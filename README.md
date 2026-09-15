@@ -11,8 +11,8 @@ Requires Node.js 24 or newer.
 
 | Package | Use it when |
 | --- | --- |
-| `@octonode/sdk` | A TypeScript or JavaScript application needs typed Octonode API calls. |
-| `@octonode/cli` | A developer, script, or CI job needs the same API from a terminal. |
+| [`@octonode/sdk`](packages/sdk/README.md) | A TypeScript or JavaScript application needs typed Octonode API calls. |
+| [`@octonode/cli`](packages/cli/README.md) | A developer, script, or CI job needs the same API from a terminal. |
 
 Only compiled `dist` files, package metadata, and package README files are published. Source,
 tests, generation scripts, and repository configuration are not included in the npm packages.
@@ -258,6 +258,8 @@ stored in this repository.
 
 The Octonode repository also needs `DEVTOOLS_REPO_TOKEN` so its OpenAPI sync workflow can open and
 auto-merge generated PRs here.
+
+See the [changelog](CHANGELOG.md) for release history.
 
 ## License
 
