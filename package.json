@@ -1,0 +1,24 @@
+{
+  "name": "octonode-devtools",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "gen": "yarn workspace @octonode/sdk gen",
+    "build": "tsc -b",
+    "test": "node --test",
+    "check": "yarn gen && yarn build && yarn test"
+  },
+  "packageManager": "yarn@4.14.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.98.1",
+    "@types/node": "^26.4.0",
+    "typescript": "5.9.3"
+  }
+}

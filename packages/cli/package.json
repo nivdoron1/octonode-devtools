@@ -1,0 +1,21 @@
+{
+  "name": "@octonode/cli",
+  "version": "0.0.3",
+  "description": "Thin CLI wrapper for the Octonode cloud SDK.",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "octonodes": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@octonode/sdk": "workspace:*",
+    "@supabase/supabase-js": "2.107.0"
+  },
+  "scripts": {
+    "prepack": "tsc -b"
+  }
+}
