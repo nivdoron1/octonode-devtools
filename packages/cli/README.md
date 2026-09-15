@@ -1,12 +1,12 @@
-# @octonode/cli
+# @octonodes/cli
 
-Thin command-line wrapper over `@octonode/sdk`.
+Thin command-line wrapper over `@octonodes/sdk`.
 
 ```sh
-npx @octonode/cli login
+npx @octonodes/cli login
 
-npx @octonode/cli operations
-npx @octonode/cli projects.api.get --input '{"query":{"workspace":"acme"}}'
+npx @octonodes/cli operations
+npx @octonodes/cli projects.api.get --input '{"query":{"workspace":"acme"}}'
 ```
 
 The installed command is `octonodes`. `login` opens GitHub authentication in your browser,

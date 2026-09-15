@@ -1,13 +1,13 @@
-# @octonode/sdk
+# @octonodes/sdk
 
 Generated TypeScript client for the Octonode cloud API.
 
 ```sh
-npm install @octonode/sdk
+npm install @octonodes/sdk
 ```
 
 ```ts
-import { createClient } from "@octonode/sdk";
+import { createClient } from "@octonodes/sdk";
 
 const octonode = createClient(process.env.OCTONODE_TOKEN!);
 

@@ -1,6 +1,6 @@
 # Octonode Devtools
 
-Type-safe access to the public Octonode API through the `@octonode/sdk` package and the
+Type-safe access to the public Octonode API through the `@octonodes/sdk` package and the
 `octonodes` command-line client. Both are generated from the same developer OpenAPI contract,
 use `https://api.octonode.dev` by default, and enforce the permissions of the supplied user or
 API token.
@@ -11,8 +11,8 @@ Requires Node.js 24 or newer.
 
 | Package | Use it when |
 | --- | --- |
-| [`@octonode/sdk`](packages/sdk/README.md) | A TypeScript or JavaScript application needs typed Octonode API calls. |
-| [`@octonode/cli`](packages/cli/README.md) | A developer, script, or CI job needs the same API from a terminal. |
+| [`@octonodes/sdk`](packages/sdk/README.md) | A TypeScript or JavaScript application needs typed Octonode API calls. |
+| [`@octonodes/cli`](packages/cli/README.md) | A developer, script, or CI job needs the same API from a terminal. |
 
 Only compiled `dist` files, package metadata, and package README files are published. Source,
 tests, generation scripts, and repository configuration are not included in the npm packages.
@@ -22,13 +22,13 @@ tests, generation scripts, and repository configuration are not included in the 
 ### Install
 
 ```sh
-npm install @octonode/sdk
+npm install @octonodes/sdk
 ```
 
 ### Create a client
 
 ```ts
-import { createClient } from "@octonode/sdk";
+import { createClient } from "@octonodes/sdk";
 
 const octonode = createClient(process.env.OCTONODE_TOKEN!);
 const projects = await octonode.projects.api.get();
@@ -37,7 +37,7 @@ const projects = await octonode.projects.api.get();
 `createClient` is the short form. The class can also be constructed directly:
 
 ```ts
-import { OctonodeClient } from "@octonode/sdk";
+import { OctonodeClient } from "@octonodes/sdk";
 
 const octonode = new OctonodeClient(process.env.OCTONODE_TOKEN!);
 ```
@@ -51,7 +51,7 @@ The default API URL is exported as `OCTONODE_API_URL`. Override it for self-host
 development and add headers when an integration needs request metadata:
 
 ```ts
-import { createClient, OCTONODE_API_URL } from "@octonode/sdk";
+import { createClient, OCTONODE_API_URL } from "@octonodes/sdk";
 
 const octonode = createClient(process.env.OCTONODE_TOKEN!, {
   url: process.env.OCTONODE_URL ?? OCTONODE_API_URL,
@@ -130,17 +130,17 @@ The CLI is a thin wrapper over the same generated SDK. It needs no local Octonod
 Run without installing:
 
 ```sh
-npx --yes @octonode/cli@latest --help
+npx --yes @octonodes/cli@latest --help
 ```
 
 Or install it globally:
 
 ```sh
-npm install --global @octonode/cli
+npm install --global @octonodes/cli
 octonodes --help
 ```
 
-The npm package is `@octonode/cli`; the installed command is `octonodes` because the unscoped
+The npm package is `@octonodes/cli`; the installed command is `octonodes` because the unscoped
 `octonode` command name is already in use.
 
 ### Login
@@ -252,7 +252,7 @@ and bumps both public packages together.
 ## Publishing
 
 Merges to `main` that change either package run the npm publish workflow. It verifies the repo,
-publishes `@octonode/sdk` first, then publishes `@octonode/cli` with npm provenance. The repository
+publishes `@octonodes/sdk` first, then publishes `@octonodes/cli` with npm provenance. The repository
 owner must add the `NPM_TOKEN` GitHub Actions secret before the first publish. No npm credential is
 stored in this repository.
 
