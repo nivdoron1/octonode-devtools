@@ -1,5 +1,5 @@
 {
-  "name": "@octonode/cli",
+  "name": "@octonodes/cli",
   "version": "0.0.3",
   "description": "Thin CLI wrapper for the Octonode cloud SDK.",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "dist"
   ],
   "dependencies": {
-    "@octonode/sdk": "workspace:*",
+    "@octonodes/sdk": "workspace:*",
     "@supabase/supabase-js": "2.107.0"
   },
   "scripts": {

@@ -35,3 +35,11 @@ test("packaged OpenAPI contains only developer operations", () => {
   assert.equal(document.paths["/api/tokens"], undefined);
   assert.equal(document.paths["/api/super-admin/organizations"], undefined);
 });
+
+test("public packages use the owned npm scope", () => {
+  const sdk = JSON.parse(readFileSync("packages/sdk/package.json", "utf8"));
+  const cli = JSON.parse(readFileSync("packages/cli/package.json", "utf8"));
+  assert.equal(sdk.name, "@octonodes/sdk");
+  assert.equal(cli.name, "@octonodes/cli");
+  assert.equal(cli.dependencies["@octonodes/sdk"], "workspace:*");
+});

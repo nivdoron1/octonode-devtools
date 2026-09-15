@@ -1,5 +1,5 @@
 {
-  "name": "@octonode/sdk",
+  "name": "@octonodes/sdk",
   "version": "0.0.3",
   "description": "Generated TypeScript client for the Octonode cloud API.",
   "license": "MIT",

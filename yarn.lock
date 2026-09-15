@@ -96,20 +96,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octonode/cli@workspace:packages/cli":
+"@octonodes/cli@workspace:packages/cli":
   version: 0.0.0-use.local
-  resolution: "@octonode/cli@workspace:packages/cli"
+  resolution: "@octonodes/cli@workspace:packages/cli"
   dependencies:
-    "@octonode/sdk": "workspace:*"
+    "@octonodes/sdk": "workspace:*"
     "@supabase/supabase-js": "npm:2.107.0"
   bin:
     octonodes: dist/index.js
   languageName: unknown
   linkType: soft
 
-"@octonode/sdk@workspace:*, @octonode/sdk@workspace:packages/sdk":
+"@octonodes/sdk@workspace:*, @octonodes/sdk@workspace:packages/sdk":
   version: 0.0.0-use.local
-  resolution: "@octonode/sdk@workspace:packages/sdk"
+  resolution: "@octonodes/sdk@workspace:packages/sdk"
   languageName: unknown
   linkType: soft
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { createClient, OCTONODE_API_URL, OctonodeClient } from "@octonode/sdk";
+import { createClient, OCTONODE_API_URL, OctonodeClient } from "@octonodes/sdk";
 import { accessToken, login, logout } from "./auth";
 
 const VERSION = (require("../package.json") as { version: string }).version;
