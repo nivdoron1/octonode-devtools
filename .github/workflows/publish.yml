@@ -21,11 +21,10 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
       - run: corepack enable
       - run: yarn install --immutable
       - run: yarn check
       - run: yarn workspace @octonodes/sdk pack --out /tmp/octonodes-sdk.tgz
-      - run: npm view "@octonodes/sdk@$(node -p "require('./packages/sdk/package.json').version")" version || npm publish /tmp/octonodes-sdk.tgz --access public
+      - run: npm view "@octonodes/sdk@$(node -p "require('./packages/sdk/package.json').version")" version >/dev/null 2>&1 || npm publish /tmp/octonodes-sdk.tgz --access public
       - run: yarn workspace @octonodes/cli pack --out /tmp/octonodes-cli.tgz
-      - run: npm view "@octonodes/cli@$(node -p "require('./packages/cli/package.json').version")" version || npm publish /tmp/octonodes-cli.tgz --access public
+      - run: npm view "@octonodes/cli@$(node -p "require('./packages/cli/package.json').version")" version >/dev/null 2>&1 || npm publish /tmp/octonodes-cli.tgz --access public
