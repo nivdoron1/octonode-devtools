@@ -16,8 +16,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    env:
-      YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -27,5 +25,7 @@ jobs:
       - run: corepack enable
       - run: yarn install --immutable
       - run: yarn check
-      - run: yarn workspace @octonodes/sdk npm publish --access public --provenance --tolerate-republish
-      - run: yarn workspace @octonodes/cli npm publish --access public --provenance --tolerate-republish
+      - run: yarn workspace @octonodes/sdk pack --out /tmp/octonodes-sdk.tgz
+      - run: npm view "@octonodes/sdk@$(node -p "require('./packages/sdk/package.json').version")" version || npm publish /tmp/octonodes-sdk.tgz --access public
+      - run: yarn workspace @octonodes/cli pack --out /tmp/octonodes-cli.tgz
+      - run: npm view "@octonodes/cli@$(node -p "require('./packages/cli/package.json').version")" version || npm publish /tmp/octonodes-cli.tgz --access public

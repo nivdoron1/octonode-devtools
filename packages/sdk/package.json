@@ -3,6 +3,11 @@
   "version": "0.0.4",
   "description": "Generated TypeScript client for the Octonode cloud API.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nivdoron1/octonode-devtools.git",
+    "directory": "packages/sdk"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

@@ -252,9 +252,9 @@ and bumps both public packages together.
 ## Publishing
 
 Merges to `main` that change either package run the npm publish workflow. It verifies the repo,
-publishes `@octonodes/sdk` first, then publishes `@octonodes/cli` with npm provenance. The repository
-owner must add the `NPM_TOKEN` GitHub Actions secret before the first publish. No npm credential is
-stored in this repository.
+publishes `@octonodes/sdk` first, then publishes `@octonodes/cli` with npm provenance. Both packages
+must trust the GitHub Actions publisher `nivdoron1/octonode-devtools` with workflow `publish.yml`.
+Publishing uses short-lived OIDC credentials, so no npm token is stored in GitHub or this repository.
 
 The Octonode repository also needs `DEVTOOLS_REPO_TOKEN` so its OpenAPI sync workflow can open and
 auto-merge generated PRs here.
