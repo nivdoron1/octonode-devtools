@@ -4663,6 +4663,325 @@
         }
       }
     },
+    "/api/projects/catalog": {
+      "get": {
+        "operationId": "getApiProjectsCatalog",
+        "summary": "Read internal workspace browsing metadata",
+        "tags": [
+          "Projects"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "workflowCount": {
+                            "type": "number"
+                          },
+                          "environments": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "readOnly": {
+                            "type": "boolean",
+                            "const": true
+                          },
+                          "legacyLanguage": {
+                            "type": "string"
+                          },
+                          "local": {
+                            "type": "boolean",
+                            "const": false
+                          },
+                          "cloudAction": {
+                            "type": "string",
+                            "enum": [
+                              "install",
+                              "sync"
+                            ]
+                          },
+                          "hosted": {
+                            "type": "boolean",
+                            "const": true
+                          },
+                          "unavailable": {
+                            "type": "boolean",
+                            "const": true
+                          },
+                          "sourceKind": {
+                            "type": "string",
+                            "enum": [
+                              "repository",
+                              "managed",
+                              "standalone"
+                            ]
+                          },
+                          "sourceRepositoryId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "configLocator": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "workflowCount"
+                        ]
+                      }
+                    },
+                    "repositories": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "generation": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "sourceRepository": {
+                            "type": "object",
+                            "properties": {
+                              "sourceRepositoryId": {
+                                "type": "string"
+                              },
+                              "displayName": {
+                                "type": "string"
+                              },
+                              "rootLocator": {
+                                "type": "string"
+                              },
+                              "canonicalRootFingerprint": {
+                                "type": "string"
+                              },
+                              "remote": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "fetchUrl": {
+                                    "type": "string"
+                                  },
+                                  "provider": {
+                                    "type": "string",
+                                    "const": "github"
+                                  },
+                                  "githubRepositoryId": {
+                                    "type": "integer",
+                                    "exclusiveMinimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "fetchUrl"
+                                ]
+                              },
+                              "recovery": {
+                                "oneOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "kind": {
+                                        "type": "string",
+                                        "const": "reclone"
+                                      },
+                                      "head": {
+                                        "type": "string"
+                                      },
+                                      "branch": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "kind",
+                                      "head"
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "kind": {
+                                        "type": "string",
+                                        "const": "relink"
+                                      }
+                                    },
+                                    "required": [
+                                      "kind"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "ready",
+                                  "missing",
+                                  "conflict"
+                                ]
+                              },
+                              "revision": {
+                                "type": "integer",
+                                "minimum": 0
+                              }
+                            },
+                            "required": [
+                              "sourceRepositoryId",
+                              "displayName",
+                              "rootLocator",
+                              "canonicalRootFingerprint",
+                              "remote",
+                              "recovery",
+                              "status",
+                              "revision"
+                            ]
+                          },
+                          "projects": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "projectId": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 240
+                                },
+                                "sourceKind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "repository",
+                                    "managed",
+                                    "standalone"
+                                  ]
+                                },
+                                "sourceRepositoryId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "configLocator": {
+                                  "type": "string"
+                                },
+                                "projectRootLocator": {
+                                  "type": "string"
+                                },
+                                "configFormat": {
+                                  "type": "string",
+                                  "enum": [
+                                    "yaml",
+                                    "json"
+                                  ]
+                                },
+                                "configFingerprint": {
+                                  "type": "string"
+                                },
+                                "storeKey": {
+                                  "type": "string"
+                                },
+                                "identitySource": {
+                                  "type": "string",
+                                  "enum": [
+                                    "new",
+                                    "legacy",
+                                    "config"
+                                  ]
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "enum": [
+                                    "ready",
+                                    "missing",
+                                    "conflict",
+                                    "invalid"
+                                  ]
+                                },
+                                "revision": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                }
+                              },
+                              "required": [
+                                "projectId",
+                                "sourceKind",
+                                "sourceRepositoryId",
+                                "configLocator",
+                                "projectRootLocator",
+                                "configFormat",
+                                "configFingerprint",
+                                "storeKey",
+                                "identitySource",
+                                "status",
+                                "revision"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "generation",
+                          "sourceRepository",
+                          "projects"
+                        ]
+                      }
+                    },
+                    "hiddenIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "projects",
+                    "repositories",
+                    "hiddenIds"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/projects/search": {
       "get": {
         "operationId": "getApiProjectsSearch",
@@ -4810,6 +5129,16 @@
           }
         },
         "parameters": [
+          {
+            "in": "query",
+            "name": "summary",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            }
+          },
           {
             "in": "query",
             "name": "q",
