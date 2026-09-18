@@ -20,6 +20,8 @@ test("OpenAPI sync bumps both public packages once", () => {
     assert.equal(JSON.parse(readFileSync(join(root, "packages/sdk/package.json"))).version, "1.2.4");
     assert.equal(JSON.parse(readFileSync(join(root, "packages/cli/package.json"))).version, "1.2.4");
     assert.equal(syncOpenApi(source, root), undefined);
+    assert.equal(syncOpenApi(source, root, true), "1.2.5");
+    assert.equal(syncOpenApi(source, root), undefined);
 
     writeFileSync(source, '{"openapi":"3.1.1"}\n');
     writeFileSync(join(root, "packages/sdk/package.json"), '{"version":"invalid"}\n');

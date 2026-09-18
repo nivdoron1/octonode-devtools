@@ -1,26 +1,28 @@
 {
   "name": "@octonodes/cli",
-  "version": "0.0.5",
-  "description": "Thin CLI wrapper for the Octonode cloud SDK.",
+  "version": "0.1.0",
+  "description": "Octonode API and plugin development CLI.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nivdoron1/octonode-devtools.git",
     "directory": "packages/cli"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "bin": {
     "octonodes": "dist/index.js"
   },
   "files": [
     "dist"
   ],
-  "dependencies": {
-    "@octonodes/sdk": "workspace:*",
-    "@supabase/supabase-js": "2.107.0"
-  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepack": "tsc -b"
+  },
+  "dependencies": {
+    "@octonodes/sdk": "workspace:*",
+    "@supabase/supabase-js": "2.107.0",
+    "esbuild": "0.28.1",
+    "yaml": "^2.4.5"
   }
 }
