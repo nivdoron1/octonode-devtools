@@ -11140,11 +11140,133 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "navigation": {
+                      "type": "object",
+                      "properties": {
+                        "collapsedPaths": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "hiddenCount": {
+                      "type": "number"
+                    },
+                    "settingsRevision": {
+                      "type": "string"
+                    },
+                    "view": {
+                      "type": "string"
+                    },
+                    "views": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "label"
+                        ]
+                      }
+                    },
+                    "groupBy": {
+                      "type": "string",
+                      "enum": [
+                        "source",
+                        "folder",
+                        "flat",
+                        "architecture"
+                      ]
+                    },
+                    "architectureLayers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "workflowIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "label",
+                          "workflowIds"
+                        ]
+                      }
+                    },
+                    "detail": {
+                      "type": "object",
+                      "properties": {
+                        "level": {
+                          "type": "string",
+                          "enum": [
+                            "files",
+                            "workflows",
+                            "steps"
+                          ]
+                        },
+                        "maxCallDepth": {
+                          "type": "number"
+                        },
+                        "maxDirectoryDepth": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "diagnostics": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
                     "items": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
+                          "icon": {
+                            "type": "string"
+                          },
+                          "color": {
+                            "type": "string"
+                          },
+                          "style": {
+                            "type": "object",
+                            "properties": {
+                              "density": {
+                                "type": "string",
+                                "enum": [
+                                  "compact",
+                                  "comfortable"
+                                ]
+                              },
+                              "radius": {
+                                "type": "string",
+                                "enum": [
+                                  "sharp",
+                                  "soft"
+                                ]
+                              }
+                            }
+                          },
                           "source": {
                             "type": "object",
                             "properties": {
@@ -11272,6 +11394,14 @@
           }
         },
         "parameters": [
+          {
+            "in": "query",
+            "name": "view",
+            "schema": {
+              "type": "string",
+              "maxLength": 240
+            }
+          },
           {
             "in": "query",
             "name": "archived",
@@ -11643,6 +11773,49 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "revealed": {
+                      "type": "boolean"
+                    },
+                    "presentation": {
+                      "type": "object",
+                      "properties": {
+                        "revision": {
+                          "type": "string"
+                        },
+                        "view": {
+                          "type": "string"
+                        },
+                        "detail": {
+                          "type": "object",
+                          "properties": {
+                            "level": {
+                              "type": "string",
+                              "enum": [
+                                "files",
+                                "workflows",
+                                "steps"
+                              ]
+                            },
+                            "maxCallDepth": {
+                              "type": "number"
+                            },
+                            "maxDirectoryDepth": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "diagnostics": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "revision",
+                        "diagnostics"
+                      ]
+                    },
                     "triggers": {
                       "type": "array",
                       "items": {
@@ -11787,6 +11960,31 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "hiddenReason": {
+                            "type": "string"
+                          },
+                          "color": {
+                            "type": "string"
+                          },
+                          "style": {
+                            "type": "object",
+                            "properties": {
+                              "density": {
+                                "type": "string",
+                                "enum": [
+                                  "compact",
+                                  "comfortable"
+                                ]
+                              },
+                              "radius": {
+                                "type": "string",
+                                "enum": [
+                                  "sharp",
+                                  "soft"
+                                ]
+                              }
+                            }
+                          },
                           "workflowId": {
                             "type": "string",
                             "minLength": 1
@@ -12249,6 +12447,14 @@
             }
           },
           {
+            "in": "query",
+            "name": "view",
+            "schema": {
+              "type": "string",
+              "maxLength": 240
+            }
+          },
+          {
             "schema": {
               "type": "string"
             },
@@ -12320,6 +12526,49 @@
                     "graph": {
                       "type": "object",
                       "properties": {
+                        "revealed": {
+                          "type": "boolean"
+                        },
+                        "presentation": {
+                          "type": "object",
+                          "properties": {
+                            "revision": {
+                              "type": "string"
+                            },
+                            "view": {
+                              "type": "string"
+                            },
+                            "detail": {
+                              "type": "object",
+                              "properties": {
+                                "level": {
+                                  "type": "string",
+                                  "enum": [
+                                    "files",
+                                    "workflows",
+                                    "steps"
+                                  ]
+                                },
+                                "maxCallDepth": {
+                                  "type": "number"
+                                },
+                                "maxDirectoryDepth": {
+                                  "type": "number"
+                                }
+                              }
+                            },
+                            "diagnostics": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "revision",
+                            "diagnostics"
+                          ]
+                        },
                         "triggers": {
                           "type": "array",
                           "items": {
@@ -12464,6 +12713,31 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "hiddenReason": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "string"
+                              },
+                              "style": {
+                                "type": "object",
+                                "properties": {
+                                  "density": {
+                                    "type": "string",
+                                    "enum": [
+                                      "compact",
+                                      "comfortable"
+                                    ]
+                                  },
+                                  "radius": {
+                                    "type": "string",
+                                    "enum": [
+                                      "sharp",
+                                      "soft"
+                                    ]
+                                  }
+                                }
+                              },
                               "workflowId": {
                                 "type": "string",
                                 "minLength": 1
@@ -12974,6 +13248,49 @@
                     "graph": {
                       "type": "object",
                       "properties": {
+                        "revealed": {
+                          "type": "boolean"
+                        },
+                        "presentation": {
+                          "type": "object",
+                          "properties": {
+                            "revision": {
+                              "type": "string"
+                            },
+                            "view": {
+                              "type": "string"
+                            },
+                            "detail": {
+                              "type": "object",
+                              "properties": {
+                                "level": {
+                                  "type": "string",
+                                  "enum": [
+                                    "files",
+                                    "workflows",
+                                    "steps"
+                                  ]
+                                },
+                                "maxCallDepth": {
+                                  "type": "number"
+                                },
+                                "maxDirectoryDepth": {
+                                  "type": "number"
+                                }
+                              }
+                            },
+                            "diagnostics": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "revision",
+                            "diagnostics"
+                          ]
+                        },
                         "triggers": {
                           "type": "array",
                           "items": {
@@ -13118,6 +13435,31 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "hiddenReason": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "string"
+                              },
+                              "style": {
+                                "type": "object",
+                                "properties": {
+                                  "density": {
+                                    "type": "string",
+                                    "enum": [
+                                      "compact",
+                                      "comfortable"
+                                    ]
+                                  },
+                                  "radius": {
+                                    "type": "string",
+                                    "enum": [
+                                      "sharp",
+                                      "soft"
+                                    ]
+                                  }
+                                }
+                              },
                               "workflowId": {
                                 "type": "string",
                                 "minLength": 1
@@ -15318,6 +15660,31 @@
                     "node": {
                       "type": "object",
                       "properties": {
+                        "hiddenReason": {
+                          "type": "string"
+                        },
+                        "color": {
+                          "type": "string"
+                        },
+                        "style": {
+                          "type": "object",
+                          "properties": {
+                            "density": {
+                              "type": "string",
+                              "enum": [
+                                "compact",
+                                "comfortable"
+                              ]
+                            },
+                            "radius": {
+                              "type": "string",
+                              "enum": [
+                                "sharp",
+                                "soft"
+                              ]
+                            }
+                          }
+                        },
                         "workflowId": {
                           "type": "string",
                           "minLength": 1
@@ -15919,6 +16286,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "native": {
+                      "type": "string"
+                    },
                     "role": {
                       "type": "string",
                       "enum": [
@@ -16150,6 +16520,7 @@
                     }
                   },
                   "required": [
+                    "native",
                     "role",
                     "ok",
                     "instanceId",
