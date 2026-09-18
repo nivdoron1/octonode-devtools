@@ -7,6 +7,24 @@ API token.
 
 Requires Node.js 24 or newer.
 
+## Plugin development
+
+The same SDK also supports offline plugin authoring through `@octonodes/sdk/plugins`.
+Define plugins and their nodes in TypeScript; the CLI generates `octonode.yml` and
+a standalone artifact for each plugin. Several plugins can share one project.
+
+```sh
+octonodes plugin create my-integrations
+cd my-integrations
+npm install
+npm test
+```
+
+See the [plugin SDK guide](packages/sdk/PLUGINS.md) for multiple entry points,
+credentials, assets, testing, and marketplace publishing. The plugin contract and
+runtime are synced from the main Octonode repository; generated API client files
+remain separate.
+
 ## Packages
 
 | Package | Use it when |

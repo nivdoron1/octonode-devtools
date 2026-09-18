@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0] - Unreleased
+
+- Define typed plugins with `@octonodes/sdk/plugins`, including node contracts, handlers, defaults, and credential metadata.
+- Create, build, validate, test, and publish independent plugin artifacts with `octonodes plugin`.
+- Generate YAML definitions and standalone runners for multiple plugins in one project; verify artifacts before publication.
+- Sync the plugin schema and runtime from the main Octonode repository alongside the generated API client.
+
 ## [0.0.3] - 2026-09-15
 
 ### Added
