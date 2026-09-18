@@ -1,6 +1,6 @@
 {
   "name": "@octonodes/cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Thin CLI wrapper for the Octonode cloud SDK.",
   "license": "MIT",
   "main": "dist/index.js",

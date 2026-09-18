@@ -1300,10 +1300,92 @@ export type GetApiProjectsTrashResponses = {
 
 export type GetApiProjectsTrashResponse = GetApiProjectsTrashResponses[keyof GetApiProjectsTrashResponses];
 
+export type GetApiProjectsCatalogData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/projects/catalog';
+};
+
+export type GetApiProjectsCatalogErrors = {
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+};
+
+export type GetApiProjectsCatalogError = GetApiProjectsCatalogErrors[keyof GetApiProjectsCatalogErrors];
+
+export type GetApiProjectsCatalogResponses = {
+    /**
+     * Success
+     */
+    200: {
+        projects: Array<{
+            id: string;
+            name: string;
+            path?: string;
+            workflowCount: number;
+            environments?: Array<string>;
+            readOnly?: true;
+            legacyLanguage?: string;
+            local?: false;
+            cloudAction?: 'install' | 'sync';
+            hosted?: true;
+            unavailable?: true;
+            sourceKind?: 'repository' | 'managed' | 'standalone';
+            sourceRepositoryId?: string | null;
+            configLocator?: string;
+        }>;
+        repositories: Array<{
+            generation: number;
+            sourceRepository: {
+                sourceRepositoryId: string;
+                displayName: string;
+                rootLocator: string;
+                canonicalRootFingerprint: string;
+                remote: {
+                    fetchUrl: string;
+                    provider?: 'github';
+                    githubRepositoryId?: number;
+                } | null;
+                recovery: {
+                    kind: 'reclone';
+                    head: string;
+                    branch?: string;
+                } | {
+                    kind: 'relink';
+                };
+                status: 'ready' | 'missing' | 'conflict';
+                revision: number;
+            };
+            projects: Array<{
+                projectId: string;
+                sourceKind: 'repository' | 'managed' | 'standalone';
+                sourceRepositoryId: string | null;
+                configLocator: string;
+                projectRootLocator: string;
+                configFormat: 'yaml' | 'json';
+                configFingerprint: string;
+                storeKey: string;
+                identitySource: 'new' | 'legacy' | 'config';
+                status: 'ready' | 'missing' | 'conflict' | 'invalid';
+                revision: number;
+            }>;
+        }>;
+        hiddenIds: Array<string>;
+    };
+};
+
+export type GetApiProjectsCatalogResponse = GetApiProjectsCatalogResponses[keyof GetApiProjectsCatalogResponses];
+
 export type GetApiProjectsSearchData = {
     body?: never;
     path?: never;
     query?: {
+        summary?: 'true';
         q?: string;
         offset?: number;
         limit?: number;
