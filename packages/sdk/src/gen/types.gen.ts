@@ -3435,6 +3435,7 @@ export type GetApiWorkflowsData = {
     body?: never;
     path?: never;
     query?: {
+        view?: string;
         archived?: 'true' | 'false';
         scope?: string;
         q?: string;
@@ -3453,7 +3454,35 @@ export type GetApiWorkflowsResponses = {
      * Success
      */
     200: {
+        navigation?: {
+            collapsedPaths?: Array<string>;
+        };
+        hiddenCount?: number;
+        settingsRevision?: string;
+        view?: string;
+        views?: Array<{
+            id: string;
+            label: string;
+        }>;
+        groupBy?: 'source' | 'folder' | 'flat' | 'architecture';
+        architectureLayers?: Array<{
+            id: string;
+            label: string;
+            workflowIds: Array<string>;
+        }>;
+        detail?: {
+            level?: 'files' | 'workflows' | 'steps';
+            maxCallDepth?: number;
+            maxDirectoryDepth?: number;
+        };
+        diagnostics?: Array<string>;
         items: Array<{
+            icon?: string;
+            color?: string;
+            style?: {
+                density?: 'compact' | 'comfortable';
+                radius?: 'sharp' | 'soft';
+            };
             source?: {
                 path: string;
                 symbol: string;
@@ -3594,6 +3623,7 @@ export type GetApiWorkflowsByWorkflowIdGraphData = {
     query?: {
         project?: string;
         workspace?: string;
+        view?: string;
     };
     url: '/api/workflows/{workflowId}/graph';
 };
@@ -3614,6 +3644,17 @@ export type GetApiWorkflowsByWorkflowIdGraphResponses = {
      * Success
      */
     200: {
+        revealed?: boolean;
+        presentation?: {
+            revision: string;
+            view?: string;
+            detail?: {
+                level?: 'files' | 'workflows' | 'steps';
+                maxCallDepth?: number;
+                maxDirectoryDepth?: number;
+            };
+            diagnostics: Array<string>;
+        };
         triggers?: Array<{
             id: string;
             name: string;
@@ -3650,6 +3691,12 @@ export type GetApiWorkflowsByWorkflowIdGraphResponses = {
             };
         };
         nodes: Array<{
+            hiddenReason?: string;
+            color?: string;
+            style?: {
+                density?: 'compact' | 'comfortable';
+                radius?: 'sharp' | 'soft';
+            };
             workflowId?: string;
             recursion?: Array<{
                 via: Array<string>;
@@ -3877,6 +3924,17 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
         conflict: true;
         error: string;
         graph: {
+            revealed?: boolean;
+            presentation?: {
+                revision: string;
+                view?: string;
+                detail?: {
+                    level?: 'files' | 'workflows' | 'steps';
+                    maxCallDepth?: number;
+                    maxDirectoryDepth?: number;
+                };
+                diagnostics: Array<string>;
+            };
             triggers?: Array<{
                 id: string;
                 name: string;
@@ -3913,6 +3971,12 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
                 };
             };
             nodes: Array<{
+                hiddenReason?: string;
+                color?: string;
+                style?: {
+                    density?: 'compact' | 'comfortable';
+                    radius?: 'sharp' | 'soft';
+                };
                 workflowId?: string;
                 recursion?: Array<{
                     via: Array<string>;
@@ -4030,6 +4094,17 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
      */
     200: {
         graph: {
+            revealed?: boolean;
+            presentation?: {
+                revision: string;
+                view?: string;
+                detail?: {
+                    level?: 'files' | 'workflows' | 'steps';
+                    maxCallDepth?: number;
+                    maxDirectoryDepth?: number;
+                };
+                diagnostics: Array<string>;
+            };
             triggers?: Array<{
                 id: string;
                 name: string;
@@ -4066,6 +4141,12 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
                 };
             };
             nodes: Array<{
+                hiddenReason?: string;
+                color?: string;
+                style?: {
+                    density?: 'compact' | 'comfortable';
+                    radius?: 'sharp' | 'soft';
+                };
                 workflowId?: string;
                 recursion?: Array<{
                     via: Array<string>;
@@ -4695,6 +4776,12 @@ export type PostApiPluginsByPluginIdNodesByNodeIdAddResponses = {
     200: {
         instanceId: string;
         node: {
+            hiddenReason?: string;
+            color?: string;
+            style?: {
+                density?: 'compact' | 'comfortable';
+                radius?: 'sharp' | 'soft';
+            };
             workflowId?: string;
             recursion?: Array<{
                 via: Array<string>;
@@ -4920,6 +5007,7 @@ export type PostApiNativeNodesByCatalogIdMaterializeResponses = {
      * Success
      */
     200: {
+        native: string;
         role: 'entry' | 'step';
         ok: true;
         instanceId: string;
