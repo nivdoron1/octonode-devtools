@@ -3650,6 +3650,17 @@ export type GetApiWorkflowsByWorkflowIdGraphResponses = {
             };
         };
         nodes: Array<{
+            workflowId?: string;
+            recursion?: Array<{
+                via: Array<string>;
+                location: {
+                    path: string;
+                    start: number;
+                    end: number;
+                    line: number;
+                    column: number;
+                };
+            }>;
             role?: 'entry' | 'step';
             symbol?: string;
             description?: string;
@@ -3902,6 +3913,17 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
                 };
             };
             nodes: Array<{
+                workflowId?: string;
+                recursion?: Array<{
+                    via: Array<string>;
+                    location: {
+                        path: string;
+                        start: number;
+                        end: number;
+                        line: number;
+                        column: number;
+                    };
+                }>;
                 role?: 'entry' | 'step';
                 symbol?: string;
                 description?: string;
@@ -4044,6 +4066,17 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
                 };
             };
             nodes: Array<{
+                workflowId?: string;
+                recursion?: Array<{
+                    via: Array<string>;
+                    location: {
+                        path: string;
+                        start: number;
+                        end: number;
+                        line: number;
+                        column: number;
+                    };
+                }>;
                 role?: 'entry' | 'step';
                 symbol?: string;
                 description?: string;
@@ -4662,6 +4695,17 @@ export type PostApiPluginsByPluginIdNodesByNodeIdAddResponses = {
     200: {
         instanceId: string;
         node: {
+            workflowId?: string;
+            recursion?: Array<{
+                via: Array<string>;
+                location: {
+                    path: string;
+                    start: number;
+                    end: number;
+                    line: number;
+                    column: number;
+                };
+            }>;
             role?: 'entry' | 'step';
             symbol?: string;
             description?: string;
@@ -4897,6 +4941,16 @@ export type PostApiNativeNodesByCatalogIdMaterializeResponses = {
                 column: number;
                 content: string;
             };
+            recursion?: Array<{
+                via: Array<string>;
+                location: {
+                    path: string;
+                    start: number;
+                    end: number;
+                    line: number;
+                    column: number;
+                };
+            }>;
             defaults?: {
                 [key: string]: unknown;
             };

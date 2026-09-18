@@ -11787,6 +11787,57 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "workflowId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "recursion": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "via": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "minItems": 1
+                                },
+                                "location": {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "start": {
+                                      "type": "number"
+                                    },
+                                    "end": {
+                                      "type": "number"
+                                    },
+                                    "line": {
+                                      "type": "number"
+                                    },
+                                    "column": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "path",
+                                    "start",
+                                    "end",
+                                    "line",
+                                    "column"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "via",
+                                "location"
+                              ]
+                            }
+                          },
                           "role": {
                             "type": "string",
                             "enum": [
@@ -12413,6 +12464,57 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "workflowId": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "recursion": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "via": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "minItems": 1
+                                    },
+                                    "location": {
+                                      "type": "object",
+                                      "properties": {
+                                        "path": {
+                                          "type": "string"
+                                        },
+                                        "start": {
+                                          "type": "number"
+                                        },
+                                        "end": {
+                                          "type": "number"
+                                        },
+                                        "line": {
+                                          "type": "number"
+                                        },
+                                        "column": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "path",
+                                        "start",
+                                        "end",
+                                        "line",
+                                        "column"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "via",
+                                    "location"
+                                  ]
+                                }
+                              },
                               "role": {
                                 "type": "string",
                                 "enum": [
@@ -13016,6 +13118,57 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "workflowId": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "recursion": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "via": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "minItems": 1
+                                    },
+                                    "location": {
+                                      "type": "object",
+                                      "properties": {
+                                        "path": {
+                                          "type": "string"
+                                        },
+                                        "start": {
+                                          "type": "number"
+                                        },
+                                        "end": {
+                                          "type": "number"
+                                        },
+                                        "line": {
+                                          "type": "number"
+                                        },
+                                        "column": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "path",
+                                        "start",
+                                        "end",
+                                        "line",
+                                        "column"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "via",
+                                    "location"
+                                  ]
+                                }
+                              },
                               "role": {
                                 "type": "string",
                                 "enum": [
@@ -15165,6 +15318,57 @@
                     "node": {
                       "type": "object",
                       "properties": {
+                        "workflowId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "recursion": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "via": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "minItems": 1
+                              },
+                              "location": {
+                                "type": "object",
+                                "properties": {
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "start": {
+                                    "type": "number"
+                                  },
+                                  "end": {
+                                    "type": "number"
+                                  },
+                                  "line": {
+                                    "type": "number"
+                                  },
+                                  "column": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "path",
+                                  "start",
+                                  "end",
+                                  "line",
+                                  "column"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "via",
+                              "location"
+                            ]
+                          }
+                        },
                         "role": {
                           "type": "string",
                           "enum": [
@@ -15787,6 +15991,53 @@
                             "column",
                             "content"
                           ]
+                        },
+                        "recursion": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "via": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "minItems": 1
+                              },
+                              "location": {
+                                "type": "object",
+                                "properties": {
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "start": {
+                                    "type": "number"
+                                  },
+                                  "end": {
+                                    "type": "number"
+                                  },
+                                  "line": {
+                                    "type": "number"
+                                  },
+                                  "column": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "path",
+                                  "start",
+                                  "end",
+                                  "line",
+                                  "column"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "via",
+                              "location"
+                            ]
+                          }
                         },
                         "defaults": {
                           "type": "object",
