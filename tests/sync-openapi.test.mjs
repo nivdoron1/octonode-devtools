@@ -5,20 +5,23 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { syncOpenApi } from "../scripts/sync-openapi.mjs";
 
-test("OpenAPI sync bumps both public packages once", () => {
+test("OpenAPI sync bumps all public packages once", () => {
   const root = mkdtempSync(join(tmpdir(), "octonode-devtools-sync-"));
   const source = join(root, "next.json");
   try {
     mkdirSync(join(root, "packages/sdk"), { recursive: true });
     mkdirSync(join(root, "packages/cli"), { recursive: true });
+    mkdirSync(join(root, "packages/ui-extensions"), { recursive: true });
     writeFileSync(source, '{"openapi":"3.1.0"}\n');
     writeFileSync(join(root, "packages/sdk/openapi.json"), '{}\n');
     writeFileSync(join(root, "packages/sdk/package.json"), '{"version":"1.2.3"}\n');
     writeFileSync(join(root, "packages/cli/package.json"), '{"version":"1.2.3"}\n');
+    writeFileSync(join(root, "packages/ui-extensions/package.json"), '{"version":"1.2.3"}\n');
 
     assert.equal(syncOpenApi(source, root), "1.2.4");
     assert.equal(JSON.parse(readFileSync(join(root, "packages/sdk/package.json"))).version, "1.2.4");
     assert.equal(JSON.parse(readFileSync(join(root, "packages/cli/package.json"))).version, "1.2.4");
+    assert.equal(JSON.parse(readFileSync(join(root, "packages/ui-extensions/package.json"))).version, "1.2.4");
     assert.equal(syncOpenApi(source, root), undefined);
     assert.equal(syncOpenApi(source, root, true), "1.2.5");
     assert.equal(syncOpenApi(source, root), undefined);
@@ -41,7 +44,9 @@ test("packaged OpenAPI contains only developer operations", () => {
 test("public packages use the owned npm scope", () => {
   const sdk = JSON.parse(readFileSync("packages/sdk/package.json", "utf8"));
   const cli = JSON.parse(readFileSync("packages/cli/package.json", "utf8"));
+  const ui = JSON.parse(readFileSync("packages/ui-extensions/package.json", "utf8"));
   assert.equal(sdk.name, "@octonodes/sdk");
   assert.equal(cli.name, "@octonodes/cli");
+  assert.equal(ui.name, "@octonodes/ui-extensions");
   assert.equal(cli.dependencies["@octonodes/sdk"], "workspace:*");
 });

@@ -83,6 +83,14 @@ rejected. Native addons and unbundleable dynamic dependencies are not supported.
 Code that reads additional files dynamically must declare those assets explicitly.
 Do not hardcode credentials: file exclusions cannot detect secrets in source.
 
+## Optional node UI
+
+Install `@octonodes/ui-extensions` and add a node `ui` declaration when the standard
+inspector layout is not enough. The CLI bundles each declared browser entry, records
+its size and digest, and rejects unsafe or oversized entries. See the
+[`@octonodes/ui-extensions` guide](https://github.com/nivdoron1/octonode-devtools/tree/main/packages/ui-extensions#readme) for the React primitives
+and manifest example. Octonode still owns values, expressions, connections, and saves.
+
 ## Publishing
 
 ```sh
@@ -115,6 +123,6 @@ node scripts/sync-plugin-sdk.mjs /path/to/octonode-devtools --check
 ```
 
 The main repository's SDK sync workflow updates these files alongside OpenAPI,
-bumps both public packages once, and runs devtools checks. Server validation uses
+bumps all public packages once, and runs devtools checks. Server validation uses
 the same authoritative schema. The public `/plugins` export does not require an
 unpublished `@octonode/*` npm dependency.

@@ -12,6 +12,41 @@ import { PLUGIN_SCHEMA_VERSION } from "./constants";
 export const PluginScope = z.enum(["user", "group", "org", "public"]);
 export type PluginScope = z.infer<typeof PluginScope>;
 
+export const PluginUiTarget = z.enum(["node.inspector.inputs"]);
+export type PluginUiTarget = z.infer<typeof PluginUiTarget>;
+export const PLUGIN_UI_BUNDLE_MAX_BYTES = 512 * 1024;
+
+const pluginUiEntry = z
+  .string()
+  .min(1)
+  .max(1_024)
+  .refine(
+    (value) =>
+      !value.startsWith("/") &&
+      !value.includes("\\") &&
+      !value.split("/").includes("..") &&
+      /\.[cm]?[jt]sx?$/.test(value),
+    "UI entries must be relative JavaScript/TypeScript module paths",
+  );
+
+export const PluginNodeUi = z
+  .object({
+    apiVersion: z.literal("1"),
+    renderers: z
+      .record(
+        z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i, "renderer id must be alphanumeric/dash/underscore"),
+        z
+          .object({
+            label: z.string().min(1).max(240),
+            targets: z.record(PluginUiTarget, pluginUiEntry),
+          })
+          .strict(),
+      )
+      .refine((renderers) => Object.keys(renderers).length > 0, "UI needs at least one renderer"),
+  })
+  .strict();
+export type PluginNodeUi = z.infer<typeof PluginNodeUi>;
+
 /**
  * Scopes supported by the hosted marketplace.
  */
@@ -39,6 +74,7 @@ export const PluginNode = z.object({
   env: z.array(z.string()).optional(),
   connections: z.array(z.string().min(1)).optional(),
   defaults: z.record(z.unknown()).optional(),
+  ui: PluginNodeUi.optional(),
 });
 export type PluginNode = z.infer<typeof PluginNode>;
 

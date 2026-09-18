@@ -21,7 +21,7 @@ export const PLUGIN_DEFINITION_FILENAMES = [
 export const MARKETPLACE_SCOPES = ["user", "group", "org", "public"] as const;
 
 export const SETTINGS_API_VERSION = "octonode.dev/settings/v1" as const;
-export const SETTINGS_SECTIONS = ["appearance", "overrides", "layers", "views"] as const;
+export const SETTINGS_SECTIONS = ["appearance", "overrides", "layers", "views", "discovery"] as const;
 
 export const WORKSPACE_ACTIONS = [
   "projects:read",

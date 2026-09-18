@@ -8,17 +8,21 @@ export function syncOpenApi(source, root = resolve(import.meta.dirname, ".."), p
 
   const sdkPath = resolve(root, "packages/sdk/package.json");
   const cliPath = resolve(root, "packages/cli/package.json");
+  const uiPath = resolve(root, "packages/ui-extensions/package.json");
   const sdk = JSON.parse(readFileSync(sdkPath, "utf8"));
   const cli = JSON.parse(readFileSync(cliPath, "utf8"));
+  const ui = JSON.parse(readFileSync(uiPath, "utf8"));
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(sdk.version);
   if (!match) throw new Error(`cannot bump SDK version "${sdk.version}"`);
 
   const version = `${match[1]}.${match[2]}.${Number(match[3]) + 1}`;
   sdk.version = version;
   cli.version = version;
+  ui.version = version;
   cpSync(source, target);
   writeFileSync(sdkPath, `${JSON.stringify(sdk, null, 2)}\n`);
   writeFileSync(cliPath, `${JSON.stringify(cli, null, 2)}\n`);
+  writeFileSync(uiPath, `${JSON.stringify(ui, null, 2)}\n`);
   return version;
 }
 

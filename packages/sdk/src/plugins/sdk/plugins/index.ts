@@ -6,5 +6,5 @@ export { validate } from "../json-schema";
 export type { JsonSchema, ValidationError } from "../json-schema";
 export type { PluginDefinition, PluginOptions, PluginHandlers } from "../plugin.types";
 export type { PluginNodeOptions, SchemaValue } from "./types";
-export { PluginManifest, PluginNode, PluginConnection } from "../../schema/plugin-sdk";
+export { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, PluginNode, PluginConnection } from "../../schema/plugin-sdk";
 export { SETTINGS_API_VERSION } from "../../schema/plugin-sdk";

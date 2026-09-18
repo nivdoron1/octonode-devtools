@@ -7,6 +7,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  statSync,
   symlinkSync,
   writeFileSync,
 } from "node:fs";
@@ -168,6 +169,52 @@ test("ESM project plugins build independently, relocate, run, and publish the ex
     globalThis.fetch = originalFetch;
     rmSync(root, { recursive: true, force: true });
     rmSync(relocated, { recursive: true, force: true });
+  }
+});
+
+test("plugin UI entries build into the immutable artifact", async () => {
+  const root = mkdtempSync(join(tmpdir(), "octonodes-plugin-ui-"));
+  try {
+    mkdirSync(join(root, "plugins"));
+    mkdirSync(join(root, "ui"));
+    symlinkSync(resolve("node_modules"), join(root, "node_modules"), "junction");
+    writeFileSync(
+      join(root, "ui/MessageForm.tsx"),
+      `
+      import { defineExtension, InputField, NodeForm, Section } from '@octonodes/ui-extensions/react';
+      export default defineExtension('node.inspector.inputs', () => (
+        <NodeForm><Section title="Message"><InputField name="text" appearance="multiline" /></Section></NodeForm>
+      ));`,
+    );
+    writeFileSync(
+      join(root, "plugins/messages.plugin.ts"),
+      `
+      import { defineNode, definePlugin } from '@octonodes/sdk/plugins';
+      export default definePlugin({ id:'messages', name:'Messages', version:'1.0.0', nodes:[defineNode({
+        id:'send', inputs:${JSON.stringify(schema)}, outputs:${JSON.stringify(schema)},
+        ui:{apiVersion:'1',renderers:{composer:{label:'Composer',targets:{'node.inspector.inputs':'ui/MessageForm.tsx'}}}},
+        run: inputs => inputs
+      })] });`,
+    );
+    const [built] = await buildPlugins(undefined, root);
+    const ui = join(built.directory, "ui/MessageForm.tsx");
+    assert.ok(existsSync(ui));
+    assert.match(readFileSync(ui, "utf8"), /ui-extension/);
+    assert.equal(verifyBuild(built.directory).manifest.nodes[0].ui.apiVersion, "1");
+    const record = JSON.parse(readFileSync(join(built.directory, "octonode-build.json"), "utf8"));
+    assert.deepEqual(record.ui[0], {
+      nodeId: "send",
+      apiVersion: "1",
+      renderer: "composer",
+      target: "node.inspector.inputs",
+      path: "ui/MessageForm.tsx",
+      size: statSync(ui).size,
+      sha256: record.files["ui/MessageForm.tsx"],
+    });
+    writeFileSync(ui, "tampered");
+    assert.throws(() => verifyBuild(built.directory), /changed since build/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
   }
 });
 
