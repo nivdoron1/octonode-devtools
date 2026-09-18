@@ -4444,6 +4444,17 @@ export type GetApiMarketplacePluginsByIdResponses = {
             };
             connections?: Array<string>;
         }>;
+        installedVersion?: string;
+        versions: Array<{
+            version: string;
+            scope: Array<'user' | 'group' | 'org' | 'public'>;
+            permissions: Array<{
+                resource: string;
+                access: string;
+            }>;
+            sha256: string;
+            publishedAt: string;
+        }>;
         connections?: {
             [key: string]: {
                 label: string;

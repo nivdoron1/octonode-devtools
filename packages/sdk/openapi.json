@@ -14675,6 +14675,63 @@
                         ]
                       }
                     },
+                    "installedVersion": {
+                      "type": "string"
+                    },
+                    "versions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "string"
+                          },
+                          "scope": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "user",
+                                "group",
+                                "org",
+                                "public"
+                              ]
+                            }
+                          },
+                          "permissions": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "resource": {
+                                  "type": "string"
+                                },
+                                "access": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "resource",
+                                "access"
+                              ]
+                            }
+                          },
+                          "sha256": {
+                            "type": "string"
+                          },
+                          "publishedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "scope",
+                          "permissions",
+                          "sha256",
+                          "publishedAt"
+                        ]
+                      }
+                    },
                     "connections": {
                       "type": "object",
                       "additionalProperties": {
@@ -14786,6 +14843,7 @@
                     "nodeCount",
                     "tags",
                     "nodes",
+                    "versions",
                     "installed",
                     "scope",
                     "permissions",
