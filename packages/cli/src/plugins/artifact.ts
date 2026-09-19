@@ -96,7 +96,8 @@ export function verifyBuild(directory: string): { manifest: PluginManifest; file
   if (
     !expected.includes("dist/index.js") ||
     !manifest.nodes.length ||
-    manifest.nodes.some((node) => node.command !== `node dist/index.js ${node.id}`)
+    manifest.nodes.some((node) => node.command !== `node dist/index.js ${node.id}` &&
+      !(manifest.integration?.npm && node.command === `node --experimental-import-meta-resolve dist/index.js ${node.id}`))
   )
     throw new Error("Invalid built plugin runner");
   const ui = manifest.nodes.flatMap((node) =>

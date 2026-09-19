@@ -13,9 +13,10 @@ npm test
 octonodes plugin validate dist/plugins/my-integrations
 ```
 
-Define plugins in `plugins/**/*.plugin.ts` using `@octonodes/sdk/plugins`.
-`octonodes plugin build` creates a standalone artifact per plugin; pass one entry
-path to build only that plugin. `octonodes plugin test <directory> <node-id> --input
+Define one plugin in `octonode.plugin.ts` using `@octonodes/sdk/plugin`.
+`octonodes plugin nodes` generates typed handles in `octonode.nodes.ts`; add
+`--check` to detect drift. `octonodes plugin build` regenerates local handles,
+type-checks definitions, and creates `dist/plugins/<id>`. `octonodes plugin test <directory> <node-id> --input
 '{...}'` invokes a built node and reports failures with a nonzero exit code.
 
 Set `scope: ["public"]` in the definition for community discovery, rebuild, then:
