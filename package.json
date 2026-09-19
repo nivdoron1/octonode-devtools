@@ -10,7 +10,9 @@
     "gen": "yarn workspace @octonodes/sdk gen",
     "build": "tsc -b",
     "test": "node --test",
-    "check": "yarn gen && yarn build && yarn test"
+    "check": "yarn gen && yarn build && yarn test",
+    "mcp:dev": "yarn workspace @octonodes/mcp dev",
+    "mcp:deploy": "yarn workspace @octonodes/mcp deploy"
   },
   "packageManager": "yarn@4.14.1",
   "engines": {
