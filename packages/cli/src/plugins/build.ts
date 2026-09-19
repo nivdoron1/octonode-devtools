@@ -9,13 +9,14 @@ import {
   readFileSync,
   renameSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { isBuiltin } from "node:module";
 import { build } from "esbuild";
 import { stringify } from "yaml";
-import { PluginManifest, SETTINGS_API_VERSION } from "@octonodes/sdk/plugins";
+import { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, SETTINGS_API_VERSION } from "@octonodes/sdk/plugins";
 import { BUILD_RECORD, RESERVED_ASSETS } from "./constants";
 import { fileHash, pluginFiles, safePath, verifyBuild } from "./artifact";
 import type { PluginBuild } from "./types";
@@ -106,6 +107,23 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         throw new Error(`Plugin ${manifest.id} must expose at least one node`);
       if (prepared.some((plugin) => plugin.manifest.id === manifest.id))
         throw new Error(`Duplicate plugin id: ${manifest.id}`);
+      const uiDeclarations = manifest.nodes.flatMap((node) =>
+        Object.entries(node.ui?.renderers ?? {}).flatMap(([renderer, definition]) =>
+          Object.entries(definition.targets).map(([target, path]) => ({
+            nodeId: node.id,
+            apiVersion: node.ui!.apiVersion,
+            renderer,
+            target: target as "node.inspector.inputs",
+            path,
+          })),
+        ),
+      );
+      const uiEntries = [...new Set(uiDeclarations.map(({ path }) => path))];
+      for (const entry of uiEntries) {
+        safePath(entry);
+        if (RESERVED_ASSETS.has(entry.split("/")[0]))
+          throw new Error(`UI entry overwrites a generated file: ${entry}`);
+      }
       if (
         !Array.isArray(metadata.assets) ||
         metadata.assets.some((path: unknown) => typeof path !== "string")
@@ -113,6 +131,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         throw new Error("assets must be an array of file paths");
       for (const asset of metadata.assets as string[]) {
         safePath(asset);
+        if (uiEntries.includes(asset)) throw new Error(`Asset duplicates a UI entry: ${asset}`);
         if (RESERVED_ASSETS.has(asset.split("/")[0]))
           throw new Error(`Asset overwrites a generated file: ${asset}`);
         let current = root;
@@ -125,6 +144,43 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
           throw new Error(`Declare individual asset files: ${asset}`);
         mkdirSync(dirname(join(staged, asset)), { recursive: true });
         cpSync(current, join(staged, asset));
+      }
+      for (const entry of uiEntries) {
+        let current = root;
+        for (const part of entry.split("/")) {
+          current = join(current, part);
+          if (lstatSync(current).isSymbolicLink())
+            throw new Error(`UI entry cannot be a symbolic link: ${entry}`);
+        }
+        if (!lstatSync(current).isFile()) throw new Error(`UI entry must be a file: ${entry}`);
+        directory(staged, dirname(entry));
+        const ui = await build({
+          absWorkingDir: root,
+          stdin: {
+            contents: `import extension from ${JSON.stringify(current)}; import { startExtension } from "@octonodes/ui-extensions/react"; startExtension(extension);`,
+            resolveDir: root,
+            sourcefile: "octonode-ui-entry.ts",
+            loader: "ts",
+          },
+          outfile: join(staged, entry),
+          bundle: true,
+          platform: "browser",
+          format: "iife",
+          target: "es2021",
+          minify: true,
+          metafile: true,
+          logLevel: "silent",
+          legalComments: "eof",
+        });
+        if (ui.warnings.length) throw new Error(ui.warnings.map((warning) => warning.text).join("\n"));
+        if (
+          Object.values(ui.metafile.outputs).some((output) =>
+            output.imports.some((dependency) => dependency.external),
+          )
+        )
+          throw new Error(`UI entry has an unbundled dependency: ${entry}`);
+        if (statSync(join(staged, entry)).size > PLUGIN_UI_BUNDLE_MAX_BYTES)
+          throw new Error(`UI entry exceeds 512 KiB: ${entry}`);
       }
       const serialized = JSON.stringify(manifest);
       writeFileSync(
@@ -173,6 +229,11 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
             files: Object.fromEntries(
               pluginFiles(staged).map((file) => [file, fileHash(join(staged, file))]),
             ),
+            ui: uiDeclarations.map((declaration) => ({
+              ...declaration,
+              size: statSync(join(staged, declaration.path)).size,
+              sha256: fileHash(join(staged, declaration.path)),
+            })),
           },
           null,
           2,

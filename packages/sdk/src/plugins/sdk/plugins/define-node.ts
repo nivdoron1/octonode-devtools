@@ -10,5 +10,6 @@ export function defineNode<const I extends JsonSchema, const O extends JsonSchem
     connections: args.connections,
     env: args.env,
     trigger: args.trigger,
+    ui: args.ui,
   };
 }

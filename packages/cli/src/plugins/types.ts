@@ -8,4 +8,13 @@ export interface PluginBuild {
 export interface PluginBuildRecord {
   format: 1;
   files: Record<string, string>;
+  ui?: Array<{
+    nodeId: string;
+    apiVersion: "1";
+    renderer: string;
+    target: "node.inspector.inputs";
+    path: string;
+    size: number;
+    sha256: string;
+  }>;
 }

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
-import { PluginManifest, SETTINGS_API_VERSION } from "@octonodes/sdk/plugins";
+import { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, SETTINGS_API_VERSION } from "@octonodes/sdk/plugins";
 import { parseDocument, visit } from "yaml";
 import { BUILD_RECORD, DEFINITION_FILES, FORBIDDEN_PART } from "./constants";
 import type { PluginBuildRecord } from "./types";
@@ -99,5 +99,31 @@ export function verifyBuild(directory: string): { manifest: PluginManifest; file
     manifest.nodes.some((node) => node.command !== `node dist/index.js ${node.id}`)
   )
     throw new Error("Invalid built plugin runner");
+  const ui = manifest.nodes.flatMap((node) =>
+    Object.entries(node.ui?.renderers ?? {}).flatMap(([renderer, definition]) =>
+      Object.entries(definition.targets).map(([target, path]) => ({
+        nodeId: node.id,
+        apiVersion: node.ui!.apiVersion,
+        renderer,
+        target,
+        path,
+      })),
+    ),
+  );
+  for (const entry of new Set(ui.map(({ path }) => path))) {
+    if (!expected.includes(entry) || lstatSync(join(directory, entry)).size > PLUGIN_UI_BUNDLE_MAX_BYTES)
+      throw new Error(`Invalid plugin UI bundle: ${entry}`);
+  }
+  if (
+    JSON.stringify(record.ui ?? []) !==
+    JSON.stringify(
+      ui.map((declaration) => ({
+        ...declaration,
+        size: lstatSync(join(directory, declaration.path)).size,
+        sha256: fileHash(join(directory, declaration.path)),
+      })),
+    )
+  )
+    throw new Error("Invalid plugin UI build record");
   return { manifest, files };
 }
