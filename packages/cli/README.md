@@ -3,6 +3,34 @@
 Command-line access to the public [Octonode cloud API](https://octonodes.com/api/docs). The CLI
 wraps `@octonodes/sdk`, so every generated SDK operation is available without writing TypeScript.
 
+## Create and publish plugins
+
+```sh
+octonodes plugin create my-integrations
+cd my-integrations
+npm install
+npm test
+octonodes plugin validate dist/plugins/my-integrations
+```
+
+Define plugins in `plugins/**/*.plugin.ts` using `@octonodes/sdk/plugins`.
+`octonodes plugin build` creates a standalone artifact per plugin; pass one entry
+path to build only that plugin. `octonodes plugin test <directory> <node-id> --input
+'{...}'` invokes a built node and reports failures with a nonzero exit code.
+
+Set `scope: ["public"]` in the definition for community discovery, rebuild, then:
+
+```sh
+octonodes login
+octonodes plugin publish dist/plugins/my-integrations --registry https://your-marketplace.example
+```
+
+Use `OCTONODE_MARKETPLACE_URL` to save the registry endpoint. Publishing uploads
+the built artifact through the existing marketplace protocol; it never publishes
+to npm. `OCTONODE_MARKETPLACE_TOKEN` overrides normal CLI authentication. Use
+`--org` and `--team` for organization/group scopes. Each plugin has an independent
+version, and unchanged build hashes are required before upload.
+
 ## Run
 
 Use it directly with `npx`:

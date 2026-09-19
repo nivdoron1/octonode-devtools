@@ -4,6 +4,10 @@ Typed TypeScript client for the public Octonode cloud API. It is generated from 
 [API contract](https://octonodes.com/api/docs) and includes projects, workflows, executions,
 nodes, data tables, plugins, GitHub integration, and workspace operations.
 
+For offline plugin authoring, import `definePlugin` and `defineNode` from
+`@octonodes/sdk/plugins`. Define several plugins in one project and generate their
+YAML manifests with `octonodes plugin build`. See the [plugin guide](PLUGINS.md).
+
 ## Install
 
 ```sh

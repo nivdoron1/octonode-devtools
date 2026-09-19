@@ -1,26 +1,34 @@
 {
   "name": "@octonodes/sdk",
-  "version": "0.0.7",
-  "description": "Generated TypeScript client for the Octonode cloud API.",
+  "version": "0.1.0",
+  "description": "Octonode API client and code-first plugin SDK.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nivdoron1/octonode-devtools.git",
     "directory": "packages/sdk"
   },
+  "files": [
+    "dist",
+    "PLUGINS.md"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./plugins": {
+      "types": "./dist/plugins/index.d.ts",
+      "default": "./dist/plugins/index.js"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "gen": "openapi-ts",
     "prepack": "tsc -b"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
   }
 }
