@@ -1,8 +1,6 @@
-import { execFileSync } from "node:child_process";
 import {
   cpSync,
   existsSync,
-  globSync,
   lstatSync,
   mkdirSync,
   mkdtempSync,
@@ -17,6 +15,8 @@ import { isBuiltin } from "node:module";
 import { build } from "esbuild";
 import { stringify } from "yaml";
 import { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, SETTINGS_API_VERSION } from "@octonodes/sdk/plugins";
+import { compileDefinition, generateNodeCatalog, PLUGIN_FILENAME } from "@octonodes/sdk/definitions/compiler";
+import { emitNpmJsFiles } from "@octonodes/sdk/definitions/npm";
 import { BUILD_RECORD, RESERVED_ASSETS } from "./constants";
 import { fileHash, pluginFiles, safePath, verifyBuild } from "./artifact";
 import type { PluginBuild } from "./types";
@@ -35,12 +35,60 @@ function directory(root: string, path: string): string {
 
 export async function buildPlugins(entry?: string, root = process.cwd()): Promise<PluginBuild[]> {
   root = resolve(root);
-  const entries = entry
-    ? [resolve(root, entry)]
-    : globSync("plugins/**/*.plugin.ts", { cwd: root })
-        .sort()
-        .map((file) => resolve(root, file));
-  if (!entries.length) throw new Error("No plugins found in plugins/**/*.plugin.ts");
+  if (entry && resolve(root, entry) !== resolve(root, PLUGIN_FILENAME))
+    throw new Error("Plugin definitions must be in octonode.plugin.ts; arbitrary entry files are not supported");
+  generateNodeCatalog(root);
+  const definition = compileDefinition(root, [], "plugin");
+  if (!definition || definition.kind !== "plugin" || !definition.manifest)
+    throw new Error("Default-export definePlugin({...}) from octonode.plugin.ts");
+  const entries = [resolve(root, PLUGIN_FILENAME)];
+  const manifestDefinition = definition.manifest;
+  const workflowNodes = definition.nodes.filter((node) => node.workflow);
+  if (workflowNodes.length && workflowNodes.length !== definition.nodes.length)
+    throw new Error("Keep exported workflows in their own plugin package");
+  const workflow = workflowNodes[0]?.workflow;
+  if (workflowNodes.some((node) => JSON.stringify(node.workflow!.files) !== JSON.stringify(workflow!.files)))
+    throw new Error("Workflow handles must come from the same generated export");
+  const npmNodes = definition.nodes.filter((node) => node.npm);
+  if (npmNodes.length && npmNodes.length !== definition.nodes.length)
+    throw new Error("Keep npm adapters and local implementations in separate plugin packages");
+  if (new Set(npmNodes.map((node) => node.npm!.packageName + "@" + node.npm!.packageVersion)).size > 1)
+    throw new Error("An npm plugin must target one package version");
+  const npm = npmNodes[0]?.npm;
+  const npmFiles = npm
+    ? emitNpmJsFiles({
+        manifest: manifestDefinition,
+        packageName: npm.packageName,
+        packageVersion: npm.packageVersion,
+        warnings: [],
+        nodes: npmNodes.map((node, index) => ({ ...node.npm!.descriptor, id: manifestDefinition.nodes[index].id })),
+      })
+    : undefined;
+  const imports = definition.nodes
+    .map(
+      (node, index) =>
+        `import { ${node.exportName} as implementation${index} } from ${JSON.stringify(resolve(root, node.path))};`,
+    )
+    .join("\n");
+  const handlers = definition.nodes
+    .map(
+      (node, index) =>
+        `${JSON.stringify(manifestDefinition.nodes[index].id)}: async (inputs) => (await implementation${index}(${node.parameters.map((name) => `inputs[${JSON.stringify(name)}]`).join(", ")})) ?? null`,
+    )
+    .join(",\n");
+  const workflowSource = `import { execFileSync } from "node:child_process"; import { join } from "node:path";
+    const invokeWorkflow = (key, inputs, context) => {
+      const result = JSON.parse(execFileSync(process.execPath, ["workflow.cjs", key], {
+        cwd: join(__dirname, "../workflow-runtime"), encoding: "utf8", maxBuffer: 16 * 1024 * 1024,
+        input: JSON.stringify({octonode:"1",type:"invoke",invocationId:"workflow",inputs,context})
+      }));
+      if (result.status !== "ok") throw new Error(result.error?.message ?? "Workflow failed");
+      return result.outputs;
+    };`;
+  const runnerSource = `${workflow ? workflowSource : npmFiles ? 'const { invokeNode } = require("../nodes/npm.cjs");' : imports}
+    import { definePlugin, startPlugin } from "@octonodes/sdk/plugins";
+    export { startPlugin };
+    export const plugin = definePlugin(${JSON.stringify(manifestDefinition)}, {${workflow ? workflowNodes.map((node, index) => `${JSON.stringify(manifestDefinition.nodes[index].id)}: (inputs, context) => invokeWorkflow(${JSON.stringify(node.workflow!.key)}, inputs, context)`).join(",") : npmFiles ? manifestDefinition.nodes.map((node) => `${JSON.stringify(node.id)}: (inputs) => invokeNode(${JSON.stringify(node.id)}, inputs)`).join(",") : handlers}});`;
   const output = directory(root, "dist/plugins");
   const staging = mkdtempSync(join(output, ".build-"));
   const prepared: Array<PluginBuild & { staged: string }> = [];
@@ -53,16 +101,37 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
       const staged = join(staging, String(index));
       mkdirSync(join(staged, "dist"), { recursive: true });
       const runner = join(staged, "dist/index.js");
+      if (workflow) {
+        for (const [path, hash] of Object.entries(workflow.files)) {
+          safePath(path);
+          let source = root;
+          for (const part of path.split("/")) {
+            source = join(source, part);
+            if (lstatSync(source).isSymbolicLink()) throw new Error(`Workflow runtime cannot be a symlink: ${path}`);
+          }
+          if (fileHash(source) !== hash) throw new Error(`Workflow runtime changed: ${path}; export again`);
+          const destination = join(staged, "workflow-runtime", path);
+          mkdirSync(dirname(destination), { recursive: true });
+          cpSync(source, destination);
+        }
+      }
+      if (npmFiles) {
+        for (const [path, content] of Object.entries(npmFiles)) {
+          mkdirSync(dirname(join(staged, path)), { recursive: true });
+          writeFileSync(join(staged, path), content);
+        }
+      }
       const result = await build({
         absWorkingDir: root,
         stdin: {
-          contents: `export { default as plugin } from ${JSON.stringify(source)}; export { startPlugin } from "@octonodes/sdk/plugins";`,
+          contents: runnerSource,
           resolveDir: root,
           sourcefile: "octonode-entry.ts",
           loader: "ts",
         },
         outfile: runner,
         bundle: true,
+        external: npmFiles ? ["../nodes/npm.cjs"] : [],
         platform: "node",
         format: "cjs",
         target: "node24",
@@ -79,32 +148,20 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         },
       });
       // esbuild cannot make computed imports or native modules portable. Fail instead of shipping a broken bundle.
-      if (result.warnings.length)
-        throw new Error(result.warnings.map((warning) => warning.text).join("\n"));
+      if (result.warnings.length) throw new Error(result.warnings.map((warning) => warning.text).join("\n"));
       for (const info of Object.values(result.metafile.outputs)) {
         for (const dependency of info.imports) {
-          if (dependency.external && !isBuiltin(dependency.path))
+          if (
+            dependency.external &&
+            !isBuiltin(dependency.path) &&
+            !(npmFiles && dependency.path === "../nodes/npm.cjs")
+          )
             throw new Error(`Unbundled dependency: ${dependency.path}`);
         }
       }
-      const metadata = JSON.parse(
-        execFileSync(
-          process.execPath,
-          [
-            "-e",
-            `
-        console = new (require('node:console').Console)({ stdout: process.stderr, stderr: process.stderr });
-        const { plugin } = require(process.argv[1]);
-        process.stdout.write(JSON.stringify({ manifest: plugin.manifest, assets: plugin.assets ?? [] }));
-      `,
-            runner,
-          ],
-          { cwd: root, encoding: "utf8", timeout: 30_000, maxBuffer: 2 * 1024 * 1024 },
-        ),
-      );
+      const metadata = { manifest: manifestDefinition, assets: definition.assets };
       const manifest = PluginManifest.parse(metadata.manifest);
-      if (!manifest.nodes.length)
-        throw new Error(`Plugin ${manifest.id} must expose at least one node`);
+      if (!manifest.nodes.length) throw new Error(`Plugin ${manifest.id} must expose at least one node`);
       if (prepared.some((plugin) => plugin.manifest.id === manifest.id))
         throw new Error(`Duplicate plugin id: ${manifest.id}`);
       const uiDeclarations = manifest.nodes.flatMap((node) =>
@@ -121,27 +178,20 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
       const uiEntries = [...new Set(uiDeclarations.map(({ path }) => path))];
       for (const entry of uiEntries) {
         safePath(entry);
-        if (RESERVED_ASSETS.has(entry.split("/")[0]))
-          throw new Error(`UI entry overwrites a generated file: ${entry}`);
+        if (RESERVED_ASSETS.has(entry.split("/")[0])) throw new Error(`UI entry overwrites a generated file: ${entry}`);
       }
-      if (
-        !Array.isArray(metadata.assets) ||
-        metadata.assets.some((path: unknown) => typeof path !== "string")
-      )
+      if (!Array.isArray(metadata.assets) || metadata.assets.some((path: unknown) => typeof path !== "string"))
         throw new Error("assets must be an array of file paths");
       for (const asset of metadata.assets as string[]) {
         safePath(asset);
         if (uiEntries.includes(asset)) throw new Error(`Asset duplicates a UI entry: ${asset}`);
-        if (RESERVED_ASSETS.has(asset.split("/")[0]))
-          throw new Error(`Asset overwrites a generated file: ${asset}`);
+        if (RESERVED_ASSETS.has(asset.split("/")[0])) throw new Error(`Asset overwrites a generated file: ${asset}`);
         let current = root;
         for (const part of asset.split("/")) {
           current = join(current, part);
-          if (lstatSync(current).isSymbolicLink())
-            throw new Error(`Asset cannot be a symbolic link: ${asset}`);
+          if (lstatSync(current).isSymbolicLink()) throw new Error(`Asset cannot be a symbolic link: ${asset}`);
         }
-        if (!lstatSync(current).isFile())
-          throw new Error(`Declare individual asset files: ${asset}`);
+        if (!lstatSync(current).isFile()) throw new Error(`Declare individual asset files: ${asset}`);
         mkdirSync(dirname(join(staged, asset)), { recursive: true });
         cpSync(current, join(staged, asset));
       }
@@ -149,8 +199,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         let current = root;
         for (const part of entry.split("/")) {
           current = join(current, part);
-          if (lstatSync(current).isSymbolicLink())
-            throw new Error(`UI entry cannot be a symbolic link: ${entry}`);
+          if (lstatSync(current).isSymbolicLink()) throw new Error(`UI entry cannot be a symbolic link: ${entry}`);
         }
         if (!lstatSync(current).isFile()) throw new Error(`UI entry must be a file: ${entry}`);
         directory(staged, dirname(entry));
@@ -174,9 +223,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         });
         if (ui.warnings.length) throw new Error(ui.warnings.map((warning) => warning.text).join("\n"));
         if (
-          Object.values(ui.metafile.outputs).some((output) =>
-            output.imports.some((dependency) => dependency.external),
-          )
+          Object.values(ui.metafile.outputs).some((output) => output.imports.some((dependency) => dependency.external))
         )
           throw new Error(`UI entry has an unbundled dependency: ${entry}`);
         if (statSync(join(staged, entry)).size > PLUGIN_UI_BUNDLE_MAX_BYTES)
@@ -191,10 +238,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         module.exports.startPlugin(module.exports.plugin);
       }\n`,
       );
-      writeFileSync(
-        join(staged, "octonode.yml"),
-        stringify({ apiVersion: SETTINGS_API_VERSION, plugin: manifest }),
-      );
+      writeFileSync(join(staged, "octonode.yml"), stringify({ apiVersion: SETTINGS_API_VERSION, plugin: manifest }));
       writeFileSync(
         join(staged, "package.json"),
         JSON.stringify(
@@ -205,6 +249,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
             type: "commonjs",
             engines: { node: ">=24" },
             license: manifest.license,
+            ...(workflow ? { dependencies: workflow.dependencies } : {}),
           },
           null,
           2,
@@ -226,9 +271,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         JSON.stringify(
           {
             format: 1,
-            files: Object.fromEntries(
-              pluginFiles(staged).map((file) => [file, fileHash(join(staged, file))]),
-            ),
+            files: Object.fromEntries(pluginFiles(staged).map((file) => [file, fileHash(join(staged, file))])),
             ui: uiDeclarations.map((declaration) => ({
               ...declaration,
               size: statSync(join(staged, declaration.path)).size,

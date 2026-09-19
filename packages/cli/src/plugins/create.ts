@@ -1,12 +1,12 @@
 import { mkdirSync, writeFileSync } from "node:fs";
+import { generateNodeCatalog } from "@octonodes/sdk/definitions/compiler";
 import { join, resolve } from "node:path";
 
 export function createPlugin(name: string, version: string): string {
-  if (!/^[a-z0-9][a-z0-9-]*$/.test(name))
-    throw new Error("Plugin name must be lowercase alphanumeric/dash");
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(name)) throw new Error("Plugin name must be lowercase alphanumeric/dash");
   const root = resolve(name);
   mkdirSync(root); // Never overwrite an existing project.
-  mkdirSync(join(root, "plugins"));
+  mkdirSync(join(root, "src"));
   mkdirSync(join(root, "tests"));
   writeFileSync(
     join(root, "package.json"),
@@ -16,7 +16,7 @@ export function createPlugin(name: string, version: string): string {
         private: true,
         engines: { node: ">=24" },
         scripts: {
-          build: "tsc --noEmit && octonodes plugin build",
+          build: "octonodes plugin build",
           test: "npm run build && node --test tests/*.test.cjs",
         },
         dependencies: { "@octonodes/sdk": version },
@@ -41,7 +41,7 @@ export function createPlugin(name: string, version: string): string {
           skipLibCheck: true,
           noEmit: true,
         },
-        include: ["plugins/**/*.ts", "src/**/*.ts"],
+        include: ["octonode.plugin.ts", "octonode.nodes.ts", "src/**/*.ts"],
       },
       null,
       2,
@@ -49,19 +49,16 @@ export function createPlugin(name: string, version: string): string {
   );
   writeFileSync(join(root, ".gitignore"), "node_modules/\ndist/\n.env\n.env.*\n");
   writeFileSync(
-    join(root, "plugins", `${name}.plugin.ts`),
-    `import { definePlugin, defineNode } from "@octonodes/sdk/plugins";
-
+    join(root, "src/echo.ts"),
+    "export function echo(text: string): { text: string } { return { text }; }\n",
+  );
+  writeFileSync(
+    join(root, "octonode.plugin.ts"),
+    `import { definePlugin, defineNode } from "@octonodes/sdk/plugin";
+import { nodes } from "./octonode.nodes.js";
 export default definePlugin({
   id: ${JSON.stringify(name)}, name: ${JSON.stringify(name)}, version: "0.1.0", license: "MIT",
-  scope: ["user"],
-  nodes: [defineNode({
-    id: "echo", label: "Echo text",
-    inputs: { type: "object", properties: { text: { type: "string" } }, required: ["text"] },
-    outputs: { type: "object", properties: { text: { type: "string" } }, required: ["text"] },
-    defaults: { text: "hello" },
-    run: ({ text }) => ({ text }),
-  })],
+  nodes: [defineNode(nodes.echo, { label: "Echo text", defaults: { text: "hello" } })],
 });
 `,
   );
@@ -82,7 +79,8 @@ test("echo runs through the packaged plugin", () => {
   );
   writeFileSync(
     join(root, "README.md"),
-    `# ${name}\n\nRun \`npm install\`, then \`npm test\`. Define additional plugins in \`plugins/*.plugin.ts\`.\n\nAll metadata belongs in code; \`dist/plugins/<id>/octonode.yml\` is generated.\nSet \`scope: ["public"]\` to share publicly. Configure \`OCTONODE_MARKETPLACE_URL\`, run \`octonodes login\`, then \`octonodes plugin publish dist/plugins/${name}\`.\nBuild executes local source; only build trusted projects. Keep secrets out of definitions and assets.\n`,
+    `# ${name}\n\nRun \`npm install\`, then \`npm test\`. Keep all definitions in \`octonode.plugin.ts\`; import handles from \`octonode.nodes.ts\` and implement functions in \`src/\`.\n\nAll metadata belongs in code; \`dist/plugins/<id>/octonode.yml\` is generated.\nSet \`scope: ["public"]\` to share publicly. Configure \`OCTONODE_MARKETPLACE_URL\`, run \`octonodes login\`, then \`octonodes plugin publish dist/plugins/${name}\`.\nConfig compilation reads definitions without executing application code. Keep secrets out of definitions and assets.\n`,
   );
+  generateNodeCatalog(root);
   return root;
 }

@@ -6,6 +6,7 @@ import { verifyBuild } from "./artifact";
 import { buildPlugins } from "./build";
 import { createPlugin } from "./create";
 import { publishPlugin } from "./publish";
+import { generateNodeCatalog } from "@octonodes/sdk/definitions/compiler";
 
 export { PLUGIN_HELP } from "./constants";
 
@@ -19,19 +20,21 @@ export async function pluginCommand(args: string[], version: string): Promise<vo
       registry: { type: "string" },
       org: { type: "string" },
       team: { type: "string" },
+      check: { type: "boolean" },
     },
   });
   const [target, nodeId] = positionals;
-  if (positionals.length > (command === "test" ? 2 : 1))
-    throw new Error("Too many plugin command arguments");
+  if (command === "nodes") {
+    generateNodeCatalog(process.cwd(), undefined, values.check);
+    process.stdout.write(values.check ? "Node inventory is current\n" : "Node inventory generated\n");
+    return;
+  }
+  if (positionals.length > (command === "test" ? 2 : 1)) throw new Error("Too many plugin command arguments");
   if (command === "build") {
     process.stdout.write(JSON.stringify(await buildPlugins(target), null, 2) + "\n");
     return;
   }
-  if (!target)
-    throw new Error(
-      `plugin ${command ?? "command"} requires a target; run octonodes plugin --help`,
-    );
+  if (!target) throw new Error(`plugin ${command ?? "command"} requires a target; run octonodes plugin --help`);
   if (command === "create") {
     process.stdout.write(
       `Created ${createPlugin(target, version)}\nNext: npm install, then npm test in that directory.\n`,
@@ -48,7 +51,7 @@ export async function pluginCommand(args: string[], version: string): Promise<vo
     const selected = nodeId ?? (manifest.nodes.length === 1 ? manifest.nodes[0].id : undefined);
     if (!manifest.nodes.some((node) => node.id === selected))
       throw new Error(`Choose a node: ${manifest.nodes.map((node) => node.id).join(", ")}`);
-    const output = execFileSync(process.execPath, ["dist/index.js", selected!], {
+    const output = execFileSync(process.execPath, ["--experimental-import-meta-resolve", "dist/index.js", selected!], {
       cwd: directory,
       encoding: "utf8",
       timeout: 30_000,
@@ -70,11 +73,7 @@ export async function pluginCommand(args: string[], version: string): Promise<vo
     const token = process.env.OCTONODE_MARKETPLACE_TOKEN ?? (await accessToken());
     if (!token) throw new Error('Run "octonodes login" or set OCTONODE_TOKEN');
     process.stdout.write(
-      JSON.stringify(
-        await publishPlugin(directory, registry, token, values.org, values.team),
-        null,
-        2,
-      ) + "\n",
+      JSON.stringify(await publishPlugin(directory, registry, token, values.org, values.team), null, 2) + "\n",
     );
     return;
   }

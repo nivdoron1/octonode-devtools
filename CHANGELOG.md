@@ -2,10 +2,16 @@
 
 ## [0.1.0] - Unreleased
 
-- Define typed plugins with `@octonodes/sdk/plugins`, including node contracts, handlers, defaults, and credential metadata.
-- Create, build, validate, test, and publish independent plugin artifacts with `octonodes plugin`.
-- Generate YAML definitions and standalone runners for multiple plugins in one project; verify artifacts before publication.
-- Sync the plugin schema and runtime from the main Octonode repository alongside the generated API client.
+### Added
+
+- Generate typed node inventories in `octonode.nodes.ts` for local source, npm imports, and workflow exports.
+- Configure local node presentation through optional `octonode.config.ts`.
+- Define each artifact in root `octonode.plugin.ts`, then build the immutable YAML artifact.
+- Preserve typed npm and plugin customizations across regeneration, and verify generated workflow runtime inputs at build time.
+
+### Changed
+
+- Use one root plugin definition instead of `plugins/**/*.plugin.ts` files.
 
 ## [0.0.3] - 2026-09-15
 

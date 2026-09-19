@@ -22,6 +22,30 @@
     "./plugins": {
       "types": "./dist/plugins/index.d.ts",
       "default": "./dist/plugins/index.js"
+    },
+    "./project": {
+      "types": "./dist/plugins/sdk/project/index.d.ts",
+      "default": "./dist/plugins/sdk/project/index.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugins/sdk/plugin/index.d.ts",
+      "default": "./dist/plugins/sdk/plugin/index.js"
+    },
+    "./definitions": {
+      "types": "./dist/plugins/sdk/definitions/index.d.ts",
+      "default": "./dist/plugins/sdk/definitions/index.js"
+    },
+    "./definitions/compiler": {
+      "types": "./dist/plugins/sdk/definitions/compiler/index.d.ts",
+      "default": "./dist/plugins/sdk/definitions/compiler/index.js"
+    },
+    "./nodes": {
+      "types": "./dist/plugins/sdk/nodes/index.d.ts",
+      "default": "./dist/plugins/sdk/nodes/index.js"
+    },
+    "./definitions/npm": {
+      "types": "./dist/plugins/sdk/definitions/npm/emit/js.d.ts",
+      "default": "./dist/plugins/sdk/definitions/npm/emit/js.js"
     }
   },
   "scripts": {
@@ -29,9 +53,29 @@
     "prepack": "tsc -b"
   },
   "dependencies": {
+    "typescript": "5.9.3",
     "zod": "^3.23.0"
   },
   "devDependencies": {
     "@types/node": "^26.4.0"
+  },
+  "typesVersions": {
+    "*": {
+      "project": [
+        "dist/plugins/sdk/project/index.d.ts"
+      ],
+      "plugin": [
+        "dist/plugins/sdk/plugin/index.d.ts"
+      ],
+      "definitions": [
+        "dist/plugins/sdk/definitions/index.d.ts"
+      ],
+      "definitions/compiler": [
+        "dist/plugins/sdk/definitions/compiler/index.d.ts"
+      ],
+      "nodes": [
+        "dist/plugins/sdk/nodes/index.d.ts"
+      ]
+    }
   }
 }

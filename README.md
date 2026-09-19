@@ -9,9 +9,10 @@ Requires Node.js 24 or newer.
 
 ## Plugin development
 
-The same SDK also supports offline plugin authoring through `@octonodes/sdk/plugins`.
+The same SDK also supports offline plugin authoring through `@octonodes/sdk/plugin`.
 Define plugins and their nodes in TypeScript; the CLI generates `octonode.yml` and
-a standalone artifact for each plugin. Several plugins can share one project.
+a standalone artifact from each package root’s `octonode.plugin.ts`. Import generated
+handles from `octonode.nodes.ts`; use `octonode.config.ts` for project appearance.
 
 ```sh
 octonodes plugin create my-integrations
@@ -20,7 +21,7 @@ npm install
 npm test
 ```
 
-See the [plugin SDK guide](packages/sdk/PLUGINS.md) for multiple entry points,
+See the [plugin SDK guide](packages/sdk/PLUGINS.md) for typed definitions,
 credentials, assets, testing, and marketplace publishing. The plugin contract and
 runtime are synced from the main Octonode repository; generated API client files
 remain separate.
