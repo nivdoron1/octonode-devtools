@@ -32,6 +32,7 @@ remain separate.
 | --- | --- |
 | [`@octonodes/sdk`](packages/sdk/README.md) | A TypeScript or JavaScript application needs typed Octonode API calls. |
 | [`@octonodes/cli`](packages/cli/README.md) | A developer, script, or CI job needs the same API from a terminal. |
+| [`@octonodes/mcp`](packages/mcp/README.md) | An MCP client needs remote Octonode tools hosted on Cloudflare Workers. |
 | [`@octonodes/ui-extensions`](packages/ui-extensions/README.md) | A plugin provides an optional node-inspector form layout. |
 
 Only compiled `dist` files, package metadata, and package README files are published. Source,
