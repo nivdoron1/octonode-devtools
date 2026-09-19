@@ -11960,6 +11960,63 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "plugin": {
+                            "type": "string"
+                          },
+                          "pluginVersion": {
+                            "type": "string"
+                          },
+                          "pluginUi": {
+                            "type": "object",
+                            "properties": {
+                              "apiVersion": {
+                                "type": "string",
+                                "const": "1"
+                              },
+                              "renderers": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                                },
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "label": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 240
+                                    },
+                                    "targets": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string",
+                                        "const": "node.inspector.inputs"
+                                      },
+                                      "additionalProperties": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 1024
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "label",
+                                    "targets"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "apiVersion",
+                              "renderers"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "renderer": {
+                            "type": "string"
+                          },
                           "hiddenReason": {
                             "type": "string"
                           },
@@ -12713,6 +12770,63 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "plugin": {
+                                "type": "string"
+                              },
+                              "pluginVersion": {
+                                "type": "string"
+                              },
+                              "pluginUi": {
+                                "type": "object",
+                                "properties": {
+                                  "apiVersion": {
+                                    "type": "string",
+                                    "const": "1"
+                                  },
+                                  "renderers": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                                    },
+                                    "additionalProperties": {
+                                      "type": "object",
+                                      "properties": {
+                                        "label": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 240
+                                        },
+                                        "targets": {
+                                          "type": "object",
+                                          "propertyNames": {
+                                            "type": "string",
+                                            "const": "node.inspector.inputs"
+                                          },
+                                          "additionalProperties": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 1024
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "label",
+                                        "targets"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "apiVersion",
+                                  "renderers"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "renderer": {
+                                "type": "string"
+                              },
                               "hiddenReason": {
                                 "type": "string"
                               },
@@ -13435,6 +13549,63 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "plugin": {
+                                "type": "string"
+                              },
+                              "pluginVersion": {
+                                "type": "string"
+                              },
+                              "pluginUi": {
+                                "type": "object",
+                                "properties": {
+                                  "apiVersion": {
+                                    "type": "string",
+                                    "const": "1"
+                                  },
+                                  "renderers": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string",
+                                      "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                                    },
+                                    "additionalProperties": {
+                                      "type": "object",
+                                      "properties": {
+                                        "label": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 240
+                                        },
+                                        "targets": {
+                                          "type": "object",
+                                          "propertyNames": {
+                                            "type": "string",
+                                            "const": "node.inspector.inputs"
+                                          },
+                                          "additionalProperties": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 1024
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "label",
+                                        "targets"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "apiVersion",
+                                  "renderers"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "renderer": {
+                                "type": "string"
+                              },
                               "hiddenReason": {
                                 "type": "string"
                               },
@@ -14340,6 +14511,50 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "official": {
+                            "type": "boolean"
+                          },
+                          "installCount": {
+                            "type": "number"
+                          },
+                          "ratingCount": {
+                            "type": "number"
+                          },
+                          "score": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "sourceKind": {
+                            "type": "string",
+                            "enum": [
+                              "sdk",
+                              "npm"
+                            ]
+                          },
+                          "npm": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "package": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              },
+                              "spec": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "package",
+                              "version",
+                              "spec"
+                            ]
+                          },
                           "id": {
                             "type": "string"
                           },
@@ -14404,6 +14619,54 @@
                                   "items": {
                                     "type": "string"
                                   }
+                                },
+                                "ui": {
+                                  "type": "object",
+                                  "properties": {
+                                    "apiVersion": {
+                                      "type": "string",
+                                      "const": "1"
+                                    },
+                                    "renderers": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string",
+                                        "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                                      },
+                                      "additionalProperties": {
+                                        "type": "object",
+                                        "properties": {
+                                          "label": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 240
+                                          },
+                                          "targets": {
+                                            "type": "object",
+                                            "propertyNames": {
+                                              "type": "string",
+                                              "const": "node.inspector.inputs"
+                                            },
+                                            "additionalProperties": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 1024
+                                            }
+                                          }
+                                        },
+                                        "required": [
+                                          "label",
+                                          "targets"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "apiVersion",
+                                    "renderers"
+                                  ],
+                                  "additionalProperties": false
                                 }
                               },
                               "required": [
@@ -14668,12 +14931,104 @@
                             "items": {
                               "type": "string"
                             }
+                          },
+                          "ui": {
+                            "type": "object",
+                            "properties": {
+                              "apiVersion": {
+                                "type": "string",
+                                "const": "1"
+                              },
+                              "renderers": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                                },
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "label": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 240
+                                    },
+                                    "targets": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string",
+                                        "const": "node.inspector.inputs"
+                                      },
+                                      "additionalProperties": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 1024
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "label",
+                                    "targets"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "apiVersion",
+                              "renderers"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
                           "id"
                         ]
                       }
+                    },
+                    "official": {
+                      "type": "boolean"
+                    },
+                    "installCount": {
+                      "type": "number"
+                    },
+                    "ratingCount": {
+                      "type": "number"
+                    },
+                    "score": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "sourceKind": {
+                      "type": "string",
+                      "enum": [
+                        "sdk",
+                        "npm"
+                      ]
+                    },
+                    "npm": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "package": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string"
+                        },
+                        "spec": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "package",
+                        "version",
+                        "spec"
+                      ]
                     },
                     "installedVersion": {
                       "type": "string"
@@ -15009,6 +15364,54 @@
                               "items": {
                                 "type": "string"
                               }
+                            },
+                            "ui": {
+                              "type": "object",
+                              "properties": {
+                                "apiVersion": {
+                                  "type": "string",
+                                  "const": "1"
+                                },
+                                "renderers": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                                  },
+                                  "additionalProperties": {
+                                    "type": "object",
+                                    "properties": {
+                                      "label": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 240
+                                      },
+                                      "targets": {
+                                        "type": "object",
+                                        "propertyNames": {
+                                          "type": "string",
+                                          "const": "node.inspector.inputs"
+                                        },
+                                        "additionalProperties": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 1024
+                                        }
+                                      }
+                                    },
+                                    "required": [
+                                      "label",
+                                      "targets"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                }
+                              },
+                              "required": [
+                                "apiVersion",
+                                "renderers"
+                              ],
+                              "additionalProperties": false
                             }
                           },
                           "required": [
@@ -15146,6 +15549,54 @@
                                   "items": {
                                     "type": "string"
                                   }
+                                },
+                                "ui": {
+                                  "type": "object",
+                                  "properties": {
+                                    "apiVersion": {
+                                      "type": "string",
+                                      "const": "1"
+                                    },
+                                    "renderers": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string",
+                                        "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                                      },
+                                      "additionalProperties": {
+                                        "type": "object",
+                                        "properties": {
+                                          "label": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 240
+                                          },
+                                          "targets": {
+                                            "type": "object",
+                                            "propertyNames": {
+                                              "type": "string",
+                                              "const": "node.inspector.inputs"
+                                            },
+                                            "additionalProperties": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 1024
+                                            }
+                                          }
+                                        },
+                                        "required": [
+                                          "label",
+                                          "targets"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "apiVersion",
+                                    "renderers"
+                                  ],
+                                  "additionalProperties": false
                                 }
                               },
                               "required": [
@@ -15280,6 +15731,54 @@
                             "items": {
                               "type": "string"
                             }
+                          },
+                          "ui": {
+                            "type": "object",
+                            "properties": {
+                              "apiVersion": {
+                                "type": "string",
+                                "const": "1"
+                              },
+                              "renderers": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                                },
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "label": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 240
+                                    },
+                                    "targets": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string",
+                                        "const": "node.inspector.inputs"
+                                      },
+                                      "additionalProperties": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 1024
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "label",
+                                    "targets"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "apiVersion",
+                              "renderers"
+                            ],
+                            "additionalProperties": false
                           },
                           "pluginId": {
                             "type": "string"
@@ -15465,6 +15964,54 @@
                             "items": {
                               "type": "string"
                             }
+                          },
+                          "ui": {
+                            "type": "object",
+                            "properties": {
+                              "apiVersion": {
+                                "type": "string",
+                                "const": "1"
+                              },
+                              "renderers": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                                },
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "label": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 240
+                                    },
+                                    "targets": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string",
+                                        "const": "node.inspector.inputs"
+                                      },
+                                      "additionalProperties": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 1024
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "label",
+                                    "targets"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "apiVersion",
+                              "renderers"
+                            ],
+                            "additionalProperties": false
                           },
                           "language": {
                             "type": "string"
@@ -15718,6 +16265,63 @@
                     "node": {
                       "type": "object",
                       "properties": {
+                        "plugin": {
+                          "type": "string"
+                        },
+                        "pluginVersion": {
+                          "type": "string"
+                        },
+                        "pluginUi": {
+                          "type": "object",
+                          "properties": {
+                            "apiVersion": {
+                              "type": "string",
+                              "const": "1"
+                            },
+                            "renderers": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                              },
+                              "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 240
+                                  },
+                                  "targets": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string",
+                                      "const": "node.inspector.inputs"
+                                    },
+                                    "additionalProperties": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "label",
+                                  "targets"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "apiVersion",
+                            "renderers"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "renderer": {
+                          "type": "string"
+                        },
                         "hiddenReason": {
                           "type": "string"
                         },
@@ -16557,6 +17161,9 @@
                           "type": "string"
                         },
                         "color": {
+                          "type": "string"
+                        },
+                        "renderer": {
                           "type": "string"
                         },
                         "position": {
