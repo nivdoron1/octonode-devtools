@@ -4,6 +4,8 @@
 
 ### Added
 
+- Connect MCP clients to the hosted Octonode authoring and collaboration tools through the
+  stateless Cloudflare Worker at `mcp.octonode.dev`.
 - Generate typed node inventories in `octonode.nodes.ts` for local source, npm imports, and workflow exports.
 - Configure local node presentation through optional `octonode.config.ts`.
 - Define each artifact in root `octonode.plugin.ts`, then build the immutable YAML artifact.

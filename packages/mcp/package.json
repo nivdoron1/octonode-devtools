@@ -1,0 +1,23 @@
+{
+  "name": "@octonodes/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:check": "wrangler deploy --dry-run",
+    "types": "wrangler types"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/client": "2.0.0",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@modelcontextprotocol/server": "2.0.0",
+    "@octonodes/sdk": "workspace:*",
+    "agents": "0.24.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "wrangler": "4.135.0"
+  }
+}
