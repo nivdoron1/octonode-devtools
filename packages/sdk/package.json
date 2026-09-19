@@ -1,6 +1,6 @@
 {
   "name": "@octonodes/sdk",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Generated TypeScript client for the Octonode cloud API.",
   "license": "MIT",
   "repository": {
