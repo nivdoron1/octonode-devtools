@@ -3691,6 +3691,20 @@ export type GetApiWorkflowsByWorkflowIdGraphResponses = {
             };
         };
         nodes: Array<{
+            plugin?: string;
+            pluginVersion?: string;
+            pluginUi?: {
+                apiVersion: '1';
+                renderers: {
+                    [key: string]: {
+                        label: string;
+                        targets: {
+                            [key: string]: string;
+                        };
+                    };
+                };
+            };
+            renderer?: string;
             hiddenReason?: string;
             color?: string;
             style?: {
@@ -3971,6 +3985,20 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
                 };
             };
             nodes: Array<{
+                plugin?: string;
+                pluginVersion?: string;
+                pluginUi?: {
+                    apiVersion: '1';
+                    renderers: {
+                        [key: string]: {
+                            label: string;
+                            targets: {
+                                [key: string]: string;
+                            };
+                        };
+                    };
+                };
+                renderer?: string;
                 hiddenReason?: string;
                 color?: string;
                 style?: {
@@ -4141,6 +4169,20 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
                 };
             };
             nodes: Array<{
+                plugin?: string;
+                pluginVersion?: string;
+                pluginUi?: {
+                    apiVersion: '1';
+                    renderers: {
+                        [key: string]: {
+                            label: string;
+                            targets: {
+                                [key: string]: string;
+                            };
+                        };
+                    };
+                };
+                renderer?: string;
                 hiddenReason?: string;
                 color?: string;
                 style?: {
@@ -4342,6 +4384,16 @@ export type GetApiMarketplaceResponses = {
      */
     200: {
         items: Array<{
+            official?: boolean;
+            installCount?: number;
+            ratingCount?: number;
+            score?: number | null;
+            sourceKind?: 'sdk' | 'npm';
+            npm?: {
+                package: string;
+                version: string;
+                spec: string;
+            } | null;
             id: string;
             name: string;
             version: string;
@@ -4366,6 +4418,17 @@ export type GetApiMarketplaceResponses = {
                     [key: string]: unknown;
                 };
                 connections?: Array<string>;
+                ui?: {
+                    apiVersion: '1';
+                    renderers: {
+                        [key: string]: {
+                            label: string;
+                            targets: {
+                                [key: string]: string;
+                            };
+                        };
+                    };
+                };
             }>;
             installed: boolean;
             scope?: 'user' | 'group' | 'org' | 'public';
@@ -4443,7 +4506,28 @@ export type GetApiMarketplacePluginsByIdResponses = {
                 [key: string]: unknown;
             };
             connections?: Array<string>;
+            ui?: {
+                apiVersion: '1';
+                renderers: {
+                    [key: string]: {
+                        label: string;
+                        targets: {
+                            [key: string]: string;
+                        };
+                    };
+                };
+            };
         }>;
+        official?: boolean;
+        installCount?: number;
+        ratingCount?: number;
+        score?: number | null;
+        sourceKind?: 'sdk' | 'npm';
+        npm?: {
+            package: string;
+            version: string;
+            spec: string;
+        } | null;
         installedVersion?: string;
         versions: Array<{
             version: string;
@@ -4526,6 +4610,17 @@ export type GetApiPluginsResponses = {
                 [key: string]: unknown;
             };
             connections?: Array<string>;
+            ui?: {
+                apiVersion: '1';
+                renderers: {
+                    [key: string]: {
+                        label: string;
+                        targets: {
+                            [key: string]: string;
+                        };
+                    };
+                };
+            };
         }>;
     }>;
 };
@@ -4578,6 +4673,17 @@ export type GetApiPluginsSearchResponses = {
                     [key: string]: unknown;
                 };
                 connections?: Array<string>;
+                ui?: {
+                    apiVersion: '1';
+                    renderers: {
+                        [key: string]: {
+                            label: string;
+                            targets: {
+                                [key: string]: string;
+                            };
+                        };
+                    };
+                };
             }>;
         }>;
         total: number;
@@ -4631,6 +4737,17 @@ export type GetApiPluginsNodesResponses = {
                 [key: string]: unknown;
             };
             connections?: Array<string>;
+            ui?: {
+                apiVersion: '1';
+                renderers: {
+                    [key: string]: {
+                        label: string;
+                        targets: {
+                            [key: string]: string;
+                        };
+                    };
+                };
+            };
             pluginId: string;
             pluginName: string;
             pluginVersion: string;
@@ -4700,6 +4817,17 @@ export type GetApiPluginsByPluginIdResponses = {
                 [key: string]: unknown;
             };
             connections?: Array<string>;
+            ui?: {
+                apiVersion: '1';
+                renderers: {
+                    [key: string]: {
+                        label: string;
+                        targets: {
+                            [key: string]: string;
+                        };
+                    };
+                };
+            };
             language?: string;
             command: string;
             icon?: string;
@@ -4787,6 +4915,20 @@ export type PostApiPluginsByPluginIdNodesByNodeIdAddResponses = {
     200: {
         instanceId: string;
         node: {
+            plugin?: string;
+            pluginVersion?: string;
+            pluginUi?: {
+                apiVersion: '1';
+                renderers: {
+                    [key: string]: {
+                        label: string;
+                        targets: {
+                            [key: string]: string;
+                        };
+                    };
+                };
+            };
+            renderer?: string;
             hiddenReason?: string;
             color?: string;
             style?: {
@@ -5080,6 +5222,7 @@ export type PostApiNativeNodesByCatalogIdMaterializeResponses = {
             symbol?: string;
             description?: string;
             color?: string;
+            renderer?: string;
             position?: {
                 x: number;
                 y: number;
