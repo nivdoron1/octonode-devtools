@@ -141,6 +141,82 @@ test("generated npm handles preserve adapter behavior, defaults and custom publi
   }
 });
 
+test("npm SDK bindings use original subpaths, hide clients, require credentials and redact upstream errors", async () => {
+  const root = mkdtempSync(join(tmpdir(), "octonodes-sdk-binding-"));
+  const consumer = mkdtempSync(join(tmpdir(), "octonodes-sdk-consumer-"));
+  try {
+    symlinkSync(resolve("node_modules"), join(root, "node_modules"), "junction");
+    const upstream = join(consumer, "node_modules/fixture");
+    mkdirSync(upstream, { recursive: true });
+    writeFileSync(join(upstream, "package.json"), JSON.stringify({
+      name: "fixture", version: "1.0.0",
+      exports: { "./cloud": "./cloud.cjs", "./core": "./core.cjs" },
+    }));
+    const marker = join(consumer, "factory-called");
+    writeFileSync(join(upstream, "core.cjs"), `exports.createClient = options => {
+      require("node:fs").writeFileSync(${JSON.stringify(marker)}, "called");
+      if (options.host !== "https://fixture.example" || options.auth.token !== "binding-secret") throw new Error("Invalid factory options");
+      return { read: id => { if (id === "fail") throw new Error("Provider leaked " + options.auth.token); return { id, originalSdk: true }; } };
+    };`);
+    writeFileSync(join(upstream, "cloud.cjs"), "exports.getIssue = (client, parameters) => client.read(parameters.id);");
+    const parameters = { type: "object", properties: { id: { type: "string" } }, required: ["id"] };
+    const handle = {
+      packageName: "fixture", packageVersion: "1.0.0",
+      descriptor: {
+        id: "get-issue", exportName: "getIssue", moduleSpecifier: "fixture/cloud",
+        params: [
+          { name: "client", required: true, rest: false, schema: { type: "object" } },
+          { name: "parameters", required: true, rest: false, schema: parameters },
+        ],
+        inputsSchema: { type: "object", properties: { client: { type: "object" }, parameters }, required: ["client", "parameters"] },
+        outputsSchema: { type: "object", properties: { result: { type: "object" }, dryRun: { type: "boolean" } } },
+      },
+    };
+    const body = `import { npmNode } from "@octonodes/sdk/nodes"; export const nodes = { getIssue: npmNode(${JSON.stringify(handle)}) } as const;\n`;
+    writeFileSync(join(root, "octonode.nodes.ts"), `// Generated npm inventory: ${createHash("sha256").update(body).digest("hex")}\n${body}`);
+    writeFileSync(join(root, "octonode.plugin.ts"), `
+      import {definePlugin,defineNode} from "@octonodes/sdk/plugin";
+      import {nodes} from "./octonode.nodes.js";
+      export default definePlugin({id:"issues",name:"Issues",version:"1.0.0",
+        source:{kind:"npm",package:"fixture",version:"1.0.0"},
+        permissions:[{resource:"secrets",access:"read"}],
+        connections:{service:{label:"Service",fields:{OCTONODES_TEST_BINDING_TOKEN:{label:"Token"}}}},
+        nodes:[defineNode(nodes.getIssue,{id:"read-issue",connections:["service"],bindings:{client:{
+          module:"fixture/core",export:"createClient",options:{host:"https://fixture.example",auth:{}},
+          env:{"auth.token":"OCTONODES_TEST_BINDING_TOKEN"}
+        }}})]});`);
+    const [built] = await buildPlugins(undefined, root);
+    assert.deepEqual(Object.keys(built.manifest.nodes[0].inputs.properties), ["parameters"]);
+    assert.deepEqual(built.manifest.nodes[0].inputs.required, ["parameters"]);
+    assert.doesNotMatch(readFileSync(join(built.directory, "octonode.yml"), "utf8"), /binding-secret/);
+    const invoke = (inputs, token = "binding-secret") => {
+      const result = spawnSync(process.execPath, [join(built.directory, "dist/index.js"), "read-issue"], {
+        cwd: consumer, encoding: "utf8", input: request(inputs),
+        env: { ...process.env, OCTONODE_PROJECT_ROOT: consumer, OCTONODES_TEST_BINDING_TOKEN: token },
+      });
+      assert.equal(result.status, 0, result.stderr);
+      assert.doesNotMatch(result.stderr, /binding-secret/);
+      return JSON.parse(result.stdout);
+    };
+    const missing = invoke({ parameters: { id: "42" } }, "");
+    assert.equal(missing.status, "error");
+    assert.match(missing.error.message, /credentials/i);
+    assert.equal(existsSync(marker), false);
+    const success = invoke({ parameters: { id: "42" } });
+    assert.equal(success.status, "ok", JSON.stringify(success));
+    assert.deepEqual(success.outputs.result, { id: "42", originalSdk: true });
+    const attemptedOverride = invoke({ parameters: { id: "43" }, client: { read: "attacker" } });
+    assert.equal(attemptedOverride.status, "error");
+    assert.match(attemptedOverride.error.message, /cannot be supplied as inputs/);
+    const failed = invoke({ parameters: { id: "fail" } });
+    assert.equal(failed.status, "error");
+    assert.doesNotMatch(JSON.stringify(failed), /binding-secret/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(consumer, { recursive: true, force: true });
+  }
+});
+
 test("code-defined plugins share the runtime contract, defaults, validation and credential checks", async () => {
   const plugin = definePlugin({ id: "text", name: "Text", version: "1.0.0", nodes: [node()] });
   assert.equal(plugin.manifest.nodes[0].command, "node dist/index.js echo");

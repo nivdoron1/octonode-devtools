@@ -33,14 +33,22 @@ export function schemaFor(
   if (checker.isArrayType(type))
     return { type: "array", items: schemaFor(checker, checker.getTypeArguments(type as ts.TypeReference)[0], next) };
   if (
-    !(type.flags & ts.TypeFlags.Object) ||
+    !(
+      type.flags & ts.TypeFlags.Object ||
+      (type.isIntersection() && type.types.every((member) => member.flags & ts.TypeFlags.Object))
+    ) ||
     checker.isTupleType(type) ||
     type.getCallSignatures().length ||
     type.getConstructSignatures().length ||
     checker.getIndexInfosOfType(type).length
   )
     return fail();
-  if (type.getSymbol()?.declarations?.some((declaration) => ts.isClassDeclaration(declaration))) return fail();
+  if (
+    (type.isIntersection() ? type.types : [type]).some((member) =>
+      member.getSymbol()?.declarations?.some((declaration) => ts.isClassDeclaration(declaration)),
+    )
+  )
+    return fail();
   const properties: Record<string, unknown> = Object.create(null);
   const required: string[] = [];
   for (const property of type.getProperties()) {

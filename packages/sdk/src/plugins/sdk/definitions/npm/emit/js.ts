@@ -55,14 +55,14 @@ for (let root = projectRoot; ; root = dirname(root)) {
   if (existsSync(join(root, ".git")) || dirname(root) === root) break;
 }
 const projectRequire = createRequire(join(projectRoot, "package.json"));
-let packagePromise;
-async function loadPkg() {
-  if (!packagePromise) packagePromise = (async () => {
+const packages = new Map();
+async function loadPkg(specifier = ${JSON.stringify(plan.packageName)}) {
+  if (!packages.has(specifier)) packages.set(specifier, (async () => {
     let entry;
-    try { entry = projectRequire.resolve(${JSON.stringify(plan.packageName)}); }
+    try { entry = projectRequire.resolve(specifier); }
     catch {
       const { resolvePackage } = await import("./npm-resolve.mjs");
-      entry = resolvePackage(${JSON.stringify(plan.packageName)}, pathToFileURL(join(projectRoot, "package.json")).href);
+      entry = resolvePackage(specifier, pathToFileURL(join(projectRoot, "package.json")).href);
       return import(entry);
     }
     try { return projectRequire(entry); }
@@ -70,15 +70,54 @@ async function loadPkg() {
       if (error.code !== "ERR_REQUIRE_ESM" && error.code !== "ERR_REQUIRE_ASYNC_MODULE") throw error;
       return import(pathToFileURL(entry).href);
     }
-  })();
-  return packagePromise;
+  })());
+  return packages.get(specifier);
+}
+async function bindClients(inputs, node) {
+  const bound = Object.create(null);
+  // Check every credential before loading factories; no partially initialized clients.
+  for (const [name, binding] of Object.entries(node.bindings || {})) {
+    if (Object.hasOwn(inputs, name)) throw new NodeError("SDK client parameters cannot be supplied as inputs", "VALIDATION_ERROR");
+    for (const variable of Object.values(binding.env || {})) {
+      if (!process.env[variable]) throw new NodeError("Missing SDK connection credentials", "VALIDATION_ERROR");
+    }
+  }
+  for (const [name, binding] of Object.entries(node.bindings || {})) {
+    const options = JSON.parse(JSON.stringify(binding.options || {}));
+    for (const [path, variable] of Object.entries(binding.env || {})) {
+      const keys = path.split(".");
+      if (keys.some((key) => ["__proto__", "prototype", "constructor"].includes(key)))
+        throw new NodeError("Unsafe SDK option path", "VALIDATION_ERROR");
+      let target = options;
+      for (const key of keys.slice(0, -1)) {
+        if (!Object.hasOwn(target, key)) target[key] = {};
+        if (!target[key] || typeof target[key] !== "object" || Array.isArray(target[key]))
+          throw new NodeError("SDK option path must point into an object", "VALIDATION_ERROR");
+        target = target[key];
+      }
+      target[keys[keys.length - 1]] = process.env[variable];
+    }
+    const module = await loadPkg(binding.module);
+    if (!Object.hasOwn(module, binding.export) || typeof module[binding.export] !== "function")
+      throw new NodeError("SDK client factory is not exported by the package", "VALIDATION_ERROR");
+    bound[name] = await module[binding.export](options);
+  }
+  return bound;
 }
 async function invoke(inputs, node = NODES[process.argv[2]]) {
   if (!node) throw new NodeError("unknown npm node", "VALIDATION_ERROR");
-  const pkg = await loadPkg();
+  try {
+  const bound = await bindClients(inputs, node);
+  const pkg = await loadPkg(node.moduleSpecifier || ${JSON.stringify(plan.packageName)});
   switch (node.id) {
 ${cases}
     default: throw new NodeError('unknown generated npm node "' + node.id + '"', "VALIDATION_ERROR");
+  }
+  } catch (error) {
+    // SDK errors can embed authorization headers or response bodies. Never forward them over IPC.
+    if (Object.keys(node.bindings || {}).length && !(error instanceof NodeError))
+      throw new NodeError("SDK invocation failed; check the connection and request", "RUNTIME_ERROR");
+    throw error;
   }
 }
 function start() {
@@ -132,7 +171,7 @@ function nodeBody(node: NpmNodeDescriptor): string {
   const rest = node.params.find((p) => p.rest);
   const argsLines = node.permissive
     ? `  const args = Array.isArray(inputs.args) ? inputs.args : [];`
-    : `  const args = ${JSON.stringify(positional)}.map((n) => inputs[n]);
+    : `  const args = ${JSON.stringify(positional)}.map((n) => Object.hasOwn(bound, n) ? bound[n] : inputs[n]);
   while (args.length && args[args.length - 1] === undefined) args.pop();${
     rest
       ? `

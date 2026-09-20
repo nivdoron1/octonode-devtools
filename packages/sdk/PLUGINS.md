@@ -51,7 +51,7 @@ same types. `octonodes plugin nodes --check` fails when it is stale or edited.
 `octonodes plugin nodes` and local plugin builds regenerate source inventories.
 Npm and workflow inventories are regenerated only by their original import/export commands; builds verify their generated content.
 
-For npm packages, the stable identity is package name plus export name. This
+For npm packages, the stable identity is the exact module specifier plus export name. This
 lets Octonode regenerate inferred types without losing authored presentation.
 
 ## `octonode.config.ts`: current-project presentation
@@ -117,6 +117,22 @@ permissions, connections, assets, and optional inspector UI. Project-only
 presentation does not leak into a published plugin. A package root defines one
 plugin; independently versioned plugins use separate package roots.
 
+For workflow nodes, the plugin's `icon` is the default. An `icon` supplied to
+`defineNode` overrides it for that node; explicit user presentation overrides
+remain highest priority. Without either icon, the renderer uses its normal fallback.
+
+Declare `source: { kind: "plugin" }` when the plugin owns its implementation.
+For upstream adapters, declare `source: { kind: "npm", package: "lodash",
+version: "<exact inspected version>" }`. The compiler checks this against the
+generated inventory and derives `integration.npm`; a mismatched package, version,
+or execution source fails the build. Omitting `source` remains compatible with
+older definitions: compilation infers it from the selected handles.
+
+Npm authority does not fork or republish the dependency. Consumer code imports
+the original package using the module forms it supports. Automatic decoration
+of those imported calls is still planned; see
+[the community plugin plan](plans/community-plugin-source-authority.md).
+
 Local function contracts support JSON primitives, literal enums, arrays, finite
 object shapes, optional parameters, and async returns. Unsupported contracts such
 as `any`, recursive types, classes, and generic or overloaded functions require a
@@ -139,6 +155,39 @@ marketplace, and installations. `octonode.yml`, `octonode.yaml`,
 existing plugins. There is no new hand-authored `octonode.plugin.yml` format.
 
 ## Npm package flow
+
+Use `--module jira.js/cloud` with `from-npm jira.js@6.2.0` to inspect an
+exported subpath. The generated handle retains that module specifier; installation
+still targets the original `jira.js` package and exact version.
+
+An upstream function that takes a non-JSON SDK client can bind that parameter
+to the package's own factory in `octonode.plugin.ts`:
+
+```ts
+defineNode(nodes.getIssue, {
+  connections: ["jira"],
+  bindings: {
+    client: {
+      module: "jira.js/core",
+      export: "createClient",
+      options: { auth: { type: "bearer" }, retry: { maxAttempts: 1 }, onSchemaMismatch: "throw" },
+      env: { host: "JIRA_HOST", "auth.token": "JIRA_ACCESS_TOKEN" },
+    },
+  },
+});
+```
+
+Declare both environment names as fields of the `jira` connection, including
+`secrets:read` permission for secret fields. Factories must belong to the original
+npm package. At runtime the adapter passes one options object to the factory,
+awaits its result, and injects it into the original function's argument position.
+Bound parameters are excluded from public inputs and defaults; input attempts to
+override them fail. Credentials are read only at runtime, never during compilation.
+Upstream errors from bound calls are sanitized before crossing IPC.
+
+This supports exported factory functions, not class constructors or arbitrary
+initialization scripts. Consumer source still uses `getIssue(client, parameters)`
+from `jira.js/cloud`; no Octonode replacement import is introduced.
 
 `octonode plugin from-npm <package>` currently inspects exported functions and
 writes the final manifest and adapter. The importer now also creates an editable typed layer:
