@@ -12,7 +12,8 @@
     "octonodes": "dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "runtime"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,6 +24,7 @@
     "@octonodes/sdk": "workspace:*",
     "@supabase/supabase-js": "2.107.0",
     "esbuild": "0.28.1",
+    "tar": "7.5.22",
     "yaml": "^2.4.5"
   }
 }

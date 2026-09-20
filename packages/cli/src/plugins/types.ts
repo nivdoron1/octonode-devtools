@@ -1,3 +1,4 @@
+// Generated from engine plugin authoring. Do not edit.
 import type { PluginManifest } from "@octonodes/sdk/plugins";
 
 export interface PluginBuild {

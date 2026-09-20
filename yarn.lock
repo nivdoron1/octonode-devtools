@@ -1130,6 +1130,7 @@ __metadata:
     "@octonodes/sdk": "workspace:*"
     "@supabase/supabase-js": "npm:2.107.0"
     esbuild: "npm:0.28.1"
+    tar: "npm:7.5.22"
     yaml: "npm:^2.4.5"
   bin:
     octonodes: dist/index.js
@@ -3123,7 +3124,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar@npm:^7.5.4":
+"tar@npm:7.5.22, tar@npm:^7.5.4":
   version: 7.5.22
   resolution: "tar@npm:7.5.22"
   dependencies:

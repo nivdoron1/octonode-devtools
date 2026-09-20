@@ -7,8 +7,9 @@ import { buildPlugins } from "./build";
 import { createPlugin } from "./create";
 import { publishPlugin } from "./publish";
 import { generateNodeCatalog } from "@octonodes/sdk/definitions/compiler";
+import { runPluginLifecycle } from "../../runtime/plugin-lifecycle.cjs";
 
-export { PLUGIN_HELP } from "./constants";
+export { PLUGIN_HELP } from "./help.constants";
 
 export async function pluginCommand(args: string[], version: string): Promise<void> {
   const command = args[0];
@@ -21,9 +22,23 @@ export async function pluginCommand(args: string[], version: string): Promise<vo
       org: { type: "string" },
       team: { type: "string" },
       check: { type: "boolean" },
+      cwd: { type: "string" },
+      alias: { type: "string" },
+      scope: { type: "string" },
+      version: { type: "string" },
+      migrate: { type: "boolean" },
+      "dry-run": { type: "boolean" },
+      frozen: { type: "boolean" },
+      "artifacts-only": { type: "boolean" },
+      offline: { type: "boolean" },
     },
   });
   const [target, nodeId] = positionals;
+  if (["install", "update", "remove", "restore", "recover", "list"].includes(command)) {
+    const token = process.env.OCTONODE_MARKETPLACE_TOKEN ?? (await accessToken());
+    process.stdout.write(JSON.stringify(await runPluginLifecycle(command, target, { ...values, token }), null, 2) + "\n");
+    return;
+  }
   if (command === "nodes") {
     generateNodeCatalog(process.cwd(), undefined, values.check);
     process.stdout.write(values.check ? "Node inventory is current\n" : "Node inventory generated\n");

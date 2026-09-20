@@ -170,7 +170,13 @@ export function compileDefinition(
           throw new Error("Invalid workflow inventory; export the workflow again");
         if (identities.has(workflow.key)) throw new Error(`Duplicate workflow: ${workflow.key}`);
         identities.add(workflow.key);
-        const customization = PluginNode.omit({ command: true, language: true, inputs: true, outputs: true })
+        const customization = PluginNode.omit({
+          command: true,
+          language: true,
+          inputs: true,
+          outputs: true,
+          implementation: true,
+        })
           .partial()
           .strict()
           .parse(item.arguments[1] ? literal(item.arguments[1]) : {});
@@ -203,7 +209,13 @@ export function compileDefinition(
       const identity = `${moduleSpecifier}:${npm.descriptor.generic ? "<call>" : npm.descriptor.exportName}`;
       if (identities.has(identity)) throw new Error(`Duplicate node function: ${identity}`);
       identities.add(identity);
-      const customization = PluginNode.omit({ command: true, language: true, inputs: true, outputs: true })
+      const customization = PluginNode.omit({
+        command: true,
+        language: true,
+        inputs: true,
+        outputs: true,
+        implementation: true,
+      })
         .partial()
         .strict()
         .parse(item.arguments[1] ? literal(item.arguments[1]) : {});
@@ -299,7 +311,13 @@ export function compileDefinition(
       return declaration.name.text;
     });
     const overrides = item.arguments[1] ? literal(item.arguments[1]) : {};
-    const customization = PluginNode.omit({ command: true, language: true, inputs: true, outputs: true })
+    const customization = PluginNode.omit({
+      command: true,
+      language: true,
+      inputs: true,
+      outputs: true,
+      implementation: true,
+    })
       .partial()
       .strict()
       .parse(overrides);
@@ -338,40 +356,104 @@ export function compileDefinition(
     [...fields].filter(([key]) => key !== "nodes").map(([key, value]) => [key, literal(value)]),
   );
   if (kind === "project" && Object.keys(metadata).length) throw new Error("defineProject accepts only nodes");
-  const { assets = [], ...pluginMetadata } = metadata;
+  const { assets = [], library, ...pluginMetadata } = metadata;
   const npm = nodes.find((node) => node.npm)?.npm;
+  const npmOnly =
+    nodes.length > 0 &&
+    nodes.every(
+      (node) => node.npm && node.npm.packageName === npm?.packageName && node.npm.packageVersion === npm.packageVersion,
+    );
   if (kind === "plugin") {
     const source = PluginManifest.innerType().shape.source.parse(pluginMetadata.source);
-    if (
-      source &&
-      (source.kind === "npm"
-        ? !npm || source.package !== npm.packageName || source.version !== npm.packageVersion
-        : !!npm)
-    )
-      throw new Error("Plugin source authority must match the generated node inventory");
-    pluginMetadata.source =
-      source ?? (npm ? { kind: "npm", package: npm.packageName, version: npm.packageVersion } : { kind: "plugin" });
-    if (
-      nodes.some((node) =>
-        npm
-          ? !node.npm || node.npm.packageName !== npm.packageName || node.npm.packageVersion !== npm.packageVersion
-          : !!node.npm,
+    for (const node of nodes) {
+      const authority = node.customization.source ?? source;
+      if (
+        authority &&
+        (authority.kind === "npm"
+          ? !node.npm || authority.package !== node.npm.packageName || authority.version !== node.npm.packageVersion
+          : !!node.npm)
       )
-    )
-      throw new Error("A plugin must use one implementation source and package version");
+        throw new Error("Plugin source authority must match the generated node inventory");
+      node.customization = {
+        ...node.customization,
+        source: node.npm
+          ? { kind: "npm", package: node.npm.packageName, version: node.npm.packageVersion }
+          : { kind: "plugin" },
+      };
+    }
+    pluginMetadata.source =
+      source ??
+      (npmOnly && npm ? { kind: "npm", package: npm.packageName, version: npm.packageVersion } : { kind: "plugin" });
   }
   if (npm) {
     const integration =
       pluginMetadata.integration && typeof pluginMetadata.integration === "object" ? pluginMetadata.integration : {};
+    const dependencies = nodes.flatMap((node) =>
+      node.npm
+        ? [
+            {
+              package: node.npm.packageName,
+              version: node.npm.packageVersion,
+              spec: node.npm.installSpec ?? `${node.npm.packageName}@${node.npm.packageVersion}`,
+            },
+          ]
+        : [],
+    );
+    const unique = [...new Map(dependencies.map((dependency) => [dependency.package, dependency])).values()];
+    if (
+      dependencies.some((dependency) =>
+        unique.some(
+          (other) =>
+            other.package === dependency.package &&
+            (other.version !== dependency.version || other.spec !== dependency.spec),
+        ),
+      )
+    )
+      throw new Error("A plugin cannot require conflicting versions of the same npm dependency");
     pluginMetadata.integration = {
       ...integration,
-      category: "npm",
-      npm: {
-        package: npm.packageName,
-        version: npm.packageVersion,
-        spec: npm.installSpec ?? `${npm.packageName}@${npm.packageVersion}`,
-      },
+      ...(npmOnly ? { category: "npm", npm: unique[0] } : { npm: undefined }),
+      npmDependencies: unique,
     };
+  }
+  let libraryEntry: { entry: string } | undefined;
+  if (library !== undefined) {
+    if (
+      !library ||
+      typeof library !== "object" ||
+      Array.isArray(library) ||
+      Object.keys(library).join() !== "entry" ||
+      typeof (library as { entry?: unknown }).entry !== "string"
+    )
+      throw new Error("library must contain one literal entry path");
+    const path = (library as { entry: string }).entry;
+    if (
+      !/^[a-zA-Z0-9_./-]+\.[cm]?ts$/.test(path) ||
+      path.startsWith("/") ||
+      path.split("/").some((part) => !part || part === ".." || part === "node_modules")
+    )
+      throw new Error("Library entry must be a TypeScript file inside the plugin");
+    const absolute = resolve(root, path);
+    if (realpathSync(absolute) !== absolute) throw new Error("Library entry cannot be a symbolic link");
+    const libraryProgram = ts.createProgram([absolute], options);
+    const libraryChecker = libraryProgram.getTypeChecker();
+    const module = libraryProgram.getSourceFile(absolute);
+    const symbol = module && libraryChecker.getSymbolAtLocation(module);
+    const exports = symbol
+      ? libraryChecker
+          .getExportsOfModule(symbol)
+          .filter((item) => {
+            const value = item.flags & ts.SymbolFlags.Alias ? libraryChecker.getAliasedSymbol(item) : item;
+            return !!(value.flags & ts.SymbolFlags.Value);
+          })
+          .map((item) => item.name)
+          .sort()
+      : [];
+    if (!exports.length) throw new Error("Library entry must expose named value exports");
+    if (exports.includes("default"))
+      throw new Error("Plugin libraries expose named exports; replace the default export with a named export");
+    pluginMetadata.library = { format: 1, entry: "library/index.js", types: "library/index.d.ts", exports };
+    libraryEntry = { entry: path };
   }
   if (!Array.isArray(assets) || assets.some((asset) => typeof asset !== "string"))
     throw new Error("assets must contain literal paths");
@@ -385,6 +467,13 @@ export function compileDefinition(
               nodes: nodes.map((node) => ({
                 id: node.customization.id ?? node.symbol,
                 ...node.customization,
+                implementation: node.npm
+                  ? {
+                      module: node.npm.descriptor.moduleSpecifier ?? node.npm.packageName,
+                      export: node.exportName,
+                      parameters: node.npm.descriptor.params.map((param) => param.name),
+                    }
+                  : { module: node.path, export: node.exportName, parameters: node.parameters },
                 inputs: node.inputs,
                 outputs: node.outputs,
                 language: "typescript",
@@ -404,5 +493,5 @@ export function compileDefinition(
         getNewLine: () => "\n",
       }),
     );
-  return { kind, nodes, manifest, assets: assets as string[] };
+  return { kind, nodes, manifest, assets: assets as string[], ...(libraryEntry ? { library: libraryEntry } : {}) };
 }

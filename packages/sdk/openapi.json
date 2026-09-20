@@ -14593,6 +14593,67 @@
                                 "id": {
                                   "type": "string"
                                 },
+                                "source": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "plugin"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "npm"
+                                        },
+                                        "package": {
+                                          "type": "string"
+                                        },
+                                        "version": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "package",
+                                        "version"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "libraryExport": {
+                                  "type": "string"
+                                },
+                                "implementation": {
+                                  "type": "object",
+                                  "properties": {
+                                    "module": {
+                                      "type": "string"
+                                    },
+                                    "export": {
+                                      "type": "string"
+                                    },
+                                    "parameters": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "module",
+                                    "export",
+                                    "parameters"
+                                  ]
+                                },
                                 "icon": {
                                   "type": "string"
                                 },
@@ -14908,6 +14969,67 @@
                           "id": {
                             "type": "string"
                           },
+                          "source": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "plugin"
+                                  }
+                                },
+                                "required": [
+                                  "kind"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "npm"
+                                  },
+                                  "package": {
+                                    "type": "string"
+                                  },
+                                  "version": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "package",
+                                  "version"
+                                ]
+                              }
+                            ]
+                          },
+                          "libraryExport": {
+                            "type": "string"
+                          },
+                          "implementation": {
+                            "type": "object",
+                            "properties": {
+                              "module": {
+                                "type": "string"
+                              },
+                              "export": {
+                                "type": "string"
+                              },
+                              "parameters": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "required": [
+                              "module",
+                              "export",
+                              "parameters"
+                            ]
+                          },
                           "icon": {
                             "type": "string"
                           },
@@ -14991,6 +15113,35 @@
                           "id"
                         ]
                       }
+                    },
+                    "library": {
+                      "type": "object",
+                      "properties": {
+                        "format": {
+                          "type": "number",
+                          "const": 1
+                        },
+                        "entry": {
+                          "type": "string",
+                          "const": "library/index.js"
+                        },
+                        "types": {
+                          "type": "string",
+                          "const": "library/index.d.ts"
+                        },
+                        "exports": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "format",
+                        "entry",
+                        "types",
+                        "exports"
+                      ]
                     },
                     "official": {
                       "type": "boolean"
@@ -15344,6 +15495,67 @@
                             "id": {
                               "type": "string"
                             },
+                            "source": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "plugin"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "npm"
+                                    },
+                                    "package": {
+                                      "type": "string"
+                                    },
+                                    "version": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "package",
+                                    "version"
+                                  ]
+                                }
+                              ]
+                            },
+                            "libraryExport": {
+                              "type": "string"
+                            },
+                            "implementation": {
+                              "type": "object",
+                              "properties": {
+                                "module": {
+                                  "type": "string"
+                                },
+                                "export": {
+                                  "type": "string"
+                                },
+                                "parameters": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "module",
+                                "export",
+                                "parameters"
+                              ]
+                            },
                             "icon": {
                               "type": "string"
                             },
@@ -15532,6 +15744,67 @@
                                 "id": {
                                   "type": "string"
                                 },
+                                "source": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "plugin"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "npm"
+                                        },
+                                        "package": {
+                                          "type": "string"
+                                        },
+                                        "version": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "package",
+                                        "version"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "libraryExport": {
+                                  "type": "string"
+                                },
+                                "implementation": {
+                                  "type": "object",
+                                  "properties": {
+                                    "module": {
+                                      "type": "string"
+                                    },
+                                    "export": {
+                                      "type": "string"
+                                    },
+                                    "parameters": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "module",
+                                    "export",
+                                    "parameters"
+                                  ]
+                                },
                                 "icon": {
                                   "type": "string"
                                 },
@@ -15716,6 +15989,67 @@
                         "properties": {
                           "id": {
                             "type": "string"
+                          },
+                          "source": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "plugin"
+                                  }
+                                },
+                                "required": [
+                                  "kind"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "npm"
+                                  },
+                                  "package": {
+                                    "type": "string"
+                                  },
+                                  "version": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "package",
+                                  "version"
+                                ]
+                              }
+                            ]
+                          },
+                          "libraryExport": {
+                            "type": "string"
+                          },
+                          "implementation": {
+                            "type": "object",
+                            "properties": {
+                              "module": {
+                                "type": "string"
+                              },
+                              "export": {
+                                "type": "string"
+                              },
+                              "parameters": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "required": [
+                              "module",
+                              "export",
+                              "parameters"
+                            ]
                           },
                           "icon": {
                             "type": "string"
@@ -15953,6 +16287,67 @@
                           "id": {
                             "type": "string"
                           },
+                          "source": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "plugin"
+                                  }
+                                },
+                                "required": [
+                                  "kind"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "npm"
+                                  },
+                                  "package": {
+                                    "type": "string"
+                                  },
+                                  "version": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "package",
+                                  "version"
+                                ]
+                              }
+                            ]
+                          },
+                          "libraryExport": {
+                            "type": "string"
+                          },
+                          "implementation": {
+                            "type": "object",
+                            "properties": {
+                              "module": {
+                                "type": "string"
+                              },
+                              "export": {
+                                "type": "string"
+                              },
+                              "parameters": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "required": [
+                              "module",
+                              "export",
+                              "parameters"
+                            ]
+                          },
                           "icon": {
                             "type": "string"
                           },
@@ -16052,6 +16447,35 @@
                           "command"
                         ]
                       }
+                    },
+                    "library": {
+                      "type": "object",
+                      "properties": {
+                        "format": {
+                          "type": "number",
+                          "const": 1
+                        },
+                        "entry": {
+                          "type": "string",
+                          "const": "library/index.js"
+                        },
+                        "types": {
+                          "type": "string",
+                          "const": "library/index.d.ts"
+                        },
+                        "exports": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "format",
+                        "entry",
+                        "types",
+                        "exports"
+                      ]
                     },
                     "installed": {
                       "type": "boolean",

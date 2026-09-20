@@ -4405,6 +4405,19 @@ export type GetApiMarketplaceResponses = {
             tags: Array<string>;
             nodes?: Array<{
                 id: string;
+                source?: {
+                    kind: 'plugin';
+                } | {
+                    kind: 'npm';
+                    package: string;
+                    version: string;
+                };
+                libraryExport?: string;
+                implementation?: {
+                    module: string;
+                    export: string;
+                    parameters: Array<string>;
+                };
                 icon?: string;
                 label?: string;
                 symbol?: string;
@@ -4494,6 +4507,19 @@ export type GetApiMarketplacePluginsByIdResponses = {
         tags: Array<string>;
         nodes: Array<{
             id: string;
+            source?: {
+                kind: 'plugin';
+            } | {
+                kind: 'npm';
+                package: string;
+                version: string;
+            };
+            libraryExport?: string;
+            implementation?: {
+                module: string;
+                export: string;
+                parameters: Array<string>;
+            };
             icon?: string;
             label?: string;
             symbol?: string;
@@ -4520,6 +4546,12 @@ export type GetApiMarketplacePluginsByIdResponses = {
                 };
             };
         }>;
+        library?: {
+            format: 1;
+            entry: 'library/index.js';
+            types: 'library/index.d.ts';
+            exports: Array<string>;
+        };
         official?: boolean;
         installCount?: number;
         ratingCount?: number;
@@ -4599,6 +4631,19 @@ export type GetApiPluginsResponses = {
         tags: Array<string>;
         nodes?: Array<{
             id: string;
+            source?: {
+                kind: 'plugin';
+            } | {
+                kind: 'npm';
+                package: string;
+                version: string;
+            };
+            libraryExport?: string;
+            implementation?: {
+                module: string;
+                export: string;
+                parameters: Array<string>;
+            };
             icon?: string;
             label?: string;
             symbol?: string;
@@ -4663,6 +4708,19 @@ export type GetApiPluginsSearchResponses = {
             tags: Array<string>;
             nodes?: Array<{
                 id: string;
+                source?: {
+                    kind: 'plugin';
+                } | {
+                    kind: 'npm';
+                    package: string;
+                    version: string;
+                };
+                libraryExport?: string;
+                implementation?: {
+                    module: string;
+                    export: string;
+                    parameters: Array<string>;
+                };
                 icon?: string;
                 label?: string;
                 symbol?: string;
@@ -4728,6 +4786,19 @@ export type GetApiPluginsNodesResponses = {
     200: {
         items: Array<{
             id: string;
+            source?: {
+                kind: 'plugin';
+            } | {
+                kind: 'npm';
+                package: string;
+                version: string;
+            };
+            libraryExport?: string;
+            implementation?: {
+                module: string;
+                export: string;
+                parameters: Array<string>;
+            };
             icon?: string;
             label?: string;
             symbol?: string;
@@ -4809,6 +4880,19 @@ export type GetApiPluginsByPluginIdResponses = {
         tags: Array<string>;
         nodes: Array<{
             id: string;
+            source?: {
+                kind: 'plugin';
+            } | {
+                kind: 'npm';
+                package: string;
+                version: string;
+            };
+            libraryExport?: string;
+            implementation?: {
+                module: string;
+                export: string;
+                parameters: Array<string>;
+            };
             icon?: string;
             label?: string;
             symbol?: string;
@@ -4839,6 +4923,12 @@ export type GetApiPluginsByPluginIdResponses = {
             trigger?: boolean;
             env?: Array<string>;
         }>;
+        library?: {
+            format: 1;
+            entry: 'library/index.js';
+            types: 'library/index.d.ts';
+            exports: Array<string>;
+        };
         installed: true;
         connections?: {
             [key: string]: {
