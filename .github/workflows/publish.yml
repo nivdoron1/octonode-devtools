@@ -30,7 +30,7 @@ jobs:
       - run: yarn check
       - run: yarn workspace @octonodes/sdk pack --out /tmp/octonodes-sdk.tgz
       - run: npm view "@octonodes/sdk@$(node -p "require('./packages/sdk/package.json').version")" version >/dev/null 2>&1 || npm publish /tmp/octonodes-sdk.tgz --access public
-      - run: yarn workspace @octonodes/ui-extensions pack --out /tmp/octonodes-ui-extensions.tgz
-      - run: npm view "@octonodes/ui-extensions@$(node -p "require('./packages/ui-extensions/package.json').version")" version >/dev/null 2>&1 || npm publish /tmp/octonodes-ui-extensions.tgz --access public
       - run: yarn workspace @octonodes/cli pack --out /tmp/octonodes-cli.tgz
       - run: npm view "@octonodes/cli@$(node -p "require('./packages/cli/package.json').version")" version >/dev/null 2>&1 || npm publish /tmp/octonodes-cli.tgz --access public
+      - run: yarn workspace @octonodes/ui-extensions pack --out /tmp/octonodes-ui-extensions.tgz
+      - run: npm view "@octonodes/ui-extensions@$(node -p "require('./packages/ui-extensions/package.json').version")" version >/dev/null 2>&1 || npm publish /tmp/octonodes-ui-extensions.tgz --access public
