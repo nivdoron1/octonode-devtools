@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/nodes/index.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/nodes/index.ts. Do not edit; run the Octonode SDK sync.
 import type { NpmNodeHandle, WorkflowNodeHandle } from "../definitions/types";
 
 /** Generated inventory declaration; the compiler reads its literal argument. */

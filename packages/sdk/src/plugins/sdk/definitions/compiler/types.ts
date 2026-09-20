@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/definitions/compiler/types.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/definitions/compiler/types.ts. Do not edit; run the Octonode SDK sync.
 import type { PluginManifest } from "../../../schema/plugin-sdk";
 import type { NodeCustomization, NpmNodeHandle, WorkflowNodeHandle } from "../types";
 

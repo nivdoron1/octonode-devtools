@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/definitions/types.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/definitions/types.ts. Do not edit; run the Octonode SDK sync.
 import type { PluginManifestInput, PluginNode } from "../../schema/plugin-sdk";
 
 export type NodeCustomization = Partial<

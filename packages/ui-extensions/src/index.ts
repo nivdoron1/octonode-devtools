@@ -1,4 +1,4 @@
-// Generated from sdks/ui-extensions/src/index.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/ui-extensions/src/index.ts. Do not edit; run the Octonode SDK sync.
 export const UI_EXTENSION_API_VERSION = "1" as const;
 export const UI_EXTENSION_TARGETS = ["node.inspector.inputs"] as const;
 

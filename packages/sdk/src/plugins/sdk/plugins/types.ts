@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/plugins/types.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/plugins/types.ts. Do not edit; run the Octonode SDK sync.
 import type { InvocationContext, PluginNode } from "../../schema/plugin-sdk";
 import type { JsonSchema } from "../json-schema";
 

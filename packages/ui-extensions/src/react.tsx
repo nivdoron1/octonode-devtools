@@ -1,4 +1,4 @@
-// Generated from sdks/ui-extensions/src/react.tsx. Do not edit; run the Octonode SDK sync.
+// Generated from packages/ui-extensions/src/react.tsx. Do not edit; run the Octonode SDK sync.
 import { createElement, type ComponentType, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { UI_EXTENSION_API_VERSION, type UiExtensionTarget, type UiExtensionTree } from "./index";

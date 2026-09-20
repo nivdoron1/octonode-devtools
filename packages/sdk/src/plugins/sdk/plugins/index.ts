@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/plugins/index.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/plugins/index.ts. Do not edit; run the Octonode SDK sync.
 export { defineNode } from "./define-node";
 export { definePlugin, startPlugin } from "../plugin";
 export { runNode, processRequest, NodeError } from "../runner";

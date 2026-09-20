@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/definitions/compiler/literals.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/definitions/compiler/literals.ts. Do not edit; run the Octonode SDK sync.
 import * as ts from "typescript";
 
 /** Configuration is data: never evaluate a config or its imported application. */

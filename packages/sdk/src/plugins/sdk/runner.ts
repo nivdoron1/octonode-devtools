@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/runner.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/runner.ts. Do not edit; run the Octonode SDK sync.
 import { Console } from "node:console";
 import {
   RequestEnvelope,

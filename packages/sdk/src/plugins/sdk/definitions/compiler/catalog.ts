@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/definitions/compiler/catalog.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/definitions/compiler/catalog.ts. Do not edit; run the Octonode SDK sync.
 import * as ts from "typescript";
 import { existsSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
