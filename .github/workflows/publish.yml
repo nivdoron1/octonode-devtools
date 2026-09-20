@@ -9,6 +9,7 @@ on:
       - "packages/ui-extensions/**"
       - "package.json"
       - "yarn.lock"
+      - ".github/workflows/publish.yml"
 
 permissions:
   contents: read
@@ -22,6 +23,8 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
       - run: corepack enable
       - run: yarn install --immutable
       - run: yarn check
