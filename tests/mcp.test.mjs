@@ -245,6 +245,50 @@ test("forwards write bodies, project overrides, and API errors", async () => {
   }
 });
 
+test("restricts project overrides to the caller's authorized projects", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => Response.json({ ok: true });
+
+  try {
+    const allowed = await payload(
+      await worker.fetch(
+        request(
+          "tools/call",
+          { name: "project_context", arguments: { projectId: "project-2" } },
+          {
+            "x-octonode-workspace": "org:test",
+            "x-octonode-project": "project-1",
+            "x-octonode-projects": '["project-1","project-2"]',
+          },
+        ),
+        {},
+        context,
+      ),
+    );
+    assert.equal(allowed.result.isError, undefined);
+
+    const denied = await payload(
+      await worker.fetch(
+        request(
+          "tools/call",
+          { name: "project_context", arguments: { projectId: "project-3" } },
+          {
+            "x-octonode-workspace": "org:test",
+            "x-octonode-project": "project-1",
+            "x-octonode-projects": '["project-1","project-2"]',
+          },
+        ),
+        {},
+        context,
+      ),
+    );
+    assert.equal(denied.result.isError, true);
+    assert.match(denied.result.content[0].text, /Unauthorized projectId: project-3/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("rejects oversized upstream responses", async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async () =>

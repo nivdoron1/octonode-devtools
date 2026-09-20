@@ -1,0 +1,4 @@
+interface:
+  display_name: "Octonode Connect"
+  short_description: "Connect Otto and agents to Octonode"
+  default_prompt: "Use $octonode-connect to inspect and update my Octonode project."

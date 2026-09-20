@@ -72,6 +72,7 @@ Read only what the task needs:
 - \`docs/workflow-inputs-and-triggers.md\` for schemas, fixed values, and triggers.
 - \`docs/api-codegen.md\` and \`docs/studio-architecture.md\` for Studio/API work.
 - \`docs/security.md\` for permissions, secrets, limits, and production boundaries.
+- \`docs/otto-integrations.md\` for Otto, hosted MCP, skills, and client-plugin boundaries.
 - \`docs/development.md\` for build, test, scan, and visual gates.`;
 
 export const REFERENCE_INDEX = `docs/conventions.md
@@ -82,6 +83,7 @@ docs/workflow-inputs-and-triggers.md
 docs/api-codegen.md
 docs/studio-architecture.md
 docs/security.md
+docs/otto-integrations.md
 docs/development.md`;
 
 export const MCP_RESOURCES = [

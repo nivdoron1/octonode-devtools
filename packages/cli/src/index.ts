@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { createClient, OCTONODE_API_URL, OctonodeClient } from "@octonodes/sdk";
 import { accessToken, login, logout } from "./auth";
+import { CONNECT_HELP, connectCommand } from "./connect.js";
 
 const VERSION = (require("../package.json") as { version: string }).version;
 const argv = process.argv.slice(2);
@@ -55,6 +56,10 @@ function usage(topic?: string): void {
     process.stdout.write((require("./plugins/constants") as typeof import("./plugins/constants")).PLUGIN_HELP);
     return;
   }
+  if (topic === "connect") {
+    process.stdout.write(CONNECT_HELP);
+    return;
+  }
   if (topic === "login") {
     process.stdout.write(`Usage:\n  octonodes login [--base-url <url>]\n  octonodes login --email <email> [--base-url <url>]\n  octonodes login --token <api-token>\n\nOpens GitHub login in your browser and signs in as the same user as Octonode Studio. Use --email for terminal email-code login, or --token for a personal, service, public, or agent API token.\n`);
     return;
@@ -71,8 +76,8 @@ function usage(topic?: string): void {
     process.stdout.write(`Usage:\n  octonodes ${topic} [--input <json>] [--base-url <url>]\n`);
     return;
   }
-  process.stdout.write("Plugin development: octonodes plugin <create|build|validate|test|publish> (see octonodes plugin --help)\n\n");
-  process.stdout.write(`octonodes v${VERSION}\n\nUsage:\n  octonodes login [--base-url <url>]\n  octonodes login --email <email> [--base-url <url>]\n  octonodes login --token <api-token>\n  octonodes logout\n  octonodes operations [filter]\n  octonodes <operation> [--input <json>] [--base-url <url>]\n\nFlags:\n  -h, --h, --help  Show help\n  -v, --version     Show version\n\nEnvironment:\n  OCTONODE_TOKEN       Overrides the saved login\n  OCTONODE_URL         Overrides ${OCTONODE_API_URL}\n  OCTONODE_CONFIG_DIR  Overrides ~/.octonode\n`);
+  process.stdout.write("Plugin development: octonodes plugin <create|build|validate|test|publish> (see octonodes plugin --help)\nMCP clients: octonodes connect <codex|claude|headers> (see octonodes connect --help)\n\n");
+  process.stdout.write(`octonodes v${VERSION}\n\nUsage:\n  octonodes login [--base-url <url>]\n  octonodes login --email <email> [--base-url <url>]\n  octonodes login --token <api-token>\n  octonodes logout\n  octonodes connect <codex|claude|headers> --workspace <kind:id> --project <id>\n  octonodes operations [filter]\n  octonodes <operation> [--input <json>] [--base-url <url>]\n\nFlags:\n  -h, --h, --help  Show help\n  -v, --version     Show version\n\nEnvironment:\n  OCTONODE_TOKEN       Overrides the saved login\n  OCTONODE_URL         Overrides ${OCTONODE_API_URL}\n  OCTONODE_CONFIG_DIR  Overrides ~/.octonode\n`);
 }
 
 async function main(): Promise<void> {
@@ -85,6 +90,10 @@ async function main(): Promise<void> {
   if (command === "plugin") {
     if (argv.length === 1) return usage("plugin");
     return (await import("./plugins/index.js")).pluginCommand(argv.slice(1), VERSION);
+  }
+  if (command === "connect") {
+    process.stdout.write(await connectCommand(argv.slice(1)));
+    return;
   }
   if (command === "login") {
     const baseUrl = flag("--base-url") ?? process.env.OCTONODE_URL ?? OCTONODE_API_URL;
