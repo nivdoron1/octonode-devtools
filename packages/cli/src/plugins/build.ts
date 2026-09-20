@@ -61,7 +61,11 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         packageName: npm.packageName,
         packageVersion: npm.packageVersion,
         warnings: [],
-        nodes: npmNodes.map((node, index) => ({ ...node.npm!.descriptor, id: manifestDefinition.nodes[index].id })),
+        nodes: npmNodes.map((node, index) => ({
+          ...node.npm!.descriptor,
+          id: manifestDefinition.nodes[index].id,
+          bindings: node.customization.bindings,
+        })),
       })
     : undefined;
   const imports = definition.nodes

@@ -52,6 +52,31 @@ export type PluginNodeUi = z.infer<typeof PluginNodeUi>;
  */
 export type MarketplaceScope = PluginScope;
 
+/** Build an upstream SDK client from connection fields, never from public node inputs. */
+export const NpmClientBinding = z
+  .object({
+    module: z
+      .string()
+      .regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+(?:\/[a-zA-Z0-9~._-]+)*$/)
+      .refine((value) => !value.split("/").some((part) => part === "." || part === ".."), "Unsafe npm module path"),
+    export: z.string().regex(/^[$A-Z_a-z][$\w]*$/),
+    options: z.record(z.unknown()).optional(),
+    env: z
+      .record(
+        z
+          .string()
+          .regex(/^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*$/)
+          .refine(
+            (path) => !path.split(".").some((key) => ["__proto__", "prototype", "constructor"].includes(key)),
+            "Unsafe option path",
+          ),
+        z.string().regex(/^[A-Z_][A-Z0-9_]*$/),
+      )
+      .optional(),
+  })
+  .strict();
+export type NpmClientBinding = z.infer<typeof NpmClientBinding>;
+
 /**
  * One node contributed by a plugin. Unlike a project node (whose signature is
  * discovered by `octonode scan`), a plugin node declares its contract directly
@@ -74,6 +99,7 @@ export const PluginNode = z.object({
   env: z.array(z.string()).optional(),
   connections: z.array(z.string().min(1)).optional(),
   defaults: z.record(z.unknown()).optional(),
+  bindings: z.record(z.string().regex(/^[A-Za-z_$][\w$]*$/), NpmClientBinding).optional(),
   ui: PluginNodeUi.optional(),
 });
 export type PluginNode = z.infer<typeof PluginNode>;
@@ -134,6 +160,19 @@ export const PluginManifest = z
     name: z.string(),
     version: z.string(),
     description: z.string().optional(),
+    /** Implementation authority; absent on legacy artifacts. */
+    source: z
+      .discriminatedUnion("kind", [
+        z.object({ kind: z.literal("plugin") }).strict(),
+        z
+          .object({
+            kind: z.literal("npm"),
+            package: z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/),
+            version: z.string().regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/),
+          })
+          .strict(),
+      ])
+      .optional(),
     icon: IconName.optional(),
     author: z.string().optional(),
     homepage: z.string().optional(),
@@ -147,11 +186,36 @@ export const PluginManifest = z
     nodes: z.array(PluginNode).default([]),
   })
   .superRefine((manifest, ctx) => {
+    const npm = manifest.integration?.npm;
+    if (
+      (manifest.source?.kind === "plugin" && npm) ||
+      (manifest.source?.kind === "npm" &&
+        (npm?.package !== manifest.source.package || npm?.version !== manifest.source.version))
+    )
+      ctx.addIssue({ code: "custom", path: ["source"], message: "source authority must match integration.npm" });
     const ids = new Set<string>();
     manifest.nodes.forEach((node, index) => {
       if (ids.has(node.id))
         ctx.addIssue({ code: "custom", path: ["nodes", index, "id"], message: "node IDs must be unique" });
       ids.add(node.id);
+      for (const binding of Object.values(node.bindings ?? {})) {
+        if (!npm || (binding.module !== npm.package && !binding.module.startsWith(`${npm.package}/`)))
+          ctx.addIssue({
+            code: "custom",
+            path: ["nodes", index, "bindings"],
+            message: "SDK factories must belong to the original npm package",
+          });
+        const credentialFields = new Set(
+          (node.connections ?? []).flatMap((name) => Object.keys(manifest.connections?.[name]?.fields ?? {})),
+        );
+        for (const name of Object.values(binding.env ?? {}))
+          if (!credentialFields.has(name))
+            ctx.addIssue({
+              code: "custom",
+              path: ["nodes", index, "bindings"],
+              message: `SDK binding requires connection field "${name}"`,
+            });
+      }
       for (const connection of node.connections ?? []) {
         if (!Object.hasOwn(manifest.connections ?? {}, connection))
           ctx.addIssue({

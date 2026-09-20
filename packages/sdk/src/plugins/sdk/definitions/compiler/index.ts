@@ -175,6 +175,7 @@ export function compileDefinition(
           .strict()
           .parse(item.arguments[1] ? literal(item.arguments[1]) : {});
         const { command: _, language: __, inputs, outputs, ...defaults } = original;
+        if (customization.bindings) throw new Error("SDK client bindings require npm handles");
         nodes.push({
           path: NODES_FILENAME,
           exportName: workflow.key,
@@ -192,20 +193,50 @@ export function compileDefinition(
       const npm = { kind: "npm", ...(literal(call.arguments[0]) as Omit<NpmNodeHandle, "kind">) } as NpmNodeHandle;
       if (!npm.packageName || !npm.packageVersion || !npm.descriptor || !Array.isArray(npm.descriptor.params))
         throw new Error("Invalid npm inventory; regenerate from the package");
-      const identity = `${npm.packageName}:${npm.descriptor.generic ? "<call>" : npm.descriptor.exportName}`;
+      const moduleSpecifier = npm.descriptor.moduleSpecifier ?? npm.packageName;
+      if (
+        (moduleSpecifier !== npm.packageName && !moduleSpecifier.startsWith(`${npm.packageName}/`)) ||
+        moduleSpecifier.split("/").some((part) => part === "." || part === "..") ||
+        /[\\%:]/.test(moduleSpecifier)
+      )
+        throw new Error("npm module must belong to the original package");
+      const identity = `${moduleSpecifier}:${npm.descriptor.generic ? "<call>" : npm.descriptor.exportName}`;
       if (identities.has(identity)) throw new Error(`Duplicate node function: ${identity}`);
       identities.add(identity);
       const customization = PluginNode.omit({ command: true, language: true, inputs: true, outputs: true })
         .partial()
         .strict()
         .parse(item.arguments[1] ? literal(item.arguments[1]) : {});
+      const bound = new Set(Object.keys(customization.bindings ?? {}));
+      for (const name of bound) {
+        if (
+          npm.descriptor.generic ||
+          npm.descriptor.permissive ||
+          !npm.descriptor.params.some((param) => param.name === name && !param.rest)
+        )
+          throw new Error(`SDK binding must name a declared non-rest parameter: ${name}`);
+        if (Object.hasOwn(customization.defaults ?? {}, name))
+          throw new Error(`Bound SDK parameter cannot have a public default: ${name}`);
+      }
+      const inputs = bound.size
+        ? {
+            ...npm.descriptor.inputsSchema,
+            properties: Object.fromEntries(
+              Object.entries((npm.descriptor.inputsSchema.properties ?? {}) as Record<string, unknown>).filter(
+                ([name]) => !bound.has(name),
+              ),
+            ),
+            required: ((npm.descriptor.inputsSchema.required ?? []) as string[]).filter((name) => !bound.has(name)),
+            additionalProperties: false,
+          }
+        : npm.descriptor.inputsSchema;
       nodes.push({
         path: NODES_FILENAME,
         exportName: npm.descriptor.exportName,
         symbol: npm.descriptor.id,
         parameters: [],
         customization: { description: npm.descriptor.description, ...customization },
-        inputs: npm.descriptor.inputsSchema,
+        inputs,
         outputs: npm.descriptor.outputsSchema,
         npm,
       });
@@ -280,6 +311,7 @@ export function compileDefinition(
         "Project node customization supports label, symbol, description and icon; identity and execution remain source-owned",
       );
     const node: CompiledNode = { path, exportName: imported.name, symbol: sourceName, parameters, customization };
+    if (customization.bindings) throw new Error("SDK client bindings require npm handles");
     // Require direct imports so runtime exports and source identities refer to the same file.
     const resolvedImport = ts.resolveModuleName(imported.module, entry, options, ts.sys).resolvedModule;
     if (!resolvedImport) throw new Error(`Cannot resolve ${imported.module}`);
@@ -308,6 +340,26 @@ export function compileDefinition(
   if (kind === "project" && Object.keys(metadata).length) throw new Error("defineProject accepts only nodes");
   const { assets = [], ...pluginMetadata } = metadata;
   const npm = nodes.find((node) => node.npm)?.npm;
+  if (kind === "plugin") {
+    const source = PluginManifest.innerType().shape.source.parse(pluginMetadata.source);
+    if (
+      source &&
+      (source.kind === "npm"
+        ? !npm || source.package !== npm.packageName || source.version !== npm.packageVersion
+        : !!npm)
+    )
+      throw new Error("Plugin source authority must match the generated node inventory");
+    pluginMetadata.source =
+      source ?? (npm ? { kind: "npm", package: npm.packageName, version: npm.packageVersion } : { kind: "plugin" });
+    if (
+      nodes.some((node) =>
+        npm
+          ? !node.npm || node.npm.packageName !== npm.packageName || node.npm.packageVersion !== npm.packageVersion
+          : !!node.npm,
+      )
+    )
+      throw new Error("A plugin must use one implementation source and package version");
+  }
   if (npm) {
     const integration =
       pluginMetadata.integration && typeof pluginMetadata.integration === "object" ? pluginMetadata.integration : {};

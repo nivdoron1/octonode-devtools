@@ -4,7 +4,17 @@ import type { PluginManifestInput, PluginNode } from "../../schema/plugin-sdk";
 export type NodeCustomization = Partial<
   Pick<
     PluginNode,
-    "id" | "label" | "symbol" | "icon" | "description" | "defaults" | "connections" | "env" | "trigger" | "ui"
+    | "id"
+    | "label"
+    | "symbol"
+    | "icon"
+    | "description"
+    | "defaults"
+    | "connections"
+    | "env"
+    | "trigger"
+    | "ui"
+    | "bindings"
   >
 >;
 
@@ -21,6 +31,7 @@ export interface NpmNodeHandle {
   readonly descriptor: {
     id: string;
     exportName: string;
+    moduleSpecifier?: string;
     params: { name: string; required: boolean; rest: boolean; schema: Record<string, unknown> }[];
     inputsSchema: Record<string, unknown>;
     outputsSchema: Record<string, unknown>;

@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Explicit plugin-owned or upstream npm source authority, with exact package/version validation.
+- Runtime SDK client factory bindings from declared connection fields, hidden client inputs, and sanitized SDK errors.
+- Original npm subpath identities in generated adapters and typed node icon inheritance documentation.
+
 ## [0.1.0] - Unreleased
 
 ### Added

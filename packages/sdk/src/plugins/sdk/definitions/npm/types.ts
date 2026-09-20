@@ -1,8 +1,12 @@
 // Generated from packages/plugin/src/npm/types.ts. Do not edit; run the Octonode SDK sync.
 // packages/plugin/src/npm/types.ts
+import type { NpmClientBinding } from "../../../schema/plugin-sdk";
+
 export interface NpmPackageMeta {
   /** Real npm package name (e.g. "@scope/pkg"). */
   name: string;
+  /** Package entry point, including an optional exported subpath. */
+  moduleSpecifier?: string;
   /** Resolved, pinned version. */
   version: string;
   description?: string;
@@ -23,6 +27,8 @@ export interface NpmParam {
 
 export interface NpmNodeDescriptor {
   id: string;
+  moduleSpecifier?: string;
+  bindings?: Record<string, NpmClientBinding>;
   /** Export name on the package; "default" for the default export; "" for the generic call node. */
   exportName: string;
   /** Declared parameter order — the emitted node maps named inputs to positional args in this order. */
@@ -40,6 +46,7 @@ export interface CompiledNpmPlugin {
   /** A valid octonode.plugin.json object. */
   manifest: Record<string, unknown>;
   packageName: string;
+  moduleSpecifier?: string;
   packageVersion: string;
   nodes: NpmNodeDescriptor[];
   warnings: string[];
@@ -49,6 +56,7 @@ export interface NpmGenerateOptions {
   cacheRoot?: string;
   /** Package spec: `name`, `name@version`, or a local folder path (tests/offline). */
   pkg: string;
+  moduleSpecifier?: string;
   id?: string;
   name?: string;
   icon?: string;
