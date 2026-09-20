@@ -4405,6 +4405,7 @@ export type GetApiMarketplaceResponses = {
             tags: Array<string>;
             nodes?: Array<{
                 id: string;
+                icon?: string;
                 label?: string;
                 symbol?: string;
                 description?: string;
@@ -4493,6 +4494,7 @@ export type GetApiMarketplacePluginsByIdResponses = {
         tags: Array<string>;
         nodes: Array<{
             id: string;
+            icon?: string;
             label?: string;
             symbol?: string;
             description?: string;
@@ -4597,6 +4599,7 @@ export type GetApiPluginsResponses = {
         tags: Array<string>;
         nodes?: Array<{
             id: string;
+            icon?: string;
             label?: string;
             symbol?: string;
             description?: string;
@@ -4660,6 +4663,7 @@ export type GetApiPluginsSearchResponses = {
             tags: Array<string>;
             nodes?: Array<{
                 id: string;
+                icon?: string;
                 label?: string;
                 symbol?: string;
                 description?: string;
@@ -4724,6 +4728,7 @@ export type GetApiPluginsNodesResponses = {
     200: {
         items: Array<{
             id: string;
+            icon?: string;
             label?: string;
             symbol?: string;
             description?: string;
@@ -4804,6 +4809,7 @@ export type GetApiPluginsByPluginIdResponses = {
         tags: Array<string>;
         nodes: Array<{
             id: string;
+            icon?: string;
             label?: string;
             symbol?: string;
             description?: string;
@@ -4830,7 +4836,6 @@ export type GetApiPluginsByPluginIdResponses = {
             };
             language?: string;
             command: string;
-            icon?: string;
             trigger?: boolean;
             env?: Array<string>;
         }>;
