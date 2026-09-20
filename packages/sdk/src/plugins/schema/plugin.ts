@@ -77,6 +77,20 @@ export const NpmClientBinding = z
   .strict();
 export type NpmClientBinding = z.infer<typeof NpmClientBinding>;
 
+export const PluginImplementationSource = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("plugin") }).strict(),
+  z
+    .object({
+      kind: z.literal("npm"),
+      package: z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/),
+      version: z.string().regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/),
+    })
+    .strict(),
+]);
+export type PluginImplementationSource = z.infer<typeof PluginImplementationSource>;
+
+export const PluginNpmDependency = z.object({ package: z.string(), version: z.string(), spec: z.string() }).strict();
+
 /**
  * One node contributed by a plugin. Unlike a project node (whose signature is
  * discovered by `octonode scan`), a plugin node declares its contract directly
@@ -101,6 +115,21 @@ export const PluginNode = z.object({
   defaults: z.record(z.unknown()).optional(),
   bindings: z.record(z.string().regex(/^[A-Za-z_$][\w$]*$/), NpmClientBinding).optional(),
   ui: PluginNodeUi.optional(),
+  source: PluginImplementationSource.optional(),
+  /** Explicit mapping to the library export; workflow adapters keep their own argument convention. */
+  libraryExport: z
+    .string()
+    .regex(/^[$A-Z_a-z][$\w]*$/)
+    .optional(),
+  /** Compiler-owned original import identity, never a presentation override. */
+  implementation: z
+    .object({
+      module: z.string(),
+      export: z.string(),
+      parameters: z.array(z.string()),
+    })
+    .strict()
+    .optional(),
 });
 export type PluginNode = z.infer<typeof PluginNode>;
 
@@ -121,13 +150,8 @@ export const PluginIntegration = z.object({
   /** Secrets/env the integration needs to authenticate (e.g. ["JIRA_TOKEN"]). */
   auth: z.array(z.string()).optional(),
   /** Original npm dependency used by generated npm nodes. */
-  npm: z
-    .object({
-      package: z.string(),
-      version: z.string(),
-      spec: z.string(),
-    })
-    .optional(),
+  npm: PluginNpmDependency.optional(),
+  npmDependencies: z.array(PluginNpmDependency).optional(),
 });
 export type PluginIntegration = z.infer<typeof PluginIntegration>;
 
@@ -161,17 +185,15 @@ export const PluginManifest = z
     version: z.string(),
     description: z.string().optional(),
     /** Implementation authority; absent on legacy artifacts. */
-    source: z
-      .discriminatedUnion("kind", [
-        z.object({ kind: z.literal("plugin") }).strict(),
-        z
-          .object({
-            kind: z.literal("npm"),
-            package: z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/),
-            version: z.string().regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/),
-          })
-          .strict(),
-      ])
+    source: PluginImplementationSource.optional(),
+    library: z
+      .object({
+        format: z.literal(1),
+        entry: z.literal("library/index.js"),
+        types: z.literal("library/index.d.ts"),
+        exports: z.array(z.string().regex(/^[$A-Z_a-z][$\w]*$/)).min(1),
+      })
+      .strict()
       .optional(),
     icon: IconName.optional(),
     author: z.string().optional(),
@@ -187,6 +209,13 @@ export const PluginManifest = z
   })
   .superRefine((manifest, ctx) => {
     const npm = manifest.integration?.npm;
+    const dependencies = manifest.integration?.npmDependencies ?? (npm ? [npm] : []);
+    if (new Set(dependencies.map((item) => item.package)).size !== dependencies.length)
+      ctx.addIssue({
+        code: "custom",
+        path: ["integration"],
+        message: "npm dependencies must have unique package names",
+      });
     if (
       (manifest.source?.kind === "plugin" && npm) ||
       (manifest.source?.kind === "npm" &&
@@ -198,8 +227,30 @@ export const PluginManifest = z
       if (ids.has(node.id))
         ctx.addIssue({ code: "custom", path: ["nodes", index, "id"], message: "node IDs must be unique" });
       ids.add(node.id);
+      const nodeSource = node.source;
+      const nodeNpm =
+        nodeSource?.kind === "npm"
+          ? dependencies.find((item) => item.package === nodeSource.package && item.version === nodeSource.version)
+          : nodeSource?.kind === "plugin"
+            ? undefined
+            : npm;
+      if (node.source?.kind === "npm" && !nodeNpm)
+        ctx.addIssue({
+          code: "custom",
+          path: ["nodes", index, "source"],
+          message: "npm source must match a declared dependency",
+        });
+      if (
+        node.libraryExport &&
+        (node.source?.kind === "npm" || !manifest.library?.exports.includes(node.libraryExport))
+      )
+        ctx.addIssue({
+          code: "custom",
+          path: ["nodes", index, "libraryExport"],
+          message: "custom export must exist in the plugin library",
+        });
       for (const binding of Object.values(node.bindings ?? {})) {
-        if (!npm || (binding.module !== npm.package && !binding.module.startsWith(`${npm.package}/`)))
+        if (!nodeNpm || (binding.module !== nodeNpm.package && !binding.module.startsWith(`${nodeNpm.package}/`)))
           ctx.addIssue({
             code: "custom",
             path: ["nodes", index, "bindings"],

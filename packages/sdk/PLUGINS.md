@@ -1,5 +1,63 @@
 # Typed Octonode authoring files
 
+## Marketplace library imports
+
+Custom integrations are marketplace artifacts, not one npm package per integration.
+In `definePlugin`, set `library: { entry: "src/index.ts" }` to expose named public
+exports. Link a workflow node to its real library function with
+`defineNode(nodes.createIssueNode, { id: "create-issue", libraryExport: "createIssue" })`.
+The workflow adapter may accept flattened inputs and host credentials; the library
+function keeps its original parameters and explicit connection object.
+
+A node can override the plugin-level source default with
+`source: { kind: "npm", package: "jira.js", version: "6.2.0" }`, but only on a
+generated npm handle for that exact implementation. Local functions use
+`source: { kind: "plugin" }`. The compiler verifies these declarations and derives
+all native npm dependencies. Presentation settings cannot redirect executable code.
+
+```sh
+octonodes plugin install jira --version <release> --alias jira
+octonodes plugin install jira-sdk --version <release>
+octonodes plugin update jira --version <release> --dry-run
+octonodes plugin update jira --version <release>
+octonodes plugin remove jira
+```
+
+```ts
+import { createIssue } from "@octonodes/plugin/jira";
+import { getIssue } from "jira.js/cloud";
+```
+
+Only selected custom libraries enter the private generated local package.
+Real npm packages are installed by the consuming project's package manager.
+Commit `octonode.lock`, `package.json`, and its native lockfile. The disposable
+`.octonode-generated/` directory ignores its generated contents automatically;
+the existing `.octonode` file is unchanged.
+
+For clean CI, use a separately available **compatible pinned CLI** before installing
+the application's dependencies:
+
+```sh
+octonodes install --frozen --artifacts-only
+npm ci
+npm run build
+```
+
+Use the equivalent native frozen install for Yarn, pnpm, or Bun. Public cached
+artifacts can restore with `--offline --artifacts-only`; private artifacts require
+online authorization. `plugin recover` repairs an interrupted native transaction,
+preserving post-crash file copies in the reported recovery directory.
+
+The first format supports portable bundled JavaScript with self-contained public
+declarations and license notices. Unsupported dynamic imports, external public types,
+native addons, and default library exports fail the build. Node 24 on macOS/Linux
+is supported; use WSL on Windows. Library imports run with application privileges,
+not the workflow permission sandbox. Importing an artifact never starts its IPC runner.
+
+Existing public `@octonodes/plugin` consumers must explicitly opt into migration
+with `--migrate`. The source changes here require a new compatible release; existing
+published version numbers alone do not imply support.
+
 > **Status:** implemented in the source SDK and devtools. Publishing updated npm packages is a separate release step.
 
 Octonode keeps three concerns separate: discovered code, project presentation,
@@ -129,9 +187,11 @@ or execution source fails the build. Omitting `source` remains compatible with
 older definitions: compilation infers it from the selected handles.
 
 Npm authority does not fork or republish the dependency. Consumer code imports
-the original package using the module forms it supports. Automatic decoration
-of those imported calls is still planned; see
-[the community plugin plan](plans/community-plugin-source-authority.md).
+the original package using the module forms it supports. Source indexing recognizes
+named imports, including aliases and exact subpaths, against the selected plugin
+manifest. Calls remain source-backed: library connection arguments are explicit,
+and workflow credential injection is not silently applied to ordinary code.
+Namespace/default imports remain ordinary source calls without plugin decoration.
 
 Local function contracts support JSON primitives, literal enums, arrays, finite
 object shapes, optional parameters, and async returns. Unsupported contracts such
@@ -249,9 +309,10 @@ Older `plugins/**/*.plugin.ts` authoring entries need migration to the root
 plugin definition. Existing YAML/JSON artifacts and the `/plugins` runtime API
 remain compatible; the new builder does not discover arbitrary TypeScript entries.
 
-One plugin package contains local functions, one npm package adapter, or one
-saved-workflow export. Mixing these execution sources in one package is rejected.
-Use separate plugin packages when they have different runtime dependencies.
+One plugin artifact can combine local functions and verified npm handles. Each node
+records its own implementation authority; exact upstream dependencies are derived
+from the selected handles. Conflicting versions of the same npm package are rejected.
+Saved-workflow exports remain separate artifacts and cannot mix with function handles.
 Workflow exports verify the hashes of their generated runtime files before
 building. Keep dependencies declared by the workflow exporter installed.
 

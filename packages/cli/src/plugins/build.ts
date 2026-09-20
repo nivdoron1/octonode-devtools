@@ -1,3 +1,4 @@
+// Generated from engine plugin authoring. Do not edit.
 import {
   cpSync,
   existsSync,
@@ -20,6 +21,7 @@ import { emitNpmJsFiles } from "@octonodes/sdk/definitions/npm";
 import { BUILD_RECORD, RESERVED_ASSETS } from "./constants";
 import { fileHash, pluginFiles, safePath, verifyBuild } from "./artifact";
 import type { PluginBuild } from "./types";
+import { buildPluginLibrary } from "./library";
 
 function directory(root: string, path: string): string {
   let current = root;
@@ -31,6 +33,15 @@ function directory(root: string, path: string): string {
       throw new Error(`Build directory must be a real directory: ${current}`);
   }
   return current;
+}
+
+function assertBundledInputs(root: string, inputs: string[]): void {
+  const sdkRoot = dirname(require.resolve("@octonodes/sdk"));
+  for (const input of inputs) {
+    const path = resolve(root, input);
+    if (path.startsWith(root + "/") || path.startsWith(sdkRoot + "/") || path.includes("/node_modules/")) continue;
+    throw new Error("A bundled import escapes the selected package. Move shared implementations into a dependency.");
+  }
 }
 
 export async function buildPlugins(entry?: string, root = process.cwd()): Promise<PluginBuild[]> {
@@ -50,34 +61,50 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
   if (workflowNodes.some((node) => JSON.stringify(node.workflow!.files) !== JSON.stringify(workflow!.files)))
     throw new Error("Workflow handles must come from the same generated export");
   const npmNodes = definition.nodes.filter((node) => node.npm);
-  if (npmNodes.length && npmNodes.length !== definition.nodes.length)
-    throw new Error("Keep npm adapters and local implementations in separate plugin packages");
-  if (new Set(npmNodes.map((node) => node.npm!.packageName + "@" + node.npm!.packageVersion)).size > 1)
-    throw new Error("An npm plugin must target one package version");
-  const npm = npmNodes[0]?.npm;
-  const npmFiles = npm
-    ? emitNpmJsFiles({
-        manifest: manifestDefinition,
-        packageName: npm.packageName,
-        packageVersion: npm.packageVersion,
-        warnings: [],
-        nodes: npmNodes.map((node, index) => ({
-          ...node.npm!.descriptor,
-          id: manifestDefinition.nodes[index].id,
-          bindings: node.customization.bindings,
-        })),
-      })
-    : undefined;
+  const npmGroups = [...new Set(npmNodes.map((node) => node.npm!.packageName))].map((packageName) =>
+    npmNodes.filter((node) => node.npm!.packageName === packageName),
+  );
+  const npmAdapters = new Map(
+    npmGroups.flatMap((nodes, index) =>
+      nodes.map((node) => [node, `../nodes/npm${npmGroups.length === 1 ? "" : `-${index}`}.cjs`] as const),
+    ),
+  );
+  const npmFiles: Record<string, string> = Object.assign(
+    {},
+    ...npmGroups.map((nodes, index) => {
+      const npm = nodes[0].npm!;
+      return Object.fromEntries(
+        Object.entries(
+          emitNpmJsFiles({
+            manifest: manifestDefinition,
+            packageName: npm.packageName,
+            packageVersion: npm.packageVersion,
+            warnings: [],
+            nodes: nodes.map((node) => ({
+              ...node.npm!.descriptor,
+              id: node.customization.id ?? node.symbol,
+              bindings: node.customization.bindings,
+            })),
+          }),
+        ).map(([path, content]) => [
+          path === "nodes/npm.cjs" && npmGroups.length > 1 ? `nodes/npm-${index}.cjs` : path,
+          content,
+        ]),
+      );
+    }),
+  );
   const imports = definition.nodes
-    .map(
-      (node, index) =>
-        `import { ${node.exportName} as implementation${index} } from ${JSON.stringify(resolve(root, node.path))};`,
+    .map((node, index) =>
+      node.npm
+        ? ""
+        : `import { ${node.exportName} as implementation${index} } from ${JSON.stringify(resolve(root, node.path))};`,
     )
     .join("\n");
   const handlers = definition.nodes
-    .map(
-      (node, index) =>
-        `${JSON.stringify(manifestDefinition.nodes[index].id)}: async (inputs) => (await implementation${index}(${node.parameters.map((name) => `inputs[${JSON.stringify(name)}]`).join(", ")})) ?? null`,
+    .map((node, index) =>
+      node.npm
+        ? `${JSON.stringify(manifestDefinition.nodes[index].id)}: inputs => require(${JSON.stringify(npmAdapters.get(node))}).invokeNode(${JSON.stringify(manifestDefinition.nodes[index].id)}, inputs)`
+        : `${JSON.stringify(manifestDefinition.nodes[index].id)}: async (inputs) => (await implementation${index}(${node.parameters.map((name) => `inputs[${JSON.stringify(name)}]`).join(", ")})) ?? null`,
     )
     .join(",\n");
   const workflowSource = `import { execFileSync } from "node:child_process"; import { join } from "node:path";
@@ -89,10 +116,10 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
       if (result.status !== "ok") throw new Error(result.error?.message ?? "Workflow failed");
       return result.outputs;
     };`;
-  const runnerSource = `${workflow ? workflowSource : npmFiles ? 'const { invokeNode } = require("../nodes/npm.cjs");' : imports}
-    import { definePlugin, startPlugin } from "@octonodes/sdk/plugins";
+  const runnerSource = `${workflow ? workflowSource : imports}
+    import { definePlugin, startPlugin } from ${JSON.stringify(require.resolve("@octonodes/sdk/plugins"))};
     export { startPlugin };
-    export const plugin = definePlugin(${JSON.stringify(manifestDefinition)}, {${workflow ? workflowNodes.map((node, index) => `${JSON.stringify(manifestDefinition.nodes[index].id)}: (inputs, context) => invokeWorkflow(${JSON.stringify(node.workflow!.key)}, inputs, context)`).join(",") : npmFiles ? manifestDefinition.nodes.map((node) => `${JSON.stringify(node.id)}: (inputs) => invokeNode(${JSON.stringify(node.id)}, inputs)`).join(",") : handlers}});`;
+    export const plugin = definePlugin(${JSON.stringify(manifestDefinition)}, {${workflow ? workflowNodes.map((node, index) => `${JSON.stringify(manifestDefinition.nodes[index].id)}: (inputs, context) => invokeWorkflow(${JSON.stringify(node.workflow!.key)}, inputs, context)`).join(",") : handlers}});`;
   const output = directory(root, "dist/plugins");
   const staging = mkdtempSync(join(output, ".build-"));
   const prepared: Array<PluginBuild & { staged: string }> = [];
@@ -135,7 +162,8 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         },
         outfile: runner,
         bundle: true,
-        external: npmFiles ? ["../nodes/npm.cjs"] : [],
+        preserveSymlinks: true,
+        external: [...new Set(npmAdapters.values())],
         platform: "node",
         format: "cjs",
         target: "node24",
@@ -153,18 +181,20 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
       });
       // esbuild cannot make computed imports or native modules portable. Fail instead of shipping a broken bundle.
       if (result.warnings.length) throw new Error(result.warnings.map((warning) => warning.text).join("\n"));
+      assertBundledInputs(root, Object.keys(result.metafile.inputs));
       for (const info of Object.values(result.metafile.outputs)) {
         for (const dependency of info.imports) {
           if (
             dependency.external &&
             !isBuiltin(dependency.path) &&
-            !(npmFiles && dependency.path === "../nodes/npm.cjs")
+            ![...npmAdapters.values()].some((path) => path === dependency.path)
           )
             throw new Error(`Unbundled dependency: ${dependency.path}`);
         }
       }
       const metadata = { manifest: manifestDefinition, assets: definition.assets };
       const manifest = PluginManifest.parse(metadata.manifest);
+      if (definition.library) await buildPluginLibrary(root, definition.library.entry, join(staged, "library"));
       if (!manifest.nodes.length) throw new Error(`Plugin ${manifest.id} must expose at least one node`);
       if (prepared.some((plugin) => plugin.manifest.id === manifest.id))
         throw new Error(`Duplicate plugin id: ${manifest.id}`);
@@ -217,6 +247,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
           },
           outfile: join(staged, entry),
           bundle: true,
+          preserveSymlinks: true,
           platform: "browser",
           format: "iife",
           target: "es2021",
@@ -226,6 +257,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
           legalComments: "eof",
         });
         if (ui.warnings.length) throw new Error(ui.warnings.map((warning) => warning.text).join("\n"));
+        assertBundledInputs(root, Object.keys(ui.metafile.inputs));
         if (
           Object.values(ui.metafile.outputs).some((output) => output.imports.some((dependency) => dependency.external))
         )

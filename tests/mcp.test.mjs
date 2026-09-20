@@ -164,6 +164,26 @@ test("forwards scope and the caller token through the Octonode SDK", async () =>
   }
 });
 
+test("plugin inspection forwards import identity metadata without changing scope", async () => {
+  const originalFetch = globalThis.fetch;
+  let apiRequest;
+  const plugin = { id: "jira", version: "1.0.0", nodes: [{ id: "create", source: { kind: "plugin" }, libraryExport: "createIssue", implementation: { module: "src/nodes.ts", export: "createIssueNode", parameters: ["summary"] } }] };
+  globalThis.fetch = async input => { apiRequest = input; return Response.json(plugin); };
+  try {
+    const body = await payload(await worker.fetch(
+      request("tools/call", { name: "project_plugin", arguments: { pluginId: "jira" } }, { "x-octonode-workspace": "org:test", "x-octonode-project": "project-1" }),
+      { OCTONODE_API_URL: "https://api.example.test" }, context,
+    ));
+    assert.equal(body.result.isError, undefined);
+    assert.match(body.result.content[0].text, /createIssueNode/);
+    assert.match(body.result.content[0].text, /libraryExport/);
+    const url = new URL(apiRequest.url);
+    assert.equal(url.pathname, "/api/plugins/jira");
+    assert.equal(url.searchParams.get("project"), "project-1");
+    assert.equal(url.searchParams.get("limit"), "100");
+  } finally { globalThis.fetch = originalFetch; }
+});
+
 test("returns tool errors when required scope is missing", async () => {
   const noWorkspace = await payload(
     await worker.fetch(

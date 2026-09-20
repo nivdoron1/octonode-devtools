@@ -344,7 +344,7 @@ const projectTools: ToolDefinition[] = [
   projectTool({ name: "project_plugins", description: "List installed plugins attached to the bound project.", path: "/api/plugins?fields=id,name,version,description,icon,nodes" }),
   projectTool({
     name: "project_plugin",
-    description: "Inspect one installed plugin and up to 100 nodes.",
+    description: "Inspect an installed plugin's pinned version and up to 100 nodes, including custom library exports and original npm implementation identities when available.",
     path: "/api/plugins/{pluginId}?limit=100",
     properties: { pluginId: id },
     required: ["pluginId"],

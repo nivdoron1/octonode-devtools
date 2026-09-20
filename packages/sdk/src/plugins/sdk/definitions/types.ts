@@ -15,6 +15,8 @@ export type NodeCustomization = Partial<
     | "trigger"
     | "ui"
     | "bindings"
+    | "source"
+    | "libraryExport"
   >
 >;
 
@@ -53,7 +55,8 @@ export interface ProjectDefinition {
   readonly nodes?: readonly NodeReference[];
 }
 
-export type PluginDefinition = Omit<PluginManifestInput, "nodes"> & {
+export type PluginDefinition = Omit<PluginManifestInput, "nodes" | "library"> & {
   readonly nodes: readonly NodeReference[];
   readonly assets?: readonly string[];
+  readonly library?: { readonly entry: string };
 };

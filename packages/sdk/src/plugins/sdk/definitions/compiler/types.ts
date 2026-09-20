@@ -19,4 +19,5 @@ export interface CompiledDefinition {
   nodes: CompiledNode[];
   manifest?: PluginManifest;
   assets: string[];
+  library?: { entry: string };
 }

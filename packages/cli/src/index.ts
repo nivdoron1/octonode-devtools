@@ -52,8 +52,8 @@ function flag(name: string): string | undefined {
 }
 
 function usage(topic?: string): void {
-  if (topic === "plugin") {
-    process.stdout.write((require("./plugins/constants") as typeof import("./plugins/constants")).PLUGIN_HELP);
+  if (topic === "plugin" || topic === "install") {
+    process.stdout.write((require("./plugins/help.constants") as typeof import("./plugins/help.constants")).PLUGIN_HELP);
     return;
   }
   if (topic === "connect") {
@@ -76,7 +76,7 @@ function usage(topic?: string): void {
     process.stdout.write(`Usage:\n  octonodes ${topic} [--input <json>] [--base-url <url>]\n`);
     return;
   }
-  process.stdout.write("Plugin development: octonodes plugin <create|build|validate|test|publish> (see octonodes plugin --help)\nMCP clients: octonodes connect <codex|claude|headers> (see octonodes connect --help)\n\n");
+  process.stdout.write("Plugins: octonodes plugin <create|build|validate|test|publish|install|update|remove|list|recover> (see octonodes plugin --help)\nFrozen restore: octonodes install --frozen --artifacts-only\nMCP clients: octonodes connect <codex|claude|headers> (see octonodes connect --help)\n\n");
   process.stdout.write(`octonodes v${VERSION}\n\nUsage:\n  octonodes login [--base-url <url>]\n  octonodes login --email <email> [--base-url <url>]\n  octonodes login --token <api-token>\n  octonodes logout\n  octonodes connect <codex|claude|headers> --workspace <kind:id> --project <id>\n  octonodes operations [filter]\n  octonodes <operation> [--input <json>] [--base-url <url>]\n\nFlags:\n  -h, --h, --help  Show help\n  -v, --version     Show version\n\nEnvironment:\n  OCTONODE_TOKEN       Overrides the saved login\n  OCTONODE_URL         Overrides ${OCTONODE_API_URL}\n  OCTONODE_CONFIG_DIR  Overrides ~/.octonode\n`);
 }
 
@@ -91,6 +91,7 @@ async function main(): Promise<void> {
     if (argv.length === 1) return usage("plugin");
     return (await import("./plugins/index.js")).pluginCommand(argv.slice(1), VERSION);
   }
+  if (command === "install") return (await import("./plugins/index.js")).pluginCommand(["restore", ...argv.slice(1)], VERSION);
   if (command === "connect") {
     process.stdout.write(await connectCommand(argv.slice(1)));
     return;
