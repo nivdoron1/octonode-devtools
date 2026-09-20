@@ -11,7 +11,7 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { isBuiltin } from "node:module";
 import { build } from "esbuild";
 import { stringify } from "yaml";
@@ -39,7 +39,11 @@ function assertBundledInputs(root: string, inputs: string[]): void {
   const sdkRoot = dirname(require.resolve("@octonodes/sdk"));
   for (const input of inputs) {
     const path = resolve(root, input);
-    if (path.startsWith(root + "/") || path.startsWith(sdkRoot + "/") || path.includes("/node_modules/")) continue;
+    const within = (directory: string) => {
+      const local = relative(directory, path);
+      return !isAbsolute(local) && !local.startsWith("..");
+    };
+    if (within(root) || within(sdkRoot) || /[\\/]node_modules[\\/]/.test(path)) continue;
     throw new Error("A bundled import escapes the selected package. Move shared implementations into a dependency.");
   }
 }
