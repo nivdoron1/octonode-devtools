@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/definitions/compiler/schemas.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/definitions/compiler/schemas.ts. Do not edit; run the Octonode SDK sync.
 import * as ts from "typescript";
 
 /** Public plugin contracts must be finite JSON values, never silently widened to unknown. */

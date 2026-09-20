@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/json-schema.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/json-schema.ts. Do not edit; run the Octonode SDK sync.
 /**
  * A deliberately tiny JSON Schema validator covering the common subset Octonode
  * nodes use to describe their I/O: `type`, `required`, `properties`, `items`,

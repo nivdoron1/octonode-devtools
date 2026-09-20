@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/definitions/compiler/index.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/definitions/compiler/index.ts. Do not edit; run the Octonode SDK sync.
 import * as ts from "typescript";
 import { existsSync, realpathSync } from "node:fs";
 import { dirname, isAbsolute, relative, resolve } from "node:path";

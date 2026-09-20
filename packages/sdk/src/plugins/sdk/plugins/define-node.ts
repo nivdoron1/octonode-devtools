@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/plugins/define-node.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/plugins/define-node.ts. Do not edit; run the Octonode SDK sync.
 import { defineNode as defineRuntimeNode } from "../define-node";
 import type { JsonSchema } from "../json-schema";
 import type { PluginNodeOptions } from "./types";

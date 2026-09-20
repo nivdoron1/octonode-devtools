@@ -1,4 +1,4 @@
-// Generated from sdks/typescript/src/plugin.ts. Do not edit; run the Octonode SDK sync.
+// Generated from packages/plugin-runtime/src/plugin.ts. Do not edit; run the Octonode SDK sync.
 import { PluginManifest } from "../schema/plugin-sdk";
 import { defineNode } from "./define-node";
 import { jsonSafetyError, NodeError, start } from "./runner";
