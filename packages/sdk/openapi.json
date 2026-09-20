@@ -14593,6 +14593,9 @@
                                 "id": {
                                   "type": "string"
                                 },
+                                "icon": {
+                                  "type": "string"
+                                },
                                 "label": {
                                   "type": "string"
                                 },
@@ -14903,6 +14906,9 @@
                         "type": "object",
                         "properties": {
                           "id": {
+                            "type": "string"
+                          },
+                          "icon": {
                             "type": "string"
                           },
                           "label": {
@@ -15338,6 +15344,9 @@
                             "id": {
                               "type": "string"
                             },
+                            "icon": {
+                              "type": "string"
+                            },
                             "label": {
                               "type": "string"
                             },
@@ -15523,6 +15532,9 @@
                                 "id": {
                                   "type": "string"
                                 },
+                                "icon": {
+                                  "type": "string"
+                                },
                                 "label": {
                                   "type": "string"
                                 },
@@ -15703,6 +15715,9 @@
                         "type": "object",
                         "properties": {
                           "id": {
+                            "type": "string"
+                          },
+                          "icon": {
                             "type": "string"
                           },
                           "label": {
@@ -15938,6 +15953,9 @@
                           "id": {
                             "type": "string"
                           },
+                          "icon": {
+                            "type": "string"
+                          },
                           "label": {
                             "type": "string"
                           },
@@ -16017,9 +16035,6 @@
                             "type": "string"
                           },
                           "command": {
-                            "type": "string"
-                          },
-                          "icon": {
                             "type": "string"
                           },
                           "trigger": {
