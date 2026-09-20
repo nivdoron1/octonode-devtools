@@ -14,7 +14,8 @@ yarn mcp:dev
 
 Connect an MCP client to `http://localhost:8787/mcp` and send its Octonode token as an
 `Authorization: Bearer ...` header plus `x-octonode-workspace`. Set `x-octonode-project` as the
-default project; callers can override it with a tool's `projectId` argument. Optionally send
+default project. For multi-project clients, send `x-octonode-projects` as a JSON array; a tool's
+`projectId` must be in that allow-list. Optionally send
 `x-octonode-worktree` to target a managed checkout. Set the Worker variable `OCTONODE_API_URL`
 only when using a self-hosted API; otherwise the SDK default is used.
 
@@ -53,6 +54,19 @@ Clients that only support local stdio servers can use `mcp-remote`:
 Use a personal token while developing, then switch automation to a project-scoped agent or
 service token with only the required read/write/run scopes. Add OAuth only when the endpoint must
 support interactive third-party users who should not configure tokens themselves.
+
+The `@octonodes/cli` package can generate scoped client configuration:
+
+```sh
+octonodes login
+octonodes connect codex --workspace org:WORKSPACE_ID --project PROJECT_ID
+octonodes connect claude --workspace org:WORKSPACE_ID --project PROJECT_ID
+```
+
+The Codex configuration uses `octonodes connect headers` to read and refresh the saved login at
+request time, so it does not store a bearer token in `config.toml`. The distributable skill and
+client-plugin bundle is at `connect-skill-plugin/`; it references this hosted Worker and does not
+duplicate its implementation.
 
 ## Deploy
 

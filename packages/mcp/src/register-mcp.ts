@@ -27,9 +27,24 @@ export function bearerToken(request: Request): string | undefined {
 }
 
 function selectedProject(args: ToolArguments, request: Request): string | undefined {
-  return typeof args.projectId === "string"
-    ? args.projectId
-    : request.headers.get("x-octonode-project") || undefined;
+  const project =
+    typeof args.projectId === "string"
+      ? args.projectId
+      : request.headers.get("x-octonode-project") || undefined;
+  const authorized = request.headers.get("x-octonode-projects");
+  if (!project || !authorized) return project;
+
+  let projects: unknown;
+  try {
+    projects = JSON.parse(authorized);
+  } catch {
+    throw new Error("x-octonode-projects must be a JSON array");
+  }
+  if (!Array.isArray(projects) || !projects.every((value) => typeof value === "string")) {
+    throw new Error("x-octonode-projects must be a JSON array of project IDs");
+  }
+  if (!projects.includes(project)) throw new Error(`Unauthorized projectId: ${project}`);
+  return project;
 }
 
 function resolvePath(definition: ToolDefinition, args: ToolArguments, project?: string): string {

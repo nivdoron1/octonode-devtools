@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "octonode": {
+      "type": "streamable-http",
+      "url": "https://mcp.octonode.dev/mcp",
+      "bearer_token_env_var": "OCTONODE_TOKEN",
+      "env_http_headers": {
+        "x-octonode-workspace": "OCTONODE_WORKSPACE",
+        "x-octonode-project": "OCTONODE_PROJECT",
+        "x-octonode-projects": "OCTONODE_PROJECTS"
+      }
+    }
+  }
+}

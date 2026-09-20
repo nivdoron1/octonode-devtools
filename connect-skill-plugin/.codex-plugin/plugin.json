@@ -1,0 +1,25 @@
+{
+  "name": "connect-skill-plugin",
+  "version": "0.1.0",
+  "description": "Connect coding agents to scoped Octonode tools and canonical authoring guidance.",
+  "author": {
+    "name": "Octonode",
+    "url": "https://octonode.dev"
+  },
+  "homepage": "https://octonode.dev",
+  "repository": "https://github.com/nivdoron1/octonode-devtools",
+  "license": "MIT",
+  "keywords": ["octonode", "mcp", "workflows"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Octonode Connect",
+    "shortDescription": "Use scoped Octonode project tools.",
+    "longDescription": "Connect an agent to the hosted Octonode MCP server and use its live project tools with canonical authoring guidance.",
+    "developerName": "Octonode",
+    "category": "Developer Tools",
+    "capabilities": ["Read projects", "Edit projects", "Run workflows"],
+    "websiteURL": "https://octonode.dev",
+    "defaultPrompt": "Use Octonode Connect to inspect and update my authorized Octonode project."
+  }
+}

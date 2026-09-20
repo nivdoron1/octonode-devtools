@@ -61,6 +61,44 @@ test("CLI exposes generated SDK operations", () => {
   assert.deepEqual(cliPackage.bin, { octonodes: "dist/index.js" });
 });
 
+test("CLI generates scoped MCP client configuration without storing a token", () => {
+  const args = [
+    "packages/cli/dist/index.js",
+    "connect",
+    "codex",
+    "--workspace",
+    "org:workspace-1",
+    "--project",
+    "project-1",
+    "--project",
+    "project-2",
+  ];
+  const codex = spawnSync(process.execPath, args, { encoding: "utf8" });
+  assert.equal(codex.status, 0, codex.stderr);
+  assert.match(codex.stdout, /https:\/\/mcp\.octonode\.dev\/mcp/);
+  assert.match(codex.stdout, /http_headers_helper/);
+  assert.doesNotMatch(codex.stdout, /octo_pat_test/);
+
+  const claude = spawnSync(process.execPath, [...args.slice(0, 2), "claude", ...args.slice(3)], {
+    encoding: "utf8",
+  });
+  assert.equal(claude.status, 0, claude.stderr);
+  assert.match(claude.stdout, /claude mcp add-json/);
+  assert.match(claude.stdout, /\$\{OCTONODE_TOKEN\}/);
+
+  const headers = spawnSync(process.execPath, [...args.slice(0, 2), "headers", ...args.slice(3)], {
+    encoding: "utf8",
+    env: { ...process.env, OCTONODE_TOKEN: "octo_pat_test" },
+  });
+  assert.equal(headers.status, 0, headers.stderr);
+  assert.deepEqual(JSON.parse(headers.stdout), {
+    Authorization: "Bearer octo_pat_test",
+    "x-octonode-workspace": "org:workspace-1",
+    "x-octonode-project": "project-1",
+    "x-octonode-projects": '["project-1","project-2"]',
+  });
+});
+
 test("CLI consumes generated SSE operations as JSON Lines", async () => {
   let authorization;
   const server = createServer((request, response) => {
