@@ -1,5 +1,4 @@
 // Generated from packages/plugin-runtime/src/plugin.ts. Do not edit; run the Octonode SDK sync.
-import { PROCESS_ENV } from "@octonode/common/environment.cjs";
 import { PluginManifest } from "../schema/plugin-sdk";
 import { defineNode } from "./define-node";
 import { jsonSafetyError, NodeError, start } from "./runner";
@@ -54,7 +53,7 @@ export function definePlugin(definition: unknown, handlers?: PluginHandlers): Pl
             ...node,
             run: (inputs, context) => {
               const missing = fields
-                .filter(([name, field]) => field.required && !PROCESS_ENV[name])
+                .filter(([name, field]) => field.required && !process.env[name])
                 .map(([name]) => name);
               if (missing.length) throw new NodeError(`Missing connection credentials: ${missing.join(", ")}`);
               return nodeHandlers[node.id](inputs, context);
