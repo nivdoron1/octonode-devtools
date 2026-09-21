@@ -11406,6 +11406,7 @@ var require_project_jobs = __commonJS({
       userId: zod_1.z.string().min(1).max(128),
       kind: zod_1.z.enum(["import", "compile"]),
       status: zod_1.z.enum(["succeeded", "failed"]),
+      projectId: zod_1.z.string().min(1).max(240).optional(),
       timestamp: zod_1.z.number().int().nonnegative()
     }).strict();
   }
