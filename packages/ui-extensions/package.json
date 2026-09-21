@@ -4,6 +4,11 @@
   "type": "module",
   "license": "MIT",
   "description": "Portable contracts and React primitives for Octonode plugin UI extensions.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nivdoron1/octonode-devtools.git",
+    "directory": "packages/ui-extensions"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
