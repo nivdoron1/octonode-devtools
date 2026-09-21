@@ -6435,6 +6435,9 @@
                                       "type": "string",
                                       "const": "const"
                                     },
+                                    "mutable": {
+                                      "type": "boolean"
+                                    },
                                     "expression": {
                                       "type": "string"
                                     }

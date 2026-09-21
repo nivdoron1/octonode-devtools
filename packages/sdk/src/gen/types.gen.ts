@@ -1881,6 +1881,7 @@ export type GetApiProjectsByProjectIdSourceIndexResponses = {
                     serializable: boolean;
                     value?: unknown;
                     declarationKind?: 'const';
+                    mutable?: boolean;
                     expression?: string;
                 };
                 variable?: {
