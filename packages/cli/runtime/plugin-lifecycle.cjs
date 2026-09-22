@@ -1711,7 +1711,7 @@ var require_octonode_config = __commonJS({
       if (!env)
         return {};
       const parent = env.inherits ? resolveEnvVars(config, env.inherits, seen) : {};
-      return { ...parent, ...env.vars ?? {} };
+      return { ...parent, ...env.vars };
     }
   }
 });
@@ -2462,7 +2462,7 @@ var require_common = __commonJS({
       description: exports2.taskDescriptionSchema.optional(),
       sprintsEnabled: zod_1.z.boolean().optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one task space change is required");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one task space change is required");
     exports2.taskStatusSchema = zod_1.z.object({
       id: collaboration_1.entityIdSchema,
       spaceId: collaboration_1.entityIdSchema,
@@ -2488,7 +2488,7 @@ var require_common = __commonJS({
       wipLimit: zod_1.z.number().int().positive().max(1e4).nullable().optional(),
       archived: zod_1.z.boolean().optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one status change is required");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one status change is required");
     exports2.workItemTypeSchema = zod_1.z.object({
       id: collaboration_1.entityIdSchema,
       spaceId: collaboration_1.entityIdSchema,
@@ -2515,7 +2515,7 @@ var require_common = __commonJS({
       position: zod_1.z.number().int().nonnegative().optional(),
       archived: zod_1.z.boolean().optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one work item type change is required");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one work item type change is required");
     exports2.taskFieldOptionSchema = zod_1.z.object({
       id: collaboration_1.entityIdSchema,
       name: exports2.taskNameSchema,
@@ -2536,7 +2536,7 @@ var require_common = __commonJS({
       position: zod_1.z.number().int().nonnegative().optional(),
       archived: zod_1.z.boolean().optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one field option change is required");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one field option change is required");
     var taskFieldDefinitionShape = {
       name: exports2.taskNameSchema,
       description: zod_1.z.string().max(500).nullable(),
@@ -2573,7 +2573,7 @@ var require_common = __commonJS({
       position: zod_1.z.number().int().nonnegative().optional(),
       archived: zod_1.z.boolean().optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one field change is required");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one field change is required");
     exports2.taskFieldValueSchema = zod_1.z.discriminatedUnion("type", [
       zod_1.z.object({ type: zod_1.z.literal("text"), value: zod_1.z.string().max(1e4) }).strict(),
       zod_1.z.object({ type: zod_1.z.literal("number"), value: zod_1.z.number().finite() }).strict(),
@@ -2609,7 +2609,7 @@ var require_common = __commonJS({
       color: exports2.taskColorSchema.optional(),
       archived: zod_1.z.boolean().optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one tag change is required");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one tag change is required");
   }
 });
 
@@ -2660,7 +2660,7 @@ var require_planning = __commonJS({
       targetAt: common_1.nullableTaskTimestampSchema.optional(),
       archived: zod_1.z.boolean().optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one release change is required");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one release change is required");
     exports2.taskReleaseProgressSchema = zod_1.z.object({
       totalItems: zod_1.z.number().int().nonnegative(),
       doneItems: zod_1.z.number().int().nonnegative(),
@@ -2703,7 +2703,7 @@ var require_planning = __commonJS({
       startAt: common_1.nullableTaskTimestampSchema.optional(),
       endAt: common_1.nullableTaskTimestampSchema.optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one sprint change is required").refine((sprint) => sprint.startAt == null || sprint.endAt == null || sprint.endAt >= sprint.startAt, "endAt must not precede startAt");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one sprint change is required").refine((sprint) => sprint.startAt == null || sprint.endAt == null || sprint.endAt >= sprint.startAt, "endAt must not precede startAt");
     exports2.sprintStartSchema = zod_1.z.object({
       startAt: common_1.taskTimestampSchema,
       endAt: common_1.taskTimestampSchema,
@@ -2845,7 +2845,7 @@ var require_work_items = __commonJS({
       tagIds: workItemMutationShape.tagIds.optional(),
       releaseIds: workItemMutationShape.releaseIds.optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one work item change is required");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one work item change is required");
     exports2.workItemMoveSchema = zod_1.z.object({
       statusId: collaboration_1.entityIdSchema,
       beforeItemId: collaboration_1.entityIdSchema.nullable().optional(),
@@ -2978,7 +2978,7 @@ var require_views = __commonJS({
       columns: taskViewMutationShape.columns.optional(),
       shared: taskViewMutationShape.shared.optional(),
       expectedVersion: collaboration_1.revisionSchema
-    }).strict().refine(({ expectedVersion: _, ...changes }) => Object.keys(changes).length > 0, "at least one view change is required");
+    }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one view change is required");
   }
 });
 
@@ -11408,6 +11408,7 @@ var require_project_jobs = __commonJS({
       kind: zod_1.z.enum(["import", "compile"]),
       status: zod_1.z.enum(["succeeded", "failed"]),
       projectId: zod_1.z.string().min(1).max(240).optional(),
+      compilationSucceeded: zod_1.z.boolean().optional(),
       timestamp: zod_1.z.number().int().nonnegative()
     }).strict();
   }
@@ -12086,11 +12087,7 @@ var require_constants2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.UI_DIR = exports2.PYTHONPATH = exports2.PORT = exports2.PATH = exports2.OPENROUTER_API_KEY = exports2.CLOUDFLARE_ACCOUNT_ID = exports2.CLOUDFLARE_API_KEY = exports2.OPENAI_API_KEY = exports2.OTEL_SERVICE_NAME = exports2.OTEL_SDK_DISABLED = exports2.OTEL_EXPORTER_OTLP_ENDPOINT = exports2.OCTONODE_WORKSPACE = exports2.OCTONODE_VISUAL_PORT = exports2.OCTONODE_USER_EMAIL = exports2.OCTONODE_USER = exports2.OCTONODE_STUDIO_URL = exports2.OCTONODE_STORE_DIR = exports2.OCTONODE_SOURCE_WATCH_CONCURRENCY = exports2.OCTONODE_SHUTDOWN_TIMEOUT_MS = exports2.OCTONODE_SERVER_PROFILE = exports2.OCTONODE_RUNTIME = exports2.OCTONODE_REPOSITORY_REGISTRY_V2 = exports2.OCTONODE_RUN_RETENTION_COUNT = exports2.OCTONODE_RUN_RETENTION_BYTES = exports2.OCTONODE_RUN_RETENTION_AGE_MS = exports2.OCTONODE_STATE_NAMESPACE = exports2.OCTONODE_RUN_QUEUE = exports2.OCTONODE_RUN_CONCURRENCY = exports2.OCTONODE_MARKETPLACE_URL = exports2.OCTONODE_MARKETPLACE_TOKEN = exports2.OCTONODE_PACKAGE_CACHE = exports2.OCTONODE_PROJECT = exports2.OCTONODE_CWD = exports2.OCTONODE_COMMUNITY_ROLLOUT = exports2.OCTONODE_CHAT_SERVICE_URL = exports2.OCTONODE_CHAT_SERVICE_TOKEN = exports2.OCTONODE_CHAT_SERVICE_AVAILABLE = exports2.OCTONODE_CHAT_MODEL = exports2.OCTONODE_CLOUD_INTERNAL_TOKEN = exports2.OCTONODE_CORS_ORIGINS = exports2.OCTONODE_API_TOKEN = exports2.OCTONODE_API_URL = exports2.OCTONODE_AUTH_TOKEN = exports2.OCTONODE_AUTH_PRINCIPAL = exports2.HOST = exports2.CONFIG_PATH = exports2.setEnvironmentVariable = exports2.childProcessEnvironment = exports2.workflowEnvironment = exports2.PROCESS_ENV = void 0;
     exports2.VISUAL_UPDATE = exports2.VISUAL_STORY = exports2.VISUAL_REVIEW_DIR = exports2.VISUAL_FULL = exports2.VISUAL_BASE = exports2.USERNAME = exports2.USER = void 0;
-    var environment_cjs_1 = require_environment();
-    var environment_cjs_2 = require_environment();
-    Object.defineProperty(exports2, "PROCESS_ENV", { enumerable: true, get: function() {
-      return environment_cjs_2.PROCESS_ENV;
-    } });
+    exports2.PROCESS_ENV = typeof process === "undefined" ? {} : process.env;
     var workflowEnvironment = (variables = {}) => {
       const environment = Object.fromEntries(Object.entries(variables).filter((entry) => typeof entry[1] === "string"));
       delete environment.OCTONODE_CLOUD_INTERNAL_TOKEN;
@@ -12100,120 +12097,120 @@ var require_constants2 = __commonJS({
       return environment;
     };
     exports2.workflowEnvironment = workflowEnvironment;
-    var childProcessEnvironment3 = (overrides = {}) => (0, exports2.workflowEnvironment)({ ...environment_cjs_1.PROCESS_ENV, ...overrides });
+    var childProcessEnvironment3 = (overrides = {}) => (0, exports2.workflowEnvironment)({ ...exports2.PROCESS_ENV, ...overrides });
     exports2.childProcessEnvironment = childProcessEnvironment3;
     var setEnvironmentVariable = (name, value) => {
       if (value === void 0)
-        delete environment_cjs_1.PROCESS_ENV[name];
+        delete exports2.PROCESS_ENV[name];
       else
-        environment_cjs_1.PROCESS_ENV[name] = value;
+        exports2.PROCESS_ENV[name] = value;
     };
     exports2.setEnvironmentVariable = setEnvironmentVariable;
-    var CONFIG_PATH = () => environment_cjs_1.PROCESS_ENV.CONFIG_PATH;
+    var CONFIG_PATH = () => exports2.PROCESS_ENV.CONFIG_PATH;
     exports2.CONFIG_PATH = CONFIG_PATH;
-    var HOST = () => environment_cjs_1.PROCESS_ENV.HOST;
+    var HOST = () => exports2.PROCESS_ENV.HOST;
     exports2.HOST = HOST;
-    var OCTONODE_AUTH_PRINCIPAL = () => environment_cjs_1.PROCESS_ENV.OCTONODE_AUTH_PRINCIPAL;
+    var OCTONODE_AUTH_PRINCIPAL = () => exports2.PROCESS_ENV.OCTONODE_AUTH_PRINCIPAL;
     exports2.OCTONODE_AUTH_PRINCIPAL = OCTONODE_AUTH_PRINCIPAL;
-    var OCTONODE_AUTH_TOKEN = () => environment_cjs_1.PROCESS_ENV.OCTONODE_AUTH_TOKEN;
+    var OCTONODE_AUTH_TOKEN = () => exports2.PROCESS_ENV.OCTONODE_AUTH_TOKEN;
     exports2.OCTONODE_AUTH_TOKEN = OCTONODE_AUTH_TOKEN;
-    var OCTONODE_API_URL = () => environment_cjs_1.PROCESS_ENV.OCTONODE_API_URL;
+    var OCTONODE_API_URL = () => exports2.PROCESS_ENV.OCTONODE_API_URL;
     exports2.OCTONODE_API_URL = OCTONODE_API_URL;
-    var OCTONODE_API_TOKEN = () => environment_cjs_1.PROCESS_ENV.OCTONODE_API_TOKEN;
+    var OCTONODE_API_TOKEN = () => exports2.PROCESS_ENV.OCTONODE_API_TOKEN;
     exports2.OCTONODE_API_TOKEN = OCTONODE_API_TOKEN;
-    var OCTONODE_CORS_ORIGINS = () => environment_cjs_1.PROCESS_ENV.OCTONODE_CORS_ORIGINS;
+    var OCTONODE_CORS_ORIGINS = () => exports2.PROCESS_ENV.OCTONODE_CORS_ORIGINS;
     exports2.OCTONODE_CORS_ORIGINS = OCTONODE_CORS_ORIGINS;
-    var OCTONODE_CLOUD_INTERNAL_TOKEN = () => environment_cjs_1.PROCESS_ENV.OCTONODE_CLOUD_INTERNAL_TOKEN;
+    var OCTONODE_CLOUD_INTERNAL_TOKEN = () => exports2.PROCESS_ENV.OCTONODE_CLOUD_INTERNAL_TOKEN;
     exports2.OCTONODE_CLOUD_INTERNAL_TOKEN = OCTONODE_CLOUD_INTERNAL_TOKEN;
-    var OCTONODE_CHAT_MODEL = () => environment_cjs_1.PROCESS_ENV.OCTONODE_CHAT_MODEL;
+    var OCTONODE_CHAT_MODEL = () => exports2.PROCESS_ENV.OCTONODE_CHAT_MODEL;
     exports2.OCTONODE_CHAT_MODEL = OCTONODE_CHAT_MODEL;
-    var OCTONODE_CHAT_SERVICE_AVAILABLE = () => environment_cjs_1.PROCESS_ENV.OCTONODE_CHAT_SERVICE_AVAILABLE;
+    var OCTONODE_CHAT_SERVICE_AVAILABLE = () => exports2.PROCESS_ENV.OCTONODE_CHAT_SERVICE_AVAILABLE;
     exports2.OCTONODE_CHAT_SERVICE_AVAILABLE = OCTONODE_CHAT_SERVICE_AVAILABLE;
-    var OCTONODE_CHAT_SERVICE_TOKEN = () => environment_cjs_1.PROCESS_ENV.OCTONODE_CHAT_SERVICE_TOKEN;
+    var OCTONODE_CHAT_SERVICE_TOKEN = () => exports2.PROCESS_ENV.OCTONODE_CHAT_SERVICE_TOKEN;
     exports2.OCTONODE_CHAT_SERVICE_TOKEN = OCTONODE_CHAT_SERVICE_TOKEN;
-    var OCTONODE_CHAT_SERVICE_URL = () => environment_cjs_1.PROCESS_ENV.OCTONODE_CHAT_SERVICE_URL;
+    var OCTONODE_CHAT_SERVICE_URL = () => exports2.PROCESS_ENV.OCTONODE_CHAT_SERVICE_URL;
     exports2.OCTONODE_CHAT_SERVICE_URL = OCTONODE_CHAT_SERVICE_URL;
-    var OCTONODE_COMMUNITY_ROLLOUT = () => environment_cjs_1.PROCESS_ENV.OCTONODE_COMMUNITY_ROLLOUT;
+    var OCTONODE_COMMUNITY_ROLLOUT = () => exports2.PROCESS_ENV.OCTONODE_COMMUNITY_ROLLOUT;
     exports2.OCTONODE_COMMUNITY_ROLLOUT = OCTONODE_COMMUNITY_ROLLOUT;
-    var OCTONODE_CWD = () => environment_cjs_1.PROCESS_ENV.OCTONODE_CWD;
+    var OCTONODE_CWD = () => exports2.PROCESS_ENV.OCTONODE_CWD;
     exports2.OCTONODE_CWD = OCTONODE_CWD;
-    var OCTONODE_PROJECT = () => environment_cjs_1.PROCESS_ENV.OCTONODE_PROJECT;
+    var OCTONODE_PROJECT = () => exports2.PROCESS_ENV.OCTONODE_PROJECT;
     exports2.OCTONODE_PROJECT = OCTONODE_PROJECT;
-    var OCTONODE_PACKAGE_CACHE2 = () => environment_cjs_1.PROCESS_ENV.OCTONODE_PACKAGE_CACHE;
+    var OCTONODE_PACKAGE_CACHE2 = () => exports2.PROCESS_ENV.OCTONODE_PACKAGE_CACHE;
     exports2.OCTONODE_PACKAGE_CACHE = OCTONODE_PACKAGE_CACHE2;
-    var OCTONODE_MARKETPLACE_TOKEN2 = () => environment_cjs_1.PROCESS_ENV.OCTONODE_MARKETPLACE_TOKEN ?? environment_cjs_1.PROCESS_ENV.VITE_OCTONODE_MARKETPLACE_TOKEN ?? environment_cjs_1.PROCESS_ENV.VITE_PUBLIC_OCTONODE_MARKETPLACE_TOKEN;
+    var OCTONODE_MARKETPLACE_TOKEN2 = () => exports2.PROCESS_ENV.OCTONODE_MARKETPLACE_TOKEN ?? exports2.PROCESS_ENV.VITE_OCTONODE_MARKETPLACE_TOKEN ?? exports2.PROCESS_ENV.VITE_PUBLIC_OCTONODE_MARKETPLACE_TOKEN;
     exports2.OCTONODE_MARKETPLACE_TOKEN = OCTONODE_MARKETPLACE_TOKEN2;
-    var OCTONODE_MARKETPLACE_URL2 = () => environment_cjs_1.PROCESS_ENV.OCTONODE_MARKETPLACE_URL ?? environment_cjs_1.PROCESS_ENV.VITE_OCTONODE_MARKETPLACE_URL ?? environment_cjs_1.PROCESS_ENV.VITE_PUBLIC_OCTONODE_MARKETPLACE_URL;
+    var OCTONODE_MARKETPLACE_URL2 = () => exports2.PROCESS_ENV.OCTONODE_MARKETPLACE_URL ?? exports2.PROCESS_ENV.VITE_OCTONODE_MARKETPLACE_URL ?? exports2.PROCESS_ENV.VITE_PUBLIC_OCTONODE_MARKETPLACE_URL;
     exports2.OCTONODE_MARKETPLACE_URL = OCTONODE_MARKETPLACE_URL2;
-    var OCTONODE_RUN_CONCURRENCY = () => environment_cjs_1.PROCESS_ENV.OCTONODE_RUN_CONCURRENCY;
+    var OCTONODE_RUN_CONCURRENCY = () => exports2.PROCESS_ENV.OCTONODE_RUN_CONCURRENCY;
     exports2.OCTONODE_RUN_CONCURRENCY = OCTONODE_RUN_CONCURRENCY;
-    var OCTONODE_RUN_QUEUE = () => environment_cjs_1.PROCESS_ENV.OCTONODE_RUN_QUEUE;
+    var OCTONODE_RUN_QUEUE = () => exports2.PROCESS_ENV.OCTONODE_RUN_QUEUE;
     exports2.OCTONODE_RUN_QUEUE = OCTONODE_RUN_QUEUE;
-    var OCTONODE_STATE_NAMESPACE = () => environment_cjs_1.PROCESS_ENV.OCTONODE_STATE_NAMESPACE;
+    var OCTONODE_STATE_NAMESPACE = () => exports2.PROCESS_ENV.OCTONODE_STATE_NAMESPACE;
     exports2.OCTONODE_STATE_NAMESPACE = OCTONODE_STATE_NAMESPACE;
-    var OCTONODE_RUN_RETENTION_AGE_MS = () => environment_cjs_1.PROCESS_ENV.OCTONODE_RUN_RETENTION_AGE_MS;
+    var OCTONODE_RUN_RETENTION_AGE_MS = () => exports2.PROCESS_ENV.OCTONODE_RUN_RETENTION_AGE_MS;
     exports2.OCTONODE_RUN_RETENTION_AGE_MS = OCTONODE_RUN_RETENTION_AGE_MS;
-    var OCTONODE_RUN_RETENTION_BYTES = () => environment_cjs_1.PROCESS_ENV.OCTONODE_RUN_RETENTION_BYTES;
+    var OCTONODE_RUN_RETENTION_BYTES = () => exports2.PROCESS_ENV.OCTONODE_RUN_RETENTION_BYTES;
     exports2.OCTONODE_RUN_RETENTION_BYTES = OCTONODE_RUN_RETENTION_BYTES;
-    var OCTONODE_RUN_RETENTION_COUNT = () => environment_cjs_1.PROCESS_ENV.OCTONODE_RUN_RETENTION_COUNT;
+    var OCTONODE_RUN_RETENTION_COUNT = () => exports2.PROCESS_ENV.OCTONODE_RUN_RETENTION_COUNT;
     exports2.OCTONODE_RUN_RETENTION_COUNT = OCTONODE_RUN_RETENTION_COUNT;
-    var OCTONODE_REPOSITORY_REGISTRY_V2 = () => environment_cjs_1.PROCESS_ENV.OCTONODE_REPOSITORY_REGISTRY_V2;
+    var OCTONODE_REPOSITORY_REGISTRY_V2 = () => exports2.PROCESS_ENV.OCTONODE_REPOSITORY_REGISTRY_V2;
     exports2.OCTONODE_REPOSITORY_REGISTRY_V2 = OCTONODE_REPOSITORY_REGISTRY_V2;
-    var OCTONODE_RUNTIME = () => environment_cjs_1.PROCESS_ENV.OCTONODE_RUNTIME;
+    var OCTONODE_RUNTIME = () => exports2.PROCESS_ENV.OCTONODE_RUNTIME;
     exports2.OCTONODE_RUNTIME = OCTONODE_RUNTIME;
-    var OCTONODE_SERVER_PROFILE = () => environment_cjs_1.PROCESS_ENV.OCTONODE_SERVER_PROFILE;
+    var OCTONODE_SERVER_PROFILE = () => exports2.PROCESS_ENV.OCTONODE_SERVER_PROFILE;
     exports2.OCTONODE_SERVER_PROFILE = OCTONODE_SERVER_PROFILE;
-    var OCTONODE_SHUTDOWN_TIMEOUT_MS = () => environment_cjs_1.PROCESS_ENV.OCTONODE_SHUTDOWN_TIMEOUT_MS;
+    var OCTONODE_SHUTDOWN_TIMEOUT_MS = () => exports2.PROCESS_ENV.OCTONODE_SHUTDOWN_TIMEOUT_MS;
     exports2.OCTONODE_SHUTDOWN_TIMEOUT_MS = OCTONODE_SHUTDOWN_TIMEOUT_MS;
-    var OCTONODE_SOURCE_WATCH_CONCURRENCY = () => environment_cjs_1.PROCESS_ENV.OCTONODE_SOURCE_WATCH_CONCURRENCY;
+    var OCTONODE_SOURCE_WATCH_CONCURRENCY = () => exports2.PROCESS_ENV.OCTONODE_SOURCE_WATCH_CONCURRENCY;
     exports2.OCTONODE_SOURCE_WATCH_CONCURRENCY = OCTONODE_SOURCE_WATCH_CONCURRENCY;
-    var OCTONODE_STORE_DIR = () => environment_cjs_1.PROCESS_ENV.OCTONODE_STORE_DIR;
+    var OCTONODE_STORE_DIR = () => exports2.PROCESS_ENV.OCTONODE_STORE_DIR;
     exports2.OCTONODE_STORE_DIR = OCTONODE_STORE_DIR;
-    var OCTONODE_STUDIO_URL = () => environment_cjs_1.PROCESS_ENV.OCTONODE_STUDIO_URL ?? environment_cjs_1.PROCESS_ENV.VITE_OCTONODE_STUDIO_URL ?? environment_cjs_1.PROCESS_ENV.VITE_PUBLIC_OCTONODE_STUDIO_URL;
+    var OCTONODE_STUDIO_URL = () => exports2.PROCESS_ENV.OCTONODE_STUDIO_URL ?? exports2.PROCESS_ENV.VITE_OCTONODE_STUDIO_URL ?? exports2.PROCESS_ENV.VITE_PUBLIC_OCTONODE_STUDIO_URL;
     exports2.OCTONODE_STUDIO_URL = OCTONODE_STUDIO_URL;
-    var OCTONODE_USER = () => environment_cjs_1.PROCESS_ENV.OCTONODE_USER;
+    var OCTONODE_USER = () => exports2.PROCESS_ENV.OCTONODE_USER;
     exports2.OCTONODE_USER = OCTONODE_USER;
-    var OCTONODE_USER_EMAIL = () => environment_cjs_1.PROCESS_ENV.OCTONODE_USER_EMAIL;
+    var OCTONODE_USER_EMAIL = () => exports2.PROCESS_ENV.OCTONODE_USER_EMAIL;
     exports2.OCTONODE_USER_EMAIL = OCTONODE_USER_EMAIL;
-    var OCTONODE_VISUAL_PORT = () => environment_cjs_1.PROCESS_ENV.OCTONODE_VISUAL_PORT;
+    var OCTONODE_VISUAL_PORT = () => exports2.PROCESS_ENV.OCTONODE_VISUAL_PORT;
     exports2.OCTONODE_VISUAL_PORT = OCTONODE_VISUAL_PORT;
-    var OCTONODE_WORKSPACE = () => environment_cjs_1.PROCESS_ENV.OCTONODE_WORKSPACE;
+    var OCTONODE_WORKSPACE = () => exports2.PROCESS_ENV.OCTONODE_WORKSPACE;
     exports2.OCTONODE_WORKSPACE = OCTONODE_WORKSPACE;
-    var OTEL_EXPORTER_OTLP_ENDPOINT = () => environment_cjs_1.PROCESS_ENV.OTEL_EXPORTER_OTLP_ENDPOINT;
+    var OTEL_EXPORTER_OTLP_ENDPOINT = () => exports2.PROCESS_ENV.OTEL_EXPORTER_OTLP_ENDPOINT;
     exports2.OTEL_EXPORTER_OTLP_ENDPOINT = OTEL_EXPORTER_OTLP_ENDPOINT;
-    var OTEL_SDK_DISABLED = () => environment_cjs_1.PROCESS_ENV.OTEL_SDK_DISABLED;
+    var OTEL_SDK_DISABLED = () => exports2.PROCESS_ENV.OTEL_SDK_DISABLED;
     exports2.OTEL_SDK_DISABLED = OTEL_SDK_DISABLED;
-    var OTEL_SERVICE_NAME = () => environment_cjs_1.PROCESS_ENV.OTEL_SERVICE_NAME;
+    var OTEL_SERVICE_NAME = () => exports2.PROCESS_ENV.OTEL_SERVICE_NAME;
     exports2.OTEL_SERVICE_NAME = OTEL_SERVICE_NAME;
-    var OPENAI_API_KEY = () => environment_cjs_1.PROCESS_ENV.OPENAI_API_KEY;
+    var OPENAI_API_KEY = () => exports2.PROCESS_ENV.OPENAI_API_KEY;
     exports2.OPENAI_API_KEY = OPENAI_API_KEY;
-    var CLOUDFLARE_API_KEY = () => environment_cjs_1.PROCESS_ENV.CLOUDFLARE_API_KEY;
+    var CLOUDFLARE_API_KEY = () => exports2.PROCESS_ENV.CLOUDFLARE_API_KEY;
     exports2.CLOUDFLARE_API_KEY = CLOUDFLARE_API_KEY;
-    var CLOUDFLARE_ACCOUNT_ID = () => environment_cjs_1.PROCESS_ENV.CLOUDFLARE_ACCOUNT_ID;
+    var CLOUDFLARE_ACCOUNT_ID = () => exports2.PROCESS_ENV.CLOUDFLARE_ACCOUNT_ID;
     exports2.CLOUDFLARE_ACCOUNT_ID = CLOUDFLARE_ACCOUNT_ID;
-    var OPENROUTER_API_KEY = () => environment_cjs_1.PROCESS_ENV.OPENROUTER_API_KEY;
+    var OPENROUTER_API_KEY = () => exports2.PROCESS_ENV.OPENROUTER_API_KEY;
     exports2.OPENROUTER_API_KEY = OPENROUTER_API_KEY;
-    var PATH = () => environment_cjs_1.PROCESS_ENV.PATH;
+    var PATH = () => exports2.PROCESS_ENV.PATH;
     exports2.PATH = PATH;
-    var PORT = () => environment_cjs_1.PROCESS_ENV.PORT;
+    var PORT = () => exports2.PROCESS_ENV.PORT;
     exports2.PORT = PORT;
-    var PYTHONPATH = () => environment_cjs_1.PROCESS_ENV.PYTHONPATH;
+    var PYTHONPATH = () => exports2.PROCESS_ENV.PYTHONPATH;
     exports2.PYTHONPATH = PYTHONPATH;
-    var UI_DIR = () => environment_cjs_1.PROCESS_ENV.UI_DIR;
+    var UI_DIR = () => exports2.PROCESS_ENV.UI_DIR;
     exports2.UI_DIR = UI_DIR;
-    var USER = () => environment_cjs_1.PROCESS_ENV.USER;
+    var USER = () => exports2.PROCESS_ENV.USER;
     exports2.USER = USER;
-    var USERNAME = () => environment_cjs_1.PROCESS_ENV.USERNAME;
+    var USERNAME = () => exports2.PROCESS_ENV.USERNAME;
     exports2.USERNAME = USERNAME;
-    var VISUAL_BASE = () => environment_cjs_1.PROCESS_ENV.VISUAL_BASE;
+    var VISUAL_BASE = () => exports2.PROCESS_ENV.VISUAL_BASE;
     exports2.VISUAL_BASE = VISUAL_BASE;
-    var VISUAL_FULL = () => environment_cjs_1.PROCESS_ENV.VISUAL_FULL;
+    var VISUAL_FULL = () => exports2.PROCESS_ENV.VISUAL_FULL;
     exports2.VISUAL_FULL = VISUAL_FULL;
-    var VISUAL_REVIEW_DIR = () => environment_cjs_1.PROCESS_ENV.VISUAL_REVIEW_DIR;
+    var VISUAL_REVIEW_DIR = () => exports2.PROCESS_ENV.VISUAL_REVIEW_DIR;
     exports2.VISUAL_REVIEW_DIR = VISUAL_REVIEW_DIR;
-    var VISUAL_STORY = () => environment_cjs_1.PROCESS_ENV.VISUAL_STORY;
+    var VISUAL_STORY = () => exports2.PROCESS_ENV.VISUAL_STORY;
     exports2.VISUAL_STORY = VISUAL_STORY;
-    var VISUAL_UPDATE = () => environment_cjs_1.PROCESS_ENV.VISUAL_UPDATE;
+    var VISUAL_UPDATE = () => exports2.PROCESS_ENV.VISUAL_UPDATE;
     exports2.VISUAL_UPDATE = VISUAL_UPDATE;
   }
 });
@@ -12326,7 +12323,7 @@ var require_api_exposure = __commonJS({
       return {
         ...document,
         info: {
-          ...document.info ?? {},
+          ...document.info,
           title: "Octonode Developer API",
           description: "Supported API for project, workflow, execution, and data integrations."
         },
@@ -12857,7 +12854,8 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
   const restoreBefore = () => {
     for (const [path, content] of before) {
       if (metadata.has(path) && !metadataTouched) continue;
-      content === void 0 ? (0, import_node_fs5.rmSync)(path, { force: true }) : (0, import_node_fs5.writeFileSync)(path, content);
+      if (content === void 0) (0, import_node_fs5.rmSync)(path, { force: true });
+      else (0, import_node_fs5.writeFileSync)(path, content);
     }
   };
   if (hadInstall && !hasLock)
@@ -12950,8 +12948,10 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
     } else if (!hadInstall) {
       (0, import_node_fs5.rmSync)((0, import_node_path5.join)(project.root, "node_modules"), { recursive: true, force: true });
     }
-    for (const [path, content] of pnpBefore)
-      content === void 0 ? (0, import_node_fs5.rmSync)(path, { force: true }) : (0, import_node_fs5.writeFileSync)(path, content);
+    for (const [path, content] of pnpBefore) {
+      if (content === void 0) (0, import_node_fs5.rmSync)(path, { force: true });
+      else (0, import_node_fs5.writeFileSync)(path, content);
+    }
     const failure = error;
     if (!recovery) (0, import_node_fs5.rmSync)(journal, { force: true });
     throw new Error(`package installation failed: ${failure.stderr?.trim() || failure.message}${recovery}`);
