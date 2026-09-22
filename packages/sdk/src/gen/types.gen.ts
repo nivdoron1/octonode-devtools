@@ -105,6 +105,24 @@ export type GetApiRunsResponses = {
                 outputs: {
                     [key: string]: unknown;
                 };
+                logs?: Array<{
+                    id: string;
+                    runId: string;
+                    nodeId: string;
+                    level: 'debug' | 'info' | 'warn' | 'error';
+                    source: 'stdout' | 'stderr' | 'engine';
+                    message: string;
+                    timestamp: number;
+                }>;
+                snapshot?: {
+                    revision: string;
+                    digest: string;
+                    workflowJson: string;
+                    code: Array<{
+                        path: string;
+                        content: string;
+                    }>;
+                };
                 durationMs: number;
             };
         }>;
@@ -177,6 +195,24 @@ export type GetApiRunsByRunIdResponses = {
             };
             outputs: {
                 [key: string]: unknown;
+            };
+            logs?: Array<{
+                id: string;
+                runId: string;
+                nodeId: string;
+                level: 'debug' | 'info' | 'warn' | 'error';
+                source: 'stdout' | 'stderr' | 'engine';
+                message: string;
+                timestamp: number;
+            }>;
+            snapshot?: {
+                revision: string;
+                digest: string;
+                workflowJson: string;
+                code: Array<{
+                    path: string;
+                    content: string;
+                }>;
             };
             durationMs: number;
         };
@@ -3197,6 +3233,24 @@ export type PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsResponses = {
             outputs: {
                 [key: string]: unknown;
             };
+            logs?: Array<{
+                id: string;
+                runId: string;
+                nodeId: string;
+                level: 'debug' | 'info' | 'warn' | 'error';
+                source: 'stdout' | 'stderr' | 'engine';
+                message: string;
+                timestamp: number;
+            }>;
+            snapshot?: {
+                revision: string;
+                digest: string;
+                workflowJson: string;
+                code: Array<{
+                    path: string;
+                    content: string;
+                }>;
+            };
             durationMs: number;
         };
         error?: string;
@@ -3231,6 +3285,13 @@ export type PostApiWorkflowsByWorkflowIdExecutionsErrors = {
      */
     400: {
         error: string;
+    };
+    /**
+     * Error
+     */
+    402: {
+        error: string;
+        code: 'missing_entitlement' | 'execution_quota_unconfigured' | 'execution_quota_inactive' | 'execution_quota_exhausted';
     };
     /**
      * Error
@@ -3309,6 +3370,24 @@ export type PostApiWorkflowsByWorkflowIdExecutionsResponses = {
             outputs: {
                 [key: string]: unknown;
             };
+            logs?: Array<{
+                id: string;
+                runId: string;
+                nodeId: string;
+                level: 'debug' | 'info' | 'warn' | 'error';
+                source: 'stdout' | 'stderr' | 'engine';
+                message: string;
+                timestamp: number;
+            }>;
+            snapshot?: {
+                revision: string;
+                digest: string;
+                workflowJson: string;
+                code: Array<{
+                    path: string;
+                    content: string;
+                }>;
+            };
             durationMs: number;
         };
         error?: string;
@@ -3373,6 +3452,24 @@ export type GetApiExecutionsByRunIdResponses = {
             };
             outputs: {
                 [key: string]: unknown;
+            };
+            logs?: Array<{
+                id: string;
+                runId: string;
+                nodeId: string;
+                level: 'debug' | 'info' | 'warn' | 'error';
+                source: 'stdout' | 'stderr' | 'engine';
+                message: string;
+                timestamp: number;
+            }>;
+            snapshot?: {
+                revision: string;
+                digest: string;
+                workflowJson: string;
+                code: Array<{
+                    path: string;
+                    content: string;
+                }>;
             };
             durationMs: number;
         };

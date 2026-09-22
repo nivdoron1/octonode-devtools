@@ -447,6 +447,97 @@
                                 "type": "object",
                                 "additionalProperties": {}
                               },
+                              "logs": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "runId": {
+                                      "type": "string"
+                                    },
+                                    "nodeId": {
+                                      "type": "string"
+                                    },
+                                    "level": {
+                                      "type": "string",
+                                      "enum": [
+                                        "debug",
+                                        "info",
+                                        "warn",
+                                        "error"
+                                      ]
+                                    },
+                                    "source": {
+                                      "type": "string",
+                                      "enum": [
+                                        "stdout",
+                                        "stderr",
+                                        "engine"
+                                      ]
+                                    },
+                                    "message": {
+                                      "type": "string"
+                                    },
+                                    "timestamp": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "runId",
+                                    "nodeId",
+                                    "level",
+                                    "source",
+                                    "message",
+                                    "timestamp"
+                                  ]
+                                }
+                              },
+                              "snapshot": {
+                                "type": "object",
+                                "properties": {
+                                  "revision": {
+                                    "type": "string",
+                                    "minLength": 64,
+                                    "maxLength": 64
+                                  },
+                                  "digest": {
+                                    "type": "string",
+                                    "minLength": 64,
+                                    "maxLength": 64
+                                  },
+                                  "workflowJson": {
+                                    "type": "string"
+                                  },
+                                  "code": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "path": {
+                                          "type": "string"
+                                        },
+                                        "content": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "path",
+                                        "content"
+                                      ]
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "revision",
+                                  "digest",
+                                  "workflowJson",
+                                  "code"
+                                ]
+                              },
                               "durationMs": {
                                 "type": "number"
                               }
@@ -690,6 +781,97 @@
                         "outputs": {
                           "type": "object",
                           "additionalProperties": {}
+                        },
+                        "logs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "runId": {
+                                "type": "string"
+                              },
+                              "nodeId": {
+                                "type": "string"
+                              },
+                              "level": {
+                                "type": "string",
+                                "enum": [
+                                  "debug",
+                                  "info",
+                                  "warn",
+                                  "error"
+                                ]
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "stdout",
+                                  "stderr",
+                                  "engine"
+                                ]
+                              },
+                              "message": {
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "runId",
+                              "nodeId",
+                              "level",
+                              "source",
+                              "message",
+                              "timestamp"
+                            ]
+                          }
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "properties": {
+                            "revision": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "digest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "workflowJson": {
+                              "type": "string"
+                            },
+                            "code": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "content": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "path",
+                                  "content"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "revision",
+                            "digest",
+                            "workflowJson",
+                            "code"
+                          ]
                         },
                         "durationMs": {
                           "type": "number"
@@ -10307,6 +10489,97 @@
                           "type": "object",
                           "additionalProperties": {}
                         },
+                        "logs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "runId": {
+                                "type": "string"
+                              },
+                              "nodeId": {
+                                "type": "string"
+                              },
+                              "level": {
+                                "type": "string",
+                                "enum": [
+                                  "debug",
+                                  "info",
+                                  "warn",
+                                  "error"
+                                ]
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "stdout",
+                                  "stderr",
+                                  "engine"
+                                ]
+                              },
+                              "message": {
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "runId",
+                              "nodeId",
+                              "level",
+                              "source",
+                              "message",
+                              "timestamp"
+                            ]
+                          }
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "properties": {
+                            "revision": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "digest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "workflowJson": {
+                              "type": "string"
+                            },
+                            "code": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "content": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "path",
+                                  "content"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "revision",
+                            "digest",
+                            "workflowJson",
+                            "code"
+                          ]
+                        },
                         "durationMs": {
                           "type": "number"
                         }
@@ -10630,6 +10903,97 @@
                           "type": "object",
                           "additionalProperties": {}
                         },
+                        "logs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "runId": {
+                                "type": "string"
+                              },
+                              "nodeId": {
+                                "type": "string"
+                              },
+                              "level": {
+                                "type": "string",
+                                "enum": [
+                                  "debug",
+                                  "info",
+                                  "warn",
+                                  "error"
+                                ]
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "stdout",
+                                  "stderr",
+                                  "engine"
+                                ]
+                              },
+                              "message": {
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "runId",
+                              "nodeId",
+                              "level",
+                              "source",
+                              "message",
+                              "timestamp"
+                            ]
+                          }
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "properties": {
+                            "revision": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "digest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "workflowJson": {
+                              "type": "string"
+                            },
+                            "code": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "content": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "path",
+                                  "content"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "revision",
+                            "digest",
+                            "workflowJson",
+                            "code"
+                          ]
+                        },
                         "durationMs": {
                           "type": "number"
                         }
@@ -10672,6 +11036,34 @@
                   },
                   "required": [
                     "error"
+                  ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "missing_entitlement",
+                        "execution_quota_unconfigured",
+                        "execution_quota_inactive",
+                        "execution_quota_exhausted"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
                   ]
                 }
               }
@@ -10966,6 +11358,97 @@
                         "outputs": {
                           "type": "object",
                           "additionalProperties": {}
+                        },
+                        "logs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "runId": {
+                                "type": "string"
+                              },
+                              "nodeId": {
+                                "type": "string"
+                              },
+                              "level": {
+                                "type": "string",
+                                "enum": [
+                                  "debug",
+                                  "info",
+                                  "warn",
+                                  "error"
+                                ]
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "stdout",
+                                  "stderr",
+                                  "engine"
+                                ]
+                              },
+                              "message": {
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "runId",
+                              "nodeId",
+                              "level",
+                              "source",
+                              "message",
+                              "timestamp"
+                            ]
+                          }
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "properties": {
+                            "revision": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "digest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "workflowJson": {
+                              "type": "string"
+                            },
+                            "code": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "content": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "path",
+                                  "content"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "revision",
+                            "digest",
+                            "workflowJson",
+                            "code"
+                          ]
                         },
                         "durationMs": {
                           "type": "number"
