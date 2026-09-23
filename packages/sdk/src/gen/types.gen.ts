@@ -58,6 +58,7 @@ export type GetApiRunsData = {
     body?: never;
     path?: never;
     query?: {
+        project?: string;
         workflowId?: string;
         cursor?: string;
         offset?: number;
