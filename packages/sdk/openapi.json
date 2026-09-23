@@ -606,6 +606,14 @@
         "parameters": [
           {
             "in": "query",
+            "name": "project",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "in": "query",
             "name": "workflowId",
             "schema": {
               "type": "string",

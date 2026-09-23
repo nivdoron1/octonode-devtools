@@ -2222,8 +2222,10 @@ var require_collaboration = __commonJS({
       projectId: zod_1.z.string().trim().min(1).max(128),
       projectIds: zod_1.z.array(zod_1.z.string().trim().min(1).max(128)).min(1).max(100).refine((ids) => new Set(ids).size === ids.length, "projectIds must be unique").optional(),
       name: zod_1.z.string().trim().min(1).max(80).optional(),
+      worktreeId: zod_1.z.string().uuid().optional(),
+      mode: zod_1.z.enum(["full", "quick"]).optional(),
       clientMutationId: exports2.idempotencyKeySchema
-    }).strict().refine(({ projectId, projectIds }) => !projectIds || projectIds[0] === projectId, "projectId must be the first projectIds entry");
+    }).strict().refine(({ projectId, projectIds, worktreeId }) => (!projectIds || projectIds[0] === projectId) && (!worktreeId || !projectIds || projectIds.length === 1), "projectId must be first and checkout sessions require one project");
     exports2.assistantSessionSortSchema = zod_1.z.enum(["activity", "created", "name"]);
     exports2.assistantSessionOrderSchema = zod_1.z.enum(["asc", "desc"]);
     exports2.assistantSessionListQuerySchema = zod_1.z.object({

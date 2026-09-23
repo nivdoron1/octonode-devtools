@@ -1,6 +1,6 @@
 {
   "name": "@octonodes/ui-extensions",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "type": "module",
   "license": "MIT",
   "description": "Portable contracts and React primitives for Octonode plugin UI extensions.",
