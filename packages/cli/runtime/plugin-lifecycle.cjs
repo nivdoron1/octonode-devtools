@@ -11895,15 +11895,6 @@ var require_runner = __commonJS({
   }
 });
 
-// packages/common/environment.cjs
-var require_environment = __commonJS({
-  "packages/common/environment.cjs"(exports2) {
-    "use strict";
-    exports2.PROCESS_ENV = process.env;
-    exports2.NODE_ENV = process.env.NODE_ENV;
-  }
-});
-
 // packages/plugin-runtime/dist/plugin.js
 var require_plugin2 = __commonJS({
   "packages/plugin-runtime/dist/plugin.js"(exports2) {
@@ -11911,7 +11902,6 @@ var require_plugin2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.definePlugin = definePlugin;
     exports2.startPlugin = startPlugin;
-    var environment_cjs_1 = require_environment();
     var schema_1 = require_dist();
     var define_node_1 = require_define_node();
     var runner_1 = require_runner();
@@ -11959,7 +11949,7 @@ var require_plugin2 = __commonJS({
             (0, define_node_1.defineNode)({
               ...node,
               run: (inputs, context) => {
-                const missing = fields.filter(([name, field]) => field.required && !environment_cjs_1.PROCESS_ENV[name]).map(([name]) => name);
+                const missing = fields.filter(([name, field]) => field.required && !process.env[name]).map(([name]) => name);
                 if (missing.length)
                   throw new runner_1.NodeError(`Missing connection credentials: ${missing.join(", ")}`);
                 return nodeHandlers[node.id](inputs, context);
