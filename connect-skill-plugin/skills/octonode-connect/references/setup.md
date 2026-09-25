@@ -23,4 +23,3 @@ mechanism. `connect headers` emits a real credential and is only for a trusted c
 
 For multiple authorized projects, repeat `--project`. Add `--worktree WORKTREE_ID` only when the
 session must target a managed checkout. Never commit a token or generated authorization header.
-
