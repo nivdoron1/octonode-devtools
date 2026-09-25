@@ -2,7 +2,7 @@ import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { MCP_TOOLS } from "../packages/mcp/src/constants.ts";
 
-export const referenceRoot = new URL("../connect-skill-plugin/skills/octonode-connect/references/mcp/", import.meta.url);
+export const referenceRoot = new URL("../octonode-plugin/skills/octonode-connect/references/mcp/", import.meta.url);
 
 function group(tool) {
   if (tool.path.includes("/github/")) return "github";

@@ -20,7 +20,7 @@ test("skill MCP references stay exact with hosted registrations", () => {
 });
 
 test("bundled skill Markdown links resolve inside the skill bundle", () => {
-  const root = new URL("../connect-skill-plugin/skills/", import.meta.url);
+  const root = new URL("../octonode-plugin/skills/", import.meta.url);
   function check(directory) {
     for (const name of readdirSync(directory)) {
       const file = new URL(name, directory);

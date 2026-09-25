@@ -88,7 +88,7 @@ Use `octonodes connect <codex|claude|cursor> --workspace org:WORKSPACE_ID --proj
 to print scoped MCP configuration. Repeat `--project` for multiple projects and optionally pass
 `--worktree`. Codex uses the saved CLI login; Claude and Cursor need `OCTONODE_TOKEN` in their
 environment. Configuration generation does not install it. See the shared
-[agent plugin](../../connect-skill-plugin/README.md) for setup and plugin operation skills.
+[agent plugin](../../octonode-plugin/README.md) for setup and plugin operation skills.
 
 ## Find operations
 

@@ -1,5 +1,5 @@
 {
-  "name": "connect-skill-plugin",
+  "name": "octonode-plugin",
   "version": "0.2.0",
   "description": "Connect to Octonode and create, test, publish, and manage workflow plugins.",
   "author": { "name": "Octonode", "url": "https://octonode.dev" },

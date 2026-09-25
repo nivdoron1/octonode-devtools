@@ -1,4 +1,4 @@
-# Octonode Connect plugin
+# Octonode Plugin
 
 One agent plugin with shared skills for Claude Code, Codex, Cursor, and Agent Plugins-compatible hosts:
 
@@ -25,8 +25,8 @@ schema, example call, scope, risk, and argument routing. They are generated from
 
 ## Load the skills
 
-- **Claude Code:** from this repository, run `claude --plugin-dir ./connect-skill-plugin`.
-  Skills are namespaced, for example `/connect-skill-plugin:octonode-plugin-author`.
+- **Claude Code:** from this repository, run `claude --plugin-dir ./octonode-plugin`.
+  Skills are namespaced, for example `/octonode-plugin:octonode-plugin-author`.
 - **Codex:** install this directory through your local plugin marketplace. For skills-only local use,
   copy the three directories under `skills/` to your project's `.agents/skills/` or `~/.agents/skills/`.
 - **Cursor:** distribute this directory as an Agent Plugin through your plugin marketplace.
