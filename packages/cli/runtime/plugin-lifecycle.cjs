@@ -11895,183 +11895,6 @@ var require_runner = __commonJS({
   }
 });
 
-// packages/plugin-runtime/dist/plugin.js
-var require_plugin2 = __commonJS({
-  "packages/plugin-runtime/dist/plugin.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.definePlugin = definePlugin;
-    exports2.startPlugin = startPlugin;
-    var schema_1 = require_dist();
-    var define_node_1 = require_define_node();
-    var runner_1 = require_runner();
-    function definePlugin(definition, handlers) {
-      const options = definition;
-      if (!handlers && (!options || !Array.isArray(options.nodes)))
-        throw new Error("plugin needs a nodes array");
-      if (!handlers) {
-        for (const node of options.nodes) {
-          if (typeof node.run !== "function")
-            throw new Error(`plugin node "${node.id}" needs a handler`);
-          if (node.kind && node.kind !== "function")
-            throw new Error("plugin nodes must be functions");
-        }
-      }
-      const manifest2 = schema_1.PluginManifest.parse(handlers ? definition : {
-        ...options,
-        nodes: options.nodes.map(({ run: _run, ...node }) => ({
-          ...node,
-          command: `node dist/index.js ${node.id}`,
-          language: "typescript"
-        }))
-      });
-      const nodeHandlers = handlers ?? Object.fromEntries(options.nodes.map((node) => [node.id, node.run]));
-      for (const node of manifest2.nodes) {
-        for (const field of ["inputs", "outputs", "defaults"]) {
-          const error = node[field] === void 0 ? void 0 : (0, runner_1.jsonSafetyError)(node[field]);
-          if (error)
-            throw new Error(`plugin node "${node.id}" ${field} must be JSON-serializable: ${error}`);
-        }
-      }
-      for (const id of Object.keys(nodeHandlers)) {
-        if (!manifest2.nodes.some((node) => node.id === id))
-          throw new Error(`handler "${id}" has no plugin node`);
-      }
-      return {
-        manifest: manifest2,
-        ...!handlers && options.assets ? { assets: options.assets } : {},
-        nodes: Object.fromEntries(manifest2.nodes.map((node) => {
-          if (!Object.hasOwn(nodeHandlers, node.id))
-            throw new Error(`plugin node "${node.id}" needs a handler`);
-          const fields = (node.connections ?? []).flatMap((id) => Object.entries(manifest2.connections?.[id]?.fields ?? {}));
-          return [
-            node.id,
-            (0, define_node_1.defineNode)({
-              ...node,
-              run: (inputs, context) => {
-                const missing = fields.filter(([name, field]) => field.required && !process.env[name]).map(([name]) => name);
-                if (missing.length)
-                  throw new runner_1.NodeError(`Missing connection credentials: ${missing.join(", ")}`);
-                return nodeHandlers[node.id](inputs, context);
-              }
-            })
-          ];
-        }))
-      };
-    }
-    function startPlugin(plugin, nodeId = process.argv[2]) {
-      const id = nodeId ?? (plugin.manifest.nodes.length === 1 ? plugin.manifest.nodes[0].id : void 0);
-      if (!id || !Object.hasOwn(plugin.nodes, id))
-        throw new Error(`Choose a plugin node: ${Object.keys(plugin.nodes).join(", ")}`);
-      (0, runner_1.start)(plugin.nodes[id]);
-    }
-  }
-});
-
-// packages/plugin-runtime/dist/plugin-file.js
-var require_plugin_file = __commonJS({
-  "packages/plugin-runtime/dist/plugin-file.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.pluginDefinitionPath = pluginDefinitionPath;
-    exports2.loadPluginDefinition = loadPluginDefinition3;
-    var node_fs_1 = require("node:fs");
-    var node_path_1 = require("node:path");
-    var yaml_1 = require("yaml");
-    var schema_1 = require_dist();
-    function pluginDefinitionPath(dir) {
-      const files = schema_1.PLUGIN_DEFINITION_FILENAMES.map((name) => (0, node_path_1.join)(dir, name)).filter(node_fs_1.existsSync);
-      if (files.length !== 1)
-        throw new Error(files.length ? `Multiple plugin definitions in ${dir}; keep exactly one` : `No plugin definition in ${dir}; create octonode.yml or octonode.json`);
-      const file = files[0];
-      if ((0, node_path_1.dirname)((0, node_fs_1.realpathSync)(file)) !== (0, node_fs_1.realpathSync)(dir))
-        throw new Error("Plugin definition must stay inside its folder");
-      if (!(0, node_fs_1.statSync)(file).isFile() || (0, node_fs_1.statSync)(file).size > 1048576)
-        throw new Error("Plugin definition must be a file smaller than 1 MiB");
-      return file;
-    }
-    function loadPluginDefinition3(dir) {
-      const file = pluginDefinitionPath(dir);
-      const source = (0, node_fs_1.readFileSync)(file, "utf8");
-      const document = (0, yaml_1.parseDocument)(source, { version: "1.2", uniqueKeys: true });
-      (0, yaml_1.visit)(document, {
-        Alias() {
-          throw new Error("Plugin definitions cannot contain YAML aliases");
-        }
-      });
-      if (document.errors.length || document.warnings.length)
-        throw new Error(`${file}: ${[...document.errors, ...document.warnings].map((error) => error.message).join("; ")}`);
-      const raw = file.endsWith(".json") ? JSON.parse(source) : document.toJS({ maxAliasCount: 0 });
-      if (file.endsWith(schema_1.PLUGIN_MANIFEST_FILENAME))
-        return schema_1.PluginManifest.parse(raw);
-      const settings = schema_1.OctonodeSettingsDocument.parse(raw);
-      if (!settings.plugin)
-        throw new Error(`${file} has no plugin section`);
-      return settings.plugin;
-    }
-  }
-});
-
-// packages/plugin-runtime/dist/index.js
-var require_dist2 = __commonJS({
-  "packages/plugin-runtime/dist/index.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;
-    var define_node_1 = require_define_node();
-    Object.defineProperty(exports2, "defineNode", { enumerable: true, get: function() {
-      return define_node_1.defineNode;
-    } });
-    Object.defineProperty(exports2, "defineService", { enumerable: true, get: function() {
-      return define_node_1.defineService;
-    } });
-    Object.defineProperty(exports2, "defineClass", { enumerable: true, get: function() {
-      return define_node_1.defineClass;
-    } });
-    Object.defineProperty(exports2, "defineConst", { enumerable: true, get: function() {
-      return define_node_1.defineConst;
-    } });
-    var runner_1 = require_runner();
-    Object.defineProperty(exports2, "runNode", { enumerable: true, get: function() {
-      return runner_1.runNode;
-    } });
-    Object.defineProperty(exports2, "start", { enumerable: true, get: function() {
-      return runner_1.start;
-    } });
-    Object.defineProperty(exports2, "NodeError", { enumerable: true, get: function() {
-      return runner_1.NodeError;
-    } });
-    var json_schema_1 = require_json_schema2();
-    Object.defineProperty(exports2, "validate", { enumerable: true, get: function() {
-      return json_schema_1.validate;
-    } });
-    var plugin_1 = require_plugin2();
-    Object.defineProperty(exports2, "definePlugin", { enumerable: true, get: function() {
-      return plugin_1.definePlugin;
-    } });
-    Object.defineProperty(exports2, "startPlugin", { enumerable: true, get: function() {
-      return plugin_1.startPlugin;
-    } });
-    var plugin_file_1 = require_plugin_file();
-    Object.defineProperty(exports2, "loadPluginDefinition", { enumerable: true, get: function() {
-      return plugin_file_1.loadPluginDefinition;
-    } });
-    Object.defineProperty(exports2, "pluginDefinitionPath", { enumerable: true, get: function() {
-      return plugin_file_1.pluginDefinitionPath;
-    } });
-    var schema_1 = require_dist();
-    Object.defineProperty(exports2, "PluginManifest", { enumerable: true, get: function() {
-      return schema_1.PluginManifest;
-    } });
-    Object.defineProperty(exports2, "PluginNode", { enumerable: true, get: function() {
-      return schema_1.PluginNode;
-    } });
-    Object.defineProperty(exports2, "PluginConnection", { enumerable: true, get: function() {
-      return schema_1.PluginConnection;
-    } });
-  }
-});
-
 // packages/common/dist/constants.js
 var require_constants2 = __commonJS({
   "packages/common/dist/constants.js"(exports2) {
@@ -12391,8 +12214,36 @@ var require_graph_layout = __commonJS({
   }
 });
 
+// packages/common/dist/plugin-nodes.js
+var require_plugin_nodes = __commonJS({
+  "packages/common/dist/plugin-nodes.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.installedPluginNodesPage = installedPluginNodesPage;
+    function isCatalogPlugin(value) {
+      if (!value || typeof value !== "object")
+        return false;
+      const plugin = value;
+      return typeof plugin.id === "string" && typeof plugin.name === "string" && typeof plugin.version === "string" && Array.isArray(plugin.nodes) && plugin.nodes.every((node) => {
+        if (!node || typeof node !== "object")
+          return false;
+        const item = node;
+        return typeof item.id === "string" && (item.icon === void 0 || typeof item.icon === "string") && (item.description === void 0 || typeof item.description === "string");
+      });
+    }
+    function installedPluginNodesPage(inventory, query) {
+      if (!inventory.every(isCatalogPlugin))
+        throw new Error("Plugin node inventory is incomplete");
+      const q = query.q?.trim().toLowerCase();
+      const nodes = inventory.flatMap((plugin) => plugin.nodes.filter((node) => !q || [node.id, node.description ?? "", plugin.id, plugin.name].join(" ").toLowerCase().includes(q)).map((node) => ({ ...node, pluginId: plugin.id, pluginName: plugin.name, pluginVersion: plugin.version }))).sort((a, b) => a.pluginName.localeCompare(b.pluginName) || a.id.localeCompare(b.id));
+      const offset = Math.min(query.offset, nodes.length);
+      return { items: nodes.slice(offset, offset + query.limit), total: nodes.length, offset, limit: query.limit };
+    }
+  }
+});
+
 // packages/common/dist/index.js
-var require_dist3 = __commonJS({
+var require_dist2 = __commonJS({
   "packages/common/dist/index.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
@@ -12412,7 +12263,7 @@ var require_dist3 = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
+    exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
     __exportStar(require_constants2(), exports2);
     __exportStar(require_legal_constants(), exports2);
     var package_cache_1 = require_package_cache();
@@ -12423,6 +12274,188 @@ var require_dist3 = __commonJS({
     var graph_layout_1 = require_graph_layout();
     Object.defineProperty(exports2, "layeredLayout", { enumerable: true, get: function() {
       return graph_layout_1.layeredLayout;
+    } });
+    var plugin_nodes_1 = require_plugin_nodes();
+    Object.defineProperty(exports2, "installedPluginNodesPage", { enumerable: true, get: function() {
+      return plugin_nodes_1.installedPluginNodesPage;
+    } });
+  }
+});
+
+// packages/plugin-runtime/dist/plugin.js
+var require_plugin2 = __commonJS({
+  "packages/plugin-runtime/dist/plugin.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.definePlugin = definePlugin;
+    exports2.startPlugin = startPlugin;
+    var common_1 = require_dist2();
+    var schema_1 = require_dist();
+    var define_node_1 = require_define_node();
+    var runner_1 = require_runner();
+    function definePlugin(definition, handlers) {
+      const options = definition;
+      if (!handlers && (!options || !Array.isArray(options.nodes)))
+        throw new Error("plugin needs a nodes array");
+      if (!handlers) {
+        for (const node of options.nodes) {
+          if (typeof node.run !== "function")
+            throw new Error(`plugin node "${node.id}" needs a handler`);
+          if (node.kind && node.kind !== "function")
+            throw new Error("plugin nodes must be functions");
+        }
+      }
+      const manifest2 = schema_1.PluginManifest.parse(handlers ? definition : {
+        ...options,
+        nodes: options.nodes.map(({ run: _run, ...node }) => ({
+          ...node,
+          command: `node dist/index.js ${node.id}`,
+          language: "typescript"
+        }))
+      });
+      const nodeHandlers = handlers ?? Object.fromEntries(options.nodes.map((node) => [node.id, node.run]));
+      for (const node of manifest2.nodes) {
+        for (const field of ["inputs", "outputs", "defaults"]) {
+          const error = node[field] === void 0 ? void 0 : (0, runner_1.jsonSafetyError)(node[field]);
+          if (error)
+            throw new Error(`plugin node "${node.id}" ${field} must be JSON-serializable: ${error}`);
+        }
+      }
+      for (const id of Object.keys(nodeHandlers)) {
+        if (!manifest2.nodes.some((node) => node.id === id))
+          throw new Error(`handler "${id}" has no plugin node`);
+      }
+      return {
+        manifest: manifest2,
+        ...!handlers && options.assets ? { assets: options.assets } : {},
+        nodes: Object.fromEntries(manifest2.nodes.map((node) => {
+          if (!Object.hasOwn(nodeHandlers, node.id))
+            throw new Error(`plugin node "${node.id}" needs a handler`);
+          const fields = (node.connections ?? []).flatMap((id) => Object.entries(manifest2.connections?.[id]?.fields ?? {}));
+          return [
+            node.id,
+            (0, define_node_1.defineNode)({
+              ...node,
+              run: (inputs, context) => {
+                const missing = fields.filter(([name, field]) => field.required && !common_1.PROCESS_ENV[name]).map(([name]) => name);
+                if (missing.length)
+                  throw new runner_1.NodeError(`Missing connection credentials: ${missing.join(", ")}`);
+                return nodeHandlers[node.id](inputs, context);
+              }
+            })
+          ];
+        }))
+      };
+    }
+    function startPlugin(plugin, nodeId = process.argv[2]) {
+      const id = nodeId ?? (plugin.manifest.nodes.length === 1 ? plugin.manifest.nodes[0].id : void 0);
+      if (!id || !Object.hasOwn(plugin.nodes, id))
+        throw new Error(`Choose a plugin node: ${Object.keys(plugin.nodes).join(", ")}`);
+      (0, runner_1.start)(plugin.nodes[id]);
+    }
+  }
+});
+
+// packages/plugin-runtime/dist/plugin-file.js
+var require_plugin_file = __commonJS({
+  "packages/plugin-runtime/dist/plugin-file.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.pluginDefinitionPath = pluginDefinitionPath2;
+    exports2.loadPluginDefinition = loadPluginDefinition3;
+    var node_fs_1 = require("node:fs");
+    var node_path_1 = require("node:path");
+    var yaml_1 = require("yaml");
+    var schema_1 = require_dist();
+    function pluginDefinitionPath2(dir) {
+      const files = schema_1.PLUGIN_DEFINITION_FILENAMES.map((name) => (0, node_path_1.join)(dir, name)).filter(node_fs_1.existsSync);
+      if (files.length !== 1)
+        throw new Error(files.length ? `Multiple plugin definitions in ${dir}; keep exactly one` : `No plugin definition in ${dir}; create octonode.yml or octonode.json`);
+      const file = files[0];
+      if ((0, node_path_1.dirname)((0, node_fs_1.realpathSync)(file)) !== (0, node_fs_1.realpathSync)(dir))
+        throw new Error("Plugin definition must stay inside its folder");
+      if (!(0, node_fs_1.statSync)(file).isFile() || (0, node_fs_1.statSync)(file).size > 1048576)
+        throw new Error("Plugin definition must be a file smaller than 1 MiB");
+      return file;
+    }
+    function loadPluginDefinition3(dir) {
+      const file = pluginDefinitionPath2(dir);
+      const source = (0, node_fs_1.readFileSync)(file, "utf8");
+      const document = (0, yaml_1.parseDocument)(source, { version: "1.2", uniqueKeys: true });
+      (0, yaml_1.visit)(document, {
+        Alias() {
+          throw new Error("Plugin definitions cannot contain YAML aliases");
+        }
+      });
+      if (document.errors.length || document.warnings.length)
+        throw new Error(`${file}: ${[...document.errors, ...document.warnings].map((error) => error.message).join("; ")}`);
+      const raw = file.endsWith(".json") ? JSON.parse(source) : document.toJS({ maxAliasCount: 0 });
+      if (file.endsWith(schema_1.PLUGIN_MANIFEST_FILENAME))
+        return schema_1.PluginManifest.parse(raw);
+      const settings = schema_1.OctonodeSettingsDocument.parse(raw);
+      if (!settings.plugin)
+        throw new Error(`${file} has no plugin section`);
+      return settings.plugin;
+    }
+  }
+});
+
+// packages/plugin-runtime/dist/index.js
+var require_dist3 = __commonJS({
+  "packages/plugin-runtime/dist/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;
+    var define_node_1 = require_define_node();
+    Object.defineProperty(exports2, "defineNode", { enumerable: true, get: function() {
+      return define_node_1.defineNode;
+    } });
+    Object.defineProperty(exports2, "defineService", { enumerable: true, get: function() {
+      return define_node_1.defineService;
+    } });
+    Object.defineProperty(exports2, "defineClass", { enumerable: true, get: function() {
+      return define_node_1.defineClass;
+    } });
+    Object.defineProperty(exports2, "defineConst", { enumerable: true, get: function() {
+      return define_node_1.defineConst;
+    } });
+    var runner_1 = require_runner();
+    Object.defineProperty(exports2, "runNode", { enumerable: true, get: function() {
+      return runner_1.runNode;
+    } });
+    Object.defineProperty(exports2, "start", { enumerable: true, get: function() {
+      return runner_1.start;
+    } });
+    Object.defineProperty(exports2, "NodeError", { enumerable: true, get: function() {
+      return runner_1.NodeError;
+    } });
+    var json_schema_1 = require_json_schema2();
+    Object.defineProperty(exports2, "validate", { enumerable: true, get: function() {
+      return json_schema_1.validate;
+    } });
+    var plugin_1 = require_plugin2();
+    Object.defineProperty(exports2, "definePlugin", { enumerable: true, get: function() {
+      return plugin_1.definePlugin;
+    } });
+    Object.defineProperty(exports2, "startPlugin", { enumerable: true, get: function() {
+      return plugin_1.startPlugin;
+    } });
+    var plugin_file_1 = require_plugin_file();
+    Object.defineProperty(exports2, "loadPluginDefinition", { enumerable: true, get: function() {
+      return plugin_file_1.loadPluginDefinition;
+    } });
+    Object.defineProperty(exports2, "pluginDefinitionPath", { enumerable: true, get: function() {
+      return plugin_file_1.pluginDefinitionPath;
+    } });
+    var schema_1 = require_dist();
+    Object.defineProperty(exports2, "PluginManifest", { enumerable: true, get: function() {
+      return schema_1.PluginManifest;
+    } });
+    Object.defineProperty(exports2, "PluginNode", { enumerable: true, get: function() {
+      return schema_1.PluginNode;
+    } });
+    Object.defineProperty(exports2, "PluginConnection", { enumerable: true, get: function() {
+      return schema_1.PluginConnection;
     } });
   }
 });
@@ -12446,7 +12479,7 @@ var import_node_path8 = require("node:path");
 var import_node_fs2 = require("node:fs");
 var import_node_os = require("node:os");
 var import_node_path2 = require("node:path");
-var import_plugin_runtime = __toESM(require_dist2());
+var import_plugin_runtime = __toESM(require_dist3());
 
 // packages/plugin/src/integrity.ts
 var import_node_crypto = require("node:crypto");
@@ -12538,7 +12571,7 @@ function addToStore(srcDir, opts = {}) {
 var import_node_fs4 = require("node:fs");
 var import_node_os2 = require("node:os");
 var import_node_path4 = require("node:path");
-var import_plugin_runtime2 = __toESM(require_dist2());
+var import_plugin_runtime2 = __toESM(require_dist3());
 var import_schema2 = __toESM(require_dist());
 
 // packages/plugin/src/lock.ts
@@ -12630,7 +12663,7 @@ var import_node_os3 = require("node:os");
 var import_node_path5 = require("node:path");
 var import_node_util = require("node:util");
 var import_yaml = require("yaml");
-var import_common = __toESM(require_dist3());
+var import_common = __toESM(require_dist2());
 
 // packages/plugin/src/dependencies.constants.ts
 var DEFAULT_PACKAGE_MANAGER = "pnpm@12.3.4";
@@ -13331,7 +13364,7 @@ var import_node_fs9 = require("node:fs");
 var import_node_path9 = require("node:path");
 var import_node_child_process2 = require("node:child_process");
 var import_node_util2 = require("node:util");
-var import_common2 = __toESM(require_dist3());
+var import_common2 = __toESM(require_dist2());
 function commandError(err) {
   const error = err;
   return [error.stderr, error.stdout].map((output) => output?.toString().trim()).find(Boolean) ?? error.message;
@@ -13421,7 +13454,7 @@ async function installPlugin(src, opts = {}) {
 }
 
 // packages/plugin/src/remote-registry.ts
-var import_common3 = __toESM(require_dist3());
+var import_common3 = __toESM(require_dist2());
 
 // packages/plugin/src/archive.ts
 var import_node_zlib2 = require("node:zlib");
@@ -13504,13 +13537,19 @@ var RemoteRegistry = class {
     }
     return res;
   }
+  async searchPage(filter = {}, offset = 0, limit = 24) {
+    const params = new URLSearchParams({ offset: String(offset), limit: String(limit) });
+    for (const [key, value] of Object.entries(filter)) if (value !== void 0) params.set(key, value);
+    const res = await this.request(`/marketplace/plugins?${params}`);
+    return await res.json();
+  }
   async search(filter = {}) {
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries(filter)) if (value) params.set(key, value);
-    const query = params.size > 0 ? `?${params}` : "";
-    const res = await this.request(`/marketplace/plugins${query}`);
-    const body = await res.json();
-    return body.entries;
+    let entries = [];
+    for (; ; ) {
+      const page = await this.searchPage(filter, entries.length, 100);
+      entries = [...entries, ...page.entries];
+      if (!page.entries.length || page.total === void 0 || entries.length >= page.total) return entries;
+    }
   }
   async detail(id, scope) {
     const query = scope ? `?scope=${encodeURIComponent(scope)}` : "";
@@ -13526,6 +13565,13 @@ var RemoteRegistry = class {
    */
   async publish(pluginDir, opts = {}) {
     const manifest2 = loadPluginManifest(pluginDir);
+    const packageFile = (0, import_node_path11.join)(pluginDir, "package.json");
+    if ((0, import_node_fs11.existsSync)(packageFile)) {
+      const metadata = JSON.parse((0, import_node_fs11.readFileSync)(packageFile, "utf8"));
+      if (metadata.version && metadata.version !== manifest2.version) {
+        throw new Error("package.json version must match the plugin version before publishing");
+      }
+    }
     const bundle = packPluginDir(pluginDir);
     const form = new FormData();
     form.set("manifest", JSON.stringify(manifest2));

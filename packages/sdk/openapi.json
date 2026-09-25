@@ -420,6 +420,10 @@
                                         },
                                         "retryable": {
                                           "type": "boolean"
+                                        },
+                                        "details": {},
+                                        "stack": {
+                                          "type": "string"
                                         }
                                       },
                                       "required": [
@@ -622,6 +626,27 @@
           },
           {
             "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ok",
+                "error",
+                "partial"
+              ]
+            }
+          },
+          {
+            "in": "query",
             "name": "cursor",
             "schema": {
               "type": "string",
@@ -763,6 +788,10 @@
                                   },
                                   "retryable": {
                                     "type": "boolean"
+                                  },
+                                  "details": {},
+                                  "stack": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -10470,6 +10499,10 @@
                                   },
                                   "retryable": {
                                     "type": "boolean"
+                                  },
+                                  "details": {},
+                                  "stack": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -10884,6 +10917,10 @@
                                   },
                                   "retryable": {
                                     "type": "boolean"
+                                  },
+                                  "details": {},
+                                  "stack": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -11340,6 +11377,10 @@
                                   },
                                   "retryable": {
                                     "type": "boolean"
+                                  },
+                                  "details": {},
+                                  "stack": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -12087,6 +12128,15 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "nativeRevision": {
+                      "type": "string"
+                    },
+                    "revision": {
+                      "type": "string"
+                    },
+                    "complete": {
+                      "type": "boolean"
+                    },
                     "items": {
                       "type": "array",
                       "items": {
@@ -12216,6 +12266,46 @@
           }
         },
         "parameters": [
+          {
+            "in": "query",
+            "name": "workspace",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "project",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "view",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "snapshot",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "nativeRevision",
+            "schema": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64
+            }
+          },
           {
             "in": "query",
             "name": "q",
@@ -15336,9 +15426,17 @@
         "parameters": [
           {
             "in": "query",
-            "name": "q",
+            "name": "workspace",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
             }
           },
           {
@@ -15379,7 +15477,8 @@
             "name": "limit",
             "schema": {
               "type": "integer",
-              "exclusiveMinimum": 0
+              "exclusiveMinimum": 0,
+              "maximum": 100
             }
           },
           {
