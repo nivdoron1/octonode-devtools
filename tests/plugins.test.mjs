@@ -480,7 +480,7 @@ test("release config builds, bumps and deploys through GitHub identity without a
     execFileSync(process.execPath, [cli, "plugin", "create", "release-plugin"], { cwd: parent });
     const root = join(parent, "release-plugin");
     symlinkSync(resolve("node_modules"), join(root, "node_modules"), "junction");
-    execFileSync("git", ["init"], { cwd: root, stdio: "ignore" });
+    execFileSync("git", ["init"], { cwd: parent, stdio: "ignore" });
     execFileSync(process.execPath, [cli, "plugin", "version", "minor", "--cwd", root]);
     assert.equal(readPluginRelease(root).config.version, "0.2.0");
     const [built] = await buildPlugins(undefined, root);
@@ -500,7 +500,7 @@ test("release config builds, bumps and deploys through GitHub identity without a
       if (String(url).includes("token.actions.test"))
         return Response.json({ value: "short-lived-github-identity" });
       assert.equal(options.headers.authorization, "Bearer short-lived-github-identity");
-      assert.equal(new URL(url).searchParams.get("config"), "plugin.octonode.json");
+      assert.equal(new URL(url).searchParams.get("config"), "release-plugin/plugin.octonode.json");
       if (!options.method) return Response.json({ status: "ready", id: "release-plugin", version: "0.2.0" });
       const bytes = Buffer.from(await options.body.get("bundle").arrayBuffer());
       const hash = createHash("sha256").update(bytes).digest("hex");

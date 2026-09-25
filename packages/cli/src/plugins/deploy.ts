@@ -1,7 +1,7 @@
 import { realpathSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { relative, resolve } from "node:path";
+import { basename, resolve } from "node:path";
 import {
   PLUGIN_PUBLISH_AUDIENCE,
   PLUGIN_PUBLISH_MAX_BYTES,
@@ -39,12 +39,12 @@ export async function deployPlugin(
       !process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN
     )
       throw new Error("GitHub deployment requires Actions permissions: id-token: write");
-    const repositoryRoot = execFileSync("git", ["rev-parse", "--show-toplevel"], {
+    const repositoryPrefix = execFileSync("git", ["rev-parse", "--show-prefix"], {
       cwd: root,
       encoding: "utf8",
     }).trim();
     const configPath = PluginConfigPath.parse(
-      relative(realpathSync(repositoryRoot), release.path).replaceAll("\\", "/"),
+      repositoryPrefix + basename(release.path),
     );
     endpoint = new URL("/github/plugins/publish", url);
     endpoint.searchParams.set("config", configPath);
