@@ -830,7 +830,7 @@ var require_constants = __commonJS({
   "packages/schema/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.CAPABILITY_UNAVAILABLE_REASONS = exports2.CAPABILITY_MODES = exports2.PLATFORM_CAPABILITIES = exports2.SOURCE_CONTROL_REGION_KINDS = exports2.TASK_RELEASE_STATES = exports2.TASK_SPRINT_STATES = exports2.TASK_LINK_TYPES = exports2.TASK_VIEW_SORTS = exports2.TASK_VIEW_GROUPS = exports2.TASK_VIEW_LAYOUTS = exports2.TASK_FIELD_TYPES = exports2.WORK_ITEM_PRIORITIES = exports2.BUILTIN_WORK_ITEM_TYPES = exports2.WORK_ITEM_LEVELS = exports2.TASK_STATUS_CATEGORIES = exports2.TASK_SPACE_TEMPLATES = exports2.COLLABORATION_ACTIONS = exports2.AGENT_TOOL_RISKS = exports2.AGENT_ERROR_CODES = exports2.AGENT_RUN_STATUSES = exports2.WORKSPACE_ACTIONS = exports2.SETTINGS_SECTIONS = exports2.SETTINGS_API_VERSION = exports2.MARKETPLACE_SCOPES = exports2.PLUGIN_DEFINITION_FILENAMES = exports2.PLUGIN_MANIFEST_FILENAME = exports2.COMMUNITY_MEDIA_TYPES = exports2.COMMUNITY_MEDIA_BODY_BYTES = exports2.COMMUNITY_MEDIA_VIDEO_BYTES = exports2.COMMUNITY_MEDIA_IMAGE_BYTES = exports2.PROJECT_JOB_PROTOCOL = exports2.PLUGIN_SCHEMA_VERSION = void 0;
+    exports2.PLUGIN_PUBLISH_MAX_BYTES = exports2.PLUGIN_CONFIG_MAX_BYTES = exports2.PLUGIN_PUBLISH_AUDIENCE = exports2.PLUGIN_RELEASE_FILES = exports2.CAPABILITY_UNAVAILABLE_REASONS = exports2.CAPABILITY_MODES = exports2.PLATFORM_CAPABILITIES = exports2.SOURCE_CONTROL_REGION_KINDS = exports2.TASK_RELEASE_STATES = exports2.TASK_SPRINT_STATES = exports2.TASK_LINK_TYPES = exports2.TASK_VIEW_SORTS = exports2.TASK_VIEW_GROUPS = exports2.TASK_VIEW_LAYOUTS = exports2.TASK_FIELD_TYPES = exports2.WORK_ITEM_PRIORITIES = exports2.BUILTIN_WORK_ITEM_TYPES = exports2.WORK_ITEM_LEVELS = exports2.TASK_STATUS_CATEGORIES = exports2.TASK_SPACE_TEMPLATES = exports2.COLLABORATION_ACTIONS = exports2.AGENT_TOOL_RISKS = exports2.AGENT_ERROR_CODES = exports2.AGENT_RUN_STATUSES = exports2.WORKSPACE_ACTIONS = exports2.SETTINGS_SECTIONS = exports2.SETTINGS_API_VERSION = exports2.MARKETPLACE_SCOPES = exports2.PLUGIN_DEFINITION_FILENAMES = exports2.PLUGIN_MANIFEST_FILENAME = exports2.COMMUNITY_MEDIA_TYPES = exports2.COMMUNITY_MEDIA_BODY_BYTES = exports2.COMMUNITY_MEDIA_VIDEO_BYTES = exports2.COMMUNITY_MEDIA_IMAGE_BYTES = exports2.PROJECT_JOB_PROTOCOL = exports2.PLUGIN_SCHEMA_VERSION = void 0;
     exports2.PLUGIN_SCHEMA_VERSION = "1";
     exports2.PROJECT_JOB_PROTOCOL = "octonode.project-job.v1";
     exports2.COMMUNITY_MEDIA_IMAGE_BYTES = 8 * 1024 * 1024;
@@ -1034,6 +1034,10 @@ var require_constants = __commonJS({
       "missing_entitlement",
       "missing_permission"
     ];
+    exports2.PLUGIN_RELEASE_FILES = ["plugin.octonode.json", "plugin.octonode.yml", "plugin.octonode.yaml"];
+    exports2.PLUGIN_PUBLISH_AUDIENCE = "https://plugins.octonodes.com";
+    exports2.PLUGIN_CONFIG_MAX_BYTES = 65536;
+    exports2.PLUGIN_PUBLISH_MAX_BYTES = 32 * 1024 * 1024;
   }
 });
 
@@ -1316,6 +1320,8 @@ var require_plugin = __commonJS({
       }).strict().optional(),
       icon: icons_1.IconName.optional(),
       author: zod_1.z.string().optional(),
+      contributors: zod_1.z.array(zod_1.z.string().trim().min(1).max(240)).max(100).optional(),
+      repository: zod_1.z.string().url().regex(/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/).optional(),
       homepage: zod_1.z.string().optional(),
       license: zod_1.z.string().optional(),
       /** Distribution tiers this plugin may be discovered/installed from. Private by default. */
@@ -11423,6 +11429,7 @@ var require_plugin_version = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginVersion = void 0;
     exports2.comparePluginVersions = comparePluginVersions;
+    exports2.bumpPluginVersion = bumpPluginVersion;
     var zod_1 = require("zod");
     exports2.PluginVersion = zod_1.z.string().max(200).regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/, "Use a semantic version such as 1.2.3 or 2.0.0-beta.1");
     function comparePluginVersions(left, right) {
@@ -11452,6 +11459,22 @@ var require_plugin_version = __commonJS({
         return an && bn ? numeric(ap[i], bp[i]) : an !== bn ? Number(bn) - Number(an) : ap[i] > bp[i] ? 1 : -1;
       }
       return ap.length - bp.length;
+    }
+    function bumpPluginVersion(version, release2) {
+      exports2.PluginVersion.parse(version);
+      const core = version.split("+")[0];
+      const prerelease = core.includes("-");
+      let [major, minor, patch] = core.split("-")[0].split(".").map(BigInt);
+      if (release2 === "major") {
+        major += !prerelease || minor !== 0n || patch !== 0n ? 1n : 0n;
+        minor = 0n;
+        patch = 0n;
+      } else if (release2 === "minor") {
+        minor += !prerelease || patch !== 0n ? 1n : 0n;
+        patch = 0n;
+      } else
+        patch += prerelease ? 0n : 1n;
+      return exports2.PluginVersion.parse(`${major}.${minor}.${patch}`);
     }
   }
 });
@@ -11505,6 +11528,52 @@ var require_execution = __commonJS({
       manifest: plugin_1.PluginManifest,
       archiveSha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/)
     });
+  }
+});
+
+// packages/schema/dist/plugin-publishing.js
+var require_plugin_publishing = __commonJS({
+  "packages/schema/dist/plugin-publishing.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
+    var zod_1 = require("zod");
+    var plugin_version_1 = require_plugin_version();
+    exports2.PluginConfigPath = zod_1.z.string().max(512).refine((path) => /^(?:[a-zA-Z0-9_.-]+\/)*plugin\.octonode\.(json|ya?ml)$/.test(path) && !path.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)), "Select a repository-relative plugin.octonode.json or .yml file");
+    exports2.PluginReleaseConfig = zod_1.z.object({
+      apiVersion: zod_1.z.literal("octonode.plugin/v1"),
+      id: zod_1.z.string().max(128).regex(/^[a-z0-9][a-z0-9-]*$/),
+      version: plugin_version_1.PluginVersion,
+      scope: zod_1.z.enum(["user", "team", "organization", "public"]),
+      teamId: zod_1.z.string().min(1).max(128).optional(),
+      orgId: zod_1.z.string().min(1).max(128).optional(),
+      contributors: zod_1.z.array(zod_1.z.string().trim().min(1).max(240)).max(100).optional(),
+      workflow: zod_1.z.string().regex(/^\.github\/workflows\/[a-zA-Z0-9_-]+\.ya?ml$/).default(".github/workflows/octonode-publish.yml")
+    }).strict().superRefine((config, ctx) => {
+      if (config.scope === "team" !== Boolean(config.teamId))
+        ctx.addIssue({ code: "custom", path: ["teamId"], message: "teamId is required only for team scope" });
+      if (config.scope === "organization" !== Boolean(config.orgId))
+        ctx.addIssue({ code: "custom", path: ["orgId"], message: "orgId is required only for organization scope" });
+    });
+    var pluginReleaseScope = (config) => config.scope === "team" ? "group" : config.scope === "organization" ? "org" : config.scope;
+    exports2.pluginReleaseScope = pluginReleaseScope;
+    exports2.PluginPublisherInput = zod_1.z.object({ repositoryId: zod_1.z.number().int().positive(), configPath: exports2.PluginConfigPath }).strict();
+    exports2.PluginPublisherConsent = exports2.PluginPublisherInput.extend({ sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/) });
+    exports2.PluginPublisherPreview = zod_1.z.object({
+      config: exports2.PluginReleaseConfig,
+      sha256: zod_1.z.string(),
+      repository: zod_1.z.string(),
+      branch: zod_1.z.string()
+    });
+    exports2.PluginPublisherConnection = exports2.PluginPublisherPreview.extend({
+      id: zod_1.z.string().uuid(),
+      repositoryId: zod_1.z.number(),
+      configPath: exports2.PluginConfigPath,
+      lastVersion: zod_1.z.string().nullable(),
+      lastSha: zod_1.z.string().nullable(),
+      lastPublishedAt: zod_1.z.number().nullable()
+    });
+    exports2.PluginPublisherConnections = zod_1.z.object({ items: zod_1.z.array(exports2.PluginPublisherConnection) });
   }
 });
 
@@ -11572,6 +11641,7 @@ var require_dist = __commonJS({
     __exportStar(require_plugin_version(), exports2);
     __exportStar(require_execution(), exports2);
     __exportStar(require_execution_constants(), exports2);
+    __exportStar(require_plugin_publishing(), exports2);
   }
 });
 
@@ -11954,8 +12024,8 @@ var require_constants2 = __commonJS({
   "packages/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.UI_DIR = exports2.PYTHONPATH = exports2.PORT = exports2.PATH = exports2.OPENROUTER_API_KEY = exports2.CLOUDFLARE_ACCOUNT_ID = exports2.CLOUDFLARE_API_KEY = exports2.OPENAI_API_KEY = exports2.OTEL_SERVICE_NAME = exports2.OTEL_SDK_DISABLED = exports2.OTEL_EXPORTER_OTLP_ENDPOINT = exports2.OCTONODE_WORKSPACE = exports2.OCTONODE_VISUAL_PORT = exports2.OCTONODE_USER_EMAIL = exports2.OCTONODE_USER = exports2.OCTONODE_STUDIO_URL = exports2.OCTONODE_STORE_DIR = exports2.OCTONODE_SOURCE_WATCH_CONCURRENCY = exports2.OCTONODE_SHUTDOWN_TIMEOUT_MS = exports2.OCTONODE_SERVER_PROFILE = exports2.OCTONODE_RUNTIME = exports2.OCTONODE_REPOSITORY_REGISTRY_V2 = exports2.OCTONODE_RUN_RETENTION_COUNT = exports2.OCTONODE_RUN_RETENTION_BYTES = exports2.OCTONODE_RUN_RETENTION_AGE_MS = exports2.OCTONODE_STATE_NAMESPACE = exports2.OCTONODE_RUN_QUEUE = exports2.OCTONODE_RUN_CONCURRENCY = exports2.OCTONODE_MARKETPLACE_URL = exports2.OCTONODE_MARKETPLACE_TOKEN = exports2.OCTONODE_PACKAGE_CACHE = exports2.OCTONODE_PROJECT = exports2.OCTONODE_CWD = exports2.OCTONODE_COMMUNITY_ROLLOUT = exports2.OCTONODE_CHAT_SERVICE_URL = exports2.OCTONODE_CHAT_SERVICE_TOKEN = exports2.OCTONODE_CHAT_SERVICE_AVAILABLE = exports2.OCTONODE_CHAT_MODEL = exports2.OCTONODE_CLOUD_INTERNAL_TOKEN = exports2.OCTONODE_CORS_ORIGINS = exports2.OCTONODE_API_TOKEN = exports2.OCTONODE_API_URL = exports2.OCTONODE_AUTH_TOKEN = exports2.OCTONODE_AUTH_PRINCIPAL = exports2.HOST = exports2.CONFIG_PATH = exports2.setEnvironmentVariable = exports2.childProcessEnvironment = exports2.workflowEnvironment = exports2.PROCESS_ENV = void 0;
-    exports2.VISUAL_UPDATE = exports2.VISUAL_STORY = exports2.VISUAL_REVIEW_DIR = exports2.VISUAL_FULL = exports2.VISUAL_BASE = exports2.USERNAME = exports2.USER = void 0;
+    exports2.PYTHONPATH = exports2.PORT = exports2.PATH = exports2.OPENROUTER_API_KEY = exports2.CLOUDFLARE_ACCOUNT_ID = exports2.CLOUDFLARE_API_KEY = exports2.OPENAI_API_KEY = exports2.OTEL_SERVICE_NAME = exports2.OTEL_SDK_DISABLED = exports2.OTEL_EXPORTER_OTLP_ENDPOINT = exports2.OCTONODE_WORKSPACE = exports2.OCTONODE_VISUAL_PORT = exports2.OCTONODE_USER_EMAIL = exports2.OCTONODE_USER = exports2.OCTONODE_STUDIO_URL = exports2.OCTONODE_STORE_DIR = exports2.OCTONODE_SOURCE_WATCH_CONCURRENCY = exports2.OCTONODE_SHUTDOWN_TIMEOUT_MS = exports2.OCTONODE_SERVER_PROFILE = exports2.OCTONODE_RUNTIME = exports2.OCTONODE_REPOSITORY_REGISTRY_V2 = exports2.OCTONODE_RUN_RETENTION_COUNT = exports2.OCTONODE_RUN_RETENTION_BYTES = exports2.OCTONODE_RUN_RETENTION_AGE_MS = exports2.OCTONODE_STATE_NAMESPACE = exports2.OCTONODE_RUN_QUEUE = exports2.OCTONODE_RUN_CONCURRENCY = exports2.DEFAULT_MARKETPLACE_URL = exports2.OCTONODE_MARKETPLACE_URL = exports2.OCTONODE_MARKETPLACE_TOKEN = exports2.OCTONODE_PACKAGE_CACHE = exports2.OCTONODE_PROJECT = exports2.OCTONODE_CWD = exports2.OCTONODE_COMMUNITY_ROLLOUT = exports2.OCTONODE_CHAT_SERVICE_URL = exports2.OCTONODE_CHAT_SERVICE_TOKEN = exports2.OCTONODE_CHAT_SERVICE_AVAILABLE = exports2.OCTONODE_CHAT_MODEL = exports2.OCTONODE_CLOUD_INTERNAL_TOKEN = exports2.OCTONODE_CORS_ORIGINS = exports2.OCTONODE_API_TOKEN = exports2.OCTONODE_API_URL = exports2.OCTONODE_AUTH_TOKEN = exports2.OCTONODE_AUTH_PRINCIPAL = exports2.HOST = exports2.CONFIG_PATH = exports2.setEnvironmentVariable = exports2.childProcessEnvironment = exports2.workflowEnvironment = exports2.PROCESS_ENV = void 0;
+    exports2.VISUAL_UPDATE = exports2.VISUAL_STORY = exports2.VISUAL_REVIEW_DIR = exports2.VISUAL_FULL = exports2.VISUAL_BASE = exports2.USERNAME = exports2.USER = exports2.UI_DIR = void 0;
     exports2.PROCESS_ENV = typeof process === "undefined" ? {} : process.env;
     var workflowEnvironment = (variables = {}) => {
       const environment = Object.fromEntries(Object.entries(variables).filter((entry) => typeof entry[1] === "string"));
@@ -12011,6 +12081,7 @@ var require_constants2 = __commonJS({
     exports2.OCTONODE_MARKETPLACE_TOKEN = OCTONODE_MARKETPLACE_TOKEN2;
     var OCTONODE_MARKETPLACE_URL3 = () => exports2.PROCESS_ENV.OCTONODE_MARKETPLACE_URL ?? exports2.PROCESS_ENV.VITE_OCTONODE_MARKETPLACE_URL ?? exports2.PROCESS_ENV.VITE_PUBLIC_OCTONODE_MARKETPLACE_URL;
     exports2.OCTONODE_MARKETPLACE_URL = OCTONODE_MARKETPLACE_URL3;
+    exports2.DEFAULT_MARKETPLACE_URL = "https://plugins.octonodes.com";
     var OCTONODE_RUN_CONCURRENCY = () => exports2.PROCESS_ENV.OCTONODE_RUN_CONCURRENCY;
     exports2.OCTONODE_RUN_CONCURRENCY = OCTONODE_RUN_CONCURRENCY;
     var OCTONODE_RUN_QUEUE = () => exports2.PROCESS_ENV.OCTONODE_RUN_QUEUE;
@@ -13650,7 +13721,7 @@ function usesPreparedRunner(directory) {
   return !manifest2.permissions.some((permission) => permission.resource === "project_data");
 }
 function preparedPluginPin(directory, pin) {
-  return !!pin?.installId && !!pin.registry && pin.registry.replace(/\/$/, "") === (0, import_common3.OCTONODE_MARKETPLACE_URL)()?.replace(/\/$/, "") && usesPreparedRunner(directory);
+  return !!pin?.installId && !!pin.registry && pin.registry.replace(/\/$/, "") === ((0, import_common3.OCTONODE_MARKETPLACE_URL)() ?? import_common3.DEFAULT_MARKETPLACE_URL).replace(/\/$/, "") && usesPreparedRunner(directory);
 }
 
 // packages/plugin/src/lifecycle.ts
@@ -13898,7 +13969,7 @@ var import_tar4 = require("tar");
 var import_node_crypto5 = require("node:crypto");
 var RemoteRegistry = class {
   constructor(opts = {}) {
-    const baseUrl = opts.baseUrl ?? (0, import_common5.OCTONODE_MARKETPLACE_URL)();
+    const baseUrl = opts.baseUrl ?? (0, import_common5.OCTONODE_MARKETPLACE_URL)() ?? import_common5.DEFAULT_MARKETPLACE_URL;
     if (!baseUrl) {
       throw new Error("marketplace URL is not configured (set OCTONODE_MARKETPLACE_URL or pass baseUrl)");
     }
@@ -14101,7 +14172,7 @@ var RemoteRegistry = class {
       }
     })();
     const archiveSha256 = releaseChecksum && /^[a-f0-9]{64}$/.test(releaseChecksum) ? releaseChecksum : void 0;
-    const prepared = this.baseUrl === (0, import_common5.OCTONODE_MARKETPLACE_URL)()?.replace(/\/$/, "") && usesPreparedRunner(entry.dir);
+    const prepared = this.baseUrl === ((0, import_common5.OCTONODE_MARKETPLACE_URL)() ?? import_common5.DEFAULT_MARKETPLACE_URL).replace(/\/$/, "") && usesPreparedRunner(entry.dir);
     if (entry.manifest.library && opts.noDeps && !opts.cacheOnly)
       throw new Error(
         "Library installation requires native dependency activation; use frozen --artifacts-only for CI restore"

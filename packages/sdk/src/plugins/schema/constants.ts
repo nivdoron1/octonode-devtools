@@ -215,3 +215,8 @@ export const CAPABILITY_UNAVAILABLE_REASONS = [
   "missing_entitlement",
   "missing_permission",
 ] as const;
+
+export const PLUGIN_RELEASE_FILES = ["plugin.octonode.json", "plugin.octonode.yml", "plugin.octonode.yaml"] as const;
+export const PLUGIN_PUBLISH_AUDIENCE = "https://plugins.octonodes.com";
+export const PLUGIN_CONFIG_MAX_BYTES = 65_536;
+export const PLUGIN_PUBLISH_MAX_BYTES = 32 * 1024 * 1024;

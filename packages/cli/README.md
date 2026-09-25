@@ -19,18 +19,32 @@ Define one plugin in `octonode.plugin.ts` using `@octonodes/sdk/plugin`.
 type-checks definitions, and creates `dist/plugins/<id>`. `octonodes plugin test <directory> <node-id> --input
 '{...}'` invokes a built node and reports failures with a nonzero exit code.
 
-Set `scope: ["public"]` in the definition for community discovery, rebuild, then:
+The scaffold includes `plugin.octonode.json`. Set `scope: "public"` in that release
+file for community discovery; use `"user"` for a private plugin, `"team"` with
+`teamId`, or `"organization"` with `orgId`. The release file overrides version,
+scope, and optional contributors from `octonode.plugin.ts` during builds.
 
 ```sh
 octonodes login
-octonodes plugin publish dist/plugins/my-integrations --registry https://your-marketplace.example
+octonodes plugin version patch
+octonodes plugin deploy .
 ```
 
-Use `OCTONODE_MARKETPLACE_URL` to save the registry endpoint. Publishing uploads
-the built artifact through the existing marketplace protocol; it never publishes
-to npm. `OCTONODE_MARKETPLACE_TOKEN` overrides normal CLI authentication. Use
-`--org` and `--team` for organization/group scopes. Each plugin has an independent
-version, and unchanged build hashes are required before upload.
+SDK/CLI `0.2.0` adds these release commands. Deployment builds, validates, hashes,
+and uploads to `https://plugins.octonodes.com` using your saved Octonode login.
+Use `OCTONODE_MARKETPLACE_URL` or `--registry` to override the registry. Publishing
+never publishes your plugin to npm; existing versions cannot be overwritten.
+
+For automatic publication, connect your repository and release-file path in
+**Partner → GitHub publishing**, review its destination, and commit the downloaded
+workflow. A version bump merged to the default branch runs `plugin deploy . --github`
+with GitHub Actions identity; no marketplace secret is required. See
+[release-file setup](../sdk/PLUGINS.md#release-files-and-github-publishing).
+
+Existing built artifacts can still use `plugin publish dist/plugins/my-integrations`.
+For definitions without a release file, set `scope: ["public"]` in TypeScript and
+rebuild first. Artifact publication accepts `--org` and `--team`; the optional
+`OCTONODE_MARKETPLACE_TOKEN` overrides normal CLI authentication.
 
 ## Run
 

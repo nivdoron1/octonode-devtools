@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0] - 2026-09-26
+
+### Added
+
+- Define plugin releases with `plugin.octonode.json` or YAML and bump exact, patch, minor, or major versions from the CLI.
+- Deploy plugins using the saved Octonode login or a connected GitHub Actions workflow with short-lived authentication.
+- Publish to personal, team, organization, or public destinations with optional contributor metadata.
+
+### Changed
+
+- Default plugin publishing to `https://plugins.octonodes.com` and verify deterministic bundle hashes during deployment.
+
 ## Unreleased
 
 ### Added

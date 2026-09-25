@@ -1,5 +1,5 @@
 // Generated from engine plugin authoring. Do not edit.
-import type { PluginManifest, PreparedPluginRuntime } from "@octonodes/sdk/plugins";
+import type { PluginManifest, PreparedPluginRuntime, PluginScope } from "@octonodes/sdk/plugins";
 
 export interface PluginBuild {
   manifest: PluginManifest;
@@ -19,4 +19,12 @@ export interface PluginBuildRecord {
     size: number;
     sha256: string;
   }>;
+}
+
+export interface PluginReleaseUpdate {
+  version?: string;
+  bump?: "patch" | "minor" | "major";
+  scope?: PluginScope;
+  orgId?: string;
+  teamId?: string;
 }

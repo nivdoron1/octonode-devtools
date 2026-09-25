@@ -468,3 +468,61 @@ test("public plugin types infer required and optional properties and check handl
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("release config builds, bumps and deploys through GitHub identity without a saved marketplace token", async () => {
+  const { deployPlugin } = await import("../packages/cli/dist/plugins/deploy.js");
+  const { readPluginRelease } = await import("../packages/cli/dist/plugins/release.js");
+  const { packBuiltPlugin } = await import("../packages/cli/dist/plugins/publish.js");
+  const parent = mkdtempSync(join(tmpdir(), "octonodes-release-"));
+  const fetchBefore = globalThis.fetch;
+  const envBefore = { ...process.env };
+  try {
+    execFileSync(process.execPath, [cli, "plugin", "create", "release-plugin"], { cwd: parent });
+    const root = join(parent, "release-plugin");
+    symlinkSync(resolve("node_modules"), join(root, "node_modules"), "junction");
+    execFileSync("git", ["init"], { cwd: parent, stdio: "ignore" });
+    execFileSync(process.execPath, [cli, "plugin", "version", "minor", "--cwd", root]);
+    assert.equal(readPluginRelease(root).config.version, "0.2.0");
+    const [built] = await buildPlugins(undefined, root);
+    assert.equal(built.manifest.version, "0.2.0");
+    assert.deepEqual(
+      packBuiltPlugin(built.directory).bundle,
+      packBuiltPlugin(built.directory).bundle,
+    );
+    Object.assign(process.env, {
+      GITHUB_ACTIONS: "true",
+      ACTIONS_ID_TOKEN_REQUEST_URL: "https://token.actions.test/oidc",
+      ACTIONS_ID_TOKEN_REQUEST_TOKEN: "github-request",
+    });
+    const calls = [];
+    globalThis.fetch = async (url, options) => {
+      calls.push({ url: String(url), options });
+      if (String(url).includes("token.actions.test"))
+        return Response.json({ value: "short-lived-github-identity" });
+      assert.equal(options.headers.authorization, "Bearer short-lived-github-identity");
+      assert.equal(new URL(url).searchParams.get("config"), "release-plugin/plugin.octonode.json");
+      if (!options.method) return Response.json({ status: "ready", id: "release-plugin", version: "0.2.0" });
+      const bytes = Buffer.from(await options.body.get("bundle").arrayBuffer());
+      const hash = createHash("sha256").update(bytes).digest("hex");
+      assert.equal(options.headers["x-octonode-sha256"], hash);
+      assert.equal(JSON.parse(options.body.get("manifest")).version, "0.2.0");
+      return Response.json({ sha256: hash });
+    };
+    assert.ok((await deployPlugin(root, undefined, undefined, true)).sha256);
+    assert.equal(calls.filter((call) => call.options.method === "POST").length, 1);
+    globalThis.fetch = async (url) =>
+      Response.json(
+        String(url).includes("token.actions.test")
+          ? { value: "short-lived" }
+          : { status: "unchanged", id: "release-plugin", version: "0.2.0" },
+      );
+    assert.equal((await deployPlugin(root, undefined, undefined, true)).status, "unchanged");
+    writeFileSync(join(root, "plugin.octonode.yml"), "apiVersion: octonode.plugin/v1");
+    assert.throws(() => readPluginRelease(root), /exactly one/);
+  } finally {
+    globalThis.fetch = fetchBefore;
+    for (const key of Object.keys(process.env)) if (!(key in envBefore)) delete process.env[key];
+    Object.assign(process.env, envBefore);
+    rmSync(parent, { recursive: true, force: true });
+  }
+});

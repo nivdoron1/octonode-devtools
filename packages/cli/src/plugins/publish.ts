@@ -1,8 +1,30 @@
-import { execFileSync } from "node:child_process";
+import { create as createTar } from "tar";
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { verifyBuild } from "./artifact";
+
+export function packBuiltPlugin(directory: string) {
+  const temp = mkdtempSync(join(tmpdir(), "octonodes-publish-"));
+  try {
+    const verified = verifyBuild(directory);
+    const snapshot = join(temp, "plugin");
+    mkdirSync(snapshot);
+    for (const file of verified.files) {
+      mkdirSync(dirname(join(snapshot, file)), { recursive: true });
+      cpSync(join(directory, file), join(snapshot, file));
+    }
+    const { manifest, files } = verifyBuild(snapshot);
+    const bundle = join(temp, "bundle.tar.gz");
+    createTar(
+      { file: bundle, cwd: snapshot, sync: true, portable: true, noMtime: true, gzip: true },
+      files,
+    );
+    return { manifest, bundle: readFileSync(bundle) };
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+}
 
 export async function publishPlugin(
   directory: string,
@@ -22,43 +44,25 @@ export async function publishPlugin(
   ) {
     throw new Error("Registry must use HTTPS (HTTP is allowed only on loopback)");
   }
-  const temp = mkdtempSync(join(tmpdir(), "octonodes-publish-"));
-  try {
-    const verified = verifyBuild(directory);
-    const snapshot = join(temp, "plugin");
-    mkdirSync(snapshot);
-    for (const file of verified.files) {
-      mkdirSync(dirname(join(snapshot, file)), { recursive: true });
-      cpSync(join(directory, file), join(snapshot, file));
-    }
-    const { manifest, files } = verifyBuild(snapshot);
-    const bundle = join(temp, "bundle.tar.gz");
-    execFileSync("tar", ["-czf", bundle, "-C", snapshot, "--", ...files]);
-    const form = new FormData();
-    form.set("manifest", JSON.stringify(manifest));
-    form.set(
-      "bundle",
-      new Blob([readFileSync(bundle)], { type: "application/gzip" }),
-      "bundle.tar.gz",
+  const { manifest, bundle } = packBuiltPlugin(directory);
+  const form = new FormData();
+  form.set("manifest", JSON.stringify(manifest));
+  form.set("bundle", new Blob([bundle], { type: "application/gzip" }), "bundle.tar.gz");
+  if (orgId) form.set("orgId", orgId);
+  if (teamId) form.set("teamId", teamId);
+  const response = await fetch(
+    `${registry.replace(/\/$/, "")}/marketplace/plugins/${encodeURIComponent(manifest.id)}/versions`,
+    {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}` },
+      body: form,
+      redirect: "error",
+      signal: AbortSignal.timeout(120_000),
+    },
+  );
+  if (!response.ok)
+    throw new Error(
+      `Plugin publish failed (HTTP ${response.status}): ${(await response.text()).slice(0, 1000)}`,
     );
-    if (orgId) form.set("orgId", orgId);
-    if (teamId) form.set("teamId", teamId);
-    const response = await fetch(
-      `${registry.replace(/\/$/, "")}/marketplace/plugins/${encodeURIComponent(manifest.id)}/versions`,
-      {
-        method: "POST",
-        headers: { authorization: `Bearer ${token}` },
-        body: form,
-        redirect: "error",
-        signal: AbortSignal.timeout(120_000),
-      },
-    );
-    if (!response.ok)
-      throw new Error(
-        `Plugin publish failed (HTTP ${response.status}): ${(await response.text()).slice(0, 1000)}`,
-      );
-    return response.json();
-  } finally {
-    rmSync(temp, { recursive: true, force: true });
-  }
+  return response.json();
 }

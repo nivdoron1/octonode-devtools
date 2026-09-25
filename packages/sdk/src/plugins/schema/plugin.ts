@@ -197,6 +197,12 @@ export const PluginManifest = z
       .optional(),
     icon: IconName.optional(),
     author: z.string().optional(),
+    contributors: z.array(z.string().trim().min(1).max(240)).max(100).optional(),
+    repository: z
+      .string()
+      .url()
+      .regex(/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/)
+      .optional(),
     homepage: z.string().optional(),
     license: z.string().optional(),
     /** Distribution tiers this plugin may be discovered/installed from. Private by default. */

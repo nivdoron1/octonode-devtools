@@ -15,12 +15,13 @@ import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { isBuiltin } from "node:module";
 import { build } from "esbuild";
 import { stringify } from "yaml";
-import { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, SETTINGS_API_VERSION } from "@octonodes/sdk/plugins";
+import { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, SETTINGS_API_VERSION, pluginReleaseScope } from "@octonodes/sdk/plugins";
 import { compileDefinition, generateNodeCatalog, PLUGIN_FILENAME } from "@octonodes/sdk/definitions/compiler";
 import { emitNpmJsFiles } from "@octonodes/sdk/definitions/npm";
 import { BUILD_RECORD, RESERVED_ASSETS } from "./constants";
 import { fileHash, pluginFiles, safePath, verifyBuild } from "./artifact";
 import type { PluginBuild } from "./types";
+import { readPluginRelease } from "./release";
 import { buildPluginLibrary } from "./library";
 
 function directory(root: string, path: string): string {
@@ -57,7 +58,19 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
   if (!definition || definition.kind !== "plugin" || !definition.manifest)
     throw new Error("Default-export definePlugin({...}) from octonode.plugin.ts");
   const entries = [resolve(root, PLUGIN_FILENAME)];
-  const manifestDefinition = definition.manifest;
+  const release = readPluginRelease(root)?.config;
+  if (release && release.id !== definition.manifest.id)
+    throw new Error("Plugin release id must match octonode.plugin.ts");
+  const manifestDefinition = PluginManifest.parse({
+    ...definition.manifest,
+    ...(release
+      ? {
+          version: release.version,
+          scope: [pluginReleaseScope(release)],
+          ...(release.contributors ? { contributors: release.contributors } : {}),
+        }
+      : {}),
+  });
   const workflowNodes = definition.nodes.filter((node) => node.workflow);
   if (workflowNodes.length && workflowNodes.length !== definition.nodes.length)
     throw new Error("Keep exported workflows in their own plugin package");

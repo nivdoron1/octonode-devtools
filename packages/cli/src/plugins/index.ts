@@ -1,3 +1,6 @@
+import { deployPlugin } from "./deploy";
+import { updatePluginRelease } from "./release";
+import { PLUGIN_PUBLISH_AUDIENCE } from "@octonodes/sdk/plugins";
 import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -17,6 +20,7 @@ export async function pluginCommand(args: string[], version: string): Promise<vo
     args: args.slice(1),
     allowPositionals: true,
     options: {
+      github: { type: "boolean" },
       input: { type: "string" },
       registry: { type: "string" },
       org: { type: "string" },
@@ -47,6 +51,36 @@ export async function pluginCommand(args: string[], version: string): Promise<vo
   if (positionals.length > (command === "test" ? 2 : 1)) throw new Error("Too many plugin command arguments");
   if (command === "build") {
     process.stdout.write(JSON.stringify(await buildPlugins(target), null, 2) + "\n");
+    return;
+  }
+  if (command === "deploy") {
+    const token = values.github
+      ? undefined
+      : (process.env.OCTONODE_MARKETPLACE_TOKEN ?? (await accessToken()));
+    process.stdout.write(
+      JSON.stringify(
+        await deployPlugin(
+          target ?? ".",
+          values.registry ?? process.env.OCTONODE_MARKETPLACE_URL ?? PLUGIN_PUBLISH_AUDIENCE,
+          token,
+          values.github,
+        ),
+        null,
+        2,
+      ) + "\n",
+    );
+    return;
+  }
+  if (command === "version") {
+    if (!target) throw new Error("Choose patch, minor, major or an exact version");
+    const result = updatePluginRelease(
+      values.cwd ?? process.cwd(),
+      ["patch", "minor", "major"].includes(target)
+        ? { bump: target as "patch" | "minor" | "major" }
+        : { version: target },
+    );
+    if (!result) throw new Error("Add a plugin.octonode.json or .yml release file first");
+    process.stdout.write(result.config.version + "\n");
     return;
   }
   if (!target) throw new Error(`plugin ${command ?? "command"} requires a target; run octonodes plugin --help`);
@@ -83,7 +117,7 @@ export async function pluginCommand(args: string[], version: string): Promise<vo
     return;
   }
   if (command === "publish") {
-    const registry = values.registry ?? process.env.OCTONODE_MARKETPLACE_URL;
+    const registry = values.registry ?? process.env.OCTONODE_MARKETPLACE_URL ?? PLUGIN_PUBLISH_AUDIENCE;
     if (!registry) throw new Error("Set OCTONODE_MARKETPLACE_URL or pass --registry <url>");
     const token = process.env.OCTONODE_MARKETPLACE_TOKEN ?? (await accessToken());
     if (!token) throw new Error('Run "octonodes login" or set OCTONODE_TOKEN');
