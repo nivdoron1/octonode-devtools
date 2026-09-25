@@ -1,4 +1,6 @@
 export const PLUGIN_HELP = `Usage:
+  octonodes plugin deploy [source-directory] [--github]
+  octonodes plugin version <patch|minor|major|version> [--cwd <directory>]
   octonodes plugin create <name>
   octonodes plugin nodes [--check]
   octonodes plugin build [octonode.plugin.ts]
@@ -12,6 +14,8 @@ export const PLUGIN_HELP = `Usage:
   octonodes install --frozen --artifacts-only [--offline]
   octonodes plugin recover
 
+Deploy reads plugin.octonode.json/.yml and builds, hashes and publishes to plugins.octonodes.com.
+GitHub publishing uses the connected repository and short-lived Actions identity, with no marketplace secret.
 Build reads octonode.plugin.ts and writes dist/plugins/<id>.
 Node inventories are generated in octonode.nodes.ts. Metadata is inspected without execution.
 Publishing uses OCTONODE_MARKETPLACE_URL and OCTONODE_MARKETPLACE_TOKEN when set,

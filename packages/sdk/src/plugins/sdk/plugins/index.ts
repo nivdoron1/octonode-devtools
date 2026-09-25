@@ -9,3 +9,16 @@ export type { PluginNodeOptions, SchemaValue } from "./types";
 export { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, PluginNode, PluginConnection } from "../../schema/plugin-sdk";
 export { SETTINGS_API_VERSION } from "../../schema/plugin-sdk";
 export { PreparedPluginRuntime } from "../../schema/plugin-sdk";
+
+export {
+  PluginReleaseConfig,
+  PluginConfigPath,
+  pluginReleaseScope,
+  bumpPluginVersion,
+  PLUGIN_RELEASE_FILES,
+  PLUGIN_CONFIG_MAX_BYTES,
+  PLUGIN_PUBLISH_MAX_BYTES,
+  PLUGIN_PUBLISH_AUDIENCE,
+} from "../../schema/plugin-sdk";
+
+export type { PluginScope } from "../../schema/plugin-sdk";

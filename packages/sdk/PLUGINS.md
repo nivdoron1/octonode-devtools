@@ -324,3 +324,43 @@ inventories, project override precedence, npm argument/default behavior,
 workflow runtime integrity, artifact relocation, and existing installation flows.
 Decorators, executable configuration, multiple plugins in one package, custom
 canvas renderers, and another manifest format remain outside this contract.
+
+## Release files and GitHub publishing
+
+SDK/CLI `0.2.0` supports `plugin.octonode.json`, `.yml`, and `.yaml` beside
+`octonode.plugin.ts`. Keep exactly one release file. For example:
+
+```json
+{
+  "apiVersion": "octonode.plugin/v1",
+  "id": "my-plugin",
+  "version": "1.0.0",
+  "scope": "public"
+}
+```
+
+The ID must match the TypeScript plugin. Release-file version, scope, and optional
+contributors override the corresponding code metadata during compilation. Other
+metadata and all node definitions remain in TypeScript. Scope can be `user`, `public`,
+`team` with `teamId`, or `organization` with `orgId`.
+
+`octonodes plugin version patch` updates the release file (also accepts `minor`,
+`major`, or an exact version). `octonodes login` followed by
+`octonodes plugin deploy .` builds, validates, hashes and publishes to
+`https://plugins.octonodes.com`, using your existing account.
+
+For automatic releases, connect the GitHub App repository and release-file path
+in **Partner → GitHub publishing**, review its target, and enable publishing.
+Use a GitHub sign-in with `repo` and `read:org` scopes. Installation requires the
+personal account owner or an active organization admin; release review and consent
+also require current repository admin permission.
+Commit the downloaded workflow at `.github/workflows/octonode-publish.yml` (or the
+explicit `workflow` path in your config). It runs
+`octonodes plugin deploy . --github` with GitHub Actions `id-token: write`.
+No marketplace secret is required. Only the authorized default-branch workflow
+can publish; changing the target requires reconnection. Existing versions are
+skipped; new bytes require a new version. Installed project pins remain unchanged.
+
+Requires deployment of the corresponding engine/control-plane changes and
+publication of SDK/CLI `0.2.0` or newer. Updating the source or opening a PR does not
+apply production migrations, deploy Workers, or publish npm packages.
