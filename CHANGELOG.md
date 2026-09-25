@@ -8,6 +8,17 @@
 - Runtime SDK client factory bindings from declared connection fields, hidden client inputs, and sanitized SDK errors.
 - Original npm subpath identities in generated adapters and typed node icon inheritance documentation.
 
+## [0.1.13] - 2026-09-25
+
+### Added
+
+- Package Octonode connection, authoring, and plugin management skills together for Claude Code, Codex, Cursor, and compatible hosts, with focused linked references for all hosted MCP operations.
+- Generate scoped Cursor MCP configuration with `octonodes connect cursor`.
+
+### Changed
+
+- Configure authenticated MCP connections in each client separately from the portable skill bundle.
+
 ## [0.1.0] - Unreleased
 
 ### Added
