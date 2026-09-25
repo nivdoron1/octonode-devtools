@@ -86,6 +86,30 @@ test("CLI generates scoped MCP client configuration without storing a token", ()
   assert.match(claude.stdout, /claude mcp add-json/);
   assert.match(claude.stdout, /\$\{OCTONODE_TOKEN\}/);
 
+  const cursor = spawnSync(process.execPath, [
+    ...args.slice(0, 2), "cursor", ...args.slice(3), "--worktree", "worktree-1",
+  ], { encoding: "utf8", env: { ...process.env, OCTONODE_TOKEN: "must-not-leak" } });
+  assert.equal(cursor.status, 0, cursor.stderr);
+  assert.deepEqual(JSON.parse(cursor.stdout), {
+    mcpServers: {
+      octonode: {
+        url: "https://mcp.octonode.dev/mcp",
+        headers: {
+          Authorization: "Bearer ${env:OCTONODE_TOKEN}",
+          "x-octonode-workspace": "org:workspace-1",
+          "x-octonode-project": "project-1",
+          "x-octonode-projects": '["project-1","project-2"]',
+          "x-octonode-worktree": "worktree-1",
+        },
+      },
+    },
+  });
+  const invalidCursor = spawnSync(process.execPath, [
+    ...args.slice(0, 2), "cursor", "--workspace", "invalid", "--project", "project-1",
+  ], { encoding: "utf8" });
+  assert.notEqual(invalidCursor.status, 0);
+  assert.equal(invalidCursor.stdout, "");
+
   const headers = spawnSync(process.execPath, [...args.slice(0, 2), "headers", ...args.slice(3)], {
     encoding: "utf8",
     env: { ...process.env, OCTONODE_TOKEN: "octo_pat_test" },
