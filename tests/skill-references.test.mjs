@@ -5,7 +5,15 @@ import { referenceRoot, renderReferences } from "../scripts/gen-mcp-skill-refere
 
 test("skill MCP references stay exact with hosted registrations", () => {
   const expected = renderReferences();
-  assert.deepEqual(readdirSync(referenceRoot).sort(), [...expected.keys()].sort());
+  function list(directory, prefix = "") {
+    return readdirSync(directory).flatMap((name) => {
+      const file = new URL(name, directory);
+      return statSync(file).isDirectory()
+        ? list(new URL(`${name}/`, directory), `${prefix}${name}/`)
+        : [`${prefix}${name}`];
+    });
+  }
+  assert.deepEqual(list(referenceRoot).sort(), [...expected.keys()].sort());
   for (const [name, content] of expected) {
     assert.equal(readFileSync(new URL(name, referenceRoot), "utf8"), content, `Run yarn gen:mcp-skills: ${name}`);
   }

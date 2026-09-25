@@ -19,8 +19,8 @@ Shared [MCP calling rules](skills/octonode-connect/references/mcp-calling.md) an
 and are linked from the authoring and management routers. Read only the references needed for a task.
 Copy all three skill folders together, preserving their names and reference files, so sibling links work.
 
-Operation references include every registered tool's input schema, example arguments, scope, risk,
-HTTP path, and query/body mapping. They are generated from `packages/mcp/src/constants.ts` by
+The MCP index leads to short category routers; each tool has its own reference page with input
+schema, example call, scope, risk, and argument routing. They are generated from `packages/mcp/src/constants.ts` by
 `yarn gen:mcp-skills` (also included in `yarn gen`). `yarn test` checks reference drift and local links.
 
 ## Load the skills
