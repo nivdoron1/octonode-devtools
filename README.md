@@ -145,6 +145,8 @@ limited, but its allowed-origin check is not a replacement for keeping private d
 ## CLI
 
 The CLI is a thin wrapper over the same generated SDK. It needs no local Octonode checkout.
+For Claude Code, Codex, Cursor, and compatible agents, see the [agent plugin](connect-skill-plugin/README.md)
+for shared skills and MCP setup.
 
 ### Run or install
 
