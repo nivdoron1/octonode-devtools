@@ -2,7 +2,12 @@
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
-import { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, SETTINGS_API_VERSION } from "@octonodes/sdk/plugins";
+import {
+  PLUGIN_UI_BUNDLE_MAX_BYTES,
+  PluginManifest,
+  PreparedPluginRuntime,
+  SETTINGS_API_VERSION,
+} from "@octonodes/sdk/plugins";
 import { parseDocument, visit } from "yaml";
 import { BUILD_RECORD, DEFINITION_FILES, FORBIDDEN_PART } from "./constants";
 import type { PluginBuildRecord } from "./types";
@@ -64,6 +69,18 @@ export function verifyBuild(directory: string): { manifest: PluginManifest; file
   const files = pluginFiles(directory);
   if (!files.includes(BUILD_RECORD)) throw new Error("Missing build record; run octonodes plugin build first");
   const record = JSON.parse(readFileSync(join(directory, BUILD_RECORD), "utf8")) as PluginBuildRecord;
+  if (record.runtime) {
+    const runtime = PreparedPluginRuntime.parse(record.runtime);
+    if ((manifest.integration?.npm || manifest.integration?.npmDependencies?.length) && !runtime.dependencies)
+      throw new Error("Prepared npm plugins must include their dependency runtime");
+    if (runtime.dependencies && !files.includes(runtime.dependencies))
+      throw new Error("Missing prepared dependency archive");
+    if (
+      runtime.dependencies &&
+      (runtime.platform === "portable" || !runtime.arch || (runtime.platform === "linux" && !runtime.libc))
+    )
+      throw new Error("Prepared dependencies require a platform, architecture and libc identity");
+  }
   if (record.format !== 1 || !record.files || typeof record.files !== "object" || Array.isArray(record.files)) {
     throw new Error("Invalid plugin build record");
   }

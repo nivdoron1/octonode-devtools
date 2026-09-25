@@ -1,5 +1,5 @@
 // Generated from engine plugin authoring. Do not edit.
-import type { PluginManifest } from "@octonodes/sdk/plugins";
+import type { PluginManifest, PreparedPluginRuntime } from "@octonodes/sdk/plugins";
 
 export interface PluginBuild {
   manifest: PluginManifest;
@@ -8,6 +8,7 @@ export interface PluginBuild {
 
 export interface PluginBuildRecord {
   format: 1;
+  runtime?: PreparedPluginRuntime;
   files: Record<string, string>;
   ui?: Array<{
     nodeId: string;
