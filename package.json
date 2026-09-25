@@ -7,7 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "gen": "yarn workspace @octonodes/sdk gen",
+    "gen": "yarn workspace @octonodes/sdk gen && yarn gen:mcp-skills",
+    "gen:mcp-skills": "node scripts/gen-mcp-skill-reference.mjs",
     "build": "tsc -b",
     "test": "node --test",
     "check": "yarn gen && yarn build && yarn test",
