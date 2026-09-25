@@ -4520,6 +4520,8 @@ export type GetApiMarketplaceResponses = {
             description?: string;
             icon?: string;
             author?: string;
+            contributors?: Array<string>;
+            repository?: string | null;
             homepage?: string;
             category?: string;
             tags: Array<string>;
@@ -4619,6 +4621,8 @@ export type GetApiMarketplacePluginsByIdResponses = {
         description?: string;
         icon?: string;
         author?: string;
+        contributors?: Array<string>;
+        repository?: string | null;
         homepage?: string;
         license?: string;
         source: 'marketplace';
@@ -4743,6 +4747,8 @@ export type GetApiPluginsResponses = {
         description?: string;
         icon?: string;
         author?: string;
+        contributors?: Array<string>;
+        repository?: string | null;
         homepage?: string;
         license?: string;
         source: string;
@@ -4820,6 +4826,8 @@ export type GetApiPluginsSearchResponses = {
             description?: string;
             icon?: string;
             author?: string;
+            contributors?: Array<string>;
+            repository?: string | null;
             homepage?: string;
             license?: string;
             source: string;
@@ -4992,6 +5000,8 @@ export type GetApiPluginsByPluginIdResponses = {
         description?: string;
         icon?: string;
         author?: string;
+        contributors?: Array<string>;
+        repository?: string | null;
         homepage?: string;
         license?: string;
         source: string;

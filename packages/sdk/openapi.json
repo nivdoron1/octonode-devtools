@@ -15157,6 +15157,18 @@
                           "author": {
                             "type": "string"
                           },
+                          "contributors": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "repository": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
                           "homepage": {
                             "type": "string"
                           },
@@ -15531,6 +15543,18 @@
                     },
                     "author": {
                       "type": "string"
+                    },
+                    "contributors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "repository": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "homepage": {
                       "type": "string"
@@ -16059,6 +16083,18 @@
                       "author": {
                         "type": "string"
                       },
+                      "contributors": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "repository": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
                       "homepage": {
                         "type": "string"
                       },
@@ -16307,6 +16343,18 @@
                           },
                           "author": {
                             "type": "string"
+                          },
+                          "contributors": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "repository": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "homepage": {
                             "type": "string"
@@ -16850,6 +16898,18 @@
                     },
                     "author": {
                       "type": "string"
+                    },
+                    "contributors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "repository": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "homepage": {
                       "type": "string"
