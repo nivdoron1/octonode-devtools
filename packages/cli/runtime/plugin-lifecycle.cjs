@@ -346,10 +346,10 @@ var require_croner = __commonJS({
       if (t && typeof t == "object" || typeof t == "function") for (let s of E(t)) !M.call(n, s) && s !== e && D(n, s, { get: () => t[s], enumerable: !(r = x(t, s)) || r.enumerable });
       return n;
     };
-    var z2 = (n) => A(D({}, "__esModule", { value: true }), n);
+    var z3 = (n) => A(D({}, "__esModule", { value: true }), n);
     var W = {};
     U(W, { Cron: () => N, CronDate: () => h, CronPattern: () => g, scheduledJobs: () => C });
-    module2.exports = z2(W);
+    module2.exports = z3(W);
     function f(n, t, e, r, s, i, a, l) {
       return f.fromTZ(f.tp(n, t, e, r, s, i, a), l);
     }
@@ -2639,8 +2639,8 @@ var require_planning = __commonJS({
       version: collaboration_1.revisionSchema,
       createdAt: common_1.taskTimestampSchema,
       updatedAt: common_1.taskTimestampSchema
-    }).strict().superRefine((release, context) => {
-      if (release.state === "released" && release.releasedAt === null) {
+    }).strict().superRefine((release2, context) => {
+      if (release2.state === "released" && release2.releasedAt === null) {
         context.addIssue({
           code: zod_1.z.ZodIssueCode.custom,
           path: ["releasedAt"],
@@ -7719,10 +7719,10 @@ var require_build = __commonJS({
             else out += sub.appendTo();
             break;
           case Regexp2.Op.ALTERNATE: {
-            let sep = "";
+            let sep2 = "";
             for (let sub of this.subs) {
-              out += sep;
-              sep = "|";
+              out += sep2;
+              sep2 = "|";
               out += sub.appendTo();
             }
             break;
@@ -11456,6 +11456,58 @@ var require_plugin_version = __commonJS({
   }
 });
 
+// packages/schema/dist/plugin/execution.constants.js
+var require_execution_constants = __commonJS({
+  "packages/schema/dist/plugin/execution.constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PREPARED_RUNTIME_ARCHIVE = exports2.PREPARED_RUNTIME_MAX_FILES = exports2.PREPARED_RUNTIME_MAX_BYTES = exports2.PLUGIN_EXECUTION_TIMEOUT_MS = exports2.PLUGIN_EXECUTION_MAX_BYTES = exports2.PLUGIN_RUNNER_PORT = exports2.PLUGIN_RUNNER_ORIGIN = void 0;
+    exports2.PLUGIN_RUNNER_ORIGIN = "http://plugin-runner.octonode.internal";
+    exports2.PLUGIN_RUNNER_PORT = 4001;
+    exports2.PLUGIN_EXECUTION_MAX_BYTES = 1024 * 1024;
+    exports2.PLUGIN_EXECUTION_TIMEOUT_MS = 5 * 6e4;
+    exports2.PREPARED_RUNTIME_MAX_BYTES = 256 * 1024 * 1024;
+    exports2.PREPARED_RUNTIME_MAX_FILES = 5e4;
+    exports2.PREPARED_RUNTIME_ARCHIVE = "octonode-runtime.tgz";
+  }
+});
+
+// packages/schema/dist/plugin/execution.js
+var require_execution = __commonJS({
+  "packages/schema/dist/plugin/execution.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AuthorizedPluginRelease = exports2.PluginExecutionRequest = exports2.PluginExecutionReference = exports2.PreparedPluginRuntime = void 0;
+    var zod_1 = require("zod");
+    var ipc_envelope_1 = require_ipc_envelope();
+    var plugin_1 = require_plugin();
+    var execution_constants_1 = require_execution_constants();
+    exports2.PreparedPluginRuntime = zod_1.z.object({
+      format: zod_1.z.literal(1),
+      nodeMajor: zod_1.z.literal(24),
+      platform: zod_1.z.enum(["portable", "linux", "darwin"]),
+      arch: zod_1.z.string().max(32).optional(),
+      libc: zod_1.z.string().max(64).optional(),
+      dependencies: zod_1.z.literal(execution_constants_1.PREPARED_RUNTIME_ARCHIVE).optional()
+    }).strict();
+    exports2.PluginExecutionReference = zod_1.z.object({
+      installId: zod_1.z.string().uuid(),
+      sha256: zod_1.z.string().regex(/^sha256:[a-f0-9]{64}$/),
+      nodeId: zod_1.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i)
+    }).strict();
+    exports2.PluginExecutionRequest = zod_1.z.object({
+      plugin: exports2.PluginExecutionReference,
+      request: ipc_envelope_1.InvokeRequest,
+      environment: zod_1.z.record(zod_1.z.string().regex(/^[a-z_][a-z0-9_]*$/i), zod_1.z.string().max(65536).refine((value) => !value.includes("\0"))).default({}),
+      timeoutMs: zod_1.z.number().int().positive().max(execution_constants_1.PLUGIN_EXECUTION_TIMEOUT_MS).default(execution_constants_1.PLUGIN_EXECUTION_TIMEOUT_MS)
+    }).strict();
+    exports2.AuthorizedPluginRelease = zod_1.z.object({
+      manifest: plugin_1.PluginManifest,
+      archiveSha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/)
+    });
+  }
+});
+
 // packages/schema/dist/index.js
 var require_dist = __commonJS({
   "packages/schema/dist/index.js"(exports2) {
@@ -11518,6 +11570,8 @@ var require_dist = __commonJS({
     __exportStar(require_project_lifecycle(), exports2);
     __exportStar(require_project_jobs(), exports2);
     __exportStar(require_plugin_version(), exports2);
+    __exportStar(require_execution(), exports2);
+    __exportStar(require_execution_constants(), exports2);
   }
 });
 
@@ -11845,7 +11899,7 @@ var require_runner = __commonJS({
       let draining = false;
       let ended = false;
       let done;
-      const finished = new Promise((resolve5) => done = resolve5);
+      const finished = new Promise((resolve7) => done = resolve7);
       const drain = async () => {
         if (draining)
           return;
@@ -11895,183 +11949,6 @@ var require_runner = __commonJS({
   }
 });
 
-// packages/plugin-runtime/dist/plugin.js
-var require_plugin2 = __commonJS({
-  "packages/plugin-runtime/dist/plugin.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.definePlugin = definePlugin;
-    exports2.startPlugin = startPlugin;
-    var schema_1 = require_dist();
-    var define_node_1 = require_define_node();
-    var runner_1 = require_runner();
-    function definePlugin(definition, handlers) {
-      const options = definition;
-      if (!handlers && (!options || !Array.isArray(options.nodes)))
-        throw new Error("plugin needs a nodes array");
-      if (!handlers) {
-        for (const node of options.nodes) {
-          if (typeof node.run !== "function")
-            throw new Error(`plugin node "${node.id}" needs a handler`);
-          if (node.kind && node.kind !== "function")
-            throw new Error("plugin nodes must be functions");
-        }
-      }
-      const manifest2 = schema_1.PluginManifest.parse(handlers ? definition : {
-        ...options,
-        nodes: options.nodes.map(({ run: _run, ...node }) => ({
-          ...node,
-          command: `node dist/index.js ${node.id}`,
-          language: "typescript"
-        }))
-      });
-      const nodeHandlers = handlers ?? Object.fromEntries(options.nodes.map((node) => [node.id, node.run]));
-      for (const node of manifest2.nodes) {
-        for (const field of ["inputs", "outputs", "defaults"]) {
-          const error = node[field] === void 0 ? void 0 : (0, runner_1.jsonSafetyError)(node[field]);
-          if (error)
-            throw new Error(`plugin node "${node.id}" ${field} must be JSON-serializable: ${error}`);
-        }
-      }
-      for (const id of Object.keys(nodeHandlers)) {
-        if (!manifest2.nodes.some((node) => node.id === id))
-          throw new Error(`handler "${id}" has no plugin node`);
-      }
-      return {
-        manifest: manifest2,
-        ...!handlers && options.assets ? { assets: options.assets } : {},
-        nodes: Object.fromEntries(manifest2.nodes.map((node) => {
-          if (!Object.hasOwn(nodeHandlers, node.id))
-            throw new Error(`plugin node "${node.id}" needs a handler`);
-          const fields = (node.connections ?? []).flatMap((id) => Object.entries(manifest2.connections?.[id]?.fields ?? {}));
-          return [
-            node.id,
-            (0, define_node_1.defineNode)({
-              ...node,
-              run: (inputs, context) => {
-                const missing = fields.filter(([name, field]) => field.required && !process.env[name]).map(([name]) => name);
-                if (missing.length)
-                  throw new runner_1.NodeError(`Missing connection credentials: ${missing.join(", ")}`);
-                return nodeHandlers[node.id](inputs, context);
-              }
-            })
-          ];
-        }))
-      };
-    }
-    function startPlugin(plugin, nodeId = process.argv[2]) {
-      const id = nodeId ?? (plugin.manifest.nodes.length === 1 ? plugin.manifest.nodes[0].id : void 0);
-      if (!id || !Object.hasOwn(plugin.nodes, id))
-        throw new Error(`Choose a plugin node: ${Object.keys(plugin.nodes).join(", ")}`);
-      (0, runner_1.start)(plugin.nodes[id]);
-    }
-  }
-});
-
-// packages/plugin-runtime/dist/plugin-file.js
-var require_plugin_file = __commonJS({
-  "packages/plugin-runtime/dist/plugin-file.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.pluginDefinitionPath = pluginDefinitionPath;
-    exports2.loadPluginDefinition = loadPluginDefinition3;
-    var node_fs_1 = require("node:fs");
-    var node_path_1 = require("node:path");
-    var yaml_1 = require("yaml");
-    var schema_1 = require_dist();
-    function pluginDefinitionPath(dir) {
-      const files = schema_1.PLUGIN_DEFINITION_FILENAMES.map((name) => (0, node_path_1.join)(dir, name)).filter(node_fs_1.existsSync);
-      if (files.length !== 1)
-        throw new Error(files.length ? `Multiple plugin definitions in ${dir}; keep exactly one` : `No plugin definition in ${dir}; create octonode.yml or octonode.json`);
-      const file = files[0];
-      if ((0, node_path_1.dirname)((0, node_fs_1.realpathSync)(file)) !== (0, node_fs_1.realpathSync)(dir))
-        throw new Error("Plugin definition must stay inside its folder");
-      if (!(0, node_fs_1.statSync)(file).isFile() || (0, node_fs_1.statSync)(file).size > 1048576)
-        throw new Error("Plugin definition must be a file smaller than 1 MiB");
-      return file;
-    }
-    function loadPluginDefinition3(dir) {
-      const file = pluginDefinitionPath(dir);
-      const source = (0, node_fs_1.readFileSync)(file, "utf8");
-      const document = (0, yaml_1.parseDocument)(source, { version: "1.2", uniqueKeys: true });
-      (0, yaml_1.visit)(document, {
-        Alias() {
-          throw new Error("Plugin definitions cannot contain YAML aliases");
-        }
-      });
-      if (document.errors.length || document.warnings.length)
-        throw new Error(`${file}: ${[...document.errors, ...document.warnings].map((error) => error.message).join("; ")}`);
-      const raw = file.endsWith(".json") ? JSON.parse(source) : document.toJS({ maxAliasCount: 0 });
-      if (file.endsWith(schema_1.PLUGIN_MANIFEST_FILENAME))
-        return schema_1.PluginManifest.parse(raw);
-      const settings = schema_1.OctonodeSettingsDocument.parse(raw);
-      if (!settings.plugin)
-        throw new Error(`${file} has no plugin section`);
-      return settings.plugin;
-    }
-  }
-});
-
-// packages/plugin-runtime/dist/index.js
-var require_dist2 = __commonJS({
-  "packages/plugin-runtime/dist/index.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;
-    var define_node_1 = require_define_node();
-    Object.defineProperty(exports2, "defineNode", { enumerable: true, get: function() {
-      return define_node_1.defineNode;
-    } });
-    Object.defineProperty(exports2, "defineService", { enumerable: true, get: function() {
-      return define_node_1.defineService;
-    } });
-    Object.defineProperty(exports2, "defineClass", { enumerable: true, get: function() {
-      return define_node_1.defineClass;
-    } });
-    Object.defineProperty(exports2, "defineConst", { enumerable: true, get: function() {
-      return define_node_1.defineConst;
-    } });
-    var runner_1 = require_runner();
-    Object.defineProperty(exports2, "runNode", { enumerable: true, get: function() {
-      return runner_1.runNode;
-    } });
-    Object.defineProperty(exports2, "start", { enumerable: true, get: function() {
-      return runner_1.start;
-    } });
-    Object.defineProperty(exports2, "NodeError", { enumerable: true, get: function() {
-      return runner_1.NodeError;
-    } });
-    var json_schema_1 = require_json_schema2();
-    Object.defineProperty(exports2, "validate", { enumerable: true, get: function() {
-      return json_schema_1.validate;
-    } });
-    var plugin_1 = require_plugin2();
-    Object.defineProperty(exports2, "definePlugin", { enumerable: true, get: function() {
-      return plugin_1.definePlugin;
-    } });
-    Object.defineProperty(exports2, "startPlugin", { enumerable: true, get: function() {
-      return plugin_1.startPlugin;
-    } });
-    var plugin_file_1 = require_plugin_file();
-    Object.defineProperty(exports2, "loadPluginDefinition", { enumerable: true, get: function() {
-      return plugin_file_1.loadPluginDefinition;
-    } });
-    Object.defineProperty(exports2, "pluginDefinitionPath", { enumerable: true, get: function() {
-      return plugin_file_1.pluginDefinitionPath;
-    } });
-    var schema_1 = require_dist();
-    Object.defineProperty(exports2, "PluginManifest", { enumerable: true, get: function() {
-      return schema_1.PluginManifest;
-    } });
-    Object.defineProperty(exports2, "PluginNode", { enumerable: true, get: function() {
-      return schema_1.PluginNode;
-    } });
-    Object.defineProperty(exports2, "PluginConnection", { enumerable: true, get: function() {
-      return schema_1.PluginConnection;
-    } });
-  }
-});
-
 // packages/common/dist/constants.js
 var require_constants2 = __commonJS({
   "packages/common/dist/constants.js"(exports2) {
@@ -12089,8 +11966,8 @@ var require_constants2 = __commonJS({
       return environment;
     };
     exports2.workflowEnvironment = workflowEnvironment;
-    var childProcessEnvironment3 = (overrides = {}) => (0, exports2.workflowEnvironment)({ ...exports2.PROCESS_ENV, ...overrides });
-    exports2.childProcessEnvironment = childProcessEnvironment3;
+    var childProcessEnvironment4 = (overrides = {}) => (0, exports2.workflowEnvironment)({ ...exports2.PROCESS_ENV, ...overrides });
+    exports2.childProcessEnvironment = childProcessEnvironment4;
     var setEnvironmentVariable = (name, value) => {
       if (value === void 0)
         delete exports2.PROCESS_ENV[name];
@@ -12132,8 +12009,8 @@ var require_constants2 = __commonJS({
     exports2.OCTONODE_PACKAGE_CACHE = OCTONODE_PACKAGE_CACHE2;
     var OCTONODE_MARKETPLACE_TOKEN2 = () => exports2.PROCESS_ENV.OCTONODE_MARKETPLACE_TOKEN ?? exports2.PROCESS_ENV.VITE_OCTONODE_MARKETPLACE_TOKEN ?? exports2.PROCESS_ENV.VITE_PUBLIC_OCTONODE_MARKETPLACE_TOKEN;
     exports2.OCTONODE_MARKETPLACE_TOKEN = OCTONODE_MARKETPLACE_TOKEN2;
-    var OCTONODE_MARKETPLACE_URL2 = () => exports2.PROCESS_ENV.OCTONODE_MARKETPLACE_URL ?? exports2.PROCESS_ENV.VITE_OCTONODE_MARKETPLACE_URL ?? exports2.PROCESS_ENV.VITE_PUBLIC_OCTONODE_MARKETPLACE_URL;
-    exports2.OCTONODE_MARKETPLACE_URL = OCTONODE_MARKETPLACE_URL2;
+    var OCTONODE_MARKETPLACE_URL3 = () => exports2.PROCESS_ENV.OCTONODE_MARKETPLACE_URL ?? exports2.PROCESS_ENV.VITE_OCTONODE_MARKETPLACE_URL ?? exports2.PROCESS_ENV.VITE_PUBLIC_OCTONODE_MARKETPLACE_URL;
+    exports2.OCTONODE_MARKETPLACE_URL = OCTONODE_MARKETPLACE_URL3;
     var OCTONODE_RUN_CONCURRENCY = () => exports2.PROCESS_ENV.OCTONODE_RUN_CONCURRENCY;
     exports2.OCTONODE_RUN_CONCURRENCY = OCTONODE_RUN_CONCURRENCY;
     var OCTONODE_RUN_QUEUE = () => exports2.PROCESS_ENV.OCTONODE_RUN_QUEUE;
@@ -12391,8 +12268,36 @@ var require_graph_layout = __commonJS({
   }
 });
 
+// packages/common/dist/plugin-nodes.js
+var require_plugin_nodes = __commonJS({
+  "packages/common/dist/plugin-nodes.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.installedPluginNodesPage = installedPluginNodesPage;
+    function isCatalogPlugin(value) {
+      if (!value || typeof value !== "object")
+        return false;
+      const plugin = value;
+      return typeof plugin.id === "string" && typeof plugin.name === "string" && typeof plugin.version === "string" && Array.isArray(plugin.nodes) && plugin.nodes.every((node) => {
+        if (!node || typeof node !== "object")
+          return false;
+        const item = node;
+        return typeof item.id === "string" && (item.icon === void 0 || typeof item.icon === "string") && (item.description === void 0 || typeof item.description === "string");
+      });
+    }
+    function installedPluginNodesPage(inventory, query) {
+      if (!inventory.every(isCatalogPlugin))
+        throw new Error("Plugin node inventory is incomplete");
+      const q = query.q?.trim().toLowerCase();
+      const nodes = inventory.flatMap((plugin) => plugin.nodes.filter((node) => !q || [node.id, node.description ?? "", plugin.id, plugin.name].join(" ").toLowerCase().includes(q)).map((node) => ({ ...node, pluginId: plugin.id, pluginName: plugin.name, pluginVersion: plugin.version }))).sort((a, b) => a.pluginName.localeCompare(b.pluginName) || a.id.localeCompare(b.id));
+      const offset = Math.min(query.offset, nodes.length);
+      return { items: nodes.slice(offset, offset + query.limit), total: nodes.length, offset, limit: query.limit };
+    }
+  }
+});
+
 // packages/common/dist/index.js
-var require_dist3 = __commonJS({
+var require_dist2 = __commonJS({
   "packages/common/dist/index.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
@@ -12412,7 +12317,7 @@ var require_dist3 = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
+    exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
     __exportStar(require_constants2(), exports2);
     __exportStar(require_legal_constants(), exports2);
     var package_cache_1 = require_package_cache();
@@ -12423,6 +12328,188 @@ var require_dist3 = __commonJS({
     var graph_layout_1 = require_graph_layout();
     Object.defineProperty(exports2, "layeredLayout", { enumerable: true, get: function() {
       return graph_layout_1.layeredLayout;
+    } });
+    var plugin_nodes_1 = require_plugin_nodes();
+    Object.defineProperty(exports2, "installedPluginNodesPage", { enumerable: true, get: function() {
+      return plugin_nodes_1.installedPluginNodesPage;
+    } });
+  }
+});
+
+// packages/plugin-runtime/dist/plugin.js
+var require_plugin2 = __commonJS({
+  "packages/plugin-runtime/dist/plugin.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.definePlugin = definePlugin;
+    exports2.startPlugin = startPlugin;
+    var common_1 = require_dist2();
+    var schema_1 = require_dist();
+    var define_node_1 = require_define_node();
+    var runner_1 = require_runner();
+    function definePlugin(definition, handlers) {
+      const options = definition;
+      if (!handlers && (!options || !Array.isArray(options.nodes)))
+        throw new Error("plugin needs a nodes array");
+      if (!handlers) {
+        for (const node of options.nodes) {
+          if (typeof node.run !== "function")
+            throw new Error(`plugin node "${node.id}" needs a handler`);
+          if (node.kind && node.kind !== "function")
+            throw new Error("plugin nodes must be functions");
+        }
+      }
+      const manifest2 = schema_1.PluginManifest.parse(handlers ? definition : {
+        ...options,
+        nodes: options.nodes.map(({ run: _run, ...node }) => ({
+          ...node,
+          command: `node dist/index.js ${node.id}`,
+          language: "typescript"
+        }))
+      });
+      const nodeHandlers = handlers ?? Object.fromEntries(options.nodes.map((node) => [node.id, node.run]));
+      for (const node of manifest2.nodes) {
+        for (const field of ["inputs", "outputs", "defaults"]) {
+          const error = node[field] === void 0 ? void 0 : (0, runner_1.jsonSafetyError)(node[field]);
+          if (error)
+            throw new Error(`plugin node "${node.id}" ${field} must be JSON-serializable: ${error}`);
+        }
+      }
+      for (const id of Object.keys(nodeHandlers)) {
+        if (!manifest2.nodes.some((node) => node.id === id))
+          throw new Error(`handler "${id}" has no plugin node`);
+      }
+      return {
+        manifest: manifest2,
+        ...!handlers && options.assets ? { assets: options.assets } : {},
+        nodes: Object.fromEntries(manifest2.nodes.map((node) => {
+          if (!Object.hasOwn(nodeHandlers, node.id))
+            throw new Error(`plugin node "${node.id}" needs a handler`);
+          const fields = (node.connections ?? []).flatMap((id) => Object.entries(manifest2.connections?.[id]?.fields ?? {}));
+          return [
+            node.id,
+            (0, define_node_1.defineNode)({
+              ...node,
+              run: (inputs, context) => {
+                const missing = fields.filter(([name, field]) => field.required && !common_1.PROCESS_ENV[name]).map(([name]) => name);
+                if (missing.length)
+                  throw new runner_1.NodeError(`Missing connection credentials: ${missing.join(", ")}`);
+                return nodeHandlers[node.id](inputs, context);
+              }
+            })
+          ];
+        }))
+      };
+    }
+    function startPlugin(plugin, nodeId = process.argv[2]) {
+      const id = nodeId ?? (plugin.manifest.nodes.length === 1 ? plugin.manifest.nodes[0].id : void 0);
+      if (!id || !Object.hasOwn(plugin.nodes, id))
+        throw new Error(`Choose a plugin node: ${Object.keys(plugin.nodes).join(", ")}`);
+      (0, runner_1.start)(plugin.nodes[id]);
+    }
+  }
+});
+
+// packages/plugin-runtime/dist/plugin-file.js
+var require_plugin_file = __commonJS({
+  "packages/plugin-runtime/dist/plugin-file.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.pluginDefinitionPath = pluginDefinitionPath2;
+    exports2.loadPluginDefinition = loadPluginDefinition3;
+    var node_fs_1 = require("node:fs");
+    var node_path_1 = require("node:path");
+    var yaml_1 = require("yaml");
+    var schema_1 = require_dist();
+    function pluginDefinitionPath2(dir) {
+      const files = schema_1.PLUGIN_DEFINITION_FILENAMES.map((name) => (0, node_path_1.join)(dir, name)).filter(node_fs_1.existsSync);
+      if (files.length !== 1)
+        throw new Error(files.length ? `Multiple plugin definitions in ${dir}; keep exactly one` : `No plugin definition in ${dir}; create octonode.yml or octonode.json`);
+      const file = files[0];
+      if ((0, node_path_1.dirname)((0, node_fs_1.realpathSync)(file)) !== (0, node_fs_1.realpathSync)(dir))
+        throw new Error("Plugin definition must stay inside its folder");
+      if (!(0, node_fs_1.statSync)(file).isFile() || (0, node_fs_1.statSync)(file).size > 1048576)
+        throw new Error("Plugin definition must be a file smaller than 1 MiB");
+      return file;
+    }
+    function loadPluginDefinition3(dir) {
+      const file = pluginDefinitionPath2(dir);
+      const source = (0, node_fs_1.readFileSync)(file, "utf8");
+      const document = (0, yaml_1.parseDocument)(source, { version: "1.2", uniqueKeys: true });
+      (0, yaml_1.visit)(document, {
+        Alias() {
+          throw new Error("Plugin definitions cannot contain YAML aliases");
+        }
+      });
+      if (document.errors.length || document.warnings.length)
+        throw new Error(`${file}: ${[...document.errors, ...document.warnings].map((error) => error.message).join("; ")}`);
+      const raw = file.endsWith(".json") ? JSON.parse(source) : document.toJS({ maxAliasCount: 0 });
+      if (file.endsWith(schema_1.PLUGIN_MANIFEST_FILENAME))
+        return schema_1.PluginManifest.parse(raw);
+      const settings = schema_1.OctonodeSettingsDocument.parse(raw);
+      if (!settings.plugin)
+        throw new Error(`${file} has no plugin section`);
+      return settings.plugin;
+    }
+  }
+});
+
+// packages/plugin-runtime/dist/index.js
+var require_dist3 = __commonJS({
+  "packages/plugin-runtime/dist/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;
+    var define_node_1 = require_define_node();
+    Object.defineProperty(exports2, "defineNode", { enumerable: true, get: function() {
+      return define_node_1.defineNode;
+    } });
+    Object.defineProperty(exports2, "defineService", { enumerable: true, get: function() {
+      return define_node_1.defineService;
+    } });
+    Object.defineProperty(exports2, "defineClass", { enumerable: true, get: function() {
+      return define_node_1.defineClass;
+    } });
+    Object.defineProperty(exports2, "defineConst", { enumerable: true, get: function() {
+      return define_node_1.defineConst;
+    } });
+    var runner_1 = require_runner();
+    Object.defineProperty(exports2, "runNode", { enumerable: true, get: function() {
+      return runner_1.runNode;
+    } });
+    Object.defineProperty(exports2, "start", { enumerable: true, get: function() {
+      return runner_1.start;
+    } });
+    Object.defineProperty(exports2, "NodeError", { enumerable: true, get: function() {
+      return runner_1.NodeError;
+    } });
+    var json_schema_1 = require_json_schema2();
+    Object.defineProperty(exports2, "validate", { enumerable: true, get: function() {
+      return json_schema_1.validate;
+    } });
+    var plugin_1 = require_plugin2();
+    Object.defineProperty(exports2, "definePlugin", { enumerable: true, get: function() {
+      return plugin_1.definePlugin;
+    } });
+    Object.defineProperty(exports2, "startPlugin", { enumerable: true, get: function() {
+      return plugin_1.startPlugin;
+    } });
+    var plugin_file_1 = require_plugin_file();
+    Object.defineProperty(exports2, "loadPluginDefinition", { enumerable: true, get: function() {
+      return plugin_file_1.loadPluginDefinition;
+    } });
+    Object.defineProperty(exports2, "pluginDefinitionPath", { enumerable: true, get: function() {
+      return plugin_file_1.pluginDefinitionPath;
+    } });
+    var schema_1 = require_dist();
+    Object.defineProperty(exports2, "PluginManifest", { enumerable: true, get: function() {
+      return schema_1.PluginManifest;
+    } });
+    Object.defineProperty(exports2, "PluginNode", { enumerable: true, get: function() {
+      return schema_1.PluginNode;
+    } });
+    Object.defineProperty(exports2, "PluginConnection", { enumerable: true, get: function() {
+      return schema_1.PluginConnection;
     } });
   }
 });
@@ -12435,18 +12522,18 @@ __export(index_exports, {
 module.exports = __toCommonJS(index_exports);
 
 // packages/plugin/src/consumer/lifecycle.ts
-var import_node_fs13 = require("node:fs");
-var import_node_path13 = require("node:path");
+var import_node_fs15 = require("node:fs");
+var import_node_path15 = require("node:path");
 
 // packages/plugin/src/lifecycle.ts
-var import_node_fs8 = require("node:fs");
-var import_node_path8 = require("node:path");
+var import_node_fs10 = require("node:fs");
+var import_node_path10 = require("node:path");
 
 // packages/plugin/src/store.ts
 var import_node_fs2 = require("node:fs");
 var import_node_os = require("node:os");
 var import_node_path2 = require("node:path");
-var import_plugin_runtime = __toESM(require_dist2());
+var import_plugin_runtime = __toESM(require_dist3());
 
 // packages/plugin/src/integrity.ts
 var import_node_crypto = require("node:crypto");
@@ -12538,7 +12625,7 @@ function addToStore(srcDir, opts = {}) {
 var import_node_fs4 = require("node:fs");
 var import_node_os2 = require("node:os");
 var import_node_path4 = require("node:path");
-var import_plugin_runtime2 = __toESM(require_dist2());
+var import_plugin_runtime2 = __toESM(require_dist3());
 var import_schema2 = __toESM(require_dist());
 
 // packages/plugin/src/lock.ts
@@ -12551,6 +12638,8 @@ var LockEntry = import_zod.z.object({
   version: import_zod.z.string(),
   /** `sha256:<hex>` dir-content hash (hashPluginDir) — the store address + integrity check. */
   sha256: import_zod.z.string(),
+  /** Registry archive checksum, distinct from the unpacked file-tree identity. */
+  archiveSha256: import_zod.z.string().regex(/^[a-f0-9]{64}$/).optional(),
   /** Marketplace base URL the bundle came from (absent for local installs). */
   registry: import_zod.z.string().optional(),
   /** Marketplace tier it was resolved from. */
@@ -12625,12 +12714,12 @@ function isPluginDir(dir) {
 
 // packages/plugin/src/dependencies.ts
 var import_node_child_process = require("node:child_process");
-var import_node_fs5 = require("node:fs");
-var import_node_os3 = require("node:os");
-var import_node_path5 = require("node:path");
+var import_node_fs6 = require("node:fs");
+var import_node_os4 = require("node:os");
+var import_node_path6 = require("node:path");
 var import_node_util = require("node:util");
 var import_yaml = require("yaml");
-var import_common = __toESM(require_dist3());
+var import_common = __toESM(require_dist2());
 
 // packages/plugin/src/dependencies.constants.ts
 var DEFAULT_PACKAGE_MANAGER = "pnpm@12.3.4";
@@ -12644,43 +12733,291 @@ var PACKAGE_MANAGER_LOCKS = {
   bun: ["bun.lock", "bun.lockb"]
 };
 
+// packages/plugin/src/dependency/snapshot.ts
+var import_node_crypto2 = require("node:crypto");
+var import_node_fs5 = require("node:fs");
+var import_node_path5 = require("node:path");
+var import_node_os3 = require("node:os");
+var import_zod2 = require("zod");
+
+// packages/plugin/src/dependency/snapshot.constants.ts
+var DEPENDENCY_SNAPSHOT_FORMAT = 1;
+var DEPENDENCY_SNAPSHOT_MAX_BYTES = 256 * 1024 * 1024;
+var DEPENDENCY_SNAPSHOT_MAX_FILES = 5e4;
+var DEPENDENCY_SNAPSHOT_OUTPUTS = [
+  "node_modules",
+  ".pnp.cjs",
+  ".pnp.loader.mjs",
+  ".pnp.data.json",
+  ".yarn/cache",
+  ".yarn/unplugged",
+  ".yarn/install-state.gz"
+];
+
+// packages/plugin/src/dependency/snapshot.ts
+function inside(root, path) {
+  const local = (0, import_node_path5.relative)(root, path);
+  return local === "" || !(0, import_node_path5.isAbsolute)(local) && local !== ".." && !local.startsWith(`..${import_node_path5.sep}`);
+}
+function digestTree(root, paths, projectRoot) {
+  const hash = (0, import_node_crypto2.createHash)("sha256");
+  let bytes = 0;
+  let count = 0;
+  const visit2 = (path) => {
+    if (++count > DEPENDENCY_SNAPSHOT_MAX_FILES) throw new Error("Dependency snapshot file limit");
+    const file = (0, import_node_path5.join)(root, path);
+    for (let parent = (0, import_node_path5.dirname)(file); inside(root, parent); parent = (0, import_node_path5.dirname)(parent)) {
+      if ((0, import_node_fs5.lstatSync)(parent).isSymbolicLink()) throw new Error("Dependency snapshot ancestor is a link");
+      if (parent === root) break;
+    }
+    const stat = (0, import_node_fs5.lstatSync)(file);
+    hash.update(
+      JSON.stringify([
+        path,
+        stat.mode & 511,
+        stat.isDirectory() ? "directory" : stat.isSymbolicLink() ? "link" : "file"
+      ])
+    );
+    if (stat.isSymbolicLink()) {
+      const link = (0, import_node_fs5.readlinkSync)(file);
+      if (!inside(projectRoot, (0, import_node_path5.resolve)((0, import_node_path5.dirname)((0, import_node_path5.join)(projectRoot, path)), link)))
+        throw new Error("Dependency snapshot link leaves project");
+      hash.update(JSON.stringify(link));
+    } else if (stat.isDirectory()) {
+      for (const name of (0, import_node_fs5.readdirSync)(file).sort()) visit2((0, import_node_path5.join)(path, name));
+    } else if (stat.isFile()) {
+      bytes += stat.size;
+      if (bytes > DEPENDENCY_SNAPSHOT_MAX_BYTES) throw new Error("Dependency snapshot size limit");
+      hash.update(String(stat.size)).update("\0").update((0, import_node_fs5.readFileSync)(file));
+    } else throw new Error("Unsupported dependency snapshot file");
+  };
+  for (const path of [...paths].sort()) visit2(path);
+  return hash.digest("hex");
+}
+function dependencySnapshot(project, cacheRoot, managerVersion, environment) {
+  try {
+    if (inside(cacheRoot, project.root)) return;
+    if (!PACKAGE_MANAGER_LOCKS[project.manager].some((name) => (0, import_node_fs5.existsSync)((0, import_node_path5.join)(project.root, name)))) return;
+    const outputs = new Set(DEPENDENCY_SNAPSHOT_OUTPUTS);
+    let inputCount = 0;
+    if (/--(?:require|import|loader|experimental-loader)(?:[=\s]|$)/.test(environment.NODE_OPTIONS ?? "")) return;
+    const walk = (directory) => (0, import_node_fs5.readdirSync)(directory).sort().flatMap((name) => {
+      const file = (0, import_node_path5.join)(directory, name);
+      const local = (0, import_node_path5.relative)(project.root, file);
+      if (inside(cacheRoot, file) || outputs.has(local) || name === "node_modules" || name === ".git" || name === ".octonode" || name === DEPENDENCY_MUTEX || name.startsWith(".octonode-recovery-"))
+        return [];
+      if (++inputCount > DEPENDENCY_SNAPSHOT_MAX_FILES) throw new Error("Dependency input file limit");
+      const stat = (0, import_node_fs5.lstatSync)(file);
+      if (stat.isSymbolicLink()) throw new Error("Linked source is not snapshot eligible");
+      if (/^\.?pnpmfile\.[cm]?js$/.test(name))
+        throw new Error("Dynamic package-manager hooks require installation");
+      if (name === ".yarnrc.yml" && /^(?:plugins|yarnPath):/m.test((0, import_node_fs5.readFileSync)(file, "utf8")))
+        throw new Error("Custom Yarn code requires installation");
+      if (stat.isDirectory()) return walk(file);
+      else {
+        if (name === "package.json") {
+          const manifest2 = JSON.parse((0, import_node_fs5.readFileSync)(file, "utf8"));
+          for (const dependencies of [
+            manifest2.dependencies,
+            manifest2.devDependencies,
+            manifest2.optionalDependencies
+          ]) {
+            for (const spec of Object.values(dependencies ?? {})) {
+              if (typeof spec !== "string") throw new Error("Invalid dependency");
+              const localSpec = /^(?:file:|link:|portal:)(.*)$/.exec(spec);
+              if (localSpec) {
+                const target = (0, import_node_path5.resolve)(directory, localSpec[1]);
+                if (!inside(project.root, target) || inside(cacheRoot, target) || (0, import_node_path5.relative)(project.root, target).split(import_node_path5.sep).some((part) => ["node_modules", ".git", ".octonode"].includes(part)))
+                  throw new Error("External or excluded dependency is not snapshot eligible");
+              }
+            }
+          }
+          outputs.add((0, import_node_path5.relative)(project.root, (0, import_node_path5.join)(directory, "node_modules")));
+        }
+        return [local];
+      }
+    });
+    const inputs = walk(project.root);
+    const inputHash = digestTree(project.root, inputs, project.root);
+    const userRoot = environment.HOME ?? (0, import_node_os3.homedir)();
+    const configuration = new Set(
+      [
+        (0, import_node_path5.join)(userRoot, ".npmrc"),
+        (0, import_node_path5.join)(userRoot, ".yarnrc"),
+        (0, import_node_path5.join)(userRoot, ".yarnrc.yml"),
+        (0, import_node_path5.join)(userRoot, ".config/pnpm/rc"),
+        "/etc/npmrc",
+        "/usr/local/etc/npmrc",
+        environment.npm_config_userconfig,
+        environment.NPM_CONFIG_USERCONFIG,
+        environment.npm_config_globalconfig,
+        environment.NPM_CONFIG_GLOBALCONFIG
+      ].filter((path) => !!path)
+    );
+    for (let cursor = (0, import_node_path5.dirname)(project.root); ; cursor = (0, import_node_path5.dirname)(cursor)) {
+      for (const name of [".npmrc", ".yarnrc", ".yarnrc.yml"]) configuration.add((0, import_node_path5.join)(cursor, name));
+      if (cursor === (0, import_node_path5.dirname)(cursor)) break;
+    }
+    const configHash = [...configuration].sort().map((file) => {
+      if (!(0, import_node_fs5.existsSync)(file)) return [file, null];
+      if (/(?:yarnPath|plugins|pnpmfile)/.test((0, import_node_fs5.readFileSync)(file, "utf8")))
+        throw new Error("Custom package-manager configuration requires installation");
+      return [file, digestTree((0, import_node_path5.dirname)(file), [(0, import_node_path5.relative)((0, import_node_path5.dirname)(file), file)], (0, import_node_path5.dirname)(file))];
+    });
+    const yarnCache = (0, import_node_path5.join)(cacheRoot, "yarn");
+    const nativeCache = project.manager === "yarn" && (0, import_node_fs5.existsSync)(yarnCache) ? digestTree(yarnCache, (0, import_node_fs5.readdirSync)(yarnCache), yarnCache) : null;
+    const key = (0, import_node_crypto2.createHash)("sha256").update(
+      JSON.stringify({
+        format: DEPENDENCY_SNAPSHOT_FORMAT,
+        root: project.root,
+        cacheRoot,
+        manager: project.manager,
+        managerVersion,
+        declared: project.declared,
+        platform: process.platform,
+        arch: process.arch,
+        kernel: (0, import_node_os3.release)(),
+        runtime: process.versions,
+        environment: Object.entries(environment).sort(([a], [b]) => a.localeCompare(b)),
+        inputHash,
+        configHash,
+        nativeCache
+      })
+    ).digest("hex");
+    const projectKey = (0, import_node_crypto2.createHash)("sha256").update(project.root).digest("hex");
+    return {
+      root: project.root,
+      cacheRoot,
+      directory: (0, import_node_path5.join)(cacheRoot, "prepared-v1", projectKey),
+      key,
+      outputs: [...outputs].sort()
+    };
+  } catch {
+    return void 0;
+  }
+}
+function copy(source, destination) {
+  (0, import_node_fs5.cpSync)(source, destination, {
+    recursive: true,
+    dereference: false,
+    verbatimSymlinks: true,
+    mode: import_node_fs5.constants.COPYFILE_FICLONE
+  });
+}
+function restoreDependencySnapshot(snapshot) {
+  let staging;
+  let activated = [];
+  let previous = [];
+  try {
+    if ((0, import_node_fs5.lstatSync)(snapshot.directory, { throwIfNoEntry: false })?.isSymbolicLink()) return false;
+    const record = import_zod2.z.object({
+      format: import_zod2.z.literal(DEPENDENCY_SNAPSHOT_FORMAT),
+      key: import_zod2.z.literal(snapshot.key),
+      sha256: import_zod2.z.string().regex(/^[a-f0-9]{64}$/),
+      outputs: import_zod2.z.array(import_zod2.z.string()).refine(
+        (paths) => new Set(paths).size === paths.length && paths.every((path) => snapshot.outputs.includes(path))
+      )
+    }).parse(JSON.parse((0, import_node_fs5.readFileSync)((0, import_node_path5.join)(snapshot.directory, "snapshot.json"), "utf8")));
+    const stored = (0, import_node_path5.join)(snapshot.directory, "files");
+    if (!record.outputs.length || digestTree(stored, record.outputs, snapshot.root) !== record.sha256) return false;
+    for (const path of snapshot.outputs) {
+      for (let cursor = (0, import_node_path5.dirname)((0, import_node_path5.join)(snapshot.root, path)); inside(snapshot.root, cursor); cursor = (0, import_node_path5.dirname)(cursor)) {
+        if ((0, import_node_fs5.lstatSync)(cursor, { throwIfNoEntry: false })?.isSymbolicLink()) return false;
+        if (cursor === snapshot.root) break;
+      }
+    }
+    staging = (0, import_node_fs5.mkdtempSync)((0, import_node_path5.join)(snapshot.root, DEPENDENCY_MUTEX, "snapshot-"));
+    for (const path of record.outputs) copy((0, import_node_path5.join)(stored, path), (0, import_node_path5.join)(staging, "next", path));
+    if (digestTree((0, import_node_path5.join)(staging, "next"), record.outputs, snapshot.root) !== record.sha256) return false;
+    for (const path of snapshot.outputs) {
+      const target = (0, import_node_path5.join)(snapshot.root, path);
+      if ((0, import_node_fs5.lstatSync)(target, { throwIfNoEntry: false })) {
+        const backup = (0, import_node_path5.join)(staging, "previous", path);
+        (0, import_node_fs5.mkdirSync)((0, import_node_path5.dirname)(backup), { recursive: true });
+        (0, import_node_fs5.renameSync)(target, backup);
+        previous = [...previous, path];
+      }
+      if (record.outputs.includes(path)) {
+        (0, import_node_fs5.mkdirSync)((0, import_node_path5.dirname)(target), { recursive: true });
+        (0, import_node_fs5.renameSync)((0, import_node_path5.join)(staging, "next", path), target);
+        activated = [...activated, path];
+      }
+    }
+    return true;
+  } catch {
+    try {
+      for (const path of [...activated].reverse()) (0, import_node_fs5.rmSync)((0, import_node_path5.join)(snapshot.root, path), { recursive: true, force: true });
+      for (const path of [...previous].reverse())
+        (0, import_node_fs5.renameSync)((0, import_node_path5.join)(staging, "previous", path), (0, import_node_path5.join)(snapshot.root, path));
+    } catch {
+      const retained = staging;
+      staging = void 0;
+      throw new Error(`Dependency snapshot activation failed; previous files retained in ${retained}`);
+    }
+    return false;
+  } finally {
+    if (staging) (0, import_node_fs5.rmSync)(staging, { recursive: true, force: true });
+  }
+}
+function saveDependencySnapshot(snapshot) {
+  let staging;
+  try {
+    const outputs = snapshot.outputs.filter((path) => (0, import_node_fs5.lstatSync)((0, import_node_path5.join)(snapshot.root, path), { throwIfNoEntry: false }));
+    if (!outputs.length) return;
+    const sha256 = digestTree(snapshot.root, outputs, snapshot.root);
+    (0, import_node_fs5.mkdirSync)((0, import_node_path5.dirname)(snapshot.directory), { recursive: true });
+    staging = (0, import_node_fs5.mkdtempSync)((0, import_node_path5.join)((0, import_node_path5.dirname)(snapshot.directory), ".prepared-"));
+    for (const path of outputs) copy((0, import_node_path5.join)(snapshot.root, path), (0, import_node_path5.join)(staging, "files", path));
+    if (digestTree((0, import_node_path5.join)(staging, "files"), outputs, snapshot.root) !== sha256) return;
+    (0, import_node_fs5.writeFileSync)(
+      (0, import_node_path5.join)(staging, "snapshot.json"),
+      JSON.stringify({ format: DEPENDENCY_SNAPSHOT_FORMAT, key: snapshot.key, sha256, outputs })
+    );
+    (0, import_node_fs5.rmSync)(snapshot.directory, { recursive: true, force: true });
+    (0, import_node_fs5.renameSync)(staging, snapshot.directory);
+  } catch {
+  } finally {
+    if (staging) (0, import_node_fs5.rmSync)(staging, { recursive: true, force: true });
+  }
+}
+
 // packages/plugin/src/dependencies.ts
 var execute = (0, import_node_util.promisify)(import_node_child_process.execFile);
 var installations = /* @__PURE__ */ new Map();
 function checkTransactionPath(root, file) {
-  const local = (0, import_node_path5.relative)(root, file);
-  if (!local || local.startsWith("../") || (0, import_node_path5.resolve)(root, local) !== file)
+  const local = (0, import_node_path6.relative)(root, file);
+  if (!local || local.startsWith("../") || (0, import_node_path6.resolve)(root, local) !== file)
     throw new Error("Transaction path must stay inside its project");
-  for (let cursor = file; cursor !== root; cursor = (0, import_node_path5.dirname)(cursor)) {
-    const stat = (0, import_node_fs5.lstatSync)(cursor, { throwIfNoEntry: false });
+  for (let cursor = file; cursor !== root; cursor = (0, import_node_path6.dirname)(cursor)) {
+    const stat = (0, import_node_fs6.lstatSync)(cursor, { throwIfNoEntry: false });
     if (stat?.isSymbolicLink()) throw new Error("Transaction path contains a symbolic link");
   }
 }
 function manifest(root) {
-  const file = (0, import_node_path5.join)(root, "package.json");
-  return (0, import_node_fs5.existsSync)(file) ? JSON.parse((0, import_node_fs5.readFileSync)(file, "utf8")) : {};
+  const file = (0, import_node_path6.join)(root, "package.json");
+  return (0, import_node_fs6.existsSync)(file) ? JSON.parse((0, import_node_fs6.readFileSync)(file, "utf8")) : {};
 }
 function dependencyCacheRoot(root) {
-  return (0, import_node_path5.resolve)(root ?? (0, import_common.OCTONODE_PACKAGE_CACHE)() ?? (0, import_node_path5.join)((0, import_node_os3.homedir)(), ".octonode", "package-cache"));
+  return (0, import_node_path6.resolve)(root ?? (0, import_common.OCTONODE_PACKAGE_CACHE)() ?? (0, import_node_path6.join)((0, import_node_os4.homedir)(), ".octonode", "package-cache"));
 }
 function dependencyPaths(cwd) {
-  const start = (0, import_node_fs5.realpathSync)(cwd);
+  const start = (0, import_node_fs6.realpathSync)(cwd);
   const ancestors = [];
-  for (let path = start; ; path = (0, import_node_path5.dirname)(path)) {
+  for (let path = start; ; path = (0, import_node_path6.dirname)(path)) {
     ancestors.push(path);
-    if ((0, import_node_fs5.existsSync)((0, import_node_path5.join)(path, ".git")) || (0, import_node_path5.dirname)(path) === path) break;
+    if ((0, import_node_fs6.existsSync)((0, import_node_path6.join)(path, ".git")) || (0, import_node_path6.dirname)(path) === path) break;
   }
-  const repository = ancestors.find((path) => (0, import_node_fs5.existsSync)((0, import_node_path5.join)(path, ".git")));
-  const target = (0, import_node_fs5.existsSync)((0, import_node_path5.join)(start, "package.json")) ? start : repository ? ancestors.find((path) => (0, import_node_fs5.existsSync)((0, import_node_path5.join)(path, "package.json"))) ?? start : start;
+  const repository = ancestors.find((path) => (0, import_node_fs6.existsSync)((0, import_node_path6.join)(path, ".git")));
+  const target = (0, import_node_fs6.existsSync)((0, import_node_path6.join)(start, "package.json")) ? start : repository ? ancestors.find((path) => (0, import_node_fs6.existsSync)((0, import_node_path6.join)(path, "package.json"))) ?? start : start;
   const root = ancestors.find((path) => {
-    if (path === target || !(0, import_node_path5.relative)(path, target) || (0, import_node_path5.relative)(path, target).startsWith("..")) return false;
+    if (path === target || !(0, import_node_path6.relative)(path, target) || (0, import_node_path6.relative)(path, target).startsWith("..")) return false;
     const workspaces = manifest(path).workspaces;
-    const pnpmWorkspace = (0, import_node_path5.join)(path, "pnpm-workspace.yaml");
-    const patterns = (0, import_node_fs5.existsSync)(pnpmWorkspace) ? (0, import_yaml.parse)((0, import_node_fs5.readFileSync)(pnpmWorkspace, "utf8"))?.packages : Array.isArray(workspaces) ? workspaces : workspaces?.packages;
+    const pnpmWorkspace = (0, import_node_path6.join)(path, "pnpm-workspace.yaml");
+    const patterns = (0, import_node_fs6.existsSync)(pnpmWorkspace) ? (0, import_yaml.parse)((0, import_node_fs6.readFileSync)(pnpmWorkspace, "utf8"))?.packages : Array.isArray(workspaces) ? workspaces : workspaces?.packages;
     if (!Array.isArray(patterns)) return false;
-    const local = (0, import_node_path5.relative)(path, target).split("\\").join("/");
+    const local = (0, import_node_path6.relative)(path, target).split("\\").join("/");
     const globs = patterns.filter((value) => typeof value === "string");
-    return globs.some((pattern) => !pattern.startsWith("!") && (0, import_node_path5.matchesGlob)(local, pattern.replace(/\/$/, ""))) && !globs.some((pattern) => pattern.startsWith("!") && (0, import_node_path5.matchesGlob)(local, pattern.slice(1).replace(/\/$/, "")));
+    return globs.some((pattern) => !pattern.startsWith("!") && (0, import_node_path6.matchesGlob)(local, pattern.replace(/\/$/, ""))) && !globs.some((pattern) => pattern.startsWith("!") && (0, import_node_path6.matchesGlob)(local, pattern.slice(1).replace(/\/$/, "")));
   }) ?? target;
   return { root, target };
 }
@@ -12688,7 +13025,7 @@ function resolveDependencyProject(cwd) {
   const { root, target } = dependencyPaths(cwd);
   const declared = manifest(root).packageManager;
   const locked = Object.keys(PACKAGE_MANAGER_LOCKS).filter(
-    (manager2) => PACKAGE_MANAGER_LOCKS[manager2].some((file) => (0, import_node_fs5.existsSync)((0, import_node_path5.join)(root, file)))
+    (manager2) => PACKAGE_MANAGER_LOCKS[manager2].some((file) => (0, import_node_fs6.existsSync)((0, import_node_path6.join)(root, file)))
   );
   const manager = declared?.split("@")[0];
   if (manager && !(manager in PACKAGE_MANAGER_LOCKS)) throw new Error(`unsupported package manager: ${declared}`);
@@ -12698,7 +13035,7 @@ function resolveDependencyProject(cwd) {
   return {
     target,
     root,
-    manager: manager ?? locked[0] ?? ((0, import_node_fs5.existsSync)((0, import_node_path5.join)(root, "pnpm-workspace.yaml")) ? "pnpm" : (0, import_node_fs5.existsSync)((0, import_node_path5.join)(target, "package.json")) ? "npm" : "pnpm"),
+    manager: manager ?? locked[0] ?? ((0, import_node_fs6.existsSync)((0, import_node_path6.join)(root, "pnpm-workspace.yaml")) ? "pnpm" : (0, import_node_fs6.existsSync)((0, import_node_path6.join)(target, "package.json")) ? "npm" : "pnpm"),
     declared
   };
 }
@@ -12726,42 +13063,48 @@ function installCommand(project, frozen) {
       return ["npm", [frozen ? "ci" : "install", "--ignore-scripts", "--no-audit", "--no-fund"]];
   }
 }
+function installEnvironment(cacheRoot) {
+  return (0, import_common.childProcessEnvironment)({
+    ...(0, import_common.packageCacheEnvironment)(dependencyCacheRoot(cacheRoot)),
+    YARN_ENABLE_SCRIPTS: "false",
+    COREPACK_ENABLE_DOWNLOAD_PROMPT: "0",
+    COREPACK_ENABLE_AUTO_PIN: "0"
+  });
+}
+function isClassicYarn(project) {
+  return project.manager === "yarn" && (project.declared?.startsWith("yarn@1.") || !project.declared && (0, import_node_fs6.existsSync)((0, import_node_path6.join)(project.root, "yarn.lock")) && (0, import_node_fs6.readFileSync)((0, import_node_path6.join)(project.root, "yarn.lock"), "utf8").includes("# yarn lockfile v1"));
+}
 async function run(project, command, cwd, cacheRoot) {
   const [file, args] = command;
-  const yarnClassic = project.manager === "yarn" && (project.declared?.startsWith("yarn@1.") || !project.declared && (0, import_node_fs5.existsSync)((0, import_node_path5.join)(project.root, "yarn.lock")) && (0, import_node_fs5.readFileSync)((0, import_node_path5.join)(project.root, "yarn.lock"), "utf8").includes("# yarn lockfile v1"));
+  const yarnClassic = isClassicYarn(project);
   const flags = yarnClassic ? [
     ...args.filter((arg) => arg !== "--mode=skip-build").map((arg) => arg === "--immutable" ? "--frozen-lockfile" : arg),
     "--ignore-scripts"
-  ] : project.manager === "pnpm" && args[0] === "add" && project.root === cwd && (0, import_node_fs5.existsSync)((0, import_node_path5.join)(cwd, "pnpm-workspace.yaml")) ? [...args, "--workspace-root"] : args;
+  ] : project.manager === "pnpm" && args[0] === "add" && project.root === cwd && (0, import_node_fs6.existsSync)((0, import_node_path6.join)(cwd, "pnpm-workspace.yaml")) ? [...args, "--workspace-root"] : args;
   const pinned = project.declared && file !== "bun" || yarnClassic;
   const executable = yarnClassic && !project.declared ? CLASSIC_YARN : file;
   await execute(pinned ? "corepack" : file, pinned ? [executable, ...flags] : flags, {
     cwd,
-    env: (0, import_common.childProcessEnvironment)({
-      ...(0, import_common.packageCacheEnvironment)(dependencyCacheRoot(cacheRoot)),
-      YARN_ENABLE_SCRIPTS: "false",
-      COREPACK_ENABLE_DOWNLOAD_PROMPT: "0",
-      COREPACK_ENABLE_AUTO_PIN: "0"
-    }),
+    env: installEnvironment(cacheRoot),
     timeout: DEPENDENCY_INSTALL_TIMEOUT_MS,
     maxBuffer: 4 * 1024 * 1024
   });
 }
 async function verifyProjectDependencies(project, names) {
   if (!names.length) return;
-  const pnp = (0, import_node_path5.join)(project.root, ".pnp.cjs");
-  const loader = (0, import_node_path5.join)(project.root, ".pnp.loader.mjs");
+  const pnp = (0, import_node_path6.join)(project.root, ".pnp.cjs");
+  const loader = (0, import_node_path6.join)(project.root, ".pnp.loader.mjs");
   await execute(
     process.execPath,
     [
-      ...(0, import_node_fs5.existsSync)(pnp) ? ["--require", pnp] : [],
-      ...(0, import_node_fs5.existsSync)(loader) ? ["--loader", loader] : [],
+      ...(0, import_node_fs6.existsSync)(pnp) ? ["--require", pnp] : [],
+      ...(0, import_node_fs6.existsSync)(loader) ? ["--loader", loader] : [],
       "--input-type=module",
       "-e",
       `import { createRequire } from 'node:module';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-const require = createRequire(${JSON.stringify((0, import_node_path5.join)(project.target, "package.json"))});
+const require = createRequire(${JSON.stringify((0, import_node_path6.join)(project.target, "package.json"))});
 for (const name of ${JSON.stringify(names)}) {
   try { require.resolve(name); } catch {
     const entry = import.meta.resolve(name);
@@ -12779,19 +13122,19 @@ async function withDependencyInstall(cwd, action) {
   const previous = installations.get(root) ?? Promise.resolve();
   const next = previous.catch(() => {
   }).then(async () => {
-    const mutex = (0, import_node_path5.join)(root, DEPENDENCY_MUTEX);
+    const mutex = (0, import_node_path6.join)(root, DEPENDENCY_MUTEX);
     try {
-      (0, import_node_fs5.mkdirSync)(mutex);
+      (0, import_node_fs6.mkdirSync)(mutex);
     } catch {
       throw new Error(
         "Another dependency installation is running or needs recovery; use octonodes plugin recover after it exits"
       );
     }
-    (0, import_node_fs5.writeFileSync)((0, import_node_path5.join)(mutex, "owner.json"), JSON.stringify({ pid: process.pid }));
+    (0, import_node_fs6.writeFileSync)((0, import_node_path6.join)(mutex, "owner.json"), JSON.stringify({ pid: process.pid }));
     try {
       return await action();
     } finally {
-      if (!(0, import_node_fs5.existsSync)((0, import_node_path5.join)(mutex, "journal.json"))) (0, import_node_fs5.rmSync)(mutex, { recursive: true, force: true });
+      if (!(0, import_node_fs6.existsSync)((0, import_node_path6.join)(mutex, "journal.json"))) (0, import_node_fs6.rmSync)(mutex, { recursive: true, force: true });
     }
   });
   installations.set(root, next);
@@ -12802,6 +13145,8 @@ async function withDependencyInstall(cwd, action) {
   }
 }
 async function reconcileDependencies(cwd, dependencies, options = {}) {
+  if (options.metadataOnly && (dependencies.length || options.remove?.length || options.frozen))
+    throw new Error("Metadata-only transactions cannot change or restore dependencies");
   if (options.frozen && (dependencies.length || options.remove?.length))
     throw new Error("Frozen installation cannot add or remove dependencies");
   for (const { name, spec, subpaths } of dependencies) {
@@ -12815,64 +13160,82 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
     }
   }
   const project = resolveDependencyProject(cwd);
-  const packageJson = (0, import_node_path5.join)(project.target, "package.json");
-  if (!dependencies.length && !(0, import_node_fs5.existsSync)(packageJson) && !options.commit) return;
-  const hasLock = PACKAGE_MANAGER_LOCKS[project.manager].some((file) => (0, import_node_fs5.existsSync)((0, import_node_path5.join)(project.root, file)));
+  const packageJson = (0, import_node_path6.join)(project.target, "package.json");
+  if (!dependencies.length && !(0, import_node_fs6.existsSync)(packageJson) && !options.commit) return;
+  const hasLock = PACKAGE_MANAGER_LOCKS[project.manager].some((file) => (0, import_node_fs6.existsSync)((0, import_node_path6.join)(project.root, file)));
   if (options.frozen && !hasLock)
     throw new Error("commit the native package-manager lockfile before preparing this worktree");
   const files = [
     .../* @__PURE__ */ new Set([
       packageJson,
-      (0, import_node_path5.join)(project.root, "package.json"),
-      ...Object.values(PACKAGE_MANAGER_LOCKS).flat().map((file) => (0, import_node_path5.join)(project.root, file)),
-      (0, import_node_path5.join)(project.root, "pnpm-workspace.yaml"),
+      (0, import_node_path6.join)(project.root, "package.json"),
+      ...Object.values(PACKAGE_MANAGER_LOCKS).flat().map((file) => (0, import_node_path6.join)(project.root, file)),
+      (0, import_node_path6.join)(project.root, "pnpm-workspace.yaml"),
       ...options.transactionFiles ?? []
     ])
   ];
   for (const path of files) checkTransactionPath(project.root, path);
-  const before = new Map(files.map((path) => [path, (0, import_node_fs5.existsSync)(path) ? (0, import_node_fs5.readFileSync)(path) : void 0]));
-  const journal = (0, import_node_path5.join)(project.root, DEPENDENCY_MUTEX, "journal.json");
-  const hadModules = (0, import_node_fs5.existsSync)((0, import_node_path5.join)(project.root, "node_modules"));
+  const before = new Map(files.map((path) => [path, (0, import_node_fs6.existsSync)(path) ? (0, import_node_fs6.readFileSync)(path) : void 0]));
+  const journal = (0, import_node_path6.join)(project.root, DEPENDENCY_MUTEX, "journal.json");
+  const hadModules = (0, import_node_fs6.existsSync)((0, import_node_path6.join)(project.root, "node_modules"));
   const pnpFiles = [".pnp.cjs", ".pnp.loader.mjs", ".pnp.data.json"];
   const pnpBefore = new Map(
     pnpFiles.map((file) => {
-      const path = (0, import_node_path5.join)(project.root, file);
-      return [path, (0, import_node_fs5.existsSync)(path) ? (0, import_node_fs5.readFileSync)(path) : void 0];
+      const path = (0, import_node_path6.join)(project.root, file);
+      return [path, (0, import_node_fs6.existsSync)(path) ? (0, import_node_fs6.readFileSync)(path) : void 0];
     })
   );
-  const hadInstall = hadModules || (0, import_node_fs5.existsSync)((0, import_node_path5.join)(project.root, ".pnp.cjs"));
+  const hadInstall = hadModules || (0, import_node_fs6.existsSync)((0, import_node_path6.join)(project.root, ".pnp.cjs"));
   let metadataTouched = false;
   const metadata = new Set(options.transactionFiles ?? []);
   const restoreBefore = () => {
     for (const [path, content] of before) {
       if (metadata.has(path) && !metadataTouched) continue;
-      if (content === void 0) (0, import_node_fs5.rmSync)(path, { force: true });
-      else (0, import_node_fs5.writeFileSync)(path, content);
+      if (content === void 0) (0, import_node_fs6.rmSync)(path, { force: true });
+      else (0, import_node_fs6.writeFileSync)(path, content);
     }
   };
-  if (hadInstall && !hasLock)
+  if (hadInstall && !hasLock && !options.metadataOnly)
     throw new Error(
       "create a native lockfile before updating existing dependencies so failed installations can be recovered"
     );
   try {
-    if ((0, import_node_fs5.existsSync)((0, import_node_path5.dirname)(journal)))
-      (0, import_node_fs5.writeFileSync)(
+    if (options.metadataOnly && (0, import_node_fs6.existsSync)((0, import_node_path6.dirname)(journal)))
+      (0, import_node_fs6.writeFileSync)((0, import_node_path6.join)((0, import_node_path6.dirname)(journal), "metadata-only"), "1");
+    if ((0, import_node_fs6.existsSync)((0, import_node_path6.dirname)(journal)))
+      (0, import_node_fs6.writeFileSync)(
         journal,
         JSON.stringify(
           [...before].map(([path, content]) => ({
-            path: (0, import_node_path5.relative)(project.root, path).replaceAll("\\", "/"),
+            path: (0, import_node_path6.relative)(project.root, path).replaceAll("\\", "/"),
             content: content?.toString("base64") ?? null
           }))
         )
       );
-    if (!(0, import_node_fs5.existsSync)(packageJson)) {
-      (0, import_node_fs5.mkdirSync)(project.target, { recursive: true });
-      (0, import_node_fs5.writeFileSync)(
+    if (options.metadataOnly) {
+      metadataTouched = true;
+      options.commit?.();
+      (0, import_node_fs6.rmSync)(journal, { force: true });
+      (0, import_node_fs6.rmSync)((0, import_node_path6.join)((0, import_node_path6.dirname)(journal), "metadata-only"), { force: true });
+      return;
+    }
+    if (!(0, import_node_fs6.existsSync)(packageJson)) {
+      (0, import_node_fs6.mkdirSync)(project.target, { recursive: true });
+      (0, import_node_fs6.writeFileSync)(
         packageJson,
         JSON.stringify({ private: true, packageManager: DEFAULT_PACKAGE_MANAGER }, null, 2) + "\n"
       );
     }
     const current = resolveDependencyProject(cwd);
+    const snapshotEnvironment = installEnvironment(options.cacheRoot);
+    const pinnedManager = current.declared && current.manager !== "bun" || isClassicYarn(current);
+    const versionCommand = isClassicYarn(current) && !current.declared ? CLASSIC_YARN : current.manager;
+    const managerVersion = options.frozen && (options.cacheRoot || (0, import_common.OCTONODE_PACKAGE_CACHE)()) ? await execute(
+      pinnedManager ? "corepack" : current.manager,
+      pinnedManager ? [versionCommand, "--version"] : ["--version"],
+      { cwd: current.root, env: snapshotEnvironment, timeout: 3e4 }
+    ).then(({ stdout }) => stdout.trim()).catch(() => void 0) : void 0;
+    const snapshot = managerVersion ? dependencySnapshot(current, dependencyCacheRoot(options.cacheRoot), managerVersion, snapshotEnvironment) : void 0;
     if (options.remove?.length) {
       for (const name of options.remove)
         if (!/^(?:@[a-z0-9][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/i.test(name))
@@ -12880,81 +13243,92 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
       const args = current.manager === "npm" ? ["uninstall", "--ignore-scripts", "--no-audit", "--no-fund"] : current.manager === "yarn" ? ["remove", "--mode=skip-build"] : ["remove", "--ignore-scripts"];
       await run(current, [current.manager, [...args, ...options.remove]], current.target, options.cacheRoot);
     }
-    await run(
-      current,
-      dependencies.length ? packageManagerAdd(
-        current.manager,
-        ...dependencies.map(({ name, spec }) => spec.startsWith(`${name}@`) ? spec : `${name}@${spec}`)
-      ) : installCommand(current, options.frozen ?? false),
-      dependencies.length ? current.target : current.root,
-      options.cacheRoot
-    );
+    const restored = snapshot ? restoreDependencySnapshot(snapshot) : false;
+    if (!restored)
+      await run(
+        current,
+        dependencies.length ? packageManagerAdd(
+          current.manager,
+          ...dependencies.map(({ name, spec }) => spec.startsWith(`${name}@`) ? spec : `${name}@${spec}`)
+        ) : installCommand(current, options.frozen ?? false),
+        dependencies.length ? current.target : current.root,
+        options.cacheRoot
+      );
     await verifyProjectDependencies(
       current,
       dependencies.flatMap(({ name, subpaths }) => subpaths ? subpaths.map((path) => name + path.slice(1)) : [name])
     );
     if (options.frozen) {
       for (const [path, content] of before) {
-        const after = (0, import_node_fs5.existsSync)(path) ? (0, import_node_fs5.readFileSync)(path) : void 0;
+        const after = (0, import_node_fs6.existsSync)(path) ? (0, import_node_fs6.readFileSync)(path) : void 0;
         if (content?.equals(after ?? Buffer.alloc(0)) || !content && !after) continue;
         if (path.endsWith("package.json") && content && after && (0, import_node_util.isDeepStrictEqual)(JSON.parse(content.toString()), JSON.parse(after.toString()))) {
-          (0, import_node_fs5.writeFileSync)(path, content);
+          (0, import_node_fs6.writeFileSync)(path, content);
         } else {
-          throw new Error(`frozen installation changed ${(0, import_node_path5.relative)(project.root, path)}`);
+          throw new Error(`frozen installation changed ${(0, import_node_path6.relative)(project.root, path)}`);
         }
       }
     }
     for (const path of metadata) {
       const content = before.get(path);
-      const current2 = (0, import_node_fs5.existsSync)(path) ? (0, import_node_fs5.readFileSync)(path) : void 0;
+      const current2 = (0, import_node_fs6.existsSync)(path) ? (0, import_node_fs6.readFileSync)(path) : void 0;
       if (!(content?.equals(current2 ?? Buffer.alloc(0)) || !content && !current2))
         throw new Error(
-          `Owner metadata changed during installation: ${(0, import_node_path5.relative)(project.root, path)}; refresh and retry`
+          `Owner metadata changed during installation: ${(0, import_node_path6.relative)(project.root, path)}; refresh and retry`
         );
     }
     metadataTouched = true;
     options.commit?.();
-    (0, import_node_fs5.rmSync)(journal, { force: true });
+    (0, import_node_fs6.rmSync)(journal, { force: true });
+    if (snapshot && !restored) {
+      const after = dependencySnapshot(
+        current,
+        dependencyCacheRoot(options.cacheRoot),
+        managerVersion,
+        snapshotEnvironment
+      );
+      if (after?.key === snapshot.key) saveDependencySnapshot(after);
+    }
   } catch (error) {
-    const changed = [...before].filter(([path, content]) => (0, import_node_fs5.existsSync)(path) && !content?.equals((0, import_node_fs5.readFileSync)(path)));
+    const changed = [...before].filter(([path, content]) => (0, import_node_fs6.existsSync)(path) && !content?.equals((0, import_node_fs6.readFileSync)(path)));
     if (changed.length) {
-      const backup = (0, import_node_path5.join)(project.root, `.octonode-recovery-${Date.now()}`);
+      const backup = (0, import_node_path6.join)(project.root, `.octonode-recovery-${Date.now()}`);
       for (const [path] of changed) {
         checkTransactionPath(project.root, path);
-        const target = (0, import_node_path5.join)(backup, (0, import_node_path5.relative)(project.root, path));
-        (0, import_node_fs5.mkdirSync)((0, import_node_path5.dirname)(target), { recursive: true });
-        (0, import_node_fs5.writeFileSync)(target, (0, import_node_fs5.readFileSync)(path));
+        const target = (0, import_node_path6.join)(backup, (0, import_node_path6.relative)(project.root, path));
+        (0, import_node_fs6.mkdirSync)((0, import_node_path6.dirname)(target), { recursive: true });
+        (0, import_node_fs6.writeFileSync)(target, (0, import_node_fs6.readFileSync)(path));
       }
       process.stderr.write(`Pre-rollback files preserved in ${backup}
 `);
     }
     restoreBefore();
     let recovery = "";
-    if (hadInstall && hasLock) {
+    if (!options.metadataOnly && hadInstall && hasLock) {
       try {
         await run(project, installCommand(project, true), project.root, options.cacheRoot);
       } catch {
         recovery = "; manifests restored, but dependency recovery failed \u2014 run a frozen install before executing workflows";
       }
       restoreBefore();
-    } else if (!hadInstall) {
-      (0, import_node_fs5.rmSync)((0, import_node_path5.join)(project.root, "node_modules"), { recursive: true, force: true });
+    } else if (!options.metadataOnly && !hadInstall) {
+      (0, import_node_fs6.rmSync)((0, import_node_path6.join)(project.root, "node_modules"), { recursive: true, force: true });
     }
     for (const [path, content] of pnpBefore) {
-      if (content === void 0) (0, import_node_fs5.rmSync)(path, { force: true });
-      else (0, import_node_fs5.writeFileSync)(path, content);
+      if (content === void 0) (0, import_node_fs6.rmSync)(path, { force: true });
+      else (0, import_node_fs6.writeFileSync)(path, content);
     }
     const failure = error;
-    if (!recovery) (0, import_node_fs5.rmSync)(journal, { force: true });
+    if (!recovery) (0, import_node_fs6.rmSync)(journal, { force: true });
     throw new Error(`package installation failed: ${failure.stderr?.trim() || failure.message}${recovery}`);
   }
 }
 async function recoverDependencyInstall(cwd) {
   const project = resolveDependencyProject(cwd);
-  const mutex = (0, import_node_path5.join)(project.root, DEPENDENCY_MUTEX);
-  if (!(0, import_node_fs5.existsSync)(mutex)) return;
-  checkTransactionPath(project.root, (0, import_node_path5.join)(mutex, "owner.json"));
-  const owner = JSON.parse((0, import_node_fs5.readFileSync)((0, import_node_path5.join)(mutex, "owner.json"), "utf8"));
+  const mutex = (0, import_node_path6.join)(project.root, DEPENDENCY_MUTEX);
+  if (!(0, import_node_fs6.existsSync)(mutex)) return;
+  checkTransactionPath(project.root, (0, import_node_path6.join)(mutex, "owner.json"));
+  const owner = JSON.parse((0, import_node_fs6.readFileSync)((0, import_node_path6.join)(mutex, "owner.json"), "utf8"));
   if (!Number.isInteger(owner.pid) || owner.pid < 1)
     throw new Error("Invalid installation owner; inspect the transaction manually");
   try {
@@ -12963,37 +13337,37 @@ async function recoverDependencyInstall(cwd) {
   } catch (error) {
     if (error.code !== "ESRCH") throw error;
   }
-  const journal = (0, import_node_path5.join)(mutex, "journal.json");
+  const journal = (0, import_node_path6.join)(mutex, "journal.json");
   checkTransactionPath(project.root, journal);
-  if ((0, import_node_fs5.existsSync)(journal)) {
-    const records = JSON.parse((0, import_node_fs5.readFileSync)(journal, "utf8"));
+  if ((0, import_node_fs6.existsSync)(journal)) {
+    const records = JSON.parse((0, import_node_fs6.readFileSync)(journal, "utf8"));
     if (!Array.isArray(records)) throw new Error("Invalid recovery journal");
     for (const record of records) {
       if (!record || typeof record.path !== "string" || !record.path || record.path.includes("\\") || record.path.startsWith("/") || record.path.split("/").some((part) => part === ".." || part === "." || part.includes(":")) || record.content !== null && typeof record.content !== "string")
         throw new Error("Invalid recovery journal path");
-      checkTransactionPath(project.root, (0, import_node_path5.join)(project.root, record.path));
-      checkTransactionPath(project.root, (0, import_node_path5.join)(mutex, "recovery-backup", record.path));
+      checkTransactionPath(project.root, (0, import_node_path6.join)(project.root, record.path));
+      checkTransactionPath(project.root, (0, import_node_path6.join)(mutex, "recovery-backup", record.path));
     }
     for (const record of records) {
-      const path = (0, import_node_path5.join)(project.root, record.path);
-      if ((0, import_node_fs5.existsSync)(path)) {
-        const backup = (0, import_node_path5.join)(mutex, "recovery-backup", record.path);
-        (0, import_node_fs5.mkdirSync)((0, import_node_path5.dirname)(backup), { recursive: true });
-        if (!(0, import_node_fs5.existsSync)(backup)) (0, import_node_fs5.writeFileSync)(backup, (0, import_node_fs5.readFileSync)(path));
+      const path = (0, import_node_path6.join)(project.root, record.path);
+      if ((0, import_node_fs6.existsSync)(path)) {
+        const backup = (0, import_node_path6.join)(mutex, "recovery-backup", record.path);
+        (0, import_node_fs6.mkdirSync)((0, import_node_path6.dirname)(backup), { recursive: true });
+        if (!(0, import_node_fs6.existsSync)(backup)) (0, import_node_fs6.writeFileSync)(backup, (0, import_node_fs6.readFileSync)(path));
       }
-      if (record.content === null) (0, import_node_fs5.rmSync)(path, { force: true });
-      else (0, import_node_fs5.writeFileSync)(path, Buffer.from(record.content, "base64"));
+      if (record.content === null) (0, import_node_fs6.rmSync)(path, { force: true });
+      else (0, import_node_fs6.writeFileSync)(path, Buffer.from(record.content, "base64"));
     }
-    if (PACKAGE_MANAGER_LOCKS[project.manager].some((file) => (0, import_node_fs5.existsSync)((0, import_node_path5.join)(project.root, file))))
+    if (!(0, import_node_fs6.existsSync)((0, import_node_path6.join)(mutex, "metadata-only")) && PACKAGE_MANAGER_LOCKS[project.manager].some((file) => (0, import_node_fs6.existsSync)((0, import_node_path6.join)(project.root, file))))
       await run(project, installCommand(project, true), project.root);
   }
-  if ((0, import_node_fs5.existsSync)((0, import_node_path5.join)(mutex, "recovery-backup"))) {
-    const backup = (0, import_node_path5.join)(project.root, `.octonode-recovery-${Date.now()}`);
-    (0, import_node_fs5.renameSync)((0, import_node_path5.join)(mutex, "recovery-backup"), backup);
+  if ((0, import_node_fs6.existsSync)((0, import_node_path6.join)(mutex, "recovery-backup"))) {
+    const backup = (0, import_node_path6.join)(project.root, `.octonode-recovery-${Date.now()}`);
+    (0, import_node_fs6.renameSync)((0, import_node_path6.join)(mutex, "recovery-backup"), backup);
     process.stderr.write(`Pre-recovery files preserved in ${backup}
 `);
   }
-  (0, import_node_fs5.rmSync)(mutex, { recursive: true, force: true });
+  (0, import_node_fs6.rmSync)(mutex, { recursive: true, force: true });
 }
 function installProjectDependencies(cwd, dependencies = [], options = {}) {
   return withDependencyInstall(cwd, () => reconcileDependencies(cwd, dependencies, options));
@@ -13002,15 +13376,15 @@ function installProjectDependencies(cwd, dependencies = [], options = {}) {
 // packages/plugin/src/generated-package.ts
 var import_tar = require("tar");
 var import_node_zlib = require("node:zlib");
-var import_node_crypto3 = require("node:crypto");
-var import_node_fs7 = require("node:fs");
-var import_node_os4 = require("node:os");
-var import_node_path7 = require("node:path");
+var import_node_crypto4 = require("node:crypto");
+var import_node_fs8 = require("node:fs");
+var import_node_os5 = require("node:os");
+var import_node_path8 = require("node:path");
 
 // packages/plugin/src/authoring/artifact.ts
-var import_node_crypto2 = require("node:crypto");
-var import_node_fs6 = require("node:fs");
-var import_node_path6 = require("node:path");
+var import_node_crypto3 = require("node:crypto");
+var import_node_fs7 = require("node:fs");
+var import_node_path7 = require("node:path");
 var import_schema3 = __toESM(require_dist());
 var import_yaml2 = require("yaml");
 
@@ -13030,18 +13404,18 @@ var RESERVED_ASSETS = /* @__PURE__ */ new Set([
 ]);
 
 // packages/plugin/src/authoring/artifact.ts
-var fileHash = (path) => (0, import_node_crypto2.createHash)("sha256").update((0, import_node_fs6.readFileSync)(path)).digest("hex");
+var fileHash = (path) => (0, import_node_crypto3.createHash)("sha256").update((0, import_node_fs7.readFileSync)(path)).digest("hex");
 function safePath(path) {
-  if (!path || (0, import_node_path6.isAbsolute)(path) || path.includes("\\") || path.split("/").some((part) => !part || part === "." || part === ".." || part.includes(":") || FORBIDDEN_PART.test(part))) {
+  if (!path || (0, import_node_path7.isAbsolute)(path) || path.includes("\\") || path.split("/").some((part) => !part || part === "." || part === ".." || part.includes(":") || FORBIDDEN_PART.test(part))) {
     throw new Error(`Unsafe plugin file: ${path}`);
   }
 }
 function pluginFiles(root, prefix = "") {
-  if (!(0, import_node_fs6.lstatSync)((0, import_node_path6.join)(root, prefix)).isDirectory()) throw new Error(`Not a plugin directory: ${root}`);
-  return (0, import_node_fs6.readdirSync)((0, import_node_path6.join)(root, prefix)).sort().flatMap((name) => {
+  if (!(0, import_node_fs7.lstatSync)((0, import_node_path7.join)(root, prefix)).isDirectory()) throw new Error(`Not a plugin directory: ${root}`);
+  return (0, import_node_fs7.readdirSync)((0, import_node_path7.join)(root, prefix)).sort().flatMap((name) => {
     const path = prefix ? `${prefix}/${name}` : name;
     safePath(path);
-    const stat = (0, import_node_fs6.lstatSync)((0, import_node_path6.join)(root, path));
+    const stat = (0, import_node_fs7.lstatSync)((0, import_node_path7.join)(root, path));
     if (stat.isSymbolicLink()) throw new Error(`Plugin files cannot be symbolic links: ${path}`);
     if (stat.isDirectory()) return pluginFiles(root, path);
     if (!stat.isFile()) throw new Error(`Plugin asset must be a regular file: ${path}`);
@@ -13049,14 +13423,14 @@ function pluginFiles(root, prefix = "") {
   });
 }
 function loadManifest(directory) {
-  if ((0, import_node_fs6.lstatSync)(directory).isSymbolicLink()) throw new Error("Plugin directory cannot be a symbolic link");
-  const definitions = DEFINITION_FILES.filter((name) => (0, import_node_fs6.existsSync)((0, import_node_path6.join)(directory, name)));
+  if ((0, import_node_fs7.lstatSync)(directory).isSymbolicLink()) throw new Error("Plugin directory cannot be a symbolic link");
+  const definitions = DEFINITION_FILES.filter((name) => (0, import_node_fs7.existsSync)((0, import_node_path7.join)(directory, name)));
   if (definitions.length !== 1) throw new Error("Keep exactly one plugin definition in the package");
-  const path = (0, import_node_path6.join)(directory, definitions[0]);
-  const stat = (0, import_node_fs6.lstatSync)(path);
+  const path = (0, import_node_path7.join)(directory, definitions[0]);
+  const stat = (0, import_node_fs7.lstatSync)(path);
   if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 1048576)
     throw new Error("Invalid plugin definition file");
-  const document = (0, import_yaml2.parseDocument)((0, import_node_fs6.readFileSync)(path, "utf8"), { uniqueKeys: true, version: "1.2" });
+  const document = (0, import_yaml2.parseDocument)((0, import_node_fs7.readFileSync)(path, "utf8"), { uniqueKeys: true, version: "1.2" });
   (0, import_yaml2.visit)(document, {
     Alias() {
       throw new Error("Plugin definitions cannot contain YAML aliases");
@@ -13072,7 +13446,16 @@ function verifyBuild(directory) {
   const manifest2 = loadManifest(directory);
   const files = pluginFiles(directory);
   if (!files.includes(BUILD_RECORD)) throw new Error("Missing build record; run octonodes plugin build first");
-  const record = JSON.parse((0, import_node_fs6.readFileSync)((0, import_node_path6.join)(directory, BUILD_RECORD), "utf8"));
+  const record = JSON.parse((0, import_node_fs7.readFileSync)((0, import_node_path7.join)(directory, BUILD_RECORD), "utf8"));
+  if (record.runtime) {
+    const runtime = import_schema3.PreparedPluginRuntime.parse(record.runtime);
+    if ((manifest2.integration?.npm || manifest2.integration?.npmDependencies?.length) && !runtime.dependencies)
+      throw new Error("Prepared npm plugins must include their dependency runtime");
+    if (runtime.dependencies && !files.includes(runtime.dependencies))
+      throw new Error("Missing prepared dependency archive");
+    if (runtime.dependencies && (runtime.platform === "portable" || !runtime.arch || runtime.platform === "linux" && !runtime.libc))
+      throw new Error("Prepared dependencies require a platform, architecture and libc identity");
+  }
   if (record.format !== 1 || !record.files || typeof record.files !== "object" || Array.isArray(record.files)) {
     throw new Error("Invalid plugin build record");
   }
@@ -13081,7 +13464,7 @@ function verifyBuild(directory) {
     throw new Error("Plugin files changed since build; rebuild before publishing");
   }
   for (const file of expected) {
-    if (record.files[file] !== fileHash((0, import_node_path6.join)(directory, file)))
+    if (record.files[file] !== fileHash((0, import_node_path7.join)(directory, file)))
       throw new Error(`Plugin file changed since build: ${file}`);
   }
   if (!expected.includes("dist/index.js") || !manifest2.nodes.length || manifest2.nodes.some(
@@ -13102,14 +13485,14 @@ function verifyBuild(directory) {
     )
   );
   for (const entry of new Set(ui.map(({ path }) => path))) {
-    if (!expected.includes(entry) || (0, import_node_fs6.lstatSync)((0, import_node_path6.join)(directory, entry)).size > import_schema3.PLUGIN_UI_BUNDLE_MAX_BYTES)
+    if (!expected.includes(entry) || (0, import_node_fs7.lstatSync)((0, import_node_path7.join)(directory, entry)).size > import_schema3.PLUGIN_UI_BUNDLE_MAX_BYTES)
       throw new Error(`Invalid plugin UI bundle: ${entry}`);
   }
   if (JSON.stringify(record.ui ?? []) !== JSON.stringify(
     ui.map((declaration) => ({
       ...declaration,
-      size: (0, import_node_fs6.lstatSync)((0, import_node_path6.join)(directory, declaration.path)).size,
-      sha256: fileHash((0, import_node_path6.join)(directory, declaration.path))
+      size: (0, import_node_fs7.lstatSync)((0, import_node_path7.join)(directory, declaration.path)).size,
+      sha256: fileHash((0, import_node_path7.join)(directory, declaration.path))
     }))
   ))
     throw new Error("Invalid plugin UI build record");
@@ -13134,41 +13517,41 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
   const packer = "tar@7.5.22/portable-v1";
   if (expectedPacker && expectedPacker !== packer)
     throw new Error(`Plugin package restore requires ${expectedPacker}; found ${packer}`);
-  const digest = (0, import_node_crypto3.createHash)("sha256").update(
+  const digest = (0, import_node_crypto4.createHash)("sha256").update(
     JSON.stringify({
       format: GENERATED_PLUGIN_FORMAT,
       packer,
       selections: selected.map(({ alias, sha256 }) => ({ alias, sha256 }))
     })
   ).digest("hex");
-  const stage = (0, import_node_fs7.mkdtempSync)((0, import_node_path7.join)((0, import_node_os4.tmpdir)(), "octonode-package-"));
+  const stage = (0, import_node_fs8.mkdtempSync)((0, import_node_path8.join)((0, import_node_os5.tmpdir)(), "octonode-package-"));
   try {
-    const packageRoot = (0, import_node_path7.join)(stage, "package");
-    (0, import_node_fs7.mkdirSync)(packageRoot);
+    const packageRoot = (0, import_node_path8.join)(stage, "package");
+    (0, import_node_fs8.mkdirSync)(packageRoot);
     for (const { alias, directory, sha256 } of selected) {
-      if ((0, import_node_fs7.lstatSync)(directory).isSymbolicLink())
+      if ((0, import_node_fs8.lstatSync)(directory).isSymbolicLink())
         throw new Error(`Plugin directory cannot be a symbolic link: ${alias}`);
-      const snapshot = (0, import_node_path7.join)(stage, "snapshots", alias);
-      (0, import_node_fs7.mkdirSync)(snapshot, { recursive: true });
+      const snapshot = (0, import_node_path8.join)(stage, "snapshots", alias);
+      (0, import_node_fs8.mkdirSync)(snapshot, { recursive: true });
       for (const file of pluginBundleFiles(directory)) {
         safePath(file);
-        (0, import_node_fs7.mkdirSync)((0, import_node_path7.dirname)((0, import_node_path7.join)(snapshot, file)), { recursive: true });
-        (0, import_node_fs7.writeFileSync)((0, import_node_path7.join)(snapshot, file), (0, import_node_fs7.readFileSync)((0, import_node_path7.join)(directory, file)));
+        (0, import_node_fs8.mkdirSync)((0, import_node_path8.dirname)((0, import_node_path8.join)(snapshot, file)), { recursive: true });
+        (0, import_node_fs8.writeFileSync)((0, import_node_path8.join)(snapshot, file), (0, import_node_fs8.readFileSync)((0, import_node_path8.join)(directory, file)));
       }
       if (hashPluginDir(snapshot) !== sha256) throw new Error(`Plugin integrity mismatch: ${alias}`);
-      const library = (0, import_node_path7.join)(snapshot, "library");
-      if (!(0, import_node_fs7.existsSync)((0, import_node_path7.join)(library, "index.js")) || !(0, import_node_fs7.existsSync)((0, import_node_path7.join)(library, "index.d.ts")))
+      const library = (0, import_node_path8.join)(snapshot, "library");
+      if (!(0, import_node_fs8.existsSync)((0, import_node_path8.join)(library, "index.js")) || !(0, import_node_fs8.existsSync)((0, import_node_path8.join)(library, "index.d.ts")))
         throw new Error(`Plugin ${alias} has no importable library; rebuild with a compatible CLI`);
       for (const file of pluginFiles(library)) {
-        const target = (0, import_node_path7.join)(packageRoot, alias, file);
-        (0, import_node_fs7.mkdirSync)((0, import_node_path7.dirname)(target), { recursive: true });
-        (0, import_node_fs7.writeFileSync)(target, (0, import_node_fs7.readFileSync)((0, import_node_path7.join)(library, file)));
-        (0, import_node_fs7.chmodSync)(target, 420);
+        const target = (0, import_node_path8.join)(packageRoot, alias, file);
+        (0, import_node_fs8.mkdirSync)((0, import_node_path8.dirname)(target), { recursive: true });
+        (0, import_node_fs8.writeFileSync)(target, (0, import_node_fs8.readFileSync)((0, import_node_path8.join)(library, file)));
+        (0, import_node_fs8.chmodSync)(target, 420);
       }
     }
     const subpaths = selected.map(({ alias }) => `./${alias}`);
-    (0, import_node_fs7.writeFileSync)(
-      (0, import_node_path7.join)(packageRoot, "package.json"),
+    (0, import_node_fs8.writeFileSync)(
+      (0, import_node_path8.join)(packageRoot, "package.json"),
       JSON.stringify(
         {
           name: GENERATED_PLUGIN_PACKAGE,
@@ -13183,8 +13566,8 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
         2
       ) + "\n"
     );
-    (0, import_node_fs7.chmodSync)((0, import_node_path7.join)(packageRoot, "package.json"), 420);
-    const archive = (0, import_node_path7.join)(stage, "package.tar");
+    (0, import_node_fs8.chmodSync)((0, import_node_path8.join)(packageRoot, "package.json"), 420);
+    const archive = (0, import_node_path8.join)(stage, "package.tar");
     (0, import_tar.create)(
       {
         file: archive,
@@ -13197,24 +13580,24 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
       },
       pluginFiles(packageRoot)
     );
-    const bytes = (0, import_node_zlib.gzipSync)((0, import_node_fs7.readFileSync)(archive), { level: 0 });
+    const bytes = (0, import_node_zlib.gzipSync)((0, import_node_fs8.readFileSync)(archive), { level: 0 });
     bytes[9] = 255;
-    const output = (0, import_node_path7.join)(cwd, GENERATED_PLUGIN_DIRECTORY);
-    (0, import_node_fs7.mkdirSync)(output, { recursive: true });
-    if ((0, import_node_fs7.lstatSync)(output).isSymbolicLink()) throw new Error("Generated plugin directory cannot be a symbolic link");
-    const ignore = (0, import_node_path7.join)(output, ".gitignore");
-    if (!(0, import_node_fs7.existsSync)(ignore)) (0, import_node_fs7.writeFileSync)(ignore, "*\n", { flag: "wx" });
-    const destination = (0, import_node_path7.join)(output, `plugin-${digest}.tgz`);
-    if ((0, import_node_fs7.existsSync)(destination)) {
-      if ((0, import_node_fs7.lstatSync)(destination).isSymbolicLink() || !(0, import_node_fs7.readFileSync)(destination).equals(bytes))
+    const output = (0, import_node_path8.join)(cwd, GENERATED_PLUGIN_DIRECTORY);
+    (0, import_node_fs8.mkdirSync)(output, { recursive: true });
+    if ((0, import_node_fs8.lstatSync)(output).isSymbolicLink()) throw new Error("Generated plugin directory cannot be a symbolic link");
+    const ignore = (0, import_node_path8.join)(output, ".gitignore");
+    if (!(0, import_node_fs8.existsSync)(ignore)) (0, import_node_fs8.writeFileSync)(ignore, "*\n", { flag: "wx" });
+    const destination = (0, import_node_path8.join)(output, `plugin-${digest}.tgz`);
+    if ((0, import_node_fs8.existsSync)(destination)) {
+      if ((0, import_node_fs8.lstatSync)(destination).isSymbolicLink() || !(0, import_node_fs8.readFileSync)(destination).equals(bytes))
         throw new Error("Generated plugin package changed; remove the corrupt generated file and restore again");
     } else {
-      const temporary = (0, import_node_fs7.mkdtempSync)((0, import_node_path7.join)(output, ".pack-"));
+      const temporary = (0, import_node_fs8.mkdtempSync)((0, import_node_path8.join)(output, ".pack-"));
       try {
-        (0, import_node_fs7.writeFileSync)((0, import_node_path7.join)(temporary, "package.tgz"), bytes);
-        (0, import_node_fs7.renameSync)((0, import_node_path7.join)(temporary, "package.tgz"), destination);
+        (0, import_node_fs8.writeFileSync)((0, import_node_path8.join)(temporary, "package.tgz"), bytes);
+        (0, import_node_fs8.renameSync)((0, import_node_path8.join)(temporary, "package.tgz"), destination);
       } finally {
-        (0, import_node_fs7.rmSync)(temporary, { recursive: true, force: true });
+        (0, import_node_fs8.rmSync)(temporary, { recursive: true, force: true });
       }
     }
     return {
@@ -13222,16 +13605,52 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
       spec: `file:./${GENERATED_PLUGIN_DIRECTORY}/plugin-${digest}.tgz`,
       subpaths,
       packer,
-      sha256: `sha256:${(0, import_node_crypto3.createHash)("sha256").update(bytes).digest("hex")}`
+      sha256: `sha256:${(0, import_node_crypto4.createHash)("sha256").update(bytes).digest("hex")}`
     };
   } finally {
-    (0, import_node_fs7.rmSync)(stage, { recursive: true, force: true });
+    (0, import_node_fs8.rmSync)(stage, { recursive: true, force: true });
   }
 }
 
 // packages/plugin/src/plugin-dependencies.ts
 function pluginNpmDependencies(manifest2) {
   return manifest2.integration?.npmDependencies ?? (manifest2.integration?.npm ? [manifest2.integration.npm] : []);
+}
+
+// packages/plugin/src/prepared/invocation.ts
+var import_common3 = __toESM(require_dist2());
+var import_schema5 = __toESM(require_dist());
+
+// packages/plugin/src/prepared/runtime.ts
+var import_node_fs9 = require("node:fs");
+var import_node_path9 = require("node:path");
+var import_tar2 = require("tar");
+var import_common2 = __toESM(require_dist2());
+var import_schema4 = __toESM(require_dist());
+function preparedRuntime(directory) {
+  const path = (0, import_node_path9.join)(directory, BUILD_RECORD);
+  if (!(0, import_node_fs9.existsSync)(path)) return;
+  const record = JSON.parse((0, import_node_fs9.readFileSync)(path, "utf8"));
+  if (record.runtime === void 0) return;
+  return import_schema4.PreparedPluginRuntime.parse(record.runtime);
+}
+function assertPreparedRuntime(runtime) {
+  const libc = process.platform === "linux" && process.report.getReport().header?.glibcVersionRuntime ? "glibc" : "musl";
+  if (Number(process.versions.node.split(".")[0]) !== runtime.nodeMajor || runtime.platform !== "portable" && (runtime.platform !== process.platform || runtime.arch !== process.arch || runtime.platform === "linux" && runtime.libc !== libc))
+    throw new Error("Prepared plugin runtime is incompatible; rebuild for this Node/platform/architecture/libc");
+}
+
+// packages/plugin/src/prepared/invocation.ts
+function usesPreparedRunner(directory) {
+  if (import_common3.PROCESS_ENV.OCTONODE_PLUGIN_RUNNER !== "true") return false;
+  const runtime = preparedRuntime(directory);
+  if (!runtime) return false;
+  assertPreparedRuntime(runtime);
+  const { manifest: manifest2 } = verifyBuild(directory);
+  return !manifest2.permissions.some((permission) => permission.resource === "project_data");
+}
+function preparedPluginPin(directory, pin) {
+  return !!pin?.installId && !!pin.registry && pin.registry.replace(/\/$/, "") === (0, import_common3.OCTONODE_MARKETPLACE_URL)()?.replace(/\/$/, "") && usesPreparedRunner(directory);
 }
 
 // packages/plugin/src/lifecycle.ts
@@ -13243,21 +13662,21 @@ async function reconcilePluginLock(cwd, next, options = {}) {
     const manifest2 = loadPluginManifest(directory);
     if (manifest2.id !== (pin.pluginId ?? alias) || manifest2.version !== pin.version || hashPluginDir(directory) !== pin.sha256)
       throw new Error(`Plugin identity or integrity mismatch: ${alias}`);
-    return { alias, directory, sha256: pin.sha256, manifest: manifest2 };
+    return { alias, directory, sha256: pin.sha256, manifest: manifest2, remote: preparedPluginPin(directory, pin) };
   });
   const libraries = loaded.filter((item) => item.manifest.library);
   const generated = libraries.length ? await generatePluginPackage(project.target, libraries) : void 0;
-  const packageFile = (0, import_node_path8.join)(project.target, "package.json");
-  const packageJson = (0, import_node_fs8.existsSync)(packageFile) ? JSON.parse((0, import_node_fs8.readFileSync)(packageFile, "utf8")) : {};
+  const packageFile = (0, import_node_path10.join)(project.target, "package.json");
+  const packageJson = (0, import_node_fs10.existsSync)(packageFile) ? JSON.parse((0, import_node_fs10.readFileSync)(packageFile, "utf8")) : {};
   const declared = { ...packageJson.devDependencies, ...packageJson.optionalDependencies, ...packageJson.dependencies };
   if (generated && declared[generated.name] && declared[generated.name].replace(/^file:\.\//, "file:") !== before.generated?.spec.replace(/^file:\.\//, "file:") && !options.migrate)
     throw new Error(
       "Existing @octonodes/plugin dependency is not managed by this lock; pass --migrate to replace it explicitly"
     );
-  const dependencies = loaded.flatMap(
+  const dependencies = loaded.filter((item) => !item.remote || item.manifest.library).flatMap(
     ({ manifest: manifest2 }) => pluginNpmDependencies(manifest2).map((npm) => {
       const spec = npm.spec.startsWith(`${npm.package}@`) ? npm.spec.slice(npm.package.length + 1) : npm.spec;
-      const sameLocal = typeof declared[npm.package] === "string" && declared[npm.package].startsWith("file:") && spec.startsWith("file:") && (0, import_node_path8.resolve)(project.target, declared[npm.package].slice(5)) === (0, import_node_path8.resolve)(project.target, spec.slice(5));
+      const sameLocal = typeof declared[npm.package] === "string" && declared[npm.package].startsWith("file:") && spec.startsWith("file:") && (0, import_node_path10.resolve)(project.target, declared[npm.package].slice(5)) === (0, import_node_path10.resolve)(project.target, spec.slice(5));
       if (declared[npm.package] && declared[npm.package] !== spec && !sameLocal)
         throw new Error(
           `Dependency conflict: ${npm.package} is ${declared[npm.package]}, plugin requires ${spec}; reconcile it explicitly first`
@@ -13276,6 +13695,7 @@ async function reconcilePluginLock(cwd, next, options = {}) {
   if (generated || before.generated || unique.length || options.commit) {
     await reconcileDependencies(project.target, [...unique, ...generated ? [generated] : []], {
       cacheRoot: options.cacheRoot,
+      metadataOnly: !generated && !before.generated && !unique.length,
       remove: !generated && before.generated ? [before.generated.name] : void 0,
       transactionFiles: [lockfilePath(cwd), ...options.transactionFiles ?? []],
       commit: () => {
@@ -13318,20 +13738,20 @@ async function removePluginPin(alias, options = {}) {
 }
 
 // packages/plugin/src/restore.ts
-var import_node_fs12 = require("node:fs");
-var import_node_path12 = require("node:path");
+var import_node_fs14 = require("node:fs");
+var import_node_path14 = require("node:path");
 
-// packages/plugin/src/remote-registry.ts
-var import_node_fs11 = require("node:fs");
-var import_node_os5 = require("node:os");
-var import_node_path11 = require("node:path");
+// packages/plugin/src/remote/registry.ts
+var import_node_fs13 = require("node:fs");
+var import_node_os6 = require("node:os");
+var import_node_path13 = require("node:path");
 
 // packages/plugin/src/install.ts
-var import_node_fs9 = require("node:fs");
-var import_node_path9 = require("node:path");
+var import_node_fs11 = require("node:fs");
+var import_node_path11 = require("node:path");
 var import_node_child_process2 = require("node:child_process");
 var import_node_util2 = require("node:util");
-var import_common2 = __toESM(require_dist3());
+var import_common4 = __toESM(require_dist2());
 function commandError(err) {
   const error = err;
   return [error.stderr, error.stdout].map((output) => output?.toString().trim()).find(Boolean) ?? error.message;
@@ -13347,7 +13767,7 @@ async function installNodeDeps(dir, opts = {}) {
       if (opts.cacheOnly) {
         for (const npm of dependencies)
           await (0, import_node_util2.promisify)(import_node_child_process2.execFile)("npm", ["cache", "add", "--ignore-scripts", "--", npm.spec], {
-            env: (0, import_common2.childProcessEnvironment)((0, import_common2.packageCacheEnvironment)(dependencyCacheRoot(opts.cacheRoot))),
+            env: (0, import_common4.childProcessEnvironment)((0, import_common4.packageCacheEnvironment)(dependencyCacheRoot(opts.cacheRoot))),
             timeout: 10 * 6e4
           });
         return {};
@@ -13364,9 +13784,9 @@ async function installNodeDeps(dir, opts = {}) {
       return { depsInstalled: false, depsError: commandError(err) };
     }
   }
-  const pjPath = (0, import_node_path9.join)(dir, "package.json");
-  if (!(0, import_node_fs9.existsSync)(pjPath)) return {};
-  const pj = JSON.parse((0, import_node_fs9.readFileSync)(pjPath, "utf8"));
+  const pjPath = (0, import_node_path11.join)(dir, "package.json");
+  if (!(0, import_node_fs11.existsSync)(pjPath)) return {};
+  const pj = JSON.parse((0, import_node_fs11.readFileSync)(pjPath, "utf8"));
   if (!pj.dependencies && !pj.optionalDependencies) return {};
   try {
     await (0, import_node_util2.promisify)(import_node_child_process2.execFile)(
@@ -13382,7 +13802,7 @@ async function installNodeDeps(dir, opts = {}) {
       ],
       {
         cwd: dir,
-        env: (0, import_common2.childProcessEnvironment)((0, import_common2.packageCacheEnvironment)(dependencyCacheRoot(opts.cacheRoot))),
+        env: (0, import_common4.childProcessEnvironment)((0, import_common4.packageCacheEnvironment)(dependencyCacheRoot(opts.cacheRoot))),
         timeout: 10 * 6e4
       }
     );
@@ -13392,7 +13812,7 @@ async function installNodeDeps(dir, opts = {}) {
   }
 }
 async function installPlugin(src, opts = {}) {
-  if (!(0, import_node_fs9.existsSync)(src) || !(0, import_node_fs9.statSync)(src).isDirectory()) {
+  if (!(0, import_node_fs11.existsSync)(src) || !(0, import_node_fs11.statSync)(src).isDirectory()) {
     throw new Error(`source "${src}" is not a directory`);
   }
   if (!isPluginDir(src)) {
@@ -13400,17 +13820,17 @@ async function installPlugin(src, opts = {}) {
   }
   const { manifest: manifest2 } = loadPlugin(src);
   const { root, source } = installRoot(opts);
-  const dest = (0, import_node_path9.join)(root, manifest2.id);
-  if ((0, import_node_fs9.existsSync)(dest)) {
+  const dest = (0, import_node_path11.join)(root, manifest2.id);
+  if ((0, import_node_fs11.existsSync)(dest)) {
     if (!opts.force) {
       throw new Error(`plugin "${manifest2.id}" is already installed at ${dest} (use --force to overwrite)`);
     }
   }
   const deps = pluginNpmDependencies(manifest2).length ? await installNodeDeps(src, { ...opts, cacheOnly: opts.cacheOnly ?? !opts.project }) : {};
   if (deps.depsError) return { manifest: manifest2, dir: dest, source, ...deps };
-  if ((0, import_node_fs9.existsSync)(dest)) (0, import_node_fs9.rmSync)(dest, { recursive: true, force: true });
-  (0, import_node_fs9.mkdirSync)(root, { recursive: true });
-  (0, import_node_fs9.cpSync)(src, dest, { recursive: true });
+  if ((0, import_node_fs11.existsSync)(dest)) (0, import_node_fs11.rmSync)(dest, { recursive: true, force: true });
+  (0, import_node_fs11.mkdirSync)(root, { recursive: true });
+  (0, import_node_fs11.cpSync)(src, dest, { recursive: true });
   return {
     manifest: manifest2,
     dir: dest,
@@ -13420,14 +13840,14 @@ async function installPlugin(src, opts = {}) {
   };
 }
 
-// packages/plugin/src/remote-registry.ts
-var import_common3 = __toESM(require_dist3());
+// packages/plugin/src/remote/registry.ts
+var import_common5 = __toESM(require_dist2());
 
 // packages/plugin/src/archive.ts
 var import_node_zlib2 = require("node:zlib");
-var import_node_fs10 = require("node:fs");
-var import_node_path10 = require("node:path");
-var import_tar2 = require("tar");
+var import_node_fs12 = require("node:fs");
+var import_node_path12 = require("node:path");
+var import_tar3 = require("tar");
 
 // packages/plugin/src/archive.constants.ts
 var PLUGIN_ARCHIVE_MAX_BYTES = 64 * 1024 * 1024;
@@ -13437,11 +13857,11 @@ var PLUGIN_ARCHIVE_MAX_FILES = 1e4;
 function extractPluginArchive(bytes, stage) {
   if (bytes.length > PLUGIN_ARCHIVE_MAX_BYTES) throw new Error("Plugin archive exceeds download limit");
   const decoded = (0, import_node_zlib2.gunzipSync)(bytes, { maxOutputLength: PLUGIN_ARCHIVE_MAX_BYTES });
-  const archive = (0, import_node_path10.join)(stage, "bundle.tar");
-  (0, import_node_fs10.writeFileSync)(archive, decoded);
+  const archive = (0, import_node_path12.join)(stage, "bundle.tar");
+  (0, import_node_fs12.writeFileSync)(archive, decoded);
   const seen = /* @__PURE__ */ new Set();
   let total = 0;
-  (0, import_tar2.list)({
+  (0, import_tar3.list)({
     file: archive,
     sync: true,
     strict: true,
@@ -13458,9 +13878,9 @@ function extractPluginArchive(bytes, stage) {
         throw new Error("Plugin archive exceeds extraction limits");
     }
   });
-  const output = (0, import_node_path10.join)(stage, "plugin");
-  (0, import_node_fs10.mkdirSync)(output);
-  (0, import_tar2.extract)({
+  const output = (0, import_node_path12.join)(stage, "plugin");
+  (0, import_node_fs12.mkdirSync)(output);
+  (0, import_tar3.extract)({
     file: archive,
     cwd: output,
     sync: true,
@@ -13473,11 +13893,12 @@ function extractPluginArchive(bytes, stage) {
   return output;
 }
 
-// packages/plugin/src/remote-registry.ts
-var import_tar3 = require("tar");
+// packages/plugin/src/remote/registry.ts
+var import_tar4 = require("tar");
+var import_node_crypto5 = require("node:crypto");
 var RemoteRegistry = class {
   constructor(opts = {}) {
-    const baseUrl = opts.baseUrl ?? (0, import_common3.OCTONODE_MARKETPLACE_URL)();
+    const baseUrl = opts.baseUrl ?? (0, import_common5.OCTONODE_MARKETPLACE_URL)();
     if (!baseUrl) {
       throw new Error("marketplace URL is not configured (set OCTONODE_MARKETPLACE_URL or pass baseUrl)");
     }
@@ -13487,7 +13908,7 @@ var RemoteRegistry = class {
       );
     }
     this.baseUrl = baseUrl.replace(/\/$/, "");
-    this.token = opts.token ?? (0, import_common3.OCTONODE_MARKETPLACE_TOKEN)();
+    this.token = opts.token ?? (0, import_common5.OCTONODE_MARKETPLACE_TOKEN)();
   }
   async request(path, init = {}) {
     const headers = new Headers(init.headers);
@@ -13504,18 +13925,48 @@ var RemoteRegistry = class {
     }
     return res;
   }
+  async searchPage(filter = {}, offset = 0, limit = 24) {
+    const params = new URLSearchParams({ offset: String(offset), limit: String(limit) });
+    for (const [key, value] of Object.entries(filter)) if (value !== void 0) params.set(key, value);
+    const res = await this.request(`/marketplace/plugins?${params}`);
+    return await res.json();
+  }
   async search(filter = {}) {
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries(filter)) if (value) params.set(key, value);
-    const query = params.size > 0 ? `?${params}` : "";
-    const res = await this.request(`/marketplace/plugins${query}`);
-    const body = await res.json();
-    return body.entries;
+    let entries = [];
+    for (; ; ) {
+      const page = await this.searchPage(filter, entries.length, 100);
+      entries = [...entries, ...page.entries];
+      if (!page.entries.length || page.total === void 0 || entries.length >= page.total) return entries;
+    }
   }
   async detail(id, scope) {
     const query = scope ? `?scope=${encodeURIComponent(scope)}` : "";
     const res = await this.request(`/marketplace/plugins/${encodeURIComponent(id)}${query}`);
     return await res.json();
+  }
+  /** Reauthorize an immutable pin, including older locks that only recorded the extracted tree hash. */
+  async matchesLockedRelease(id, pin) {
+    const remoteId = pin.remoteId ?? id;
+    const detail = await this.detail(remoteId, pin.scope);
+    const release2 = detail.versions.find((entry) => entry.version === pin.version);
+    if (!release2 || pin.publisher && release2.publishedBy !== pin.publisher) return false;
+    const checksum = release2.archiveSha256 ?? release2.sha256;
+    if (pin.archiveSha256 || checksum?.startsWith("sha256:")) return checksum === (pin.archiveSha256 ?? pin.sha256);
+    if (!/^[a-f0-9]{64}$/.test(checksum)) return false;
+    const directory = await this.downloadBundle(remoteId, pin.version, pin.scope, id, checksum);
+    try {
+      return hashPluginDir(directory) === pin.sha256;
+    } finally {
+      (0, import_node_fs13.rmSync)((0, import_node_path13.dirname)(directory), { recursive: true, force: true });
+    }
+  }
+  async registerInstall(id, version, scope, opts) {
+    const response = await this.request(`/marketplace/plugins/${encodeURIComponent(id)}/install`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ version, scope, ownerId: opts.ownerId, environment: opts.environment ?? "self_hosted" })
+    });
+    return (await response.json()).installId;
   }
   /**
    * Pack a plugin folder into a tarball and publish it (metadata + bundle).
@@ -13526,6 +13977,13 @@ var RemoteRegistry = class {
    */
   async publish(pluginDir, opts = {}) {
     const manifest2 = loadPluginManifest(pluginDir);
+    const packageFile = (0, import_node_path13.join)(pluginDir, "package.json");
+    if ((0, import_node_fs13.existsSync)(packageFile)) {
+      const metadata = JSON.parse((0, import_node_fs13.readFileSync)(packageFile, "utf8"));
+      if (metadata.version && metadata.version !== manifest2.version) {
+        throw new Error("package.json version must match the plugin version before publishing");
+      }
+    }
     const bundle = packPluginDir(pluginDir);
     const form = new FormData();
     form.set("manifest", JSON.stringify(manifest2));
@@ -13536,10 +13994,14 @@ var RemoteRegistry = class {
       method: "POST",
       body: form
     });
-    return await res.json();
+    const release2 = await res.json();
+    const digest = (0, import_node_crypto5.createHash)("sha256").update(bundle).digest("hex");
+    if (release2.sha256 !== digest || release2.archiveSha256 !== void 0 && release2.archiveSha256 !== digest)
+      throw new Error("Marketplace published archive checksum mismatch; check the release before publishing again");
+    return release2;
   }
   /** Download a version's bundle and extract it to a fresh temp folder. */
-  async downloadBundle(id, version, scope, expectedId = id) {
+  async downloadBundle(id, version, scope, expectedId = id, expectedChecksum) {
     const query = scope ? `?scope=${encodeURIComponent(scope)}` : "";
     const res = await this.request(
       `/marketplace/plugins/${encodeURIComponent(id)}/versions/${encodeURIComponent(version)}/bundle${query}`
@@ -13560,17 +14022,27 @@ var RemoteRegistry = class {
       await reader.cancel();
     }
     const bytes = Buffer.concat(chunks);
-    const dir = (0, import_node_fs11.mkdtempSync)((0, import_node_path11.join)((0, import_node_os5.tmpdir)(), "octo-bundle-"));
+    const archiveChecksum = res.headers.get("x-octonode-archive-sha256");
+    if (archiveChecksum !== null && !/^[a-f0-9]{64}$/.test(archiveChecksum))
+      throw new Error("Plugin registry archive checksum is invalid");
+    const checksums = [archiveChecksum, res.headers.get("x-octonode-sha256"), expectedChecksum].filter(
+      (checksum) => !!checksum
+    );
+    const digest = (0, import_node_crypto5.createHash)("sha256").update(bytes).digest("hex");
+    for (const expected of checksums)
+      if (/^[a-f0-9]{64}$/.test(expected) && expected !== digest) throw new Error("Plugin registry checksum mismatch");
+    const dir = (0, import_node_fs13.mkdtempSync)((0, import_node_path13.join)((0, import_node_os6.tmpdir)(), "octo-bundle-"));
     try {
       const extracted = extractPluginArchive(bytes, dir);
       const manifest2 = loadPluginManifest(extracted);
       if (manifest2.id !== expectedId || manifest2.version !== version)
         throw new Error(`Downloaded plugin does not match requested ${id}@${version}`);
-      const checksum = res.headers.get("x-octonode-sha256");
-      if (checksum && hashPluginDir(extracted) !== checksum) throw new Error("Plugin registry checksum mismatch");
+      for (const expected of checksums)
+        if (!/^[a-f0-9]{64}$/.test(expected) && hashPluginDir(extracted) !== expected)
+          throw new Error("Plugin registry checksum mismatch");
       return extracted;
     } catch (error) {
-      (0, import_node_fs11.rmSync)(dir, { recursive: true, force: true });
+      (0, import_node_fs13.rmSync)(dir, { recursive: true, force: true });
       throw error;
     }
   }
@@ -13582,7 +14054,14 @@ var RemoteRegistry = class {
   async install(id, opts = {}) {
     const detail = await this.detail(id, opts.scope);
     const version = opts.version ?? detail.version;
-    const dir = await this.downloadBundle(id, version, opts.scope);
+    const release2 = detail.versions?.find((entry) => entry.version === version);
+    const dir = await this.downloadBundle(
+      id,
+      version,
+      opts.scope,
+      id,
+      release2?.archiveSha256 ?? release2?.sha256
+    );
     const plugin = await installPlugin(dir, opts);
     const res = await this.request(`/marketplace/plugins/${encodeURIComponent(id)}/install`, {
       method: "POST",
@@ -13608,19 +14087,21 @@ var RemoteRegistry = class {
     const detail = await this.detail(id, opts.scope);
     const version = opts.version ?? detail.version;
     const versionMeta = detail.versions?.find((v) => v.version === version);
-    if (!opts.cacheOnly && !opts.noDeps && !versionMeta?.sha256)
+    const releaseChecksum = versionMeta?.archiveSha256 ?? versionMeta?.sha256;
+    if (!opts.cacheOnly && !opts.noDeps && !releaseChecksum)
       throw new Error("Marketplace release is missing its immutable checksum");
     const availableScopes = versionMeta?.scope ?? detail.scope;
     const scope = opts.scope && availableScopes.includes(opts.scope) ? opts.scope : availableScopes[0];
-    const dir = await this.downloadBundle(id, version, scope);
+    const dir = await this.downloadBundle(id, version, scope, id, releaseChecksum);
     const entry = (() => {
       try {
         return addToStore(dir, { storeRoot: opts.storeRoot });
       } finally {
-        (0, import_node_fs11.rmSync)((0, import_node_path11.dirname)(dir), { recursive: true, force: true });
+        (0, import_node_fs13.rmSync)((0, import_node_path13.dirname)(dir), { recursive: true, force: true });
       }
     })();
-    if (versionMeta?.sha256 && entry.sha256 !== versionMeta.sha256) throw new Error("Plugin release checksum mismatch");
+    const archiveSha256 = releaseChecksum && /^[a-f0-9]{64}$/.test(releaseChecksum) ? releaseChecksum : void 0;
+    const prepared = this.baseUrl === (0, import_common5.OCTONODE_MARKETPLACE_URL)()?.replace(/\/$/, "") && usesPreparedRunner(entry.dir);
     if (entry.manifest.library && opts.noDeps && !opts.cacheOnly)
       throw new Error(
         "Library installation requires native dependency activation; use frozen --artifacts-only for CI restore"
@@ -13632,26 +14113,29 @@ var RemoteRegistry = class {
         remoteId: id,
         version: entry.version,
         sha256: entry.sha256,
+        archiveSha256,
         registry: this.baseUrl,
         scope,
         permissions: versionMeta?.permissions ?? detail.permissions,
         publisher: versionMeta?.publishedBy
       };
-      await activatePluginPin(alias2, pin2, opts);
       let installId2 = "";
-      if (!opts.dryRun) {
+      if (prepared && !opts.dryRun) {
+        installId2 = await this.registerInstall(id, version, scope, { ...opts, environment: "cloud" });
+        if (!installId2 || !/^[a-f0-9-]{36}$/.test(installId2))
+          throw new Error("Marketplace did not authorize the prepared installation");
+        pin2.installId = installId2;
+      }
+      try {
+        await activatePluginPin(alias2, pin2, opts);
+      } catch (error) {
+        if (installId2) await this.postEvent(installId2, "uninstall").catch(() => {
+        });
+        throw error;
+      }
+      if (!opts.dryRun && !prepared) {
         try {
-          const response = await this.request(`/marketplace/plugins/${encodeURIComponent(id)}/install`, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-              version,
-              scope,
-              ownerId: opts.ownerId,
-              environment: opts.environment ?? "self_hosted"
-            })
-          });
-          installId2 = (await response.json()).installId;
+          installId2 = await this.registerInstall(id, version, scope, opts);
           if (installId2)
             await withDependencyInstall(opts.cwd ?? process.cwd(), async () => {
               const current = readLockfile(opts.cwd).plugins[alias2];
@@ -13665,10 +14149,10 @@ var RemoteRegistry = class {
         plugin: { manifest: entry.manifest, dir: entry.dir, source: "store" },
         entry,
         installId: installId2,
-        depsInstalled: !opts.dryRun
+        depsInstalled: !opts.dryRun && (!prepared || !!entry.manifest.library)
       };
     }
-    const deps = entry.created || entry.manifest.integration?.npm ? await installNodeDeps(entry.dir, {
+    const deps = !prepared && (entry.created || entry.manifest.integration?.npm) ? await installNodeDeps(entry.dir, {
       noDeps: opts.noDeps,
       cwd: opts.cwd,
       cacheRoot: opts.cacheRoot,
@@ -13681,25 +14165,36 @@ var RemoteRegistry = class {
       remoteId: id,
       version: entry.version,
       sha256: entry.sha256,
+      archiveSha256,
       registry: this.baseUrl,
       scope,
       publisher: versionMeta?.publishedBy,
       permissions: versionMeta?.permissions ?? detail.permissions
     };
-    await withDependencyInstall(opts.cwd ?? process.cwd(), async () => {
-      const previous = readLockfile(opts.cwd).plugins[alias];
-      if (previous && ((previous.pluginId ?? alias) !== entry.id || previous.registry !== this.baseUrl || previous.publisher !== pin.publisher))
-        throw new Error("Plugin alias belongs to another publisher or registry");
-      upsertLockEntry(opts.cwd ?? process.cwd(), alias, pin);
-    });
+    if (opts.dryRun)
+      return { plugin: { manifest: entry.manifest, dir: entry.dir, source: "store" }, entry, installId: "" };
     let installId = "";
+    if (prepared) {
+      installId = await this.registerInstall(id, version, scope, { ...opts, environment: "cloud" });
+      if (!installId || !/^[a-f0-9-]{36}$/.test(installId))
+        throw new Error("Marketplace did not authorize the prepared installation");
+      pin.installId = installId;
+    }
     try {
-      const response = await this.request(`/marketplace/plugins/${encodeURIComponent(id)}/install`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ version, scope, ownerId: opts.ownerId, environment: opts.environment ?? "self_hosted" })
+      await withDependencyInstall(opts.cwd ?? process.cwd(), async () => {
+        const previous = readLockfile(opts.cwd).plugins[alias];
+        if (previous && ((previous.pluginId ?? alias) !== entry.id || previous.registry !== this.baseUrl || previous.publisher !== pin.publisher))
+          throw new Error("Plugin alias belongs to another publisher or registry");
+        upsertLockEntry(opts.cwd ?? process.cwd(), alias, pin);
       });
-      installId = (await response.json()).installId;
+    } catch (error) {
+      if (installId) await this.postEvent(installId, "uninstall").catch(() => {
+      });
+      throw error;
+    }
+    if (prepared) return { plugin: { manifest: entry.manifest, dir: entry.dir, source: "store" }, entry, installId };
+    try {
+      installId = await this.registerInstall(id, version, scope, opts);
       await withDependencyInstall(opts.cwd ?? process.cwd(), async () => {
         const current = readLockfile(opts.cwd).plugins[alias];
         if (current?.sha256 === pin.sha256 && current.registry === pin.registry)
@@ -13725,13 +14220,13 @@ var RemoteRegistry = class {
 };
 function packPluginDir(pluginDir) {
   pluginBundleFiles(pluginDir);
-  const staging = (0, import_node_fs11.mkdtempSync)((0, import_node_path11.join)((0, import_node_os5.tmpdir)(), "octo-pack-"));
-  const out = (0, import_node_path11.join)(staging, "bundle.tar.gz");
+  const staging = (0, import_node_fs13.mkdtempSync)((0, import_node_path13.join)((0, import_node_os6.tmpdir)(), "octo-pack-"));
+  const out = (0, import_node_path13.join)(staging, "bundle.tar.gz");
   try {
-    (0, import_tar3.create)({ file: out, cwd: pluginDir, sync: true, portable: true, gzip: true }, pluginBundleFiles(pluginDir));
-    return (0, import_node_fs11.readFileSync)(out);
+    (0, import_tar4.create)({ file: out, cwd: pluginDir, sync: true, portable: true, gzip: true }, pluginBundleFiles(pluginDir));
+    return (0, import_node_fs13.readFileSync)(out);
   } finally {
-    (0, import_node_fs11.rmSync)(staging, { recursive: true, force: true });
+    (0, import_node_fs13.rmSync)(staging, { recursive: true, force: true });
   }
 }
 
@@ -13739,7 +14234,7 @@ function packPluginDir(pluginDir) {
 async function installFromLock(opts = {}) {
   const cwd = resolveDependencyProject(opts.cwd ?? process.cwd()).target;
   if (opts.frozen && opts.force) throw new Error("Frozen restore cannot accept changed artifact bytes");
-  if (opts.frozen && !(0, import_node_fs12.existsSync)((0, import_node_path12.join)(cwd, "octonode.lock"))) throw new Error("Frozen restore requires octonode.lock");
+  if (opts.frozen && !(0, import_node_fs14.existsSync)((0, import_node_path14.join)(cwd, "octonode.lock"))) throw new Error("Frozen restore requires octonode.lock");
   return withDependencyInstall(cwd, async () => {
     const lock = readLockfile(cwd);
     if (lock.generated && opts.force)
@@ -13756,9 +14251,8 @@ async function installFromLock(opts = {}) {
           throw new Error("Frozen restore cannot change the registry");
         if (pin.scope && pin.scope !== "public" && registry) {
           if (opts.offline) throw new Error("Private plugin access must be reauthorized online before restore");
-          const detail = await new RemoteRegistry({ baseUrl: registry, token: opts.token }).detail(remoteId, pin.scope);
-          const version = detail.versions.find((item) => item.version === pin.version);
-          if (!version || version.sha256 !== pin.sha256 || pin.publisher && version.publishedBy !== pin.publisher)
+          const remote = new RemoteRegistry({ baseUrl: registry, token: opts.token });
+          if (!await remote.matchesLockedRelease(id, pin))
             throw new Error("Locked private release is not authorized or changed");
         }
         let directory = storeEntryDir(id, pin.version, pin.sha256, opts.storeRoot);
@@ -13772,16 +14266,18 @@ async function installFromLock(opts = {}) {
             remoteId,
             pin.version,
             pin.scope,
-            id
+            id,
+            opts.force ? void 0 : pin.archiveSha256
           );
           try {
             const actual = hashPluginDir(downloaded);
             if (actual !== pin.sha256 && !opts.force) throw new Error("integrity mismatch for " + alias);
             const entry = addToStore(downloaded, { storeRoot: opts.storeRoot });
             directory = entry.dir;
-            if (actual !== pin.sha256) upsertLockEntry(cwd, alias, { ...pin, sha256: actual });
+            if (actual !== pin.sha256)
+              upsertLockEntry(cwd, alias, { ...pin, sha256: actual, archiveSha256: void 0 });
           } finally {
-            (0, import_node_fs12.rmSync)((0, import_node_path12.dirname)(downloaded), { recursive: true, force: true });
+            (0, import_node_fs14.rmSync)((0, import_node_path14.dirname)(downloaded), { recursive: true, force: true });
           }
           result.restored.push(alias);
         }
@@ -13789,9 +14285,10 @@ async function installFromLock(opts = {}) {
         if (manifest2.id !== id || manifest2.version !== pin.version)
           throw new Error("Plugin identity mismatch: " + alias);
         if (manifest2.library) libraries.push({ alias, directory, sha256: pin.sha256 });
+        if (!manifest2.library && preparedPluginPin(directory, pin)) continue;
         if (!manifest2.library && !pluginNpmDependencies(manifest2).length && !opts.artifactsOnly && !opts.noDeps) {
-          const packagePath = (0, import_node_path12.join)(directory, "package.json");
-          const legacy = (0, import_node_fs12.existsSync)(packagePath) ? JSON.parse((0, import_node_fs12.readFileSync)(packagePath, "utf8")) : {};
+          const packagePath = (0, import_node_path14.join)(directory, "package.json");
+          const legacy = (0, import_node_fs14.existsSync)(packagePath) ? JSON.parse((0, import_node_fs14.readFileSync)(packagePath, "utf8")) : {};
           if (legacy.dependencies || legacy.optionalDependencies) {
             if (opts.frozen || opts.offline)
               throw new Error(
@@ -13818,7 +14315,7 @@ async function installFromLock(opts = {}) {
         const generated = await generatePluginPackage(cwd, libraries, lock.generated.packer);
         if (generated.spec !== lock.generated.spec || generated.sha256 !== lock.generated.sha256 || JSON.stringify(generated.subpaths) !== JSON.stringify(lock.generated.subpaths))
           throw new Error("Generated package does not match octonode.lock");
-        const manifest2 = JSON.parse((0, import_node_fs12.readFileSync)((0, import_node_path12.join)(cwd, "package.json"), "utf8"));
+        const manifest2 = JSON.parse((0, import_node_fs14.readFileSync)((0, import_node_path14.join)(cwd, "package.json"), "utf8"));
         if (manifest2.dependencies?.[generated.name]?.replace(/^file:\.\//, "file:") !== generated.spec.replace(/^file:\.\//, "file:"))
           throw new Error("package.json disagrees with octonode.lock");
       }
@@ -13838,11 +14335,11 @@ async function installFromLock(opts = {}) {
 }
 
 // packages/plugin/src/consumer/lifecycle.ts
-var import_schema4 = __toESM(require_dist());
+var import_schema6 = __toESM(require_dist());
 async function runPluginLifecycle(command, target, flags) {
-  const cwd = resolveDependencyProject(typeof flags.cwd === "string" ? (0, import_node_path13.resolve)(flags.cwd) : process.cwd()).target;
+  const cwd = resolveDependencyProject(typeof flags.cwd === "string" ? (0, import_node_path15.resolve)(flags.cwd) : process.cwd()).target;
   const scope = typeof flags.scope === "string" ? flags.scope : void 0;
-  if (scope && !import_schema4.MARKETPLACE_SCOPES.includes(scope)) throw new Error("Invalid marketplace scope");
+  if (scope && !import_schema6.MARKETPLACE_SCOPES.includes(scope)) throw new Error("Invalid marketplace scope");
   const options = {
     cwd,
     alias: typeof flags.alias === "string" ? flags.alias : void 0,
@@ -13870,8 +14367,8 @@ async function runPluginLifecycle(command, target, flags) {
     await removePluginPin(target, options);
     return { removed: target, dryRun: options.dryRun };
   }
-  if (command === "install" && (0, import_node_fs13.existsSync)((0, import_node_path13.resolve)(cwd, target))) {
-    const entry = await installLocalArtifact((0, import_node_path13.resolve)(cwd, target), options);
+  if (command === "install" && (0, import_node_fs15.existsSync)((0, import_node_path15.resolve)(cwd, target))) {
+    const entry = await installLocalArtifact((0, import_node_path15.resolve)(cwd, target), options);
     return { id: options.alias ?? entry.id, version: entry.version, sha256: entry.sha256, dryRun: options.dryRun };
   }
   if (command !== "install" && command !== "update") throw new Error(`Unknown plugin lifecycle command: ${command}`);

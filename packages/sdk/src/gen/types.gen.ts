@@ -60,6 +60,8 @@ export type GetApiRunsData = {
     query?: {
         project?: string;
         workflowId?: string;
+        search?: string;
+        status?: 'ok' | 'error' | 'partial';
         cursor?: string;
         offset?: number;
         limit?: number;
@@ -99,6 +101,8 @@ export type GetApiRunsResponses = {
                             code: string;
                             message: string;
                             retryable?: boolean;
+                            details?: unknown;
+                            stack?: string;
                         };
                         note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                     };
@@ -190,6 +194,8 @@ export type GetApiRunsByRunIdResponses = {
                         code: string;
                         message: string;
                         retryable?: boolean;
+                        details?: unknown;
+                        stack?: string;
                     };
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
@@ -3227,6 +3233,8 @@ export type PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsResponses = {
                         code: string;
                         message: string;
                         retryable?: boolean;
+                        details?: unknown;
+                        stack?: string;
                     };
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
@@ -3364,6 +3372,8 @@ export type PostApiWorkflowsByWorkflowIdExecutionsResponses = {
                         code: string;
                         message: string;
                         retryable?: boolean;
+                        details?: unknown;
+                        stack?: string;
                     };
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
@@ -3447,6 +3457,8 @@ export type GetApiExecutionsByRunIdResponses = {
                         code: string;
                         message: string;
                         retryable?: boolean;
+                        details?: unknown;
+                        stack?: string;
                     };
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
@@ -3659,6 +3671,11 @@ export type GetApiWorkflowsByWorkflowIdNodeCatalogData = {
         workflowId: string;
     };
     query?: {
+        workspace?: string;
+        project?: string;
+        view?: string;
+        snapshot?: 'true';
+        nativeRevision?: string;
         q?: string;
         offset?: number;
         limit?: number;
@@ -3682,6 +3699,9 @@ export type GetApiWorkflowsByWorkflowIdNodeCatalogResponses = {
      * Success
      */
     200: {
+        nativeRevision?: string;
+        revision?: string;
+        complete?: boolean;
         items: Array<{
             id: string;
             label: string;
@@ -4454,6 +4474,7 @@ export type GetApiMarketplaceData = {
     body?: never;
     path?: never;
     query?: {
+        workspace?: string;
         q?: string;
         category?: string;
         tag?: string;

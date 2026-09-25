@@ -8,3 +8,4 @@ export type { PluginDefinition, PluginOptions, PluginHandlers } from "../plugin.
 export type { PluginNodeOptions, SchemaValue } from "./types";
 export { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, PluginNode, PluginConnection } from "../../schema/plugin-sdk";
 export { SETTINGS_API_VERSION } from "../../schema/plugin-sdk";
+export { PreparedPluginRuntime } from "../../schema/plugin-sdk";
