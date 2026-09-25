@@ -65,7 +65,7 @@ octonodes connect claude --workspace org:WORKSPACE_ID --project PROJECT_ID
 
 The Codex configuration uses `octonodes connect headers` to read and refresh the saved login at
 request time, so it does not store a bearer token in `config.toml`. The distributable skill and
-client-plugin bundle is at `connect-skill-plugin/`; it references this hosted Worker and does not
+client-plugin bundle is at `octonode-plugin/`; it references this hosted Worker and does not
 duplicate its implementation.
 
 ## Deploy

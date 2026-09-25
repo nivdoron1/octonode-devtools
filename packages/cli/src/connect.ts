@@ -4,10 +4,13 @@ import { accessToken } from "./auth.js";
 export const CONNECT_HELP = `Usage:
   octonodes connect codex --workspace <kind:id> --project <id> [--project <id>] [--worktree <id>]
   octonodes connect claude --workspace <kind:id> --project <id> [--project <id>] [--worktree <id>]
+  octonodes connect cursor --workspace <kind:id> --project <id> [--project <id>] [--worktree <id>]
   octonodes connect headers --workspace <kind:id> --project <id> [--project <id>] [--worktree <id>]
 
-Run "octonodes login" first. "codex" prints config.toml, "claude" prints a claude mcp command,
-and "headers" is the credential helper used by Codex.
+"codex" prints config.toml and uses your saved "octonodes login" or OCTONODE_TOKEN.
+"claude" prints a claude mcp command; "cursor" prints .cursor/mcp.json.
+For Claude and Cursor, set OCTONODE_TOKEN in the client's environment before starting it.
+"headers" is the credential helper used by Codex. Configuration is printed, never installed.
 `;
 
 interface Scope {
@@ -66,8 +69,8 @@ function helperCommand(scope: Scope): string {
 export async function connectCommand(args: string[]): Promise<string> {
   const target = args[0];
   if (!target || target === "--help" || target === "-h") return CONNECT_HELP;
-  if (!["codex", "claude", "headers"].includes(target)) {
-    throw new Error(`unknown connect target "${target}"; use codex, claude, or headers`);
+  if (!["codex", "claude", "cursor", "headers"].includes(target)) {
+    throw new Error(`unknown connect target "${target}"; use codex, claude, cursor, or headers`);
   }
   const scope = parseScope(args.slice(1));
 
@@ -78,6 +81,10 @@ export async function connectCommand(args: string[]): Promise<string> {
     const headers = scopeHeaders(scope, "${OCTONODE_TOKEN}");
     const config = JSON.stringify({ type: "http", url: OCTONODE_MCP_URL, headers });
     return `claude mcp add-json --scope user octonode '${config}'\n`;
+  }
+  if (target === "cursor") {
+    const headers = scopeHeaders(scope, "${env:OCTONODE_TOKEN}");
+    return `${JSON.stringify({ mcpServers: { octonode: { url: OCTONODE_MCP_URL, headers } } }, null, 2)}\n`;
   }
   if (target === "headers") {
     const token = await accessToken();

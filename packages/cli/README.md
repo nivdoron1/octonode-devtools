@@ -82,6 +82,14 @@ octonodes projects.api.get
 Authentication is resolved in this order: `OCTONODE_TOKEN`, a saved API token, then a saved Studio
 session.
 
+## Connect an AI client
+
+Use `octonodes connect <codex|claude|cursor> --workspace org:WORKSPACE_ID --project PROJECT_ID`
+to print scoped MCP configuration. Repeat `--project` for multiple projects and optionally pass
+`--worktree`. Codex uses the saved CLI login; Claude and Cursor need `OCTONODE_TOKEN` in their
+environment. Configuration generation does not install it. See the shared
+[agent plugin](../../octonode-plugin/README.md) for setup and plugin operation skills.
+
 ## Find operations
 
 List every operation or filter by name:
