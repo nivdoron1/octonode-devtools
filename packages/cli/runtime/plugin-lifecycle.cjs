@@ -3225,7 +3225,7 @@ var require_design_documents = __commonJS({
     exports2.designDocumentShareSchema = exports2.designDocumentUpdateSchema = exports2.designDocumentCreateSchema = exports2.designDocumentDetailSchema = exports2.designDocumentSchema = exports2.designDocumentRevisionSchema = exports2.designDocumentScopeSchema = exports2.designDocumentAccessSchema = exports2.designDocumentFormatSchema = void 0;
     var zod_1 = require("zod");
     var collaboration_1 = require_collaboration();
-    exports2.designDocumentFormatSchema = zod_1.z.enum(["markdown", "html", "text"]);
+    exports2.designDocumentFormatSchema = zod_1.z.enum(["markdown", "html", "text", "latex"]);
     exports2.designDocumentAccessSchema = zod_1.z.enum(["private", "workspace", "public_file", "public_host"]);
     exports2.designDocumentScopeSchema = zod_1.z.discriminatedUnion("kind", [
       zod_1.z.object({ kind: zod_1.z.literal("workspace") }).strict(),
