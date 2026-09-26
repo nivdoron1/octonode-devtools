@@ -84,7 +84,7 @@ export async function pluginCommand(args: string[], version: string): Promise<vo
         ? { bump: target as "patch" | "minor" | "major" }
         : { version: target },
     );
-    if (!result) throw new Error("Add a plugin.octonode.json or .yml release file first");
+    if (!result) throw new Error("Add an octonode.plugin.json release file first");
     process.stdout.write(result.config.version + "\n");
     return;
   }

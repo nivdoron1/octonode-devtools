@@ -327,8 +327,9 @@ canvas renderers, and another manifest format remain outside this contract.
 
 ## Release files and GitHub publishing
 
-SDK/CLI `0.2.0` supports `plugin.octonode.json`, `.yml`, and `.yaml` beside
-`octonode.plugin.ts`. Keep exactly one release file. For example:
+Use `octonode.plugin.json` beside `octonode.plugin.ts`. Existing
+`plugin.octonode.json`, `.yml`, and `.yaml` release files remain readable.
+Keep exactly one release file. For example:
 
 ```json
 {

@@ -500,7 +500,7 @@ test("release config builds, bumps and deploys through GitHub identity without a
       if (String(url).includes("token.actions.test"))
         return Response.json({ value: "short-lived-github-identity" });
       assert.equal(options.headers.authorization, "Bearer short-lived-github-identity");
-      assert.equal(new URL(url).searchParams.get("config"), "release-plugin/plugin.octonode.json");
+      assert.equal(new URL(url).searchParams.get("config"), "release-plugin/octonode.plugin.json");
       if (!options.method) return Response.json({ status: "ready", id: "release-plugin", version: "0.2.0" });
       const bytes = Buffer.from(await options.body.get("bundle").arrayBuffer());
       const hash = createHash("sha256").update(bytes).digest("hex");
@@ -529,6 +529,7 @@ test("release config builds, bumps and deploys through GitHub identity without a
 
 test("deploy-all discovers a tracked legacy manifest and publishes its verified built artifact", async () => {
   const { deployAllPlugins } = await import("../packages/cli/dist/plugins/deploy.js");
+  const { readPluginRelease } = await import("../packages/cli/dist/plugins/release.js");
   const parent = mkdtempSync(join(tmpdir(), "octonodes-deploy-all-"));
   const fetchBefore = globalThis.fetch;
   const envBefore = { ...process.env };
@@ -540,6 +541,7 @@ test("deploy-all discovers a tracked legacy manifest and publishes its verified 
     const manifestPath = join(parent, "packages/legacy-example/octonode.plugin.json");
     mkdirSync(join(parent, "packages/legacy-example"), { recursive: true });
     writeFileSync(manifestPath, JSON.stringify(built.manifest));
+    assert.equal(readPluginRelease(join(parent, "packages/legacy-example")), undefined);
     const artifact = join(parent, "dist/marketplace/legacy-example");
     cpSync(built.directory, artifact, { recursive: true });
     execFileSync("git", ["init"], { cwd: parent, stdio: "ignore" });
@@ -563,10 +565,10 @@ test("deploy-all discovers a tracked legacy manifest and publishes its verified 
     mkdirSync(join(source, "legacy"));
     writeFileSync(nested, JSON.stringify({ ...built.manifest, version: "0.1.0" }));
     execFileSync("git", ["rm", "--cached", "packages/legacy-example/octonode.plugin.json"], { cwd: parent });
-    execFileSync("git", ["add", "legacy-example/plugin.octonode.json", "legacy-example/legacy/octonode.plugin.json"], { cwd: parent });
+    execFileSync("git", ["add", "legacy-example/octonode.plugin.json", "legacy-example/legacy/octonode.plugin.json"], { cwd: parent });
     globalThis.fetch = async (url, options) => {
       if (String(url).includes("token.actions.test")) return Response.json({ value: "identity" });
-      assert.equal(new URL(url).searchParams.get("config"), "legacy-example/plugin.octonode.json");
+      assert.equal(new URL(url).searchParams.get("config"), "legacy-example/octonode.plugin.json");
       assert.equal(options.method, undefined);
       return Response.json({ status: "unchanged", id: "legacy-example", version: built.manifest.version });
     };

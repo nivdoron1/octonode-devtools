@@ -83,18 +83,23 @@ async function uploadGithubBuild(directory: string, endpoint: URL, identity: () 
 export async function deployAllPlugins(registry = PLUGIN_PUBLISH_AUDIENCE, cwd = process.cwd()) {
   const root = execFileSync("git", ["rev-parse", "--show-toplevel"], { cwd, encoding: "utf8" }).trim();
   const files = execFileSync("git", ["ls-files", "-z"], { cwd: root }).toString().split("\0");
-  const candidates = files.filter((path) => PluginConfigPath.safeParse(path).success);
+  const candidates = files.filter((path) => PluginConfigPath.safeParse(path).success).map((path) => ({
+    path,
+    release:
+      basename(path) !== "octonode.plugin.json" ||
+      JSON.parse(readFileSync(join(root, path), "utf8")).apiVersion !== undefined,
+  }));
   const releaseRoots = candidates
-    .filter((path) => basename(path) !== "octonode.plugin.json" && path.includes("/"))
-    .map((path) => dirname(path) + "/");
+    .filter(({ path, release }) => release && path.includes("/"))
+    .map(({ path }) => dirname(path) + "/");
   const paths = candidates.filter(
-    (path) => basename(path) !== "octonode.plugin.json" || !releaseRoots.some((root) => path.startsWith(root)),
+    ({ path, release }) => release || !releaseRoots.some((root) => path.startsWith(root)),
   );
   if (!paths.length) throw new Error("No tracked Octonode plugin manifests were found");
   const results = [];
-  for (const path of paths) {
+  for (const { path, release } of paths) {
     const source = join(root, path);
-    if (basename(path) !== "octonode.plugin.json") {
+    if (release) {
       results.push(await deployPlugin(dirname(source), registry, undefined, true));
       continue;
     }
@@ -119,7 +124,7 @@ export async function deployPlugin(
 ) {
   root = realpathSync(resolve(root));
   const release = readPluginRelease(root);
-  if (!release) throw new Error("Add plugin.octonode.json or plugin.octonode.yml before deploying");
+  if (!release) throw new Error("Add octonode.plugin.json before deploying");
   const url = new URL(registry);
   if (
     url.protocol !== "https:" ||

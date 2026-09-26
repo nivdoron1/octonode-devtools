@@ -15,7 +15,7 @@ export const PLUGIN_HELP = `Usage:
   octonodes install --frozen --artifacts-only [--offline]
   octonodes plugin recover
 
-Deploy reads plugin.octonode.json/.yml and builds, hashes and publishes to plugins.octonodes.com.
+Deploy reads octonode.plugin.json and builds, hashes and publishes to plugins.octonodes.com.
 GitHub publishing uses the connected repository and short-lived Actions identity, with no marketplace secret.
 Deploy-all scans tracked release files and legacy manifests after the repository build.
 Build reads octonode.plugin.ts and writes dist/plugins/<id>.
