@@ -64,3 +64,105 @@ export const PluginPublisherConnection = PluginPublisherPreview.extend({
   lastPublishedAt: z.number().nullable(),
 });
 export const PluginPublisherConnections = z.object({ items: z.array(PluginPublisherConnection) });
+
+export const PluginPublisherOperation = z.enum(["create", "update", "delete"]);
+export const PluginPublisherReviewItem = z.object({
+  configPath: PluginConfigPath,
+  config: PluginReleaseConfig,
+  sha256: z.string(),
+  connectionId: z.string().nullable(),
+  missing: z.boolean(),
+});
+export const PluginPublisherReview = z.object({
+  repositoryId: z.number(),
+  repository: z.string(),
+  branch: z.string(),
+  headSha: z.string(),
+  revision: z.string(),
+  items: z.array(PluginPublisherReviewItem),
+});
+export const PluginPublisherApply = z
+  .object({
+    repositoryId: z.number().int().positive(),
+    revision: z.string().regex(/^[a-f0-9]{64}$/),
+    operations: z
+      .array(z.object({ configPath: PluginConfigPath, operation: PluginPublisherOperation }).strict())
+      .min(1)
+      .max(100),
+  })
+  .strict();
+export const PluginPublisherApplied = z.object({
+  ok: z.boolean(),
+  sha: z.string(),
+  repositoryId: z.number(),
+  buildId: z.number(),
+});
+export const PluginPublisherBuildQuery = z.object({
+  repositoryId: z.coerce.number().int().positive().optional(),
+  page: z.coerce.number().int().min(1).max(1000).default(1),
+  search: z.string().max(200).default(""),
+  status: z.enum(["", "queued", "in_progress", "success", "failure"]).default(""),
+  sort: z.enum(["newest", "oldest", "name"]).default("newest"),
+});
+export const PluginPublisherBuilds = z.object({
+  total: z.number(),
+  page: z.number(),
+  hasMore: z.boolean(),
+  items: z.array(
+    z.object({
+      id: z.number(),
+      repositoryId: z.number(),
+      number: z.number(),
+      attempt: z.number(),
+      title: z.string(),
+      sha: z.string(),
+      branch: z.string(),
+      status: z.string(),
+      conclusion: z.string().nullable(),
+      url: z.string(),
+      createdAt: z.string(),
+      updatedAt: z.string(),
+    }),
+  ),
+});
+export const PluginPublisherBuildDetail = z.object({
+  repository: z.string(),
+  sha: z.string(),
+  branch: z.string(),
+  status: z.string(),
+  createdAt: z.string(),
+  items: z.array(
+    z.object({
+      configPath: PluginConfigPath,
+      name: z.string(),
+      version: z.string(),
+      scope: z.enum(["user", "team", "organization", "public"]),
+      operation: PluginPublisherOperation,
+      status: z.string(),
+      url: z.string().nullable(),
+      error: z.string().nullable(),
+    }),
+  ),
+  log: z.string(),
+});
+export type PluginPublisherReview = z.infer<typeof PluginPublisherReview>;
+export type PluginPublisherApply = z.infer<typeof PluginPublisherApply>;
+export type PluginPublisherReviewItem = z.infer<typeof PluginPublisherReviewItem>;
+export type PluginPublisherBuilds = z.infer<typeof PluginPublisherBuilds>;
+export type PluginPublisherBuildDetail = z.infer<typeof PluginPublisherBuildDetail>;
+
+export const PluginCloudBuild = z.object({
+  id: z.number().int().positive(),
+  sha: z.string().regex(/^[a-f0-9]{40}$/),
+  active: z.boolean(),
+  items: z
+    .array(
+      z.object({
+        configPath: PluginConfigPath,
+        config: PluginReleaseConfig,
+        operation: PluginPublisherOperation,
+        status: z.string(),
+      }),
+    )
+    .max(100),
+});
