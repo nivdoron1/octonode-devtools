@@ -1034,7 +1034,12 @@ var require_constants = __commonJS({
       "missing_entitlement",
       "missing_permission"
     ];
-    exports2.PLUGIN_RELEASE_FILES = ["plugin.octonode.json", "plugin.octonode.yml", "plugin.octonode.yaml"];
+    exports2.PLUGIN_RELEASE_FILES = [
+      exports2.PLUGIN_MANIFEST_FILENAME,
+      "plugin.octonode.json",
+      "plugin.octonode.yml",
+      "plugin.octonode.yaml"
+    ];
     exports2.PLUGIN_PUBLISH_AUDIENCE = "https://plugins.octonodes.com";
     exports2.PLUGIN_CONFIG_MAX_BYTES = 65536;
     exports2.PLUGIN_PUBLISH_MAX_BYTES = 32 * 1024 * 1024;
@@ -11536,10 +11541,10 @@ var require_plugin_publishing = __commonJS({
   "packages/schema/dist/plugin-publishing.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
+    exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherAutomatic = exports2.PluginPublisherRepository = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
     var zod_1 = require("zod");
     var plugin_version_1 = require_plugin_version();
-    exports2.PluginConfigPath = zod_1.z.string().max(512).refine((path) => /^(?:[a-zA-Z0-9_.-]+\/)*plugin\.octonode\.(json|ya?ml)$/.test(path) && !path.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)), "Select a repository-relative plugin.octonode.json or .yml file");
+    exports2.PluginConfigPath = zod_1.z.string().max(512).refine((path) => /^(?:[a-zA-Z0-9_.-]+\/)*(?:plugin\.octonode\.(?:json|ya?ml)|octonode\.plugin\.json)$/.test(path) && !path.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)), "Select a repository-relative octonode.plugin.json file (older plugin.octonode release files also work)");
     exports2.PluginReleaseConfig = zod_1.z.object({
       apiVersion: zod_1.z.literal("octonode.plugin/v1"),
       id: zod_1.z.string().max(128).regex(/^[a-z0-9][a-z0-9-]*$/),
@@ -11558,6 +11563,12 @@ var require_plugin_publishing = __commonJS({
     var pluginReleaseScope = (config) => config.scope === "team" ? "group" : config.scope === "organization" ? "org" : config.scope;
     exports2.pluginReleaseScope = pluginReleaseScope;
     exports2.PluginPublisherInput = zod_1.z.object({ repositoryId: zod_1.z.number().int().positive(), configPath: exports2.PluginConfigPath }).strict();
+    exports2.PluginPublisherRepository = exports2.PluginPublisherInput.pick({ repositoryId: true });
+    exports2.PluginPublisherAutomatic = zod_1.z.object({
+      ok: zod_1.z.boolean(),
+      connected: zod_1.z.number(),
+      workflow: zod_1.z.string()
+    });
     exports2.PluginPublisherConsent = exports2.PluginPublisherInput.extend({ sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/) });
     exports2.PluginPublisherPreview = zod_1.z.object({
       config: exports2.PluginReleaseConfig,

@@ -19,7 +19,7 @@ Define one plugin in `octonode.plugin.ts` using `@octonodes/sdk/plugin`.
 type-checks definitions, and creates `dist/plugins/<id>`. `octonodes plugin test <directory> <node-id> --input
 '{...}'` invokes a built node and reports failures with a nonzero exit code.
 
-The scaffold includes `plugin.octonode.json`. Set `scope: "public"` in that release
+The scaffold includes `octonode.plugin.json`. Set `scope: "public"` in that release
 file for community discovery; use `"user"` for a private plugin, `"team"` with
 `teamId`, or `"organization"` with `orgId`. The release file overrides version,
 scope, and optional contributors from `octonode.plugin.ts` during builds.

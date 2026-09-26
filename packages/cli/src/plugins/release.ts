@@ -13,7 +13,7 @@ import {
 export function readPluginRelease(root: string) {
   const files = PLUGIN_RELEASE_FILES.filter((file) => existsSync(join(root, file)));
   if (!files.length) return undefined;
-  if (files.length !== 1) throw new Error("Keep exactly one plugin.octonode release file");
+  if (files.length !== 1) throw new Error("Keep exactly one octonode.plugin.json release file");
   const path = join(root, files[0]);
   const stat = lstatSync(path);
   if (!stat.isFile() || stat.isSymbolicLink() || stat.size > PLUGIN_CONFIG_MAX_BYTES)
@@ -25,7 +25,9 @@ export function readPluginRelease(root: string) {
     },
   });
   if (document.errors.length || document.warnings.length) throw new Error("Invalid plugin release JSON/YAML");
-  return { path, document, config: PluginReleaseConfig.parse(document.toJS({ maxAliasCount: 0 })) };
+  const data = document.toJS({ maxAliasCount: 0 });
+  if (files[0] === "octonode.plugin.json" && data?.schemaVersion === "1") return undefined;
+  return { path, document, config: PluginReleaseConfig.parse(data) };
 }
 
 /** Explicit release edits preserve YAML comments; builds never rewrite source. */

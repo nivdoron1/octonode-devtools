@@ -7,9 +7,9 @@ export const PluginConfigPath = z
   .max(512)
   .refine(
     (path) =>
-      /^(?:[a-zA-Z0-9_.-]+\/)*plugin\.octonode\.(json|ya?ml)$/.test(path) &&
+      /^(?:[a-zA-Z0-9_.-]+\/)*(?:plugin\.octonode\.(?:json|ya?ml)|octonode\.plugin\.json)$/.test(path) &&
       !path.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)),
-    "Select a repository-relative plugin.octonode.json or .yml file",
+    "Select a repository-relative octonode.plugin.json file (older plugin.octonode release files also work)",
   );
 export const PluginReleaseConfig = z
   .object({
@@ -42,6 +42,12 @@ export const pluginReleaseScope = (config: PluginReleaseConfig) =>
 export const PluginPublisherInput = z
   .object({ repositoryId: z.number().int().positive(), configPath: PluginConfigPath })
   .strict();
+export const PluginPublisherRepository = PluginPublisherInput.pick({ repositoryId: true });
+export const PluginPublisherAutomatic = z.object({
+  ok: z.boolean(),
+  connected: z.number(),
+  workflow: z.string(),
+});
 export const PluginPublisherConsent = PluginPublisherInput.extend({ sha256: z.string().regex(/^[a-f0-9]{64}$/) });
 export const PluginPublisherPreview = z.object({
   config: PluginReleaseConfig,
