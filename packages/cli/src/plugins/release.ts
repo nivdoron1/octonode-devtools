@@ -26,7 +26,7 @@ export function readPluginRelease(root: string) {
   });
   if (document.errors.length || document.warnings.length) throw new Error("Invalid plugin release JSON/YAML");
   const data = document.toJS({ maxAliasCount: 0 });
-  if (files[0] === "octonode.plugin.json" && data?.apiVersion === undefined) return undefined;
+  if (files[0] === "octonode.plugin.json" && data?.schemaVersion === "1") return undefined;
   return { path, document, config: PluginReleaseConfig.parse(data) };
 }
 
