@@ -12716,6 +12716,7 @@ var PLUGIN_BUNDLE_EXCLUDES = [
   "*.pem",
   "*.key"
 ];
+var MAX_CATALOG_MANIFESTS = 512;
 
 // packages/plugin/src/integrity.ts
 function collectFiles(dir, base, files) {
@@ -12874,6 +12875,79 @@ function loadPlugin(dir, source = "user") {
 }
 function isPluginDir(dir) {
   return import_schema2.PLUGIN_DEFINITION_FILENAMES.some((name) => (0, import_node_fs4.existsSync)((0, import_node_path4.join)(dir, name)));
+}
+function pluginDirsIn(root) {
+  if (!(0, import_node_fs4.existsSync)(root)) return [];
+  const out = [];
+  for (const name of (0, import_node_fs4.readdirSync)(root)) {
+    if (name.startsWith(".")) continue;
+    const dir = (0, import_node_path4.join)(root, name);
+    try {
+      if ((0, import_node_fs4.statSync)(dir).isDirectory() && isPluginDir(dir)) out.push(dir);
+    } catch {
+    }
+  }
+  return out;
+}
+function discoverPluginCatalog(opts = {}) {
+  return discover(opts, true);
+}
+var catalogManifests = /* @__PURE__ */ new Map();
+function catalogManifest(dir) {
+  const path = (0, import_plugin_runtime2.pluginDefinitionPath)(dir);
+  const stat = (0, import_node_fs4.statSync)(path);
+  const revision = `${stat.dev}:${stat.ino}:${stat.size}:${stat.mtimeMs}:${stat.ctimeMs}`;
+  const cached = catalogManifests.get(path);
+  if (cached?.revision === revision) return cached.manifest;
+  const manifest2 = loadPluginManifest(dir);
+  if (catalogManifests.size >= MAX_CATALOG_MANIFESTS) catalogManifests.delete(catalogManifests.keys().next().value);
+  catalogManifests.set(path, { revision, manifest: manifest2 });
+  return manifest2;
+}
+function discover(opts, metadataOnly) {
+  const plugins = [];
+  const errors = [];
+  const seen = /* @__PURE__ */ new Set();
+  const scanRoot = (root, source) => {
+    for (const dir of pluginDirsIn(root)) {
+      try {
+        const manifest2 = metadataOnly ? catalogManifest(dir) : loadPluginManifest(dir);
+        if (seen.has(manifest2.id)) continue;
+        seen.add(manifest2.id);
+        plugins.push({ manifest: manifest2, dir, source });
+      } catch (err) {
+        errors.push({ dir, message: err.message });
+      }
+    }
+  };
+  scanRoot(projectPluginRoot(opts.cwd), "project");
+  try {
+    const lock = readLockfile(opts.cwd);
+    for (const [id, entry] of Object.entries(lock.plugins)) {
+      if (seen.has(id)) continue;
+      const dir = storeEntryDir(entry.pluginId ?? id, entry.version, entry.sha256, opts.storeRoot);
+      if (!isPluginDir(dir)) {
+        errors.push({
+          dir,
+          message: `plugin "${id}"@${entry.version} is locked but missing from the store \u2014 run \`octonode install\``
+        });
+        continue;
+      }
+      try {
+        const manifest2 = metadataOnly ? catalogManifest(dir) : loadPluginManifest(dir);
+        if (manifest2.id !== (entry.pluginId ?? id) || manifest2.version !== entry.version || !metadataOnly && hashPluginDir(dir) !== entry.sha256)
+          throw new Error(`Locked plugin ${id} failed identity or integrity validation; run octonode install`);
+        seen.add(id);
+        plugins.push({ manifest: { ...manifest2, id }, dir, source: "store" });
+      } catch (err) {
+        errors.push({ dir, message: err.message });
+      }
+    }
+  } catch (err) {
+    errors.push({ dir: opts.cwd ?? process.cwd(), message: err.message });
+  }
+  scanRoot(opts.userRoot ?? userPluginRoot(), "user");
+  return { plugins, errors };
 }
 
 // packages/plugin/src/dependencies.ts
@@ -13254,7 +13328,7 @@ async function run(project, command, cwd, cacheRoot) {
     maxBuffer: 4 * 1024 * 1024
   });
 }
-async function verifyProjectDependencies(project, names) {
+async function verifyProjectDependencies(project, names, versions = {}) {
   if (!names.length) return;
   const pnp = (0, import_node_path6.join)(project.root, ".pnp.cjs");
   const loader = (0, import_node_path6.join)(project.root, ".pnp.loader.mjs");
@@ -13266,13 +13340,36 @@ async function verifyProjectDependencies(project, names) {
       "--input-type=module",
       "-e",
       `import { createRequire } from 'node:module';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const require = createRequire(${JSON.stringify((0, import_node_path6.join)(project.target, "package.json"))});
+const versions = ${JSON.stringify(versions)};
 for (const name of ${JSON.stringify(names)}) {
-  try { require.resolve(name); } catch {
+  let resolved;
+  try { resolved = require.resolve(name); } catch {
     const entry = import.meta.resolve(name);
+    resolved = entry.startsWith('file:') ? fileURLToPath(entry) : undefined;
     if (entry.startsWith('file:') && !existsSync(fileURLToPath(entry))) throw new Error('missing package entry: ' + name);
+  }
+  const identity = name.startsWith('@') ? name.split('/').slice(0, 2).join('/') : name.split('/')[0];
+  if (Object.hasOwn(versions, identity)) {
+    let directory = resolved ? dirname(resolved) : '';
+    let matched = false;
+    while (directory) {
+      const file = join(directory, 'package.json');
+      if (existsSync(file)) {
+        const pkg = JSON.parse(readFileSync(file, 'utf8'));
+        if (pkg.name === identity) {
+          if (pkg.version !== versions[identity]) throw new Error('installed dependency version mismatch: ' + name);
+          matched = true; break;
+        }
+      }
+      const parent = dirname(directory);
+      if (parent === directory) break;
+      directory = parent;
+    }
+    if (!matched) throw new Error('cannot verify installed package: ' + name);
   }
 }`
     ],
@@ -13323,7 +13420,40 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
       throw new Error("invalid npm dependency subpath");
     }
   }
+  const unique = /* @__PURE__ */ new Map();
+  for (const dependency of dependencies) {
+    const spec = dependency.spec.startsWith(`${dependency.name}@`) ? dependency.spec.slice(dependency.name.length + 1) : dependency.spec;
+    const previous = unique.get(dependency.name);
+    if (previous && previous.spec !== spec) throw new Error(`Conflicting dependency requests for ${dependency.name}`);
+    unique.set(dependency.name, {
+      ...dependency,
+      spec,
+      ...previous?.subpaths || dependency.subpaths ? { subpaths: [.../* @__PURE__ */ new Set([...previous?.subpaths ?? [], ...dependency.subpaths ?? []])] } : {}
+    });
+  }
+  dependencies = [...unique.values()];
   const project = resolveDependencyProject(cwd);
+  const declared = manifest(project.target);
+  const existing = { ...declared.devDependencies, ...declared.optionalDependencies, ...declared.dependencies };
+  if (options.preserveExisting) {
+    for (const { name, spec } of dependencies)
+      if (Object.hasOwn(existing, name) && existing[name] !== spec && !(existing[name].startsWith("file:") && spec.startsWith("file:") && (0, import_node_path6.resolve)(project.target, existing[name].slice(5)) === (0, import_node_path6.resolve)(project.target, spec.slice(5))))
+        throw new Error(
+          `Dependency conflict: ${name} is ${existing[name]}, plugin requires ${spec}; reconcile it explicitly first`
+        );
+  }
+  const reusable = dependencies.length > 0 && !options.remove?.length && dependencies.every(
+    ({ name, spec }) => existing[name] === spec && /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(spec)
+  );
+  const reuse = reusable && await verifyProjectDependencies(
+    project,
+    dependencies.flatMap(({ name, subpaths }) => subpaths ? subpaths.map((path) => name + path.slice(1)) : [name]),
+    Object.fromEntries(dependencies.map(({ name, spec }) => [name, spec]))
+  ).then(
+    () => true,
+    () => false
+  );
+  const metadataOnly = options.metadataOnly || reuse;
   const packageJson = (0, import_node_path6.join)(project.target, "package.json");
   if (!dependencies.length && !(0, import_node_fs6.existsSync)(packageJson) && !options.commit) return;
   const hasLock = PACKAGE_MANAGER_LOCKS[project.manager].some((file) => (0, import_node_fs6.existsSync)((0, import_node_path6.join)(project.root, file)));
@@ -13359,13 +13489,12 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
       else (0, import_node_fs6.writeFileSync)(path, content);
     }
   };
-  if (hadInstall && !hasLock && !options.metadataOnly)
+  if (hadInstall && !hasLock && !metadataOnly)
     throw new Error(
       "create a native lockfile before updating existing dependencies so failed installations can be recovered"
     );
   try {
-    if (options.metadataOnly && (0, import_node_fs6.existsSync)((0, import_node_path6.dirname)(journal)))
-      (0, import_node_fs6.writeFileSync)((0, import_node_path6.join)((0, import_node_path6.dirname)(journal), "metadata-only"), "1");
+    if (metadataOnly && (0, import_node_fs6.existsSync)((0, import_node_path6.dirname)(journal))) (0, import_node_fs6.writeFileSync)((0, import_node_path6.join)((0, import_node_path6.dirname)(journal), "metadata-only"), "1");
     if ((0, import_node_fs6.existsSync)((0, import_node_path6.dirname)(journal)))
       (0, import_node_fs6.writeFileSync)(
         journal,
@@ -13376,7 +13505,7 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
           }))
         )
       );
-    if (options.metadataOnly) {
+    if (metadataOnly) {
       metadataTouched = true;
       options.commit?.();
       (0, import_node_fs6.rmSync)(journal, { force: true });
@@ -13468,14 +13597,14 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
     }
     restoreBefore();
     let recovery = "";
-    if (!options.metadataOnly && hadInstall && hasLock) {
+    if (!metadataOnly && hadInstall && hasLock) {
       try {
         await run(project, installCommand(project, true), project.root, options.cacheRoot);
       } catch {
         recovery = "; manifests restored, but dependency recovery failed \u2014 run a frozen install before executing workflows";
       }
       restoreBefore();
-    } else if (!options.metadataOnly && !hadInstall) {
+    } else if (!metadataOnly && !hadInstall) {
       (0, import_node_fs6.rmSync)((0, import_node_path6.join)(project.root, "node_modules"), { recursive: true, force: true });
     }
     for (const [path, content] of pnpBefore) {
@@ -13780,6 +13909,19 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
 function pluginNpmDependencies(manifest2) {
   return manifest2.integration?.npmDependencies ?? (manifest2.integration?.npm ? [manifest2.integration.npm] : []);
 }
+function assertUniqueNpmPlugins(plugins) {
+  const owners = /* @__PURE__ */ new Map();
+  for (const { alias, manifest: manifest2 } of plugins) {
+    const pkg = manifest2.integration?.npm?.package.trim().toLowerCase();
+    if (!pkg) continue;
+    const previous = owners.get(pkg);
+    if (previous && previous !== alias)
+      throw new Error(
+        `Use existing npm integration "${previous}" for ${pkg}; duplicate plugin alias "${alias}" is not allowed`
+      );
+    owners.set(pkg, alias);
+  }
+}
 
 // packages/plugin/src/prepared/invocation.ts
 var import_common3 = __toESM(require_dist2());
@@ -13828,6 +13970,10 @@ async function reconcilePluginLock(cwd, next, options = {}) {
       throw new Error(`Plugin identity or integrity mismatch: ${alias}`);
     return { alias, directory, sha256: pin.sha256, manifest: manifest2, remote: preparedPluginPin(directory, pin) };
   });
+  assertUniqueNpmPlugins([
+    ...discoverPluginCatalog({ cwd, storeRoot: options.storeRoot }).plugins.filter((item) => item.source === "project" && !loaded.some((pin) => pin.alias === item.manifest.id)).map((item) => ({ alias: item.manifest.id, manifest: item.manifest })),
+    ...loaded
+  ]);
   const libraries = loaded.filter((item) => item.manifest.library);
   const generated = libraries.length ? await generatePluginPackage(project.target, libraries) : void 0;
   const packageFile = (0, import_node_path10.join)(project.target, "package.json");
@@ -13924,6 +14070,9 @@ function installRoot(opts) {
   return opts.project ? { root: projectPluginRoot(opts.cwd), source: "project" } : { root: userPluginRoot(), source: "user" };
 }
 async function installNodeDeps(dir, opts = {}) {
+  return installNodeDepsUnlocked(dir, opts, false);
+}
+async function installNodeDepsUnlocked(dir, opts, locked) {
   if (opts.noDeps) return {};
   const dependencies = pluginNpmDependencies(loadPluginManifest(dir));
   if (dependencies.length) {
@@ -13936,11 +14085,12 @@ async function installNodeDeps(dir, opts = {}) {
           });
         return {};
       }
-      await installProjectDependencies(
+      await (locked ? reconcileDependencies : installProjectDependencies)(
         opts.cwd ?? process.cwd(),
         dependencies.map((npm) => ({ name: npm.package, spec: npm.spec })),
         {
-          cacheRoot: opts.cacheRoot
+          cacheRoot: opts.cacheRoot,
+          preserveExisting: true
         }
       );
       return { depsInstalled: true };
@@ -13976,6 +14126,10 @@ async function installNodeDeps(dir, opts = {}) {
   }
 }
 async function installPlugin(src, opts = {}) {
+  if (opts.project) return withDependencyInstall(opts.cwd ?? process.cwd(), () => installPluginUnlocked(src, opts));
+  return installPluginUnlocked(src, opts);
+}
+async function installPluginUnlocked(src, opts) {
   if (!(0, import_node_fs11.existsSync)(src) || !(0, import_node_fs11.statSync)(src).isDirectory()) {
     throw new Error(`source "${src}" is not a directory`);
   }
@@ -13984,13 +14138,20 @@ async function installPlugin(src, opts = {}) {
   }
   const { manifest: manifest2 } = loadPlugin(src);
   const { root, source } = installRoot(opts);
+  const installed = discoverPluginCatalog({ cwd: opts.cwd }).plugins.filter(
+    (item) => (opts.project ? item.source !== "user" : item.source === "user") && item.manifest.id !== manifest2.id
+  );
+  assertUniqueNpmPlugins([
+    ...installed.map((item) => ({ alias: item.manifest.id, manifest: item.manifest })),
+    { alias: manifest2.id, manifest: manifest2 }
+  ]);
   const dest = (0, import_node_path11.join)(root, manifest2.id);
   if ((0, import_node_fs11.existsSync)(dest)) {
     if (!opts.force) {
       throw new Error(`plugin "${manifest2.id}" is already installed at ${dest} (use --force to overwrite)`);
     }
   }
-  const deps = pluginNpmDependencies(manifest2).length ? await installNodeDeps(src, { ...opts, cacheOnly: opts.cacheOnly ?? !opts.project }) : {};
+  const deps = pluginNpmDependencies(manifest2).length ? await installNodeDepsUnlocked(src, { ...opts, cacheOnly: opts.cacheOnly ?? !opts.project }, !!opts.project) : {};
   if (deps.depsError) return { manifest: manifest2, dir: dest, source, ...deps };
   if ((0, import_node_fs11.existsSync)(dest)) (0, import_node_fs11.rmSync)(dest, { recursive: true, force: true });
   (0, import_node_fs11.mkdirSync)(root, { recursive: true });
@@ -14000,7 +14161,7 @@ async function installPlugin(src, opts = {}) {
     dir: dest,
     source,
     ...deps,
-    ...pluginNpmDependencies(manifest2).length ? {} : await installNodeDeps(dest, opts)
+    ...pluginNpmDependencies(manifest2).length ? {} : await installNodeDepsUnlocked(dest, opts, !!opts.project)
   };
 }
 
@@ -14346,7 +14507,20 @@ var RemoteRegistry = class {
     }
     try {
       await withDependencyInstall(opts.cwd ?? process.cwd(), async () => {
-        const previous = readLockfile(opts.cwd).plugins[alias];
+        const pins = readLockfile(opts.cwd).plugins;
+        assertUniqueNpmPlugins([
+          ...discoverPluginCatalog({ cwd: opts.cwd, storeRoot: opts.storeRoot }).plugins.filter(
+            (item) => item.source === "project" && item.manifest.id !== alias && !pins[item.manifest.id]
+          ).map((item) => ({ alias: item.manifest.id, manifest: item.manifest })),
+          ...Object.entries(pins).filter(([key]) => key !== alias).map(([key, locked]) => ({
+            alias: key,
+            manifest: loadPluginManifest(
+              storeEntryDir(locked.pluginId ?? key, locked.version, locked.sha256, opts.storeRoot)
+            )
+          })),
+          { alias, manifest: entry.manifest }
+        ]);
+        const previous = pins[alias];
         if (previous && ((previous.pluginId ?? alias) !== entry.id || previous.registry !== this.baseUrl || previous.publisher !== pin.publisher))
           throw new Error("Plugin alias belongs to another publisher or registry");
         upsertLockEntry(opts.cwd ?? process.cwd(), alias, pin);
