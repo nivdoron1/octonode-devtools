@@ -7,9 +7,9 @@ export const PluginConfigPath = z
   .max(512)
   .refine(
     (path) =>
-      /^(?:[a-zA-Z0-9_.-]+\/)*plugin\.octonode\.(json|ya?ml)$/.test(path) &&
+      /^(?:[a-zA-Z0-9_.-]+\/)*(?:plugin\.octonode\.(?:json|ya?ml)|octonode\.plugin\.json)$/.test(path) &&
       !path.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)),
-    "Select a repository-relative plugin.octonode.json or .yml file",
+    "Select a repository-relative plugin.octonode.json, .yml, or octonode.plugin.json file",
   );
 export const PluginReleaseConfig = z
   .object({

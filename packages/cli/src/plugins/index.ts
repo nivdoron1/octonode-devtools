@@ -1,4 +1,4 @@
-import { deployPlugin } from "./deploy";
+import { deployAllPlugins, deployPlugin } from "./deploy";
 import { updatePluginRelease } from "./release";
 import { PLUGIN_PUBLISH_AUDIENCE } from "@octonodes/sdk/plugins";
 import { execFileSync } from "node:child_process";
@@ -69,6 +69,11 @@ export async function pluginCommand(args: string[], version: string): Promise<vo
         2,
       ) + "\n",
     );
+    return;
+  }
+  if (command === "deploy-all") {
+    if (!values.github || positionals.length) throw new Error("Use plugin deploy-all --github in GitHub Actions");
+    process.stdout.write(JSON.stringify(await deployAllPlugins(values.registry ?? PLUGIN_PUBLISH_AUDIENCE), null, 2) + "\n");
     return;
   }
   if (command === "version") {
