@@ -11541,7 +11541,7 @@ var require_plugin_publishing = __commonJS({
   "packages/schema/dist/plugin-publishing.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherAutomatic = exports2.PluginPublisherRepository = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
+    exports2.PluginCloudBuild = exports2.PluginPublisherBuildDetail = exports2.PluginPublisherBuilds = exports2.PluginPublisherBuildQuery = exports2.PluginPublisherApplied = exports2.PluginPublisherApply = exports2.PluginPublisherReview = exports2.PluginPublisherReviewItem = exports2.PluginPublisherOperation = exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherAutomatic = exports2.PluginPublisherRepository = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
     var zod_1 = require("zod");
     var plugin_version_1 = require_plugin_version();
     exports2.PluginConfigPath = zod_1.z.string().max(512).refine((path) => /^(?:[a-zA-Z0-9_.-]+\/)*(?:plugin\.octonode\.(?:json|ya?ml)|octonode\.plugin\.json)$/.test(path) && !path.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)), "Select a repository-relative octonode.plugin.json file (older plugin.octonode release files also work)");
@@ -11585,6 +11585,88 @@ var require_plugin_publishing = __commonJS({
       lastPublishedAt: zod_1.z.number().nullable()
     });
     exports2.PluginPublisherConnections = zod_1.z.object({ items: zod_1.z.array(exports2.PluginPublisherConnection) });
+    exports2.PluginPublisherOperation = zod_1.z.enum(["create", "update", "delete"]);
+    exports2.PluginPublisherReviewItem = zod_1.z.object({
+      configPath: exports2.PluginConfigPath,
+      config: exports2.PluginReleaseConfig,
+      sha256: zod_1.z.string(),
+      connectionId: zod_1.z.string().nullable(),
+      missing: zod_1.z.boolean()
+    });
+    exports2.PluginPublisherReview = zod_1.z.object({
+      repositoryId: zod_1.z.number(),
+      repository: zod_1.z.string(),
+      branch: zod_1.z.string(),
+      headSha: zod_1.z.string(),
+      revision: zod_1.z.string(),
+      items: zod_1.z.array(exports2.PluginPublisherReviewItem)
+    });
+    exports2.PluginPublisherApply = zod_1.z.object({
+      repositoryId: zod_1.z.number().int().positive(),
+      revision: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      operations: zod_1.z.array(zod_1.z.object({ configPath: exports2.PluginConfigPath, operation: exports2.PluginPublisherOperation }).strict()).min(1).max(100)
+    }).strict();
+    exports2.PluginPublisherApplied = zod_1.z.object({
+      ok: zod_1.z.boolean(),
+      sha: zod_1.z.string(),
+      repositoryId: zod_1.z.number(),
+      buildId: zod_1.z.number()
+    });
+    exports2.PluginPublisherBuildQuery = zod_1.z.object({
+      repositoryId: zod_1.z.coerce.number().int().positive().optional(),
+      page: zod_1.z.coerce.number().int().min(1).max(1e3).default(1),
+      search: zod_1.z.string().max(200).default(""),
+      status: zod_1.z.enum(["", "queued", "in_progress", "success", "failure"]).default(""),
+      sort: zod_1.z.enum(["newest", "oldest", "name"]).default("newest")
+    });
+    exports2.PluginPublisherBuilds = zod_1.z.object({
+      total: zod_1.z.number(),
+      page: zod_1.z.number(),
+      hasMore: zod_1.z.boolean(),
+      items: zod_1.z.array(zod_1.z.object({
+        id: zod_1.z.number(),
+        repositoryId: zod_1.z.number(),
+        number: zod_1.z.number(),
+        attempt: zod_1.z.number(),
+        title: zod_1.z.string(),
+        sha: zod_1.z.string(),
+        branch: zod_1.z.string(),
+        status: zod_1.z.string(),
+        conclusion: zod_1.z.string().nullable(),
+        url: zod_1.z.string(),
+        createdAt: zod_1.z.string(),
+        updatedAt: zod_1.z.string()
+      }))
+    });
+    exports2.PluginPublisherBuildDetail = zod_1.z.object({
+      repository: zod_1.z.string(),
+      sha: zod_1.z.string(),
+      branch: zod_1.z.string(),
+      status: zod_1.z.string(),
+      createdAt: zod_1.z.string(),
+      items: zod_1.z.array(zod_1.z.object({
+        configPath: exports2.PluginConfigPath,
+        name: zod_1.z.string(),
+        version: zod_1.z.string(),
+        scope: zod_1.z.enum(["user", "team", "organization", "public"]),
+        operation: exports2.PluginPublisherOperation,
+        status: zod_1.z.string(),
+        url: zod_1.z.string().nullable(),
+        error: zod_1.z.string().nullable()
+      })),
+      log: zod_1.z.string()
+    });
+    exports2.PluginCloudBuild = zod_1.z.object({
+      id: zod_1.z.number().int().positive(),
+      sha: zod_1.z.string().regex(/^[a-f0-9]{40}$/),
+      active: zod_1.z.boolean(),
+      items: zod_1.z.array(zod_1.z.object({
+        configPath: exports2.PluginConfigPath,
+        config: exports2.PluginReleaseConfig,
+        operation: exports2.PluginPublisherOperation,
+        status: zod_1.z.string()
+      })).max(100)
+    });
   }
 });
 
