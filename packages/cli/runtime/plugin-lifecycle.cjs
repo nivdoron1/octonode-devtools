@@ -11541,7 +11541,7 @@ var require_plugin_publishing = __commonJS({
   "packages/schema/dist/plugin-publishing.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PluginCloudBuild = exports2.PluginPublisherBuildDetail = exports2.PluginPublisherBuilds = exports2.PluginPublisherBuildQuery = exports2.PluginPublisherApplied = exports2.PluginPublisherApply = exports2.PluginPublisherReview = exports2.PluginPublisherReviewItem = exports2.PluginPublisherOperation = exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherAutomatic = exports2.PluginPublisherRepository = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
+    exports2.PluginCloudBuild = exports2.PluginPublisherBuildDetail = exports2.PluginPublisherBuilds = exports2.PluginPublisherBuildQuery = exports2.PluginPublisherListQuery = exports2.PluginPublisherApplied = exports2.PluginPublisherApply = exports2.PluginPublisherReview = exports2.PluginPublisherReviewItem = exports2.PluginPublisherOperation = exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherAutomatic = exports2.PluginPublisherRepository = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
     var zod_1 = require("zod");
     var plugin_version_1 = require_plugin_version();
     exports2.PluginConfigPath = zod_1.z.string().max(512).refine((path) => /^(?:[a-zA-Z0-9_.-]+\/)*(?:plugin\.octonode\.(?:json|ya?ml)|octonode\.plugin\.json)$/.test(path) && !path.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)), "Select a repository-relative octonode.plugin.json file (older plugin.octonode release files also work)");
@@ -11612,17 +11612,32 @@ var require_plugin_publishing = __commonJS({
       repositoryId: zod_1.z.number(),
       buildId: zod_1.z.number()
     });
+    exports2.PluginPublisherListQuery = zod_1.z.object({
+      q: zod_1.z.string().trim().max(200).default(""),
+      offset: zod_1.z.coerce.number().int().min(0).max(1e6).default(0),
+      limit: zod_1.z.coerce.number().int().min(1).max(100).default(25),
+      days: zod_1.z.enum(["7", "30", "90"]).default("30"),
+      scope: zod_1.z.enum(["", "user", "group", "org", "public"]).default(""),
+      source: zod_1.z.enum(["", "sdk", "npm"]).default(""),
+      sort: zod_1.z.enum(["updated", "name", "version", "scope", "source", "installs", "score", "versions"]).default("updated"),
+      direction: zod_1.z.enum(["asc", "desc"]).default("desc")
+    });
     exports2.PluginPublisherBuildQuery = zod_1.z.object({
       repositoryId: zod_1.z.coerce.number().int().positive().optional(),
-      page: zod_1.z.coerce.number().int().min(1).max(1e3).default(1),
+      page: zod_1.z.coerce.number().int().min(1).max(1e6).default(1),
       search: zod_1.z.string().max(200).default(""),
       status: zod_1.z.enum(["", "queued", "in_progress", "success", "failure"]).default(""),
-      sort: zod_1.z.enum(["newest", "oldest", "name"]).default("newest")
+      sort: zod_1.z.enum(["newest", "oldest", "name", "status", "branch", "sha"]).default("newest"),
+      direction: zod_1.z.enum(["asc", "desc"]).default("asc"),
+      limit: zod_1.z.coerce.number().int().min(1).max(100).default(30),
+      branch: zod_1.z.string().trim().max(200).default(""),
+      sha: zod_1.z.string().trim().max(200).default("")
     });
     exports2.PluginPublisherBuilds = zod_1.z.object({
       total: zod_1.z.number(),
       page: zod_1.z.number(),
       hasMore: zod_1.z.boolean(),
+      limit: zod_1.z.number(),
       items: zod_1.z.array(zod_1.z.object({
         id: zod_1.z.number(),
         repositoryId: zod_1.z.number(),
@@ -11666,6 +11681,43 @@ var require_plugin_publishing = __commonJS({
         operation: exports2.PluginPublisherOperation,
         status: zod_1.z.string()
       })).max(100)
+    });
+  }
+});
+
+// packages/schema/dist/plugin-allowlist.js
+var require_plugin_allowlist = __commonJS({
+  "packages/schema/dist/plugin-allowlist.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PluginAllowlistPage = exports2.PluginAllowlistInput = exports2.PluginAllowlistQuery = exports2.PluginAllowlistKind = void 0;
+    var zod_1 = require("zod");
+    exports2.PluginAllowlistKind = zod_1.z.enum(["org", "team", "user"]);
+    exports2.PluginAllowlistQuery = zod_1.z.object({
+      kind: exports2.PluginAllowlistKind,
+      q: zod_1.z.string().trim().max(200).default(""),
+      status: zod_1.z.enum(["allowed", "available", "all"]).default("allowed"),
+      sort: zod_1.z.enum(["name", "id"]).default("name"),
+      direction: zod_1.z.enum(["asc", "desc"]).default("asc"),
+      offset: zod_1.z.coerce.number().int().min(0).max(1e6).default(0),
+      limit: zod_1.z.coerce.number().int().min(1).max(100).default(25)
+    });
+    exports2.PluginAllowlistInput = zod_1.z.object({
+      kind: exports2.PluginAllowlistKind,
+      id: zod_1.z.string().min(1).max(200)
+    }).strict();
+    exports2.PluginAllowlistPage = zod_1.z.object({
+      items: zod_1.z.array(zod_1.z.object({
+        id: zod_1.z.string(),
+        name: zod_1.z.string(),
+        allowed: zod_1.z.boolean(),
+        inherited: zod_1.z.boolean(),
+        eligible: zod_1.z.boolean()
+      })),
+      total: zod_1.z.number(),
+      offset: zod_1.z.number(),
+      limit: zod_1.z.number(),
+      canAdd: zod_1.z.boolean()
     });
   }
 });
@@ -11735,6 +11787,7 @@ var require_dist = __commonJS({
     __exportStar(require_execution(), exports2);
     __exportStar(require_execution_constants(), exports2);
     __exportStar(require_plugin_publishing(), exports2);
+    __exportStar(require_plugin_allowlist(), exports2);
   }
 });
 
@@ -12201,8 +12254,8 @@ var require_constants2 = __commonJS({
     exports2.OCTONODE_STORE_DIR = OCTONODE_STORE_DIR;
     var OCTONODE_STUDIO_URL = () => exports2.PROCESS_ENV.OCTONODE_STUDIO_URL ?? exports2.PROCESS_ENV.VITE_OCTONODE_STUDIO_URL ?? exports2.PROCESS_ENV.VITE_PUBLIC_OCTONODE_STUDIO_URL;
     exports2.OCTONODE_STUDIO_URL = OCTONODE_STUDIO_URL;
-    var OCTONODE_USER = () => exports2.PROCESS_ENV.OCTONODE_USER;
-    exports2.OCTONODE_USER = OCTONODE_USER;
+    var OCTONODE_USER2 = () => exports2.PROCESS_ENV.OCTONODE_USER;
+    exports2.OCTONODE_USER = OCTONODE_USER2;
     var OCTONODE_USER_EMAIL = () => exports2.PROCESS_ENV.OCTONODE_USER_EMAIL;
     exports2.OCTONODE_USER_EMAIL = OCTONODE_USER_EMAIL;
     var OCTONODE_VISUAL_PORT = () => exports2.PROCESS_ENV.OCTONODE_VISUAL_PORT;
@@ -14234,11 +14287,15 @@ var RemoteRegistry = class {
     }
     this.baseUrl = baseUrl.replace(/\/$/, "");
     this.token = opts.token ?? (0, import_common5.OCTONODE_MARKETPLACE_TOKEN)();
+    this.workspace = opts.workspace ?? (0, import_common5.OCTONODE_USER)()?.match(/^workspace:((?:user|org|team):.+)$/)?.[1];
   }
   async request(path, init = {}) {
     const headers = new Headers(init.headers);
     if (this.token) headers.set("authorization", `Bearer ${this.token}`);
-    const res = await fetch(`${this.baseUrl}${path}`, {
+    const url = new URL(`${this.baseUrl}${path}`);
+    if (this.workspace && (init.method === void 0 || init.method === "GET" || url.pathname.endsWith("/install")))
+      url.searchParams.set("workspace", this.workspace);
+    const res = await fetch(url.toString(), {
       ...init,
       headers,
       redirect: "error",
@@ -14378,13 +14435,15 @@ var RemoteRegistry = class {
    */
   async install(id, opts = {}) {
     const detail = await this.detail(id, opts.scope);
+    if (detail.manifestId && detail.manifestId !== id)
+      throw new Error("Publisher-qualified plugins require installToStore so their registry identity is preserved");
     const version = opts.version ?? detail.version;
     const release2 = detail.versions?.find((entry) => entry.version === version);
     const dir = await this.downloadBundle(
       id,
       version,
       opts.scope,
-      id,
+      detail.manifestId ?? id,
       release2?.archiveSha256 ?? release2?.sha256
     );
     const plugin = await installPlugin(dir, opts);
@@ -14417,7 +14476,7 @@ var RemoteRegistry = class {
       throw new Error("Marketplace release is missing its immutable checksum");
     const availableScopes = versionMeta?.scope ?? detail.scope;
     const scope = opts.scope && availableScopes.includes(opts.scope) ? opts.scope : availableScopes[0];
-    const dir = await this.downloadBundle(id, version, scope, id, releaseChecksum);
+    const dir = await this.downloadBundle(id, version, scope, detail.manifestId ?? id, releaseChecksum);
     const entry = (() => {
       try {
         return addToStore(dir, { storeRoot: opts.storeRoot });
@@ -14432,7 +14491,7 @@ var RemoteRegistry = class {
         "Library installation requires native dependency activation; use frozen --artifacts-only for CI restore"
       );
     if (!opts.cacheOnly && !opts.noDeps) {
-      const alias2 = opts.alias ?? entry.id;
+      const alias2 = opts.alias ?? (detail.manifestId && id !== detail.manifestId ? id : entry.id);
       const pin2 = {
         pluginId: entry.id,
         remoteId: id,
@@ -14484,7 +14543,7 @@ var RemoteRegistry = class {
       cacheOnly: opts.cacheOnly
     }) : {};
     if (deps.depsError) throw new Error(deps.depsError);
-    const alias = opts.alias ?? entry.id;
+    const alias = opts.alias ?? (detail.manifestId && id !== detail.manifestId ? id : entry.id);
     const pin = {
       pluginId: entry.id,
       remoteId: id,
