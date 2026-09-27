@@ -1,7 +1,7 @@
 // Generated from packages/schema/src/plugin/execution.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
 import { InvokeRequest } from "../ipc-envelope";
-import { PluginManifest } from "../plugin";
+import { PluginManifest } from "./plugin";
 import { PLUGIN_EXECUTION_TIMEOUT_MS, PREPARED_RUNTIME_ARCHIVE } from "./execution.constants";
 
 export const PreparedPluginRuntime = z

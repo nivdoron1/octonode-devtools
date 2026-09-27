@@ -721,9 +721,9 @@ var require_croner = __commonJS({
   }
 });
 
-// packages/schema/dist/workflow-triggers.js
-var require_workflow_triggers = __commonJS({
-  "packages/schema/dist/workflow-triggers.js"(exports2) {
+// packages/schema/dist/workflow/triggers.js
+var require_triggers = __commonJS({
+  "packages/schema/dist/workflow/triggers.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WorkflowTriggerUpdate = exports2.WorkflowTriggerState = exports2.WorkflowTriggers = exports2.WorkflowTrigger = void 0;
@@ -805,9 +805,9 @@ var require_workflow_triggers = __commonJS({
   }
 });
 
-// packages/schema/dist/workflow-entry.js
-var require_workflow_entry = __commonJS({
-  "packages/schema/dist/workflow-entry.js"(exports2) {
+// packages/schema/dist/workflow/entry.js
+var require_entry = __commonJS({
+  "packages/schema/dist/workflow/entry.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WorkflowEntryNodes = exports2.WorkflowNodeRole = void 0;
@@ -1221,9 +1221,9 @@ var require_source_index = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin.js
+// packages/schema/dist/plugin/plugin.js
 var require_plugin = __commonJS({
-  "packages/schema/dist/plugin.js"(exports2) {
+  "packages/schema/dist/plugin/plugin.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginManifest = exports2.PluginConnection = exports2.PluginIntegration = exports2.PluginPermission = exports2.PluginNode = exports2.PluginNpmDependency = exports2.PluginImplementationSource = exports2.NpmClientBinding = exports2.PluginNodeUi = exports2.PLUGIN_UI_BUNDLE_MAX_BYTES = exports2.PluginUiTarget = exports2.PluginScope = void 0;
@@ -1408,11 +1408,11 @@ var require_octonode_config = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.OctonodeConfig = exports2.WorkflowExecutionPlan = exports2.Workflow = exports2.WorkflowSource = exports2.WorkflowInputBinding = exports2.WorkflowTestWorkflow = exports2.WorkflowEvaluation = exports2.WorkflowPromise = exports2.WorkflowPromiseMode = exports2.WorkflowEdge = exports2.ProjectAttachments = exports2.ProjectDefaults = exports2.Environment = exports2.NodeConfig = exports2.NodePresentation = exports2.NodeRuntime = exports2.NodeSignature = exports2.NodeKind = exports2.CONFIG_API_VERSION = void 0;
     exports2.resolveEnvVars = resolveEnvVars;
-    var workflow_triggers_js_1 = require_workflow_triggers();
+    var triggers_js_1 = require_triggers();
     var zod_1 = require("zod");
     var ipc_envelope_1 = require_ipc_envelope();
     var icons_1 = require_icons();
-    var workflow_entry_1 = require_workflow_entry();
+    var entry_1 = require_entry();
     var source_index_1 = require_source_index();
     var plugin_1 = require_plugin();
     exports2.CONFIG_API_VERSION = "octonode.dev/v1";
@@ -1494,7 +1494,7 @@ var require_octonode_config = __commonJS({
       /** Catalog ancestry, independent of editable presentation. */
       native: zod_1.z.string().optional(),
       /** Stable execution boundary; legacy entries fall back to their icon. */
-      role: workflow_entry_1.WorkflowNodeRole.optional(),
+      role: entry_1.WorkflowNodeRole.optional(),
       /** Stable identity key; edges reference this, never the source path. */
       id: zod_1.z.string(),
       /**
@@ -1606,7 +1606,7 @@ var require_octonode_config = __commonJS({
       /** CONFIG-OWNED catalog archive state. */
       archived: zod_1.z.boolean().optional(),
       /** CONFIG-OWNED subscriptions, never executable DAG nodes. */
-      triggers: workflow_triggers_js_1.WorkflowTriggers.optional(),
+      triggers: triggers_js_1.WorkflowTriggers.optional(),
       id: zod_1.z.string(),
       /** CODE-OWNED origin for a workflow projected from a normal source file. */
       source: exports2.WorkflowSource.optional(),
@@ -1690,7 +1690,7 @@ var require_octonode_config = __commonJS({
           ...workflow.entry ? [workflow.entry] : [],
           ...workflow.edges.flatMap((edge) => [edge.from.node, edge.to.node])
         ]);
-        const result = workflow_entry_1.WorkflowEntryNodes.safeParse(config.nodes.filter((node) => members.has(node.id)).map((node) => ({ id: node.id, icon: node.presentation?.icon, role: node.role })));
+        const result = entry_1.WorkflowEntryNodes.safeParse(config.nodes.filter((node) => members.has(node.id)).map((node) => ({ id: node.id, icon: node.presentation?.icon, role: node.role })));
         if (!result.success)
           ctx.addIssue({ code: "custom", path: ["workflows", index, "nodes"], message: result.error.issues[0].message });
       });
@@ -1970,9 +1970,9 @@ var require_data_table_schema = __commonJS({
   }
 });
 
-// packages/schema/dist/workflow-layout.js
-var require_workflow_layout = __commonJS({
-  "packages/schema/dist/workflow-layout.js"(exports2) {
+// packages/schema/dist/workflow/layout.js
+var require_layout = __commonJS({
+  "packages/schema/dist/workflow/layout.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WorkflowLayout = exports2.GroupLayout = exports2.StickyNoteLayout = void 0;
@@ -3098,9 +3098,9 @@ var require_task_management = __commonJS({
   }
 });
 
-// packages/schema/dist/design-collaboration.js
-var require_design_collaboration = __commonJS({
-  "packages/schema/dist/design-collaboration.js"(exports2) {
+// packages/schema/dist/design/collaboration.js
+var require_collaboration2 = __commonJS({
+  "packages/schema/dist/design/collaboration.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.designReviewThreadCreateSchema = exports2.designReviewThreadPageSchema = exports2.designReviewThreadSchema = exports2.designAnchorProjectionSchema = exports2.commentTargetSchema = exports2.pullRequestCommentTargetSchema = exports2.designCommentTargetSchema = exports2.designSourceReferenceSchema = exports2.designArtifactRevisionCreateSchema = exports2.designArtifactCreateSchema = exports2.designArtifactPageSchema = exports2.designArtifactSummarySchema = exports2.designArtifactSchema = exports2.designArtifactRevisionSchema = exports2.designPreviewDescriptorSchema = exports2.projectRevisionSchema = void 0;
@@ -3222,9 +3222,9 @@ var require_design_collaboration = __commonJS({
   }
 });
 
-// packages/schema/dist/design-documents.js
-var require_design_documents = __commonJS({
-  "packages/schema/dist/design-documents.js"(exports2) {
+// packages/schema/dist/design/documents.js
+var require_documents = __commonJS({
+  "packages/schema/dist/design/documents.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.designDocumentShareSchema = exports2.designDocumentUpdateSchema = exports2.designDocumentCreateSchema = exports2.designDocumentDetailSchema = exports2.designDocumentSchema = exports2.designDocumentRevisionSchema = exports2.designDocumentScopeSchema = exports2.designDocumentAccessSchema = exports2.designDocumentFormatSchema = void 0;
@@ -3905,9 +3905,9 @@ var require_repository_registry = __commonJS({
   }
 });
 
-// packages/schema/dist/community-publications.js
-var require_community_publications = __commonJS({
-  "packages/schema/dist/community-publications.js"(exports2) {
+// packages/schema/dist/community/publications.js
+var require_publications = __commonJS({
+  "packages/schema/dist/community/publications.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.publicationTransitions = exports2.publicationTopicsSchema = exports2.publicationTopicSchema = exports2.publicationModerationPageSchema = exports2.publicationModerationItemSchema = exports2.communityKnowledgeSearchResponseSchema = exports2.communityKnowledgeMatchSchema = exports2.communityKnowledgeSearchRequestSchema = exports2.publicationRatingSchema = exports2.publicationReportSchema = exports2.publicationModerateSchema = exports2.publicationArchiveSchema = exports2.publicationSubmitSchema = exports2.publicationRevisionCreateSchema = exports2.publicationUpdateSchema = exports2.publicationCreateSchema = exports2.publicationCommentCreateSchema = exports2.publicationCommentListQuerySchema = exports2.publicationCommentPageSchema = exports2.publicationCommentSchema = exports2.publicationPageSchema = exports2.publicationMineListQuerySchema = exports2.publicationListQuerySchema = exports2.publicationDetailSchema = exports2.publicationSummarySchema = exports2.publicationRevisionSchema = exports2.publicationLinkSchema = exports2.cslCitationSchema = exports2.publicationAuthorSchema = exports2.creatorProfileSchema = exports2.creatorHandleSchema = exports2.publicationSlugSchema = exports2.publicationModerationDecisionSchema = exports2.publicationOrderSchema = exports2.publicationSortSchema = exports2.publicationStatusSchema = exports2.publicationKindSchema = void 0;
@@ -4136,9 +4136,9 @@ var require_community_publications = __commonJS({
   }
 });
 
-// packages/schema/dist/community-media.js
-var require_community_media = __commonJS({
-  "packages/schema/dist/community-media.js"(exports2) {
+// packages/schema/dist/community/media.js
+var require_media = __commonJS({
+  "packages/schema/dist/community/media.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.communityMediaBlockSchema = exports2.communityMediaItemSchema = exports2.communityMediaUploadSchema = void 0;
@@ -4189,17 +4189,17 @@ ${JSON.stringify(exports2.communityMediaBlockSchema.parse(block))}
   }
 });
 
-// packages/schema/dist/community-media.types.js
-var require_community_media_types = __commonJS({
-  "packages/schema/dist/community-media.types.js"(exports2) {
+// packages/schema/dist/community/media.types.js
+var require_media_types = __commonJS({
+  "packages/schema/dist/community/media.types.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
   }
 });
 
-// packages/schema/dist/workflow-templates.js
-var require_workflow_templates = __commonJS({
-  "packages/schema/dist/workflow-templates.js"(exports2) {
+// packages/schema/dist/workflow/templates.js
+var require_templates = __commonJS({
+  "packages/schema/dist/workflow/templates.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.workflowTemplateDetailSchema = exports2.workflowTemplateSummarySchema = exports2.workflowTemplateListQuerySchema = exports2.workflowTemplateCreateSchema = exports2.workflowTemplateSnapshotSchema = exports2.workflowTemplatePermissionSchema = exports2.workflowTemplatePlaceholderSchema = exports2.workflowTemplateEdgeSchema = exports2.workflowTemplateNodeSchema = exports2.workflowTemplateDefinitionSchema = void 0;
@@ -4207,7 +4207,7 @@ var require_workflow_templates = __commonJS({
     exports2.createWorkflowTemplateSnapshot = createWorkflowTemplateSnapshot;
     exports2.verifyWorkflowTemplateSnapshot = verifyWorkflowTemplateSnapshot;
     var zod_1 = require("zod");
-    var community_publications_1 = require_community_publications();
+    var publications_1 = require_publications();
     var collaboration_1 = require_collaboration();
     var publicJsonSchema = zod_1.z.lazy(() => zod_1.z.union([
       zod_1.z.null(),
@@ -4262,20 +4262,20 @@ var require_workflow_templates = __commonJS({
       placeholders: zod_1.z.array(exports2.workflowTemplatePlaceholderSchema).max(100),
       permissions: zod_1.z.array(exports2.workflowTemplatePermissionSchema).max(100),
       compatibility: zod_1.z.object({ octonode: zod_1.z.string().min(1).max(80), notes: zod_1.z.string().max(1e3).optional() }).strict(),
-      creator: zod_1.z.object({ handle: community_publications_1.creatorHandleSchema, displayName: zod_1.z.string().min(1).max(80) }).strict(),
+      creator: zod_1.z.object({ handle: publications_1.creatorHandleSchema, displayName: zod_1.z.string().min(1).max(80) }).strict(),
       license: zod_1.z.string().min(1).max(80)
     }).strict();
     var workflowTemplatePayloadSchema = workflowTemplatePayloadBaseSchema.superRefine((value, context) => scanSensitive(value, context));
     exports2.workflowTemplateSnapshotSchema = workflowTemplatePayloadBaseSchema.extend({ digest: collaboration_1.sha256Schema }).strict().superRefine((value, context) => scanSensitive(value, context));
     function readWorkflowCodeReference(code) {
       const match = /^\/\/ octonode-community: ([a-z0-9-]+) ([a-f0-9]{64})\r?\n/.exec(code);
-      if (!match || !community_publications_1.publicationSlugSchema.safeParse(match[1]).success)
+      if (!match || !publications_1.publicationSlugSchema.safeParse(match[1]).success)
         return null;
       return { slug: match[1], digest: match[2] };
     }
     exports2.workflowTemplateCreateSchema = zod_1.z.object({
       publicationId: collaboration_1.entityIdSchema,
-      slug: community_publications_1.publicationSlugSchema,
+      slug: publications_1.publicationSlugSchema,
       useCase: zod_1.z.string().trim().min(1).max(120),
       difficulty: zod_1.z.enum(["beginner", "intermediate", "advanced"]),
       triggers: zod_1.z.array(zod_1.z.string().min(1).max(80)).max(20),
@@ -4292,7 +4292,7 @@ var require_workflow_templates = __commonJS({
       difficulty: zod_1.z.enum(["beginner", "intermediate", "advanced"]).optional(),
       trigger: zod_1.z.string().max(80).optional(),
       service: zod_1.z.string().max(80).optional(),
-      creator: community_publications_1.creatorHandleSchema.optional(),
+      creator: publications_1.creatorHandleSchema.optional(),
       sort: zod_1.z.enum(["published", "updated", "title"]).default("published"),
       order: zod_1.z.enum(["asc", "desc"]).default("desc"),
       cursor: zod_1.z.string().max(512).optional(),
@@ -4301,12 +4301,12 @@ var require_workflow_templates = __commonJS({
     exports2.workflowTemplateSummarySchema = zod_1.z.object({
       id: collaboration_1.entityIdSchema,
       publicationId: collaboration_1.entityIdSchema,
-      slug: community_publications_1.publicationSlugSchema,
+      slug: publications_1.publicationSlugSchema,
       title: zod_1.z.string(),
       description: zod_1.z.string(),
       useCase: zod_1.z.string(),
       difficulty: zod_1.z.enum(["beginner", "intermediate", "advanced"]),
-      creator: community_publications_1.creatorHandleSchema,
+      creator: publications_1.creatorHandleSchema,
       nodes: zod_1.z.array(safeId),
       plugins: zod_1.z.array(safeId),
       runtimes: zod_1.z.array(zod_1.z.string()),
@@ -11341,9 +11341,9 @@ var require_github = __commonJS({
   }
 });
 
-// packages/schema/dist/project-lifecycle.js
-var require_project_lifecycle = __commonJS({
-  "packages/schema/dist/project-lifecycle.js"(exports2) {
+// packages/schema/dist/project/lifecycle.js
+var require_lifecycle = __commonJS({
+  "packages/schema/dist/project/lifecycle.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProjectLifecycleRecord = exports2.ProjectLifecycle = void 0;
@@ -11366,9 +11366,9 @@ var require_project_lifecycle = __commonJS({
   }
 });
 
-// packages/schema/dist/project-jobs.js
-var require_project_jobs = __commonJS({
-  "packages/schema/dist/project-jobs.js"(exports2) {
+// packages/schema/dist/project/jobs.js
+var require_jobs = __commonJS({
+  "packages/schema/dist/project/jobs.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProjectJobNotification = exports2.ProjectJobStatus = exports2.ProjectJobResult = exports2.ProjectJobInput = void 0;
@@ -11427,9 +11427,9 @@ var require_project_jobs = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin-version.js
-var require_plugin_version = __commonJS({
-  "packages/schema/dist/plugin-version.js"(exports2) {
+// packages/schema/dist/plugin/version.js
+var require_version = __commonJS({
+  "packages/schema/dist/plugin/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginVersion = void 0;
@@ -11536,19 +11536,19 @@ var require_execution = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin-publishing.js
-var require_plugin_publishing = __commonJS({
-  "packages/schema/dist/plugin-publishing.js"(exports2) {
+// packages/schema/dist/plugin/publishing.js
+var require_publishing = __commonJS({
+  "packages/schema/dist/plugin/publishing.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginCloudBuild = exports2.PluginPublisherBuildDetail = exports2.PluginPublisherBuilds = exports2.PluginPublisherBuildQuery = exports2.PluginPublisherListQuery = exports2.PluginPublisherApplied = exports2.PluginPublisherApply = exports2.PluginPublisherReview = exports2.PluginPublisherReviewItem = exports2.PluginPublisherOperation = exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherAutomatic = exports2.PluginPublisherRepository = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
     var zod_1 = require("zod");
-    var plugin_version_1 = require_plugin_version();
+    var version_1 = require_version();
     exports2.PluginConfigPath = zod_1.z.string().max(512).refine((path) => /^(?:[a-zA-Z0-9_.-]+\/)*(?:plugin\.octonode\.(?:json|ya?ml)|octonode\.plugin\.json)$/.test(path) && !path.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)), "Select a repository-relative octonode.plugin.json file (older plugin.octonode release files also work)");
     exports2.PluginReleaseConfig = zod_1.z.object({
       apiVersion: zod_1.z.literal("octonode.plugin/v1"),
       id: zod_1.z.string().max(128).regex(/^[a-z0-9][a-z0-9-]*$/),
-      version: plugin_version_1.PluginVersion,
+      version: version_1.PluginVersion,
       scope: zod_1.z.enum(["user", "team", "organization", "public"]),
       teamId: zod_1.z.string().min(1).max(128).optional(),
       orgId: zod_1.z.string().min(1).max(128).optional(),
@@ -11685,9 +11685,94 @@ var require_plugin_publishing = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin-allowlist.js
-var require_plugin_allowlist = __commonJS({
-  "packages/schema/dist/plugin-allowlist.js"(exports2) {
+// packages/schema/dist/toolkit.js
+var require_toolkit = __commonJS({
+  "packages/schema/dist/toolkit.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ToolkitInstallRequest = exports2.ToolkitRelease = exports2.ToolkitResolvedMember = exports2.ToolkitQuery = exports2.ToolkitDefinition = exports2.ToolkitMember = exports2.ToolkitVisibility = exports2.ToolkitOwner = void 0;
+    var zod_1 = require("zod");
+    var plugin_1 = require_plugin();
+    var version_1 = require_version();
+    exports2.ToolkitOwner = zod_1.z.object({
+      kind: zod_1.z.enum(["user", "team", "org"]),
+      id: zod_1.z.string().trim().min(1).max(240)
+    }).strict();
+    exports2.ToolkitVisibility = zod_1.z.enum(["user", "team", "org", "public"]);
+    exports2.ToolkitMember = zod_1.z.object({
+      pluginId: zod_1.z.string().min(1).max(240),
+      version: version_1.PluginVersion,
+      alias: zod_1.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100)
+    }).strict();
+    exports2.ToolkitDefinition = zod_1.z.object({
+      name: zod_1.z.string().trim().min(1).max(200),
+      description: zod_1.z.string().max(4e3).default(""),
+      version: version_1.PluginVersion,
+      owner: exports2.ToolkitOwner,
+      visibility: exports2.ToolkitVisibility,
+      plugins: zod_1.z.array(exports2.ToolkitMember).max(100)
+    }).strict().superRefine((value, ctx) => {
+      if (value.visibility !== "public" && value.visibility !== value.owner.kind)
+        ctx.addIssue({ code: "custom", path: ["visibility"], message: "Visibility must match the owner or be public" });
+      for (const field of ["pluginId", "alias"])
+        if (new Set(value.plugins.map((plugin) => plugin[field])).size !== value.plugins.length)
+          ctx.addIssue({ code: "custom", path: ["plugins"], message: `Duplicate plugin ${field}` });
+    });
+    exports2.ToolkitQuery = zod_1.z.object({
+      q: zod_1.z.string().trim().max(200).default(""),
+      visibility: exports2.ToolkitVisibility.optional(),
+      status: zod_1.z.enum(["draft", "published"]).optional(),
+      ownerKind: exports2.ToolkitOwner.shape.kind.optional(),
+      ownerId: exports2.ToolkitOwner.shape.id.optional(),
+      sort: zod_1.z.enum(["name", "updated", "plugins"]).default("updated"),
+      direction: zod_1.z.enum(["asc", "desc"]).default("desc"),
+      offset: zod_1.z.coerce.number().int().min(0).max(1e6).default(0),
+      limit: zod_1.z.coerce.number().int().min(1).max(100).default(24),
+      npmPackage: zod_1.z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/).optional(),
+      npmVersion: version_1.PluginVersion.optional(),
+      installed: zod_1.z.enum(["true", "false"]).optional(),
+      installedVersions: zod_1.z.string().max(64e3).default("[]").transform((value, ctx) => {
+        try {
+          return zod_1.z.array(zod_1.z.tuple([zod_1.z.string().max(240), version_1.PluginVersion])).max(1e3).parse(JSON.parse(value));
+        } catch {
+          ctx.addIssue({ code: "custom", message: "Invalid installed toolkit versions" });
+          return zod_1.z.NEVER;
+        }
+      })
+    });
+    exports2.ToolkitResolvedMember = exports2.ToolkitMember.extend({
+      name: zod_1.z.string(),
+      manifestId: zod_1.z.string(),
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      scope: plugin_1.PluginScope,
+      permissions: zod_1.z.array(plugin_1.PluginPermission),
+      publisher: zod_1.z.string().nullable(),
+      npmPackage: zod_1.z.string().nullable(),
+      connections: zod_1.z.array(zod_1.z.string())
+    });
+    exports2.ToolkitRelease = zod_1.z.object({
+      id: zod_1.z.string(),
+      name: zod_1.z.string(),
+      description: zod_1.z.string(),
+      version: version_1.PluginVersion,
+      owner: exports2.ToolkitOwner,
+      visibility: exports2.ToolkitVisibility,
+      revision: zod_1.z.number().int(),
+      sha256: zod_1.z.string().nullable(),
+      status: zod_1.z.enum(["draft", "published"]),
+      plugins: zod_1.z.array(exports2.ToolkitResolvedMember).max(100)
+    });
+    exports2.ToolkitInstallRequest = zod_1.z.object({
+      version: version_1.PluginVersion,
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      destination: exports2.ToolkitOwner
+    }).strict();
+  }
+});
+
+// packages/schema/dist/plugin/allowlist.js
+var require_allowlist = __commonJS({
+  "packages/schema/dist/plugin/allowlist.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginAllowlistPage = exports2.PluginAllowlistInput = exports2.PluginAllowlistQuery = exports2.PluginAllowlistKind = void 0;
@@ -11746,27 +11831,27 @@ var require_dist = __commonJS({
     exports2.schemaVersion = exports2.octonodeJsonSchema = void 0;
     __exportStar(require_ipc_envelope(), exports2);
     __exportStar(require_octonode_config(), exports2);
-    __exportStar(require_workflow_entry(), exports2);
+    __exportStar(require_entry(), exports2);
     __exportStar(require_store(), exports2);
     __exportStar(require_data_tables(), exports2);
     __exportStar(require_data_table_schema(), exports2);
-    __exportStar(require_workflow_layout(), exports2);
+    __exportStar(require_layout(), exports2);
     __exportStar(require_source_index(), exports2);
     __exportStar(require_test_workflow_graph(), exports2);
     __exportStar(require_collaboration(), exports2);
     __exportStar(require_task_management(), exports2);
-    __exportStar(require_design_collaboration(), exports2);
-    __exportStar(require_design_documents(), exports2);
+    __exportStar(require_collaboration2(), exports2);
+    __exportStar(require_documents(), exports2);
     __exportStar(require_analytics_dashboard(), exports2);
     __exportStar(require_capabilities(), exports2);
     __exportStar(require_agent_chat(), exports2);
     __exportStar(require_knowledge(), exports2);
     __exportStar(require_architecture(), exports2);
     __exportStar(require_repository_registry(), exports2);
-    __exportStar(require_community_publications(), exports2);
-    __exportStar(require_community_media(), exports2);
-    __exportStar(require_community_media_types(), exports2);
-    __exportStar(require_workflow_templates(), exports2);
+    __exportStar(require_publications(), exports2);
+    __exportStar(require_media(), exports2);
+    __exportStar(require_media_types(), exports2);
+    __exportStar(require_templates(), exports2);
     __exportStar(require_constants(), exports2);
     var json_schema_1 = require_json_schema();
     Object.defineProperty(exports2, "octonodeJsonSchema", { enumerable: true, get: function() {
@@ -11780,14 +11865,15 @@ var require_dist = __commonJS({
     __exportStar(require_access_tokens(), exports2);
     __exportStar(require_plugin(), exports2);
     __exportStar(require_github(), exports2);
-    __exportStar(require_workflow_triggers(), exports2);
-    __exportStar(require_project_lifecycle(), exports2);
-    __exportStar(require_project_jobs(), exports2);
-    __exportStar(require_plugin_version(), exports2);
+    __exportStar(require_triggers(), exports2);
+    __exportStar(require_lifecycle(), exports2);
+    __exportStar(require_jobs(), exports2);
+    __exportStar(require_version(), exports2);
     __exportStar(require_execution(), exports2);
     __exportStar(require_execution_constants(), exports2);
-    __exportStar(require_plugin_publishing(), exports2);
-    __exportStar(require_plugin_allowlist(), exports2);
+    __exportStar(require_publishing(), exports2);
+    __exportStar(require_toolkit(), exports2);
+    __exportStar(require_allowlist(), exports2);
   }
 });
 
@@ -12853,6 +12939,8 @@ var import_zod = require("zod");
 var import_schema = __toESM(require_dist());
 var LOCK_FILENAME = "octonode.lock";
 var LockEntry = import_zod.z.object({
+  /** False only for pins introduced exclusively by a toolkit. Legacy pins are direct. */
+  direct: import_zod.z.boolean().optional(),
   version: import_zod.z.string(),
   /** `sha256:<hex>` dir-content hash (hashPluginDir) — the store address + integrity check. */
   sha256: import_zod.z.string(),
@@ -12875,6 +12963,16 @@ var LockEntry = import_zod.z.object({
 var Lockfile = import_zod.z.object({
   lockfileVersion: import_zod.z.literal(1).default(1),
   plugins: import_zod.z.record(LockEntry).default({}),
+  toolkits: import_zod.z.record(
+    import_zod.z.object({
+      id: import_zod.z.string(),
+      registry: import_zod.z.string().url(),
+      version: import_zod.z.string(),
+      sha256: import_zod.z.string().regex(/^[a-f0-9]{64}$/),
+      plugins: import_zod.z.array(import_zod.z.string()),
+      destination: import_schema.ToolkitOwner
+    }).strict()
+  ).optional(),
   generated: import_zod.z.object({
     name: import_zod.z.literal("@octonodes/plugin"),
     spec: import_zod.z.string().regex(/^file:\.\/\.octonode-generated\/plugin-[a-f0-9]{64}\.tgz$/),
@@ -12908,6 +13006,9 @@ function writeLockfile(cwd, lock) {
 }
 function upsertLockEntry(cwd, id, entry) {
   const lock = readLockfile(cwd);
+  const previous = lock.plugins[id];
+  if (previous && Object.values(lock.toolkits ?? {}).some((toolkit) => toolkit.plugins.includes(id)) && (previous.version !== entry.version || previous.sha256 !== entry.sha256 || previous.registry !== entry.registry || previous.remoteId !== entry.remoteId || previous.pluginId !== entry.pluginId))
+    throw new Error(`Plugin ${id} is required by an installed toolkit; update the toolkit first`);
   const next = { ...lock, plugins: { ...lock.plugins, [id]: LockEntry.parse(entry) } };
   writeLockfile(cwd, next);
   return next;
@@ -14016,6 +14117,15 @@ function preparedPluginPin(directory, pin) {
 async function reconcilePluginLock(cwd, next, options = {}) {
   const project = resolveDependencyProject(cwd);
   const before = readLockfile(cwd);
+  for (const toolkit of Object.values(next.toolkits ?? {})) {
+    for (const alias of toolkit.plugins) {
+      const pin = next.plugins[alias];
+      const previous = before.plugins[alias];
+      if (!pin) throw new Error(`Toolkit ${toolkit.id} requires plugin ${alias}`);
+      if (previous && before.toolkits?.[toolkit.id]?.sha256 === toolkit.sha256 && (pin.version !== previous.version || pin.sha256 !== previous.sha256 || pin.registry !== previous.registry || pin.remoteId !== previous.remoteId))
+        throw new Error(`Update toolkit ${toolkit.id} before changing required plugin ${alias}`);
+    }
+  }
   const loaded = Object.entries(next.plugins).map(([alias, pin]) => {
     const directory = storeEntryDir(pin.pluginId ?? alias, pin.version, pin.sha256, options.storeRoot);
     const manifest2 = loadPluginManifest(directory);
@@ -14075,9 +14185,15 @@ async function activatePluginPin(alias, pin, options = {}) {
   return withDependencyInstall(cwd, () => {
     const lock = readLockfile(cwd);
     const previous = lock.plugins[alias];
+    if (previous && Object.values(lock.toolkits ?? {}).some((toolkit) => toolkit.plugins.includes(alias)) && (previous.version !== pin.version || previous.sha256 !== pin.sha256))
+      throw new Error(`Plugin ${alias} is required by an installed toolkit; update the toolkit first`);
     if (previous && ((previous.pluginId ?? alias) !== (pin.pluginId ?? alias) || previous.registry !== pin.registry || previous.scope !== pin.scope || previous.remoteId !== pin.remoteId || previous.publisher !== pin.publisher))
       throw new Error(`Plugin alias ${alias} belongs to another source; choose another alias or remove it first`);
-    return reconcilePluginLock(cwd, { ...lock, plugins: { ...lock.plugins, [alias]: pin } }, options);
+    return reconcilePluginLock(
+      cwd,
+      { ...lock, plugins: { ...lock.plugins, [alias]: { ...pin, direct: true } } },
+      options
+    );
   });
 }
 async function installLocalArtifact(directory, options = {}) {
@@ -14095,6 +14211,8 @@ async function removePluginPin(alias, options = {}) {
   const cwd = resolveDependencyProject(options.cwd ?? process.cwd()).target;
   await withDependencyInstall(cwd, async () => {
     const lock = readLockfile(cwd);
+    if (Object.values(lock.toolkits ?? {}).some((toolkit) => toolkit.plugins.includes(alias)))
+      throw new Error(`Plugin ${alias} is required by an installed toolkit; remove the toolkit first`);
     const plugins = Object.fromEntries(Object.entries(lock.plugins).filter(([id]) => id !== alias));
     await reconcilePluginLock(cwd, { ...lock, plugins }, options);
   });
@@ -14274,6 +14392,7 @@ function extractPluginArchive(bytes, stage) {
 // packages/plugin/src/remote/registry.ts
 var import_tar4 = require("tar");
 var import_node_crypto5 = require("node:crypto");
+var import_schema6 = __toESM(require_dist());
 var RemoteRegistry = class {
   constructor(opts = {}) {
     const baseUrl = opts.baseUrl ?? (0, import_common5.OCTONODE_MARKETPLACE_URL)() ?? import_common5.DEFAULT_MARKETPLACE_URL;
@@ -14349,6 +14468,43 @@ var RemoteRegistry = class {
       body: JSON.stringify({ version, scope, ownerId: opts.ownerId, environment: opts.environment ?? "self_hosted" })
     });
     return (await response.json()).installId;
+  }
+  async toolkit(id, version) {
+    const response = await this.request(
+      `/marketplace/toolkits/${encodeURIComponent(id)}${version ? `?version=${encodeURIComponent(version)}` : ""}`
+    );
+    return import_schema6.ToolkitRelease.parse(await response.json());
+  }
+  async toolkitPlugins(query) {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(query)) if (value !== void 0) params.set(key, String(value));
+    const response = await this.request(`/marketplace/toolkits/plugins?${params}`);
+    const page = await response.json();
+    return page.items.map((item) => import_schema6.ToolkitResolvedMember.parse(item));
+  }
+  async resolveToolkit(id, body) {
+    const response = await this.request(`/marketplace/toolkits/${encodeURIComponent(id)}/resolve`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    return import_schema6.ToolkitRelease.parse(await response.json());
+  }
+  async saveToolkit(definition, id, revision) {
+    const response = await this.request(`/marketplace/toolkits${id ? `/${encodeURIComponent(id)}` : ""}`, {
+      method: id ? "PUT" : "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(id ? { definition, revision } : definition)
+    });
+    return import_schema6.ToolkitRelease.parse(await response.json());
+  }
+  async publishToolkit(id, version, revision) {
+    const response = await this.request(`/marketplace/toolkits/${encodeURIComponent(id)}/publish`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ version, revision })
+    });
+    return import_schema6.ToolkitRelease.parse(await response.json());
   }
   /**
    * Pack a plugin folder into a tarball and publish it (metadata + bundle).
@@ -14637,6 +14793,27 @@ async function installFromLock(opts = {}) {
     if (lock.generated && opts.force)
       throw new Error("Generated packages require explicit version updates, not --force repinning");
     const result = { restored: [], present: [], errors: [] };
+    for (const toolkit of Object.values(lock.toolkits ?? {})) {
+      try {
+        if (opts.offline) throw new Error("Toolkit access must be reauthorized online before restore");
+        const release2 = await new RemoteRegistry({ baseUrl: toolkit.registry, token: opts.token }).resolveToolkit(
+          toolkit.id,
+          {
+            version: toolkit.version,
+            sha256: toolkit.sha256,
+            destination: toolkit.destination
+          }
+        );
+        if (release2.plugins.length !== toolkit.plugins.length || release2.plugins.some((member) => {
+          const pin = lock.plugins[member.alias];
+          return !toolkit.plugins.includes(member.alias) || !pin || pin.remoteId !== member.pluginId || pin.registry !== toolkit.registry || pin.version !== member.version || pin.archiveSha256 !== member.sha256;
+        }))
+          throw new Error("Toolkit membership disagrees with octonode.lock");
+      } catch (error) {
+        result.errors.push({ id: toolkit.id, message: error.message });
+      }
+    }
+    if (result.errors.length) return result;
     const libraries = [];
     const dependencies = [];
     for (const [alias, pin] of Object.entries(lock.plugins)) {
@@ -14732,11 +14909,11 @@ async function installFromLock(opts = {}) {
 }
 
 // packages/plugin/src/consumer/lifecycle.ts
-var import_schema6 = __toESM(require_dist());
+var import_schema7 = __toESM(require_dist());
 async function runPluginLifecycle(command, target, flags) {
   const cwd = resolveDependencyProject(typeof flags.cwd === "string" ? (0, import_node_path15.resolve)(flags.cwd) : process.cwd()).target;
   const scope = typeof flags.scope === "string" ? flags.scope : void 0;
-  if (scope && !import_schema6.MARKETPLACE_SCOPES.includes(scope)) throw new Error("Invalid marketplace scope");
+  if (scope && !import_schema7.MARKETPLACE_SCOPES.includes(scope)) throw new Error("Invalid marketplace scope");
   const options = {
     cwd,
     alias: typeof flags.alias === "string" ? flags.alias : void 0,

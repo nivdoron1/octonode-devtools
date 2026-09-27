@@ -5274,6 +5274,78 @@ export type GetApiMarketplaceAnalyticsResponses = {
 
 export type GetApiMarketplaceAnalyticsResponse = GetApiMarketplaceAnalyticsResponses[keyof GetApiMarketplaceAnalyticsResponses];
 
+export type GetApiMarketplaceToolkitsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        q?: string;
+        visibility?: 'user' | 'team' | 'org' | 'public';
+        status?: 'draft' | 'published';
+        ownerKind?: 'user' | 'team' | 'org';
+        ownerId?: string;
+        sort?: 'name' | 'updated' | 'plugins';
+        direction?: 'asc' | 'desc';
+        offset?: number;
+        limit?: number;
+        npmPackage?: string;
+        npmVersion?: string;
+        installed?: 'true' | 'false';
+        project?: string;
+    };
+    url: '/api/marketplace/toolkits';
+};
+
+export type GetApiMarketplaceToolkitsErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    503: {
+        error: string;
+    };
+};
+
+export type GetApiMarketplaceToolkitsError = GetApiMarketplaceToolkitsErrors[keyof GetApiMarketplaceToolkitsErrors];
+
+export type GetApiMarketplaceToolkitsResponses = {
+    /**
+     * Success
+     */
+    200: {
+        total: number;
+        offset: number;
+        limit: number;
+        items: Array<{
+            id: string;
+            name: string;
+            description: string;
+            ownerKind: 'user' | 'team' | 'org';
+            ownerId: string;
+            visibility: 'user' | 'team' | 'org' | 'public';
+            revision: number;
+            updated_at: string;
+            version: string;
+            status: 'draft' | 'published';
+            sha256: string | null;
+            pluginCount: number;
+            installed: number;
+        }>;
+    };
+};
+
+export type GetApiMarketplaceToolkitsResponse = GetApiMarketplaceToolkitsResponses[keyof GetApiMarketplaceToolkitsResponses];
+
 export type GetApiTemplatesData = {
     body?: never;
     path?: never;
