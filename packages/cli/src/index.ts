@@ -56,6 +56,10 @@ function usage(topic?: string): void {
     process.stdout.write((require("./plugins/help.constants") as typeof import("./plugins/help.constants")).PLUGIN_HELP);
     return;
   }
+  if (topic === "app") {
+    process.stdout.write((require("./apps/constants") as typeof import("./apps/constants")).APP_HELP);
+    return;
+  }
   if (topic === "connect") {
     process.stdout.write(CONNECT_HELP);
     return;
@@ -76,7 +80,7 @@ function usage(topic?: string): void {
     process.stdout.write(`Usage:\n  octonodes ${topic} [--input <json>] [--base-url <url>]\n`);
     return;
   }
-  process.stdout.write("Plugins: octonodes plugin <create|build|validate|test|publish|install|update|remove|list|recover> (see octonodes plugin --help)\nFrozen restore: octonodes install --frozen --artifacts-only\nMCP clients: octonodes connect <codex|claude|cursor|headers> (see octonodes connect --help)\n\n");
+  process.stdout.write("Apps: octonodes app <create|extension add|dev|build|validate|serve|publish> (see octonodes app --help)\nPlugins: octonodes plugin <create|build|validate|test|publish|install|update|remove|list|recover> (see octonodes plugin --help)\nFrozen restore: octonodes install --frozen --artifacts-only\nMCP clients: octonodes connect <codex|claude|cursor|headers> (see octonodes connect --help)\n\n");
   process.stdout.write(`octonodes v${VERSION}\n\nUsage:\n  octonodes login [--base-url <url>]\n  octonodes login --email <email> [--base-url <url>]\n  octonodes login --token <api-token>\n  octonodes logout\n  octonodes connect <codex|claude|cursor|headers> --workspace <kind:id> --project <id>\n  octonodes operations [filter]\n  octonodes <operation> [--input <json>] [--base-url <url>]\n\nFlags:\n  -h, --h, --help  Show help\n  -v, --version     Show version\n\nEnvironment:\n  OCTONODE_TOKEN       Overrides the saved login\n  OCTONODE_URL         Overrides ${OCTONODE_API_URL}\n  OCTONODE_CONFIG_DIR  Overrides ~/.octonode\n`);
 }
 
@@ -87,6 +91,10 @@ async function main(): Promise<void> {
     return;
   }
   if (helpRequested) return usage(command.startsWith("-") ? undefined : command);
+  if (command === "app") {
+    if (argv.length === 1) return usage("app");
+    return (await import("./apps/index.js")).appCommand(argv.slice(1), VERSION);
+  }
   if (command === "plugin") {
     if (argv.length === 1) return usage("plugin");
     return (await import("./plugins/index.js")).pluginCommand(argv.slice(1), VERSION);

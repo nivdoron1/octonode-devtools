@@ -1,5 +1,5 @@
 // Generated from packages/ui-extensions/src/react.tsx. Do not edit; run the Octonode SDK sync.
-import { createElement, type ComponentType, type ReactNode } from "react";
+import { useId, useEffect, createElement, type ComponentType, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { UI_EXTENSION_API_VERSION, type UiExtensionTarget, type UiExtensionTree } from "./index";
 
@@ -25,6 +25,46 @@ export function InputField({ name, appearance }: { name: string; appearance?: "s
   return createElement("octonode-input-field", { name, appearance });
 }
 
+const callbacks = new Map<string, (value?: string) => void>();
+export function Button({
+  children,
+  onPress,
+  disabled = false,
+}: {
+  children: string;
+  onPress: () => void;
+  disabled?: boolean;
+}) {
+  const id = useId();
+  useEffect(() => {
+    callbacks.set(id, onPress);
+    return () => {
+      callbacks.delete(id);
+    };
+  }, [id, onPress]);
+  return createElement("octonode-button", { "data-id": id, "data-disabled": String(disabled) }, children);
+}
+export function TextField({
+  label,
+  value,
+  onChange,
+  disabled = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+}) {
+  const id = useId();
+  useEffect(() => {
+    callbacks.set(id, (value) => onChange(value ?? ""));
+    return () => {
+      callbacks.delete(id);
+    };
+  }, [id, onChange]);
+  return createElement("octonode-text-field", { "data-id": id, label, value, "data-disabled": String(disabled) });
+}
+
 function serialize(node: Node): UiExtensionTree | null {
   if (node.nodeType === Node.TEXT_NODE) {
     const value = node.textContent?.trim();
@@ -35,6 +75,21 @@ function serialize(node: Node): UiExtensionTree | null {
     const serialized = serialize(child);
     return serialized ? [serialized] : [];
   });
+  if (node.localName === "octonode-button")
+    return {
+      type: "button",
+      id: node.getAttribute("data-id") ?? "",
+      label: node.textContent ?? "",
+      disabled: node.getAttribute("data-disabled") === "true",
+    };
+  if (node.localName === "octonode-text-field")
+    return {
+      type: "text-field",
+      id: node.getAttribute("data-id") ?? "",
+      label: node.getAttribute("label") ?? "",
+      value: node.getAttribute("value") ?? "",
+      disabled: node.getAttribute("data-disabled") === "true",
+    };
   if (node.localName === "octonode-node-form") return { type: "node-form", children };
   if (node.localName === "octonode-section")
     return { type: "section", title: node.getAttribute("title") ?? "", children };
@@ -50,6 +105,18 @@ function serialize(node: Node): UiExtensionTree | null {
 }
 
 export function startExtension(extension: UiExtensionDefinition): void {
+  addEventListener("message", (event) => {
+    if (
+      event.source !== parent ||
+      event.data?.octonode !== "ui-extension" ||
+      event.data?.type !== "event" ||
+      event.data?.target !== extension.target
+    )
+      return;
+    const { id, value } = event.data;
+    if (typeof id !== "string" || (value !== undefined && (typeof value !== "string" || value.length > 4000))) return;
+    callbacks.get(id)?.(value);
+  });
   const root = document.createElement("div");
   document.body.append(root);
   let queued = false;

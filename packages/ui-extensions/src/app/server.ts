@@ -1,0 +1,43 @@
+// Generated from packages/ui-extensions/src/app/server.ts. Do not edit; run the Octonode SDK sync.
+import { appContext, type AppRequest } from "./project.js";
+import type { AppContext, AppGrant } from "./types.js";
+
+export type { AppContext, AppExecution, AppGrant, AppProject } from "./types.js";
+
+/** Verify the browser's app bearer before using it from a developer-hosted backend. */
+export async function connectAppServer(
+  token: string,
+  options: { appId: string; baseUrl: string; projectId?: string },
+): Promise<AppContext> {
+  if (!/^octo_app_[A-Za-z0-9_-]{43}$/.test(token)) throw new Error("Invalid app session");
+  const base = new URL(options.baseUrl);
+  if (base.protocol !== "https:" && !(base.protocol === "http:" && ["localhost", "127.0.0.1"].includes(base.hostname)))
+    throw new Error("Octonode API URL must use HTTPS");
+  const request: AppRequest = async <T>(operation: "context" | "data" | "workflow.run", body?: unknown): Promise<T> => {
+    const path =
+      operation === "context"
+        ? "/api/apps/runtime/session"
+        : operation === "data"
+          ? "/api/apps/runtime/data"
+          : "/api/apps/runtime/executions";
+    const response = await fetch(new URL(path, base), {
+      method: operation === "context" ? "GET" : "POST",
+      headers: {
+        authorization: `Bearer ${token}`,
+        ...(operation === "context" ? {} : { "content-type": "application/json" }),
+      },
+      ...(operation === "context" ? {} : { body: JSON.stringify(body) }),
+    });
+    if (!response.ok) throw new Error(`Octonode app request failed (${response.status})`);
+    return response.json() as Promise<T>;
+  };
+  const verified = await request<{
+    appId: string;
+    installationId: string;
+    userId: string;
+    workspace: AppContext["workspace"];
+    grants: AppGrant[];
+  }>("context");
+  if (verified.appId !== options.appId) throw new Error("App session belongs to another app");
+  return appContext({ ...verified, projectId: options.projectId }, verified, request);
+}

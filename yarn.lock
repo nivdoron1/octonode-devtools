@@ -1128,6 +1128,7 @@ __metadata:
   resolution: "@octonodes/cli@workspace:packages/cli"
   dependencies:
     "@octonodes/sdk": "workspace:*"
+    "@octonodes/ui-extensions": "workspace:*"
     "@supabase/supabase-js": "npm:2.107.0"
     esbuild: "npm:0.28.1"
     tar: "npm:7.5.22"
@@ -1161,7 +1162,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@octonodes/ui-extensions@workspace:packages/ui-extensions":
+"@octonodes/ui-extensions@workspace:*, @octonodes/ui-extensions@workspace:packages/ui-extensions":
   version: 0.0.0-use.local
   resolution: "@octonodes/ui-extensions@workspace:packages/ui-extensions"
   dependencies:

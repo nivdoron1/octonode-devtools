@@ -23,6 +23,7 @@ import { fileHash, pluginFiles, safePath, verifyBuild } from "./artifact";
 import type { PluginBuild } from "./types";
 import { readPluginRelease } from "./release";
 import { buildPluginLibrary } from "./library";
+import { buildApp } from "./app";
 
 function directory(root: string, path: string): string {
   let current = root;
@@ -71,6 +72,11 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         }
       : {}),
   });
+  if (manifestDefinition.app) {
+    if (definition.assets.length)
+      throw new Error("Self-hosted app assets must be deployed by the developer, not packaged");
+    return [buildApp(manifestDefinition, directory(root, "dist/plugins"), root)];
+  }
   const workflowNodes = definition.nodes.filter((node) => node.workflow);
   if (workflowNodes.length && workflowNodes.length !== definition.nodes.length)
     throw new Error("Keep exported workflows in their own plugin package");
