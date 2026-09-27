@@ -1,6 +1,6 @@
 {
   "name": "@octonodes/ui-extensions",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "type": "module",
   "license": "MIT",
   "description": "Portable contracts and React primitives for Octonode plugin UI extensions.",
@@ -40,5 +40,10 @@
     "@types/react-dom": "19.2.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nivdoron1/octonode-devtools.git",
+    "directory": "packages/ui-extensions"
   }
 }
