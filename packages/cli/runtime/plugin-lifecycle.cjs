@@ -14465,7 +14465,14 @@ var RemoteRegistry = class {
     const response = await this.request(`/marketplace/plugins/${encodeURIComponent(id)}/install`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ version, scope, ownerId: opts.ownerId, environment: opts.environment ?? "self_hosted" })
+      body: JSON.stringify({
+        version,
+        scope,
+        ownerId: opts.ownerId,
+        environment: opts.environment ?? "self_hosted",
+        toolkitId: opts.toolkitId,
+        toolkitVersion: opts.toolkitVersion
+      })
     });
     return (await response.json()).installId;
   }
