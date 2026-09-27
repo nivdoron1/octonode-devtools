@@ -97,17 +97,35 @@ export const PluginPublisherApplied = z.object({
   repositoryId: z.number(),
   buildId: z.number(),
 });
+export const PluginPublisherListQuery = z.object({
+  q: z.string().trim().max(200).default(""),
+  offset: z.coerce.number().int().min(0).max(1_000_000).default(0),
+  limit: z.coerce.number().int().min(1).max(100).default(25),
+  days: z.enum(["7", "30", "90"]).default("30"),
+  scope: z.enum(["", "user", "group", "org", "public"]).default(""),
+  source: z.enum(["", "sdk", "npm"]).default(""),
+  sort: z.enum(["updated", "name", "version", "scope", "source", "installs", "score", "versions"]).default("updated"),
+  direction: z.enum(["asc", "desc"]).default("desc"),
+});
+export type PluginPublisherListQuery = z.infer<typeof PluginPublisherListQuery>;
+
 export const PluginPublisherBuildQuery = z.object({
   repositoryId: z.coerce.number().int().positive().optional(),
-  page: z.coerce.number().int().min(1).max(1000).default(1),
+  page: z.coerce.number().int().min(1).max(1_000_000).default(1),
   search: z.string().max(200).default(""),
   status: z.enum(["", "queued", "in_progress", "success", "failure"]).default(""),
-  sort: z.enum(["newest", "oldest", "name"]).default("newest"),
+  sort: z.enum(["newest", "oldest", "name", "status", "branch", "sha"]).default("newest"),
+  direction: z.enum(["asc", "desc"]).default("asc"),
+  limit: z.coerce.number().int().min(1).max(100).default(30),
+  branch: z.string().trim().max(200).default(""),
+  sha: z.string().trim().max(200).default(""),
 });
+export type PluginPublisherBuildQuery = z.infer<typeof PluginPublisherBuildQuery>;
 export const PluginPublisherBuilds = z.object({
   total: z.number(),
   page: z.number(),
   hasMore: z.boolean(),
+  limit: z.number(),
   items: z.array(
     z.object({
       id: z.number(),
