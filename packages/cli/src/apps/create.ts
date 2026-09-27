@@ -128,22 +128,68 @@ test("release bundles match the manifest", () => {
       join(root, "README.md"),
       `# ${name}
 
-Run npm install, then npm run dev. Use --use-localhost to skip the HTTPS tunnel. Run npm test to validate the release. Edit src/extensions/notice.tsx and octonode.app.json.
-Add a page with: octonodes app extension add overview --target app.page
-Build: npm run build
-Validate: octonodes app validate dist/apps/${name}
+An Octonode app created by \`octonodes app create\`. The default contribution is a
+\`workspace.block\` on workspace home. Add a page only if the app needs one.
 
-${template === "full" ? "Full app: edit src/server.ts (default-export a Fetch API handler). Set web.applicationUrl in octonode.app.json before release builds, or use app build --app-url https://your-host.example. Deploy dist/web/" + name + " with Node 24 and run node start.cjs in that directory. Restore the previous web artifact before clean CI builds to retain assets used by older installations. Development uses a temporary tunnel URL and never writes it to configuration. The /api/context example verifies an installation bearer using the SDK. Production requires OCTONODE_APP_ID and OCTONODE_API_URL; workspace development configures them automatically." : ""}
+## Work locally
 
-The source descriptor owns IDs, targets, entry paths, settings and version. Builds generate hashes;
-do not edit dist/. App pages remain optional. Settings are shared workspace values, not secrets.
+\`\`\`sh
+npm install
+npm test
+npm run dev
+\`\`\`
 
-Preview in Studio: octonodes login, then octonodes app dev --workspace user:<your-id>.
-Publish privately: octonodes app publish --workspace user:<your-id>.
-For an update, increment the source version and pass --app-id <id> --revision <current-revision>.
-Full apps must deploy their web build to web.applicationUrl before publication.
-Install through Studio → Apps, then visit workspace home.
-Existing installations stay pinned until an administrator approves an update.
+The CLI opens a live HTTPS preview and downloads a verified tunnel helper on first
+use. No Cloudflare account or separate installation is needed. Use
+\`octonodes app dev --use-localhost\` for offline UI work.
+Edit \`octonode.app.json\` and \`src/extensions/notice.tsx\`. The descriptor owns
+app identity, version, extension targets and entry files. Do not edit \`dist/\`.
+Add a page with \`octonodes app extension add overview --target app.page\`.
+
+## Preview and publish in Octonode
+
+\`\`\`sh
+octonodes login
+octonodes app dev --workspace user:<your-user-id>
+npm test
+octonodes app validate dist/apps/${name}
+octonodes app publish --workspace user:<your-user-id>
+\`\`\`
+
+Use \`team:<id>\` or \`org:<id>\` if that is the publisher workspace. Studio
+preview is private and expiring, with no project grants. The first publication
+returns the registered app ID and revision. Install through **Studio → Apps**;
+a block appears on workspace home. An administrator can change shared settings
+or disable an extension-only installation. Shared settings are not secrets.
+
+For updates, change the source version, run \`npm test\`, then publish with
+\`--app-id <registered-app-id> --revision <current-revision>\`. Existing
+installations stay pinned until an administrator approves an update.
+
+${template === "full" ? `## Host the full app
+
+Edit \`src/server.ts\`, which default-exports a Fetch API handler. Set
+\`web.applicationUrl\` in \`octonode.app.json\` to a permanent HTTPS origin
+before building and publishing. Add only the \`web.requestedActions\` your
+app needs. The generated \`/api/context\` route verifies an installed app
+bearer through \`@octonodes/ui-extensions/app/server\`.
+
+Publishing registers metadata but does not deploy the backend. After the first
+publish returns the app ID, copy the entire \`dist/web/${name}\` directory
+to a Node 24 host. Configure HTTPS, \`PORT\`, \`OCTONODE_APP_ID\` and
+\`OCTONODE_API_URL\`, then run \`node start.cjs\` from that directory.
+Check the public page and every hashed \`/extensions/<hash>.js\` asset
+before inviting installation. Restore the previous web artifact before clean
+CI builds, or retain older hash-named assets at the host for pinned installs.
+The development tunnel URL is temporary and must not be published.
+
+` : ""}## SDK and deployment guides
+
+- [App quickstart](https://playbook.octonodes.com/docs/apps-quickstart)
+- [Configuration](https://playbook.octonodes.com/docs/apps-configuration)
+- [App SDKs](https://playbook.octonodes.com/docs/apps-sdk)
+- [Hosting](https://playbook.octonodes.com/docs/apps-hosting)
+- [Publishing and updates](https://playbook.octonodes.com/docs/apps-publishing)
 `,
     );
     return root;

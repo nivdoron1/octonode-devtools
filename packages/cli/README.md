@@ -3,6 +3,47 @@
 Command-line access to the public [Octonode cloud API](https://octonodes.com/api/docs). The CLI
 wraps `@octonodes/sdk`, so every generated SDK operation is available without writing TypeScript.
 
+## Create an app
+
+Use Node 24 and a CLI release containing `octonodes app`. The default scaffold
+is an extension-only workspace block: no page, backend, or Cloudflare account.
+
+```sh
+octonodes app create workspace-notice
+cd workspace-notice
+npm install
+npm test
+npm run dev
+```
+
+Edit `octonode.app.json` and `src/extensions/notice.tsx`. `npm test`
+checks types and verifies build hashes. `npm run dev` watches changes and starts
+a verified, automatically managed HTTPS tunnel. `--use-localhost` skips the
+tunnel; `--tunnel-url <https-origin> --port <port>` uses your own. Preview
+in Studio with `octonodes login` followed by
+`octonodes app dev --workspace user:<id>`.
+
+```sh
+octonodes app extension add overview --target app.page
+octonodes app publish --workspace user:<id>
+```
+
+Adding a page is optional. Install through Studio → Apps; a block appears on
+workspace home, and a page-capable app opens from Apps. An administrator can
+configure or disable an installation. The first publication returns the app ID
+and revision. Increment the source version and publish an update with
+`--app-id <id> --revision <current-revision>`; existing installs remain pinned
+until their administrator approves an update.
+
+For a connected backend, use `octonodes app create inventory-labels --template
+full`. Set `web.applicationUrl` in `octonode.app.json` to a permanent HTTPS
+origin, add only necessary `web.requestedActions`, and run `npm test`. The CLI
+publishes release metadata; deploy `dist/web/inventory-labels` to a Node 24
+host yourself, set `OCTONODE_APP_ID` and `OCTONODE_API_URL`, and run
+`node start.cjs`. Keep prior content-hashed assets for pinned installations.
+The [Playbook app guide](https://playbook.octonodes.com/docs/apps) covers the
+project file, SDKs, hosting, consent, publishing and updates.
+
 ## Create and publish plugins
 
 ```sh

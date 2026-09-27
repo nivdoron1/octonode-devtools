@@ -26,6 +26,42 @@ credentials, assets, testing, and marketplace publishing. The plugin contract an
 runtime are synced from the main Octonode repository; generated API client files
 remain separate.
 
+## Create an app
+
+`octonodes` creates a complete app project. Use the default extension-only template
+for a workspace block with no backend; add an `app.page` when you want an Apps
+page. Use `--template full` when your app needs its own hosted page or server.
+
+```sh
+npm install --global @octonodes/cli
+octonodes app create workspace-notice
+cd workspace-notice
+npm install
+npm test
+npm run dev
+```
+
+The project contains `octonode.app.json`, a TypeScript/React extension, and a
+build check. `app dev` runs a live preview and automatically provisions a
+verified HTTPS tunnel. It needs no Cloudflare account or separate tunnel install.
+Use `octonodes app dev --use-localhost` for offline UI work. To preview in a real
+workspace, run `octonodes login` and `octonodes app dev --workspace user:<id>`.
+
+```sh
+# From the app directory, after signing in:
+octonodes app publish --workspace user:<id>
+# Install the release in Studio → Apps and view the block on workspace home.
+```
+
+For a hosted app, start with `octonodes app create inventory-labels --template
+full`, set `web.applicationUrl` to a permanent HTTPS origin, build and publish,
+then deploy the complete `dist/web/inventory-labels` directory to a Node 24
+host. The first publish returns `OCTONODE_APP_ID`; set it and
+`OCTONODE_API_URL` on the host before inviting installations. Publication does
+not deploy the backend. Read the [end-to-end Playbook](https://playbook.octonodes.com/docs/apps),
+[CLI app commands](packages/cli/README.md#create-an-app), and
+[app SDK guide](packages/ui-extensions/README.md#app-sdk-entry-points).
+
 ## Packages
 
 | Package                                                        | Use it when                                                                           |
@@ -287,42 +323,3 @@ See the [changelog](CHANGELOG.md) for release history.
 ## License
 
 MIT
-
-## Create an extension app
-
-```bash
-octonodes app create my-app
-cd my-app
-npm install
-npm test
-octonodes app extension add overview --target app.page
-npm run build
-octonodes app validate dist/apps/my-app
-```
-
-The starter is a TypeScript/React workspace block with a shared message setting. It needs
-no application URL, backend, or dashboard. `octonode.app.json` declares the app version,
-settings and extension entry files; builds compile those entries into browser IIFEs and
-generate hashes. Add a page only when needed. Scaffolding, builds and local preview run without login.
-
-The CLI writes `dist/apps/<id>/octonode.json`, `extensions/<id>.js` and
-`octonode-build.json`. It preserves the last successful artifact on build failure and
-refuses source symlinks, path escapes and altered release artifacts. Existing project
-folders and extension files are never overwritten by create/add.
-
-Run `npm run dev` for an automatic HTTPS tunnel and live extension preview (requires
-cloudflared), or `octonodes app dev --use-localhost`. For Studio preview, sign in with
-`octonodes login`, then run `octonodes app dev --workspace user:<id>`.
-
-Use `app create my-app --template full` for an additional Node backend and hosted page.
-Set `web.applicationUrl` in the source descriptor before release builds; deploy the
-verified `dist/web/<id>` output with `octonodes app serve`. The scaffold includes a
-session-verifying `/api/context` endpoint; production sets `OCTONODE_APP_ID` and
-`OCTONODE_API_URL` on the server. Development tokens carry no project data grants.
-
-Publish with `octonodes app publish --workspace user:<id>`, then install through Studio
-consent. Updates require `--app-id` and `--revision`. Builds never publish or install.
-Workspace development requires the matching engine deployment and migration 0023.
-The source and artifact contract are documented in [the CLI plan](docs/app-cli-plan.md).
-
-App development automatically downloads and caches a verified tunnel helper. No Cloudflare account or separate installation is required; use `--use-localhost` for offline development or `--tunnel-url` for your own tunnel.

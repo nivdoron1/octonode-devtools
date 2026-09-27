@@ -130,3 +130,18 @@ token's scopes and workspace access.
 
 Use [`@octonodes/cli`](https://www.npmjs.com/package/@octonodes/cli) to call the same operations
 from a terminal or shell script.
+
+## Which SDK for an installed app?
+
+This package authenticates general cloud API calls with a personal or service
+token. An `octo_app_` installation session is scoped to one installed app and
+must not be passed to `createClient`.
+
+- Browser extension UI: `@octonodes/ui-extensions/react`.
+- Installed browser project actions: `@octonodes/ui-extensions/app`.
+- Developer-hosted backend session verification and project actions:
+  `@octonodes/ui-extensions/app/server`.
+- Independently authorized service integration: this `@octonodes/sdk` package.
+
+See the [Playbook app SDK reference](https://playbook.octonodes.com/docs/apps-sdk)
+and [full app guide](https://playbook.octonodes.com/docs/apps-hosting).

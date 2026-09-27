@@ -134,3 +134,26 @@ const products = await project.tables.rows.list("products");
 ```
 
 The backend helper verifies the bearer on each `connectAppServer` call and uses that bearer only for the app runtime endpoints. Sessions expire after five minutes; background work requires a separately approved installation service identity.
+
+## App SDK entry points
+
+For a complete app, run `octonodes app create <name>` and follow the
+[Playbook quickstart](https://playbook.octonodes.com/docs/apps-quickstart).
+The default project is a workspace block with no backend. Add an `app.page` via
+`octonodes app extension add overview --target app.page`, or choose
+`--template full` for a hosted Fetch API backend. The CLI bundles declared
+extension entries and calls `startExtension`; a manually built entry must call
+it itself.
+
+| Import | Role |
+| --- | --- |
+| `@octonodes/ui-extensions/react` | Define and render `workspace.block` or `app.page` |
+| `@octonodes/ui-extensions` | Read the installed session and shared settings |
+| `@octonodes/ui-extensions/app` | Use live installation grants in an extension iframe |
+| `@octonodes/ui-extensions/app/server` | Verify a bearer and use granted projects from your backend |
+
+The backend helper must run on each authenticated request. Keep the registered
+app ID and API origin in server configuration. For a complete project,
+production launch and consent flow, see [configuration](https://playbook.octonodes.com/docs/apps-configuration),
+[hosting](https://playbook.octonodes.com/docs/apps-hosting), and
+[publishing](https://playbook.octonodes.com/docs/apps-publishing).

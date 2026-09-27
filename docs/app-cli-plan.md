@@ -70,12 +70,12 @@ Set `web.applicationUrl` before full-app release builds. Then:
 ```sh
 npm test
 octonodes app validate dist/apps/my-app
-# Full apps: deploy dist/web/my-app to a Node 24 host and run:
+octonodes app publish --workspace user:<id>
+# The first publish returns <app-id>. For full apps, deploy dist/web/my-app
+# to a Node 24 host, then run there with the returned registered ID:
 cd dist/web/my-app
 PORT=3000 OCTONODE_APP_ID=<app-id> OCTONODE_API_URL=https://octonodes.com node start.cjs
-# Return to the source project to publish:
-octonodes app publish --workspace user:<id>
-# After incrementing the source version:
+# Back in the source project, after incrementing the source version:
 octonodes app publish --workspace user:<id> --app-id <id> --revision <revision>
 ```
 
