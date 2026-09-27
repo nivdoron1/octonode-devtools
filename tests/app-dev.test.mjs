@@ -247,7 +247,7 @@ test("tunnel origins reject URL credentials and startup failure is actionable", 
   assert.equal(publicOrigin("https://example.com/"), "https://example.com");
   for (const url of [
     "http://example.com",
-    "https://user:secret@example.com",
+    "https://user@example.com",
     "https://example.com/path",
     "https://example.com/?key=secret",
   ])
