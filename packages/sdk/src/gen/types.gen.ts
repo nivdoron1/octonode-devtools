@@ -4,6 +4,471 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type PostApiAppsRuntimeExecutionsData = {
+    body: {
+        projectId: string;
+        workflowId: string;
+        idempotencyKey: string;
+        input?: {
+            [key: string]: unknown;
+        };
+        env?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/apps/runtime/executions';
+};
+
+export type PostApiAppsRuntimeExecutionsErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    401: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    402: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    404: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    409: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    413: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    429: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    503: {
+        error: string;
+    };
+};
+
+export type PostApiAppsRuntimeExecutionsError = PostApiAppsRuntimeExecutionsErrors[keyof PostApiAppsRuntimeExecutionsErrors];
+
+export type PostApiAppsRuntimeExecutionsResponses = {
+    /**
+     * Success
+     */
+    202: {
+        requestHash: string;
+        dispatchPending: boolean;
+        runId: string;
+        workflowId: string;
+        status: 'queued' | 'running' | 'succeeded' | 'failed' | 'cancelled' | 'interrupted';
+        submittedAt: number;
+        startedAt?: number;
+        finishedAt?: number;
+        result?: {
+            workflowId: string;
+            runId: string;
+            env?: string;
+            status: 'ok' | 'error' | 'partial';
+            nodes: {
+                [key: string]: {
+                    status: 'ok' | 'error' | 'skipped';
+                    attempts: number;
+                    durationMs: number;
+                    command?: string;
+                    inputs?: unknown;
+                    outputs?: unknown;
+                    error?: {
+                        code: string;
+                        message: string;
+                        retryable?: boolean;
+                        details?: unknown;
+                        stack?: string;
+                    };
+                    note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
+                };
+            };
+            outputs: {
+                [key: string]: unknown;
+            };
+            logs?: Array<{
+                id: string;
+                runId: string;
+                nodeId: string;
+                level: 'debug' | 'info' | 'warn' | 'error';
+                source: 'stdout' | 'stderr' | 'engine';
+                message: string;
+                timestamp: number;
+            }>;
+            snapshot?: {
+                revision: string;
+                digest: string;
+                workflowJson: string;
+                code: Array<{
+                    path: string;
+                    content: string;
+                }>;
+            };
+            durationMs: number;
+        };
+        error?: string;
+    };
+};
+
+export type PostApiAppsRuntimeExecutionsResponse = PostApiAppsRuntimeExecutionsResponses[keyof PostApiAppsRuntimeExecutionsResponses];
+
+export type PostApiAppsRuntimeDataData = {
+    body: {
+        operation: 'project.get';
+        projectId: string;
+    } | {
+        operation: 'tables.list';
+        projectId: string;
+    } | {
+        operation: 'rows.list';
+        projectId: string;
+        tableId: string;
+        input: {
+            cursor?: string;
+            limit?: number;
+        };
+    } | {
+        operation: 'rows.insert';
+        projectId: string;
+        tableId: string;
+        input: {
+            data: {
+                [key: string]: unknown;
+            };
+        };
+    } | {
+        operation: 'rows.update';
+        projectId: string;
+        tableId: string;
+        rowId: string;
+        input: {
+            data: {
+                [key: string]: unknown;
+            };
+            expectedVersion: number;
+        };
+    } | {
+        operation: 'rows.delete';
+        projectId: string;
+        tableId: string;
+        rowId: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/apps/runtime/data';
+};
+
+export type PostApiAppsRuntimeDataErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    401: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    404: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    409: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    413: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    503: {
+        error: string;
+    };
+};
+
+export type PostApiAppsRuntimeDataError = PostApiAppsRuntimeDataErrors[keyof PostApiAppsRuntimeDataErrors];
+
+export type PostApiAppsRuntimeDataResponses = {
+    /**
+     * Success
+     */
+    200: Array<{
+        id: string;
+        projectId: string;
+        name: string;
+        slug: string;
+        description?: string;
+        storageMode: 'sqlite' | 'kv_blob';
+        columns: Array<{
+            id: string;
+            key: string;
+            name: string;
+            type: 'text' | 'number' | 'boolean' | 'date' | 'datetime' | 'json';
+            required: boolean;
+            defaultValue?: unknown;
+            position: number;
+        }>;
+        rowCount: number;
+        schemaVersion: number;
+        createdAt: number;
+        updatedAt: number;
+    }> | {
+        rows: Array<{
+            id: string;
+            tableId: string;
+            data: {
+                [key: string]: unknown;
+            };
+            version: number;
+            createdAt: number;
+            updatedAt: number;
+        }>;
+        nextCursor?: string;
+    } | {
+        id: string;
+        tableId: string;
+        data: {
+            [key: string]: unknown;
+        };
+        version: number;
+        createdAt: number;
+        updatedAt: number;
+    } | {
+        id: string;
+        name: string;
+    } | {
+        ok: true;
+    };
+};
+
+export type PostApiAppsRuntimeDataResponse = PostApiAppsRuntimeDataResponses[keyof PostApiAppsRuntimeDataResponses];
+
+export type GetApiAppsRuntimeSessionData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/apps/runtime/session';
+};
+
+export type GetApiAppsRuntimeSessionErrors = {
+    /**
+     * Error
+     */
+    401: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    404: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    409: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    503: {
+        error: string;
+    };
+};
+
+export type GetApiAppsRuntimeSessionError = GetApiAppsRuntimeSessionErrors[keyof GetApiAppsRuntimeSessionErrors];
+
+export type GetApiAppsRuntimeSessionResponses = {
+    /**
+     * Success
+     */
+    200: {
+        appId: string;
+        installationId: string;
+        userId: string;
+        workspace: {
+            kind: 'user' | 'team' | 'org';
+            id: string;
+        };
+        version: string;
+        grants: Array<{
+            action: 'projects:read' | 'data:read' | 'data:write' | 'workflows:run';
+            projectId: string;
+        }>;
+        expiresAt: number;
+    };
+};
+
+export type GetApiAppsRuntimeSessionResponse = GetApiAppsRuntimeSessionResponses[keyof GetApiAppsRuntimeSessionResponses];
+
+export type GetApiMarketplaceAppsData = {
+    body?: never;
+    path?: never;
+    query: {
+        workspace: string;
+        offset?: number;
+        q?: string;
+        sort?: 'name' | 'updated';
+        direction?: 'asc' | 'desc';
+    };
+    url: '/api/marketplace/apps';
+};
+
+export type GetApiMarketplaceAppsErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    401: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    404: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    503: {
+        error: string;
+    };
+};
+
+export type GetApiMarketplaceAppsError = GetApiMarketplaceAppsErrors[keyof GetApiMarketplaceAppsErrors];
+
+export type GetApiMarketplaceAppsResponses = {
+    /**
+     * Success
+     */
+    200: {
+        items: Array<{
+            id: string;
+            slug: string;
+            name: string;
+            description: string | null;
+            owner: {
+                kind: 'user' | 'team' | 'org';
+                id: string;
+            };
+            distribution: 'user' | 'team' | 'org' | 'public';
+            version: string;
+            revision: number;
+            status: 'draft' | 'published' | 'deprecated';
+            manifestSha256: string;
+            rating: number | null;
+            reviewCount: number;
+            app: {
+                apiVersion: '1';
+                hosting: 'self-hosted';
+                applicationUrl: string;
+                iconUrl?: string;
+                privacyUrl?: string;
+                supportUrl?: string;
+                redirectUrls: Array<string>;
+                webhookUrl?: string;
+                requestedActions?: Array<'projects:read' | 'data:read' | 'data:write' | 'workflows:run'>;
+                extensions?: Array<{
+                    id: string;
+                    target: 'app.page' | 'workspace.block';
+                    url: string;
+                    sha256: string;
+                }>;
+            } | {
+                apiVersion: '2';
+                hosting: 'extension-only';
+                iconUrl?: string;
+                settings?: Array<{
+                    id: string;
+                    label: string;
+                    defaultValue?: string;
+                }>;
+                privacyUrl?: string;
+                supportUrl?: string;
+                requestedActions?: Array<'projects:read' | 'data:read' | 'data:write' | 'workflows:run'>;
+                extensions: Array<{
+                    id: string;
+                    target: 'app.page' | 'workspace.block';
+                    path: string;
+                    sha256: string;
+                }>;
+            };
+        }>;
+        total: number;
+        offset: number;
+        limit: number;
+    };
+};
+
+export type GetApiMarketplaceAppsResponse = GetApiMarketplaceAppsResponses[keyof GetApiMarketplaceAppsResponses];
+
 export type GetApiCapabilitiesData = {
     body?: never;
     path?: never;
