@@ -51,7 +51,8 @@ direct network access; the scoped host bridge below provides approved project ac
 
 Declare shared string settings in the v2 manifest and read them through
 `getAppSession().configuration`. Customers configure or disable the app under its installation
-settings. Blocks appear in workspace home; only page contributions get an Open app link.
+settings. Blocks appear in workspace home; an `app.page` or self-hosted web app
+can have an Open app link.
 See `examples/workspace-notice-app` and `docs/plugins.md` in the engine repository.
 
 ## Self-hosted apps
@@ -135,25 +136,12 @@ const products = await project.tables.rows.list("products");
 
 The backend helper verifies the bearer on each `connectAppServer` call and uses that bearer only for the app runtime endpoints. Sessions expire after five minutes; background work requires a separately approved installation service identity.
 
-## App SDK entry points
+## End-to-end app guides
 
-For a complete app, run `octonodes app create <name>` and follow the
-[Playbook quickstart](https://playbook.octonodes.com/docs/apps-quickstart).
-The default project is a workspace block with no backend. Add an `app.page` via
-`octonodes app extension add overview --target app.page`, or choose
-`--template full` for a hosted Fetch API backend. The CLI bundles declared
-extension entries and calls `startExtension`; a manually built entry must call
-it itself.
-
-| Import | Role |
-| --- | --- |
-| `@octonodes/ui-extensions/react` | Define and render `workspace.block` or `app.page` |
-| `@octonodes/ui-extensions` | Read the installed session and shared settings |
-| `@octonodes/ui-extensions/app` | Use live installation grants in an extension iframe |
-| `@octonodes/ui-extensions/app/server` | Verify a bearer and use granted projects from your backend |
-
-The backend helper must run on each authenticated request. Keep the registered
-app ID and API origin in server configuration. For a complete project,
-production launch and consent flow, see [configuration](https://playbook.octonodes.com/docs/apps-configuration),
+The public Playbook is the source for the complete authoring path:
+[quickstart](https://playbook.octonodes.com/docs/apps-quickstart),
+[project configuration](https://playbook.octonodes.com/docs/apps-configuration),
+[SDK imports and permissions](https://playbook.octonodes.com/docs/apps-sdk),
 [hosting](https://playbook.octonodes.com/docs/apps-hosting), and
-[publishing](https://playbook.octonodes.com/docs/apps-publishing).
+[publishing and updates](https://playbook.octonodes.com/docs/apps-publishing).
+The CLI scaffold supplies a runnable extension-only or full app example.

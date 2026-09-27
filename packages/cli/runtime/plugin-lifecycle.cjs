@@ -1221,6 +1221,91 @@ var require_source_index = __commonJS({
   }
 });
 
+// packages/schema/dist/app.js
+var require_app = __commonJS({
+  "packages/schema/dist/app.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AppDefinition = exports2.ExtensionOnlyApp = exports2.SelfHostedApp = exports2.SelfHostedAppExtension = exports2.AppAction = void 0;
+    var zod_1 = require("zod");
+    exports2.AppAction = zod_1.z.enum(["projects:read", "data:read", "data:write", "workflows:run"]);
+    var appUrl = zod_1.z.string().max(2048).url().refine((value) => {
+      try {
+        const url = new URL(value);
+        return value === value.trim() && /^https:\/\//i.test(value) && !/[\p{Cc}\s\\?#]/u.test(value) && url.protocol === "https:" && !url.username && !url.password && !url.search && !url.hash && url.hostname.includes(".") && !url.hostname.endsWith(".") && !url.hostname.includes(":") && !/^\d+\.\d+\.\d+\.\d+$/.test(url.hostname) && !/\.(localhost|local|internal)$/.test(url.hostname);
+      } catch {
+        return false;
+      }
+    }, "App URLs must use public HTTPS hostnames without credentials, query strings or fragments");
+    exports2.SelfHostedAppExtension = zod_1.z.object({
+      id: zod_1.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
+      target: zod_1.z.enum(["app.page", "workspace.block"]),
+      url: appUrl,
+      sha256: zod_1.z.string().regex(/^sha256:[a-f0-9]{64}$/)
+    }).strict();
+    exports2.SelfHostedApp = zod_1.z.object({
+      apiVersion: zod_1.z.literal("1"),
+      hosting: zod_1.z.literal("self-hosted"),
+      applicationUrl: appUrl,
+      iconUrl: appUrl.optional(),
+      privacyUrl: appUrl.optional(),
+      supportUrl: appUrl.optional(),
+      redirectUrls: zod_1.z.array(appUrl).min(1).max(10),
+      webhookUrl: appUrl.optional(),
+      requestedActions: zod_1.z.array(exports2.AppAction).max(4).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
+      extensions: zod_1.z.array(exports2.SelfHostedAppExtension).max(32).default([])
+    }).strict().superRefine((app, ctx) => {
+      if (!URL.canParse(app.applicationUrl))
+        return;
+      const origin = new URL(app.applicationUrl).origin;
+      for (const [path, url] of [
+        ...app.redirectUrls.map((url2, index) => [["redirectUrls", index], url2]),
+        ...app.iconUrl ? [[["iconUrl"], app.iconUrl]] : [],
+        ...app.webhookUrl ? [[["webhookUrl"], app.webhookUrl]] : [],
+        ...app.extensions.map((extension, index) => [["extensions", index, "url"], extension.url])
+      ]) {
+        if (URL.canParse(url) && new URL(url).origin !== origin)
+          ctx.addIssue({
+            code: "custom",
+            path: [...path],
+            message: "App endpoints and assets must share the application origin"
+          });
+      }
+      if (new Set(app.redirectUrls).size !== app.redirectUrls.length)
+        ctx.addIssue({ code: "custom", path: ["redirectUrls"], message: "App redirect URLs must be unique" });
+      if (new Set(app.extensions.map((extension) => extension.id)).size !== app.extensions.length)
+        ctx.addIssue({ code: "custom", path: ["extensions"], message: "App extension IDs must be unique" });
+    });
+    exports2.ExtensionOnlyApp = zod_1.z.object({
+      apiVersion: zod_1.z.literal("2"),
+      hosting: zod_1.z.literal("extension-only"),
+      iconUrl: appUrl.optional(),
+      settings: zod_1.z.array(zod_1.z.object({
+        id: zod_1.z.string().regex(/^[a-z][a-zA-Z0-9_]*$/).max(100),
+        label: zod_1.z.string().trim().min(1).max(240),
+        defaultValue: zod_1.z.string().max(4e3).default("")
+      }).strict()).max(32).default([]),
+      privacyUrl: appUrl.optional(),
+      supportUrl: appUrl.optional(),
+      requestedActions: zod_1.z.array(exports2.AppAction).max(0).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
+      extensions: zod_1.z.array(zod_1.z.object({
+        id: exports2.SelfHostedAppExtension.shape.id,
+        target: exports2.SelfHostedAppExtension.shape.target,
+        path: zod_1.z.string().regex(/^extensions\/[a-z0-9][a-z0-9-]*\.js$/).max(150),
+        sha256: exports2.SelfHostedAppExtension.shape.sha256
+      }).strict()).min(1).max(32)
+    }).strict().superRefine((app, ctx) => {
+      if (new Set(app.settings.map((setting) => setting.id)).size !== app.settings.length)
+        ctx.addIssue({ code: "custom", path: ["settings"], message: "App setting IDs must be unique" });
+      for (const field of ["id", "path"]) {
+        if (new Set(app.extensions.map((extension) => extension[field])).size !== app.extensions.length)
+          ctx.addIssue({ code: "custom", path: ["extensions"], message: `App extension ${field}s must be unique` });
+      }
+    });
+    exports2.AppDefinition = zod_1.z.union([exports2.SelfHostedApp, exports2.ExtensionOnlyApp]);
+  }
+});
+
 // packages/schema/dist/plugin/plugin.js
 var require_plugin = __commonJS({
   "packages/schema/dist/plugin/plugin.js"(exports2) {
@@ -1231,6 +1316,7 @@ var require_plugin = __commonJS({
     var ipc_envelope_1 = require_ipc_envelope();
     var icons_1 = require_icons();
     var constants_1 = require_constants();
+    var app_1 = require_app();
     exports2.PluginScope = zod_1.z.enum(["user", "group", "org", "public"]);
     exports2.PluginUiTarget = zod_1.z.enum(["node.inspector.inputs"]);
     exports2.PLUGIN_UI_BUNDLE_MAX_BYTES = 512 * 1024;
@@ -1333,10 +1419,17 @@ var require_plugin = __commonJS({
       scope: zod_1.z.array(exports2.PluginScope).default(["user"]),
       /** Coarse runtime capabilities the plugin requests; consented to at install. */
       permissions: zod_1.z.array(exports2.PluginPermission).default([]),
+      app: app_1.AppDefinition.optional(),
       integration: exports2.PluginIntegration.optional(),
       connections: zod_1.z.record(zod_1.z.string().regex(/^[a-z0-9][a-z0-9-]*$/), exports2.PluginConnection).optional(),
       nodes: zod_1.z.array(exports2.PluginNode).default([])
     }).superRefine((manifest2, ctx) => {
+      if (manifest2.app && (manifest2.nodes.length || manifest2.library || manifest2.permissions.length || Object.keys(manifest2.connections ?? {}).length || manifest2.integration?.npm || manifest2.integration?.npmDependencies?.length))
+        ctx.addIssue({
+          code: "custom",
+          path: ["app"],
+          message: "Self-hosted apps cannot include executable plugin nodes, libraries, dependencies, connections or plugin permissions"
+        });
       const npm = manifest2.integration?.npm;
       const dependencies = manifest2.integration?.npmDependencies ?? (npm ? [npm] : []);
       if (new Set(dependencies.map((item) => item.package)).size !== dependencies.length)
@@ -11296,6 +11389,156 @@ var require_access_tokens = __commonJS({
   }
 });
 
+// packages/schema/dist/plugin/version.js
+var require_version = __commonJS({
+  "packages/schema/dist/plugin/version.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PluginVersion = void 0;
+    exports2.comparePluginVersions = comparePluginVersions;
+    exports2.bumpPluginVersion = bumpPluginVersion;
+    var zod_1 = require("zod");
+    exports2.PluginVersion = zod_1.z.string().max(200).regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/, "Use a semantic version such as 1.2.3 or 2.0.0-beta.1");
+    function comparePluginVersions(left, right) {
+      const validLeft = exports2.PluginVersion.safeParse(left).success;
+      const validRight = exports2.PluginVersion.safeParse(right).success;
+      if (!validLeft || !validRight)
+        return Number(validLeft) - Number(validRight) || left.localeCompare(right);
+      const [leftCore, ...leftPre] = left.split("+")[0].split("-");
+      const [rightCore, ...rightPre] = right.split("+")[0].split("-");
+      const numeric = (a2, b2) => a2.length - b2.length || (a2 > b2 ? 1 : a2 < b2 ? -1 : 0);
+      const a = leftCore.split(".");
+      const b = rightCore.split(".");
+      for (let i = 0; i < 3; i++) {
+        const difference = numeric(a[i], b[i]);
+        if (difference)
+          return difference;
+      }
+      if (!leftPre.length || !rightPre.length)
+        return Number(!leftPre.length) - Number(!rightPre.length);
+      const ap = leftPre.join("-").split(".");
+      const bp = rightPre.join("-").split(".");
+      for (let i = 0; i < Math.min(ap.length, bp.length); i++) {
+        if (ap[i] === bp[i])
+          continue;
+        const an = /^\d+$/.test(ap[i]);
+        const bn = /^\d+$/.test(bp[i]);
+        return an && bn ? numeric(ap[i], bp[i]) : an !== bn ? Number(bn) - Number(an) : ap[i] > bp[i] ? 1 : -1;
+      }
+      return ap.length - bp.length;
+    }
+    function bumpPluginVersion(version, release2) {
+      exports2.PluginVersion.parse(version);
+      const core = version.split("+")[0];
+      const prerelease = core.includes("-");
+      let [major, minor, patch] = core.split("-")[0].split(".").map(BigInt);
+      if (release2 === "major") {
+        major += !prerelease || minor !== 0n || patch !== 0n ? 1n : 0n;
+        minor = 0n;
+        patch = 0n;
+      } else if (release2 === "minor") {
+        minor += !prerelease || patch !== 0n ? 1n : 0n;
+        patch = 0n;
+      } else
+        patch += prerelease ? 0n : 1n;
+      return exports2.PluginVersion.parse(`${major}.${minor}.${patch}`);
+    }
+  }
+});
+
+// packages/schema/dist/app-installation.js
+var require_app_installation = __commonJS({
+  "packages/schema/dist/app-installation.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.appSettingsSchema = exports2.appInstallationSchema = exports2.appUninstallSchema = exports2.appInstallSchema = exports2.appGrantsSchema = exports2.appGrantSchema = exports2.appReviewSchema = exports2.appStatusSchema = exports2.appLifecycleSchema = exports2.appPublishSchema = void 0;
+    var zod_1 = require("zod");
+    var app_1 = require_app();
+    var collaboration_1 = require_collaboration();
+    var version_1 = require_version();
+    exports2.appPublishSchema = zod_1.z.object({
+      workspace: collaboration_1.workspaceRefSchema,
+      distribution: zod_1.z.enum(["user", "team", "org", "public"]).optional(),
+      slug: zod_1.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
+      name: zod_1.z.string().trim().min(1).max(200),
+      description: zod_1.z.string().max(4e3).optional(),
+      version: version_1.PluginVersion,
+      app: app_1.AppDefinition,
+      bundles: zod_1.z.array(zod_1.z.object({
+        id: zod_1.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
+        code: zod_1.z.string().min(1).max(2 * 1024 * 1024)
+      }).strict()).max(32).optional(),
+      expectedRevision: zod_1.z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1)
+    }).strict().refine((body) => !body.distribution || body.distribution === "public" || body.distribution === body.workspace.kind, "Private distribution must match the publisher workspace");
+    exports2.appLifecycleSchema = zod_1.z.object({
+      workspace: collaboration_1.workspaceRefSchema,
+      expectedRevision: zod_1.z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1)
+    }).strict();
+    exports2.appStatusSchema = exports2.appLifecycleSchema.extend({ status: zod_1.z.enum(["published", "deprecated"]) }).strict();
+    exports2.appReviewSchema = zod_1.z.object({ stars: zod_1.z.number().int().min(1).max(5), body: zod_1.z.string().max(2e3) }).strict();
+    exports2.appGrantSchema = zod_1.z.object({
+      action: app_1.AppAction,
+      projectId: zod_1.z.string().min(1).max(128)
+    }).strict();
+    exports2.appGrantsSchema = zod_1.z.array(exports2.appGrantSchema).max(100).refine((grants) => new Set(grants.map((grant) => JSON.stringify([grant.action, grant.projectId]))).size === grants.length, "App grants must be unique");
+    exports2.appInstallSchema = zod_1.z.object({
+      appId: zod_1.z.string().uuid(),
+      version: version_1.PluginVersion,
+      manifestSha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      grants: exports2.appGrantsSchema,
+      expectedRevision: zod_1.z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1)
+    }).strict();
+    exports2.appUninstallSchema = zod_1.z.object({
+      expectedRevision: zod_1.z.number().int().min(1).max(Number.MAX_SAFE_INTEGER - 1)
+    }).strict();
+    exports2.appInstallationSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      appId: zod_1.z.string().uuid(),
+      workspace: collaboration_1.workspaceRefSchema,
+      version: version_1.PluginVersion,
+      manifestSha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      grants: exports2.appGrantsSchema,
+      status: zod_1.z.enum(["active", "uninstalled"]),
+      enabled: zod_1.z.boolean(),
+      configuration: zod_1.z.record(zod_1.z.string().max(4e3)),
+      revision: zod_1.z.number().int().positive(),
+      installedBy: zod_1.z.string(),
+      updatedAt: zod_1.z.number().int().nonnegative()
+    }).strict();
+    exports2.appSettingsSchema = zod_1.z.object({
+      expectedRevision: zod_1.z.number().int().min(1).max(Number.MAX_SAFE_INTEGER - 1),
+      enabled: zod_1.z.boolean(),
+      configuration: zod_1.z.record(zod_1.z.string().max(4e3)).refine((value) => Object.keys(value).length <= 32)
+    }).strict();
+  }
+});
+
+// packages/schema/dist/app-analytics.js
+var require_app_analytics = __commonJS({
+  "packages/schema/dist/app-analytics.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.appAnalyticsQuerySchema = void 0;
+    var zod_1 = require("zod");
+    var date = zod_1.z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine((value) => {
+      const timestamp = Date.parse(`${value}T00:00:00Z`);
+      return Number.isFinite(timestamp) && new Date(timestamp).toISOString().slice(0, 10) === value;
+    }, "Invalid calendar date");
+    exports2.appAnalyticsQuerySchema = zod_1.z.object({
+      days: zod_1.z.enum(["7", "30", "90"]).default("30"),
+      from: date.optional(),
+      to: date.optional()
+    }).refine(({ from, to }) => {
+      if (!from && !to)
+        return true;
+      if (!from || !to)
+        return false;
+      const span = Date.parse(to) - Date.parse(from);
+      return span >= 0 && span < 366 * 864e5;
+    }, "Choose both dates in order, spanning at most 366 days");
+  }
+});
+
 // packages/schema/dist/github.js
 var require_github = __commonJS({
   "packages/schema/dist/github.js"(exports2) {
@@ -11424,63 +11667,6 @@ var require_jobs = __commonJS({
       compilationSucceeded: zod_1.z.boolean().optional(),
       timestamp: zod_1.z.number().int().nonnegative()
     }).strict();
-  }
-});
-
-// packages/schema/dist/plugin/version.js
-var require_version = __commonJS({
-  "packages/schema/dist/plugin/version.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PluginVersion = void 0;
-    exports2.comparePluginVersions = comparePluginVersions;
-    exports2.bumpPluginVersion = bumpPluginVersion;
-    var zod_1 = require("zod");
-    exports2.PluginVersion = zod_1.z.string().max(200).regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/, "Use a semantic version such as 1.2.3 or 2.0.0-beta.1");
-    function comparePluginVersions(left, right) {
-      const validLeft = exports2.PluginVersion.safeParse(left).success;
-      const validRight = exports2.PluginVersion.safeParse(right).success;
-      if (!validLeft || !validRight)
-        return Number(validLeft) - Number(validRight) || left.localeCompare(right);
-      const [leftCore, ...leftPre] = left.split("+")[0].split("-");
-      const [rightCore, ...rightPre] = right.split("+")[0].split("-");
-      const numeric = (a2, b2) => a2.length - b2.length || (a2 > b2 ? 1 : a2 < b2 ? -1 : 0);
-      const a = leftCore.split(".");
-      const b = rightCore.split(".");
-      for (let i = 0; i < 3; i++) {
-        const difference = numeric(a[i], b[i]);
-        if (difference)
-          return difference;
-      }
-      if (!leftPre.length || !rightPre.length)
-        return Number(!leftPre.length) - Number(!rightPre.length);
-      const ap = leftPre.join("-").split(".");
-      const bp = rightPre.join("-").split(".");
-      for (let i = 0; i < Math.min(ap.length, bp.length); i++) {
-        if (ap[i] === bp[i])
-          continue;
-        const an = /^\d+$/.test(ap[i]);
-        const bn = /^\d+$/.test(bp[i]);
-        return an && bn ? numeric(ap[i], bp[i]) : an !== bn ? Number(bn) - Number(an) : ap[i] > bp[i] ? 1 : -1;
-      }
-      return ap.length - bp.length;
-    }
-    function bumpPluginVersion(version, release2) {
-      exports2.PluginVersion.parse(version);
-      const core = version.split("+")[0];
-      const prerelease = core.includes("-");
-      let [major, minor, patch] = core.split("-")[0].split(".").map(BigInt);
-      if (release2 === "major") {
-        major += !prerelease || minor !== 0n || patch !== 0n ? 1n : 0n;
-        minor = 0n;
-        patch = 0n;
-      } else if (release2 === "minor") {
-        minor += !prerelease || patch !== 0n ? 1n : 0n;
-        patch = 0n;
-      } else
-        patch += prerelease ? 0n : 1n;
-      return exports2.PluginVersion.parse(`${major}.${minor}.${patch}`);
-    }
   }
 });
 
@@ -11807,6 +11993,41 @@ var require_allowlist = __commonJS({
   }
 });
 
+// packages/schema/dist/app-runtime.js
+var require_app_runtime = __commonJS({
+  "packages/schema/dist/app-runtime.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.appExecutionRequestSchema = exports2.appDataRequestSchema = void 0;
+    var zod_1 = require("zod");
+    var data_tables_js_1 = require_data_tables();
+    var projectId = zod_1.z.string().min(1).max(128);
+    var tableId = zod_1.z.string().min(1).max(128);
+    var rowId = zod_1.z.string().min(1).max(128);
+    exports2.appDataRequestSchema = zod_1.z.discriminatedUnion("operation", [
+      zod_1.z.object({ operation: zod_1.z.literal("project.get"), projectId }).strict(),
+      zod_1.z.object({ operation: zod_1.z.literal("tables.list"), projectId }).strict(),
+      zod_1.z.object({ operation: zod_1.z.literal("rows.list"), projectId, tableId, input: data_tables_js_1.ListRowsInput }).strict(),
+      zod_1.z.object({ operation: zod_1.z.literal("rows.insert"), projectId, tableId, input: data_tables_js_1.InsertRowInput }).strict(),
+      zod_1.z.object({
+        operation: zod_1.z.literal("rows.update"),
+        projectId,
+        tableId,
+        rowId,
+        input: data_tables_js_1.UpdateRowInput.extend({ expectedVersion: zod_1.z.number().int().positive() })
+      }).strict(),
+      zod_1.z.object({ operation: zod_1.z.literal("rows.delete"), projectId, tableId, rowId }).strict()
+    ]);
+    exports2.appExecutionRequestSchema = zod_1.z.object({
+      projectId,
+      workflowId: zod_1.z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/).max(240),
+      idempotencyKey: zod_1.z.string().uuid(),
+      input: zod_1.z.record(zod_1.z.string(), zod_1.z.unknown()).default({}),
+      env: zod_1.z.string().max(100).optional()
+    }).strict();
+  }
+});
+
 // packages/schema/dist/index.js
 var require_dist = __commonJS({
   "packages/schema/dist/index.js"(exports2) {
@@ -11864,6 +12085,9 @@ var require_dist = __commonJS({
     __exportStar(require_settings(), exports2);
     __exportStar(require_access_tokens(), exports2);
     __exportStar(require_plugin(), exports2);
+    __exportStar(require_app(), exports2);
+    __exportStar(require_app_installation(), exports2);
+    __exportStar(require_app_analytics(), exports2);
     __exportStar(require_github(), exports2);
     __exportStar(require_triggers(), exports2);
     __exportStar(require_lifecycle(), exports2);
@@ -11874,6 +12098,7 @@ var require_dist = __commonJS({
     __exportStar(require_publishing(), exports2);
     __exportStar(require_toolkit(), exports2);
     __exportStar(require_allowlist(), exports2);
+    __exportStar(require_app_runtime(), exports2);
   }
 });
 
@@ -12436,6 +12661,9 @@ var require_api_exposure = __commonJS({
     exports2.developerOpenApiDocument = developerOpenApiDocument;
     exports2.PRIVATE_API_DOC_EMAIL = "nivdoron1234@gmail.com";
     var DEVELOPER_API_RULES = [
+      [/^\/api\/apps\/runtime\/session$/, /* @__PURE__ */ new Set(["GET"])],
+      [/^\/api\/apps\/runtime\/executions$/, /* @__PURE__ */ new Set(["POST"])],
+      [/^\/api\/apps\/runtime\/data$/, /* @__PURE__ */ new Set(["POST"])],
       [/^\/api\/(?:capabilities|identity|workspaces|workspaces\/permissions)$/, /* @__PURE__ */ new Set(["GET"])],
       [/^\/api\/profile$/, /* @__PURE__ */ new Set(["GET"])],
       [/^\/api\/profiles\/(?:workspace-members|[^/]+\/avatar)$/, /* @__PURE__ */ new Set(["GET"])],
@@ -13894,6 +14122,8 @@ function verifyBuild(directory) {
   const files = pluginFiles(directory);
   if (!files.includes(BUILD_RECORD)) throw new Error("Missing build record; run octonodes plugin build first");
   const record = JSON.parse((0, import_node_fs7.readFileSync)((0, import_node_path7.join)(directory, BUILD_RECORD), "utf8"));
+  if (manifest2.app && (record.runtime || record.ui?.length))
+    throw new Error("Self-hosted apps cannot include a prepared runtime or packaged UI");
   if (record.runtime) {
     const runtime = import_schema3.PreparedPluginRuntime.parse(record.runtime);
     if ((manifest2.integration?.npm || manifest2.integration?.npmDependencies?.length) && !runtime.dependencies)
@@ -13913,6 +14143,17 @@ function verifyBuild(directory) {
   for (const file of expected) {
     if (record.files[file] !== fileHash((0, import_node_path7.join)(directory, file)))
       throw new Error(`Plugin file changed since build: ${file}`);
+  }
+  if (manifest2.app) {
+    const assets = manifest2.app.hosting === "extension-only" ? manifest2.app.extensions : [];
+    const allowed = ["octonode.json", ...assets.map((extension) => extension.path)].sort();
+    if (JSON.stringify(expected) !== JSON.stringify(allowed))
+      throw new Error("App artifacts contain registration metadata only and declared static bundles");
+    for (const extension of assets) {
+      if ((0, import_node_fs7.lstatSync)((0, import_node_path7.join)(directory, extension.path)).size > 2 * 1024 * 1024 || `sha256:${fileHash((0, import_node_path7.join)(directory, extension.path))}` !== extension.sha256)
+        throw new Error(`Invalid app bundle: ${extension.path}`);
+    }
+    return { manifest: manifest2, files };
   }
   if (!expected.includes("dist/index.js") || !manifest2.nodes.length || manifest2.nodes.some(
     (node) => node.command !== `node dist/index.js ${node.id}` && !((manifest2.integration?.npm || manifest2.integration?.npmDependencies?.length) && node.command === `node --experimental-import-meta-resolve dist/index.js ${node.id}`)

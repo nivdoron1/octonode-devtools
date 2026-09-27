@@ -1,6 +1,6 @@
 {
   "name": "@octonodes/cli",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Octonode API and plugin development CLI.",
   "license": "MIT",
   "repository": {
