@@ -6,6 +6,7 @@ import { build } from "esbuild";
 import { buildAppProject, verifyWebBuild } from "./build";
 import { readAppSource } from "./source";
 import { createAppServer } from "./server";
+import { ensureCloudflared } from "./cloudflared";
 import { publicOrigin, startTunnel } from "./tunnel";
 import { createDevelopmentSession } from "./development";
 import type { DevOptions } from "./types";
@@ -41,10 +42,12 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
   let timer: ReturnType<typeof setTimeout> | undefined;
   let heartbeat: ReturnType<typeof setInterval> | undefined;
   let closed = false;
+  const startup = new AbortController();
   let buildTask = Promise.resolve();
   const close = async () => {
     if (closed) return;
     closed = true;
+    startup.abort();
     clearTimeout(timer);
     watcher?.close();
     clearInterval(heartbeat);
@@ -62,11 +65,13 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
   process.once("SIGTERM", onSignal);
   try {
     const port = await host.listen();
+    const executable = !options.localhost && !options.tunnelUrl ? await ensureCloudflared(startup.signal) : undefined;
+    startup.signal.throwIfAborted();
     const origin = options.localhost
       ? `http://127.0.0.1:${port}`
       : options.tunnelUrl
         ? publicOrigin(options.tunnelUrl)
-        : await (tunnel = startTunnel(port)).url;
+        : await (tunnel = startTunnel(port, executable)).url;
     host.setOrigin(origin);
     if (!options.localhost) {
       let reachable = false;

@@ -29,7 +29,7 @@ export function startTunnel(port: number, executable = "cloudflared") {
     process.stdout.on("data", receive);
     process.stderr.on("data", receive);
     process.on("error", () =>
-      finish(new Error("Install cloudflared (brew install cloudflared), use --tunnel-url, or pass --use-localhost")),
+      finish(new Error("Could not start the tunnel helper; retry, use --tunnel-url, or pass --use-localhost")),
     );
     process.on("exit", () => finish(new Error("Tunnel exited before becoming ready")));
   });

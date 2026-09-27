@@ -23,7 +23,9 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
     const root = join(parent, "full");
     symlinkSync(resolve("node_modules"), join(root, "node_modules"), "dir");
     dev = await startAppDev(root, { localhost: true, open: false });
-    assert.deepEqual(await (await fetch(dev.origin + "/api/hello")).json(), { message: "Hello from your app backend" });
+    assert.deepEqual(await (await fetch(dev.origin + "/api/hello")).json(), {
+      message: "Hello from your app backend",
+    });
     assert.equal((await fetch(dev.origin + "/_octonode/state")).status, 401);
     const headers = { authorization: `Bearer ${dev.secret}` };
     const state = await (await fetch(dev.origin + "/_octonode/state", { headers })).json();
@@ -75,15 +77,19 @@ test("full app release requires a production URL and separates server code from 
       encoding: "utf8",
     });
     assert.equal(typecheck.status, 0, typecheck.stdout + typecheck.stderr);
-    const smoke = spawnSync(process.execPath, ["--test", "tests/app.test.cjs"], { cwd: root, encoding: "utf8" });
+    const smoke = spawnSync(process.execPath, ["--test", "tests/app.test.cjs"], {
+      cwd: root,
+      encoding: "utf8",
+    });
     assert.equal(smoke.status, 0, smoke.stdout + smoke.stderr);
     const oldExtension = built.manifest.app.extensions[0];
     const oldBytes = readFileSync(join(built.webDirectory, "extensions", oldExtension.sha256.slice(7) + ".js"), "utf8");
     const entry = join(root, "src/extensions/notice.tsx");
     writeFileSync(entry, readFileSync(entry, "utf8").replace("Welcome to the workspace", "Version two"));
     const originalId = descriptor.extensions[0].id;
-    descriptor.extensions[0].id = oldExtension.sha256.slice(7);writeFileSync(descriptorPath,JSON.stringify(descriptor));
-    await assert.rejects(buildAppProject(root,"https://example.com"),/reserved for immutable assets/);
+    descriptor.extensions[0].id = oldExtension.sha256.slice(7);
+    writeFileSync(descriptorPath, JSON.stringify(descriptor));
+    await assert.rejects(buildAppProject(root, "https://example.com"), /reserved for immutable assets/);
     descriptor.extensions[0].id = originalId;
     descriptor.version = "0.2.0";
     writeFileSync(descriptorPath, JSON.stringify(descriptor));
@@ -121,7 +127,10 @@ test("full app release requires a production URL and separates server code from 
             sent = true;
             assert.equal(path, "/api/context");
             assert.equal(options.headers.authorization, `Bearer ${token}`);
-            return { ok: status === 200, json: async () => ({ workspace: { kind: "team", id: "alpha" } }) };
+            return {
+              ok: status === 200,
+              json: async () => ({ workspace: { kind: "team", id: "alpha" } }),
+            };
           },
         });
         await new Promise((resolve) => setImmediate(resolve));
@@ -204,7 +213,10 @@ test("publisher dev sessions refresh and revoke; publication sends fresh verifie
     process.env.OCTONODE_TOKEN = "test-publisher-token";
     await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
     const baseUrl = `http://127.0.0.1:${server.address().port}`;
-    const result = spawnSync(process.execPath, [cli, "app", "create", "draft"], { cwd: parent, encoding: "utf8" });
+    const result = spawnSync(process.execPath, [cli, "app", "create", "draft"], {
+      cwd: parent,
+      encoding: "utf8",
+    });
     assert.equal(result.status, 0, result.stderr);
     const root = join(parent, "draft");
     symlinkSync(resolve("node_modules"), join(root, "node_modules"));
@@ -252,5 +264,58 @@ test("tunnel origins reject URL credentials and startup failure is actionable", 
     "https://example.com/?key=secret",
   ])
     assert.throws(() => publicOrigin(url));
-  await assert.rejects(startTunnel(3000, "/nonexistent-octonode-cloudflared").url, /Install cloudflared/);
+  await assert.rejects(startTunnel(3000, "/nonexistent-octonode-cloudflared").url, /Could not start the tunnel helper/);
+});
+
+test("managed tunnel setup verifies downloads, reuses cache and recovers from corruption", async (t) => {
+  const { createHash } = await import("node:crypto");
+  const { readdirSync } = await import("node:fs");
+  const { c } = require("tar");
+  const { ensureCloudflared } = require("../packages/cli/dist/apps/cloudflared.js");
+  const { CLOUDFLARED_ASSETS } = require("../packages/cli/dist/apps/constants.js");
+  const root = mkdtempSync(join(tmpdir(), "octonodes-tunnel-cache-"));
+  const bytes = Buffer.from("test-only tunnel binary");
+  const sha256 = createHash("sha256").update(bytes).digest("hex");
+  let downloads = 0;
+  let payload = bytes;
+  let status = 200;
+  t.mock.method(globalThis, "fetch", async (url) => {
+    assert.match(String(url), /^https:\/\/github.com\/cloudflare\/cloudflared\/releases\/download\//);
+    downloads++;
+    return new Response(payload, { status });
+  });
+  CLOUDFLARED_ASSETS["test-raw"] = { file: "test", sha256 };
+  try {
+    const path = await ensureCloudflared(undefined, root, "test-raw");
+    assert.deepEqual(readFileSync(path), bytes);
+    assert.equal(await ensureCloudflared(undefined, root, "test-raw"), path);
+    assert.equal(downloads, 1);
+    writeFileSync(path, "corrupted cache");
+    payload = Buffer.from("bad download");
+    await assert.rejects(ensureCloudflared(undefined, root, "test-raw"), /checksum mismatch/);
+    assert.deepEqual(readdirSync(join(path, "..")), ["cloudflared"]);
+    status = 503;
+    await assert.rejects(ensureCloudflared(undefined, root, "test-raw"), /HTTP 503/);
+    status = 200;
+    payload = bytes;
+    await ensureCloudflared(undefined, root, "test-raw");
+    assert.deepEqual(readFileSync(path), bytes);
+    writeFileSync(join(root, "cloudflared"), bytes);
+    await c({ cwd: root, gzip: true, file: join(root, "asset.tgz") }, ["cloudflared"]);
+    payload = readFileSync(join(root, "asset.tgz"));
+    CLOUDFLARED_ASSETS["test-tar"] = {
+      file: "test.tgz",
+      sha256: createHash("sha256").update(payload).digest("hex"),
+      binarySha256: sha256,
+    };
+    assert.deepEqual(readFileSync(await ensureCloudflared(undefined, root, "test-tar")), bytes);
+    writeFileSync(path, "corrupted cache");
+    payload = bytes;
+    await assert.rejects(ensureCloudflared(AbortSignal.abort(), root, "test-raw"), /aborted/);
+    await assert.rejects(ensureCloudflared(undefined, root, "unsupported"), /--tunnel-url/);
+  } finally {
+    delete CLOUDFLARED_ASSETS["test-raw"];
+    delete CLOUDFLARED_ASSETS["test-tar"];
+    rmSync(root, { recursive: true, force: true });
+  }
 });

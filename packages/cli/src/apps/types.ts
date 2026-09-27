@@ -19,3 +19,5 @@ export interface DevOptions {
   baseUrl?: string;
   studioUrl?: string;
 }
+
+export type CloudflaredAsset = { file: string; sha256: string; binarySha256?: string };

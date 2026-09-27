@@ -324,3 +324,5 @@ Publish with `octonodes app publish --workspace user:<id>`, then install through
 consent. Updates require `--app-id` and `--revision`. Builds never publish or install.
 Workspace development requires the matching engine deployment and migration 0023.
 The source and artifact contract are documented in [the CLI plan](docs/app-cli-plan.md).
+
+App development automatically downloads and caches a verified tunnel helper. No Cloudflare account or separate installation is required; use `--use-localhost` for offline development or `--tunnel-url` for your own tunnel.

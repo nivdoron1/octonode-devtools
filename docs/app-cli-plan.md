@@ -17,9 +17,13 @@ Omit `--template full` for a static extension-only app. Both templates start wit
 workspace block. Add a page explicitly with
 `octonodes app extension add overview --target app.page`.
 
-`app dev` starts the HTTP adapter, builds declared extensions/backend, starts an installed
+`app dev` starts the HTTP adapter, builds declared extensions/backend, automatically prepares a
 Cloudflare Quick Tunnel, waits for public reachability, and opens the local preview.
-Install cloudflared separately (`brew install cloudflared` on macOS). Use
+No Cloudflare account, Homebrew, administrator privileges or separate installation is needed.
+The CLI downloads the pinned official helper on first use, verifies SHA-256 before execution,
+and reuses its verified cache under `~/.octonode/cache/cloudflared` (or `OCTONODE_CONFIG_DIR`).
+macOS and Linux support x64/arm64; Windows supports x64. The first run needs access to GitHub
+release downloads. Unsupported platforms can use a custom tunnel. Use
 `--use-localhost` for offline development, `--no-open` for terminal-only startup, or
 `--port 3000 --tunnel-url https://your-tunnel-host` with your existing tunnel.
 The descriptor never receives the temporary URL. Source changes rebuild automatically;
