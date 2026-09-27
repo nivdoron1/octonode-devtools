@@ -1,11 +1,13 @@
 // Generated from packages/ui-extensions/src/index.ts. Do not edit; run the Octonode SDK sync.
 export const UI_EXTENSION_API_VERSION = "1" as const;
-export const UI_EXTENSION_TARGETS = ["node.inspector.inputs"] as const;
+export const UI_EXTENSION_TARGETS = ["node.inspector.inputs", "app.page", "workspace.block"] as const;
 
 export type UiExtensionTarget = (typeof UI_EXTENSION_TARGETS)[number];
 
 export type UiExtensionTree =
   | { type: "text"; value: string }
+  | { type: "button"; id: string; label: string; disabled: boolean }
+  | { type: "text-field"; id: string; label: string; value: string; disabled: boolean }
   | { type: "node-form"; children: UiExtensionTree[] }
   | { type: "section"; title: string; children: UiExtensionTree[] }
   | { type: "input-field"; name: string; appearance?: "single-line" | "multiline" };
@@ -56,7 +58,22 @@ export function validateExtensionMessage(
     if (!node || typeof node !== "object" || depth > MAX_DEPTH || ++count > MAX_NODES) return false;
     const candidate = node as Partial<UiExtensionTree>;
     if (candidate.type === "text") return typeof candidate.value === "string" && candidate.value.length <= MAX_TEXT;
+    if (candidate.type === "button" || candidate.type === "text-field") {
+      return (
+        expectedTarget !== "node.inspector.inputs" &&
+        typeof candidate.id === "string" &&
+        candidate.id.length > 0 &&
+        candidate.id.length <= 100 &&
+        typeof candidate.label === "string" &&
+        candidate.label.trim().length > 0 &&
+        candidate.label.length <= 240 &&
+        typeof candidate.disabled === "boolean" &&
+        (candidate.type === "button" ||
+          ("value" in candidate && typeof candidate.value === "string" && candidate.value.length <= MAX_TEXT))
+      );
+    }
     if (candidate.type === "input-field") {
+      if (expectedTarget !== "node.inspector.inputs") return false;
       if (
         typeof candidate.name !== "string" ||
         !INPUT_NAME.test(candidate.name) ||
@@ -77,4 +94,21 @@ export function validateExtensionMessage(
   return visit(message.tree, 0)
     ? { message: message as UiExtensionRenderMessage, inputNames: [...new Set(inputNames)] }
     : null;
+}
+
+export interface AppSession {
+  configuration: Readonly<Record<string, string>>;
+  token: string;
+  expiresAt: number;
+  appId: string;
+  installationId: string;
+  workspace: { kind: "user" | "team" | "org"; id: string };
+  projectId?: string;
+  version: string;
+}
+/** Available only inside an installed app extension. Send this bearer to your own backend for verification. */
+export function getAppSession(): AppSession {
+  const session = (globalThis as typeof globalThis & { __octonodeApp?: AppSession }).__octonodeApp;
+  if (!session || session.expiresAt <= Date.now()) throw new Error("App session expired; reopen the app");
+  return session;
 }

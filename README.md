@@ -28,12 +28,12 @@ remain separate.
 
 ## Packages
 
-| Package | Use it when |
-| --- | --- |
-| [`@octonodes/sdk`](packages/sdk/README.md) | A TypeScript or JavaScript application needs typed Octonode API calls. |
-| [`@octonodes/cli`](packages/cli/README.md) | A developer, script, or CI job needs the same API from a terminal. |
-| [`@octonodes/mcp`](packages/mcp/README.md) | An MCP client needs remote Octonode tools hosted on Cloudflare Workers. |
-| [`@octonodes/ui-extensions`](packages/ui-extensions/README.md) | A plugin provides an optional node-inspector form layout. |
+| Package                                                        | Use it when                                                                           |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| [`@octonodes/sdk`](packages/sdk/README.md)                     | A TypeScript or JavaScript application needs typed Octonode API calls.                |
+| [`@octonodes/cli`](packages/cli/README.md)                     | A developer, script, or CI job needs the same API from a terminal.                    |
+| [`@octonodes/mcp`](packages/mcp/README.md)                     | An MCP client needs remote Octonode tools hosted on Cloudflare Workers.               |
+| [`@octonodes/ui-extensions`](packages/ui-extensions/README.md) | Plugin inspector layouts and installed app pages, blocks, and scoped project actions. |
 
 Only compiled `dist` files, package metadata, and package README files are published. Source,
 tests, generation scripts, and repository configuration are not included in the npm packages.
@@ -131,13 +131,13 @@ The SDK does not bypass Octonode authentication or authorization. The API valida
 token, its scopes, workspace membership, optional project binding, expiration, and revocation on
 every request.
 
-| Credential | Intended use |
-| --- | --- |
-| Supabase user access token | Interactive calls as the signed-in Studio user. |
-| Personal token (`octo_pat_`) | Local developer tools acting as one account. |
-| Service token (`octo_svc_`) | Trusted backend or CI access to one workspace. |
-| Public token (`octo_pub_`) | Intentionally public browser data-table reads from allowed origins. |
-| Agent token (`octo_agent_`) | Scoped headless collaboration or agent access. |
+| Credential                   | Intended use                                                        |
+| ---------------------------- | ------------------------------------------------------------------- |
+| Supabase user access token   | Interactive calls as the signed-in Studio user.                     |
+| Personal token (`octo_pat_`) | Local developer tools acting as one account.                        |
+| Service token (`octo_svc_`)  | Trusted backend or CI access to one workspace.                      |
+| Public token (`octo_pub_`)   | Intentionally public browser data-table reads from allowed origins. |
+| Agent token (`octo_agent_`)  | Scoped headless collaboration or agent access.                      |
 
 Never put a personal, service, or agent token in browser code. A public token is intentionally
 limited, but its allowed-origin check is not a replacement for keeping private data private.
@@ -243,10 +243,10 @@ shell.
 
 ### CLI environment variables
 
-| Variable | Behavior |
-| --- | --- |
-| `OCTONODE_TOKEN` | Overrides all saved login credentials. |
-| `OCTONODE_URL` | Overrides the default `https://api.octonode.dev`. |
+| Variable              | Behavior                                                  |
+| --------------------- | --------------------------------------------------------- |
+| `OCTONODE_TOKEN`      | Overrides all saved login credentials.                    |
+| `OCTONODE_URL`        | Overrides the default `https://api.octonode.dev`.         |
 | `OCTONODE_CONFIG_DIR` | Overrides the default `~/.octonode` credential directory. |
 
 Use `-h`, `--h`, or `--help` globally or after a command.
@@ -287,3 +287,40 @@ See the [changelog](CHANGELOG.md) for release history.
 ## License
 
 MIT
+
+## Create an extension app
+
+```bash
+octonodes app create my-app
+cd my-app
+npm install
+npm test
+octonodes app extension add overview --target app.page
+npm run build
+octonodes app validate dist/apps/my-app
+```
+
+The starter is a TypeScript/React workspace block with a shared message setting. It needs
+no application URL, backend, or dashboard. `octonode.app.json` declares the app version,
+settings and extension entry files; builds compile those entries into browser IIFEs and
+generate hashes. Add a page only when needed. Scaffolding, builds and local preview run without login.
+
+The CLI writes `dist/apps/<id>/octonode.json`, `extensions/<id>.js` and
+`octonode-build.json`. It preserves the last successful artifact on build failure and
+refuses source symlinks, path escapes and altered release artifacts. Existing project
+folders and extension files are never overwritten by create/add.
+
+Run `npm run dev` for an automatic HTTPS tunnel and live extension preview (requires
+cloudflared), or `octonodes app dev --use-localhost`. For Studio preview, sign in with
+`octonodes login`, then run `octonodes app dev --workspace user:<id>`.
+
+Use `app create my-app --template full` for an additional Node backend and hosted page.
+Set `web.applicationUrl` in the source descriptor before release builds; deploy the
+verified `dist/web/<id>` output with `octonodes app serve`. The scaffold includes a
+session-verifying `/api/context` endpoint; production sets `OCTONODE_APP_ID` and
+`OCTONODE_API_URL` on the server. Development tokens carry no project data grants.
+
+Publish with `octonodes app publish --workspace user:<id>`, then install through Studio
+consent. Updates require `--app-id` and `--revision`. Builds never publish or install.
+Workspace development requires the matching engine deployment and migration 0023.
+The source and artifact contract are documented in [the CLI plan](docs/app-cli-plan.md).

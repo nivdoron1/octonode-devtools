@@ -3,6 +3,7 @@ import { z } from "zod";
 import { JsonSchema } from "../ipc-envelope";
 import { IconName } from "../icons";
 import { PLUGIN_SCHEMA_VERSION } from "../constants";
+import { AppDefinition } from "../app";
 
 /**
  * A plugin's distribution scope — who may discover and install it. `user` is
@@ -209,11 +210,27 @@ export const PluginManifest = z
     scope: z.array(PluginScope).default(["user"]),
     /** Coarse runtime capabilities the plugin requests; consented to at install. */
     permissions: z.array(PluginPermission).default([]),
+    app: AppDefinition.optional(),
     integration: PluginIntegration.optional(),
     connections: z.record(z.string().regex(/^[a-z0-9][a-z0-9-]*$/), PluginConnection).optional(),
     nodes: z.array(PluginNode).default([]),
   })
   .superRefine((manifest, ctx) => {
+    if (
+      manifest.app &&
+      (manifest.nodes.length ||
+        manifest.library ||
+        manifest.permissions.length ||
+        Object.keys(manifest.connections ?? {}).length ||
+        manifest.integration?.npm ||
+        manifest.integration?.npmDependencies?.length)
+    )
+      ctx.addIssue({
+        code: "custom",
+        path: ["app"],
+        message:
+          "Self-hosted apps cannot include executable plugin nodes, libraries, dependencies, connections or plugin permissions",
+      });
     const npm = manifest.integration?.npm;
     const dependencies = manifest.integration?.npmDependencies ?? (npm ? [npm] : []);
     if (new Set(dependencies.map((item) => item.package)).size !== dependencies.length)

@@ -7,6 +7,7 @@ export type { JsonSchema, ValidationError } from "../json-schema";
 export type { PluginDefinition, PluginOptions, PluginHandlers } from "../plugin.types";
 export type { PluginNodeOptions, SchemaValue } from "./types";
 export { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, PluginNode, PluginConnection } from "../../schema/plugin-sdk";
+export { AppAction, AppDefinition, ExtensionOnlyApp, SelfHostedApp, SelfHostedAppExtension } from "../../schema/plugin-sdk";
 export { SETTINGS_API_VERSION } from "../../schema/plugin-sdk";
 export { PreparedPluginRuntime } from "../../schema/plugin-sdk";
 

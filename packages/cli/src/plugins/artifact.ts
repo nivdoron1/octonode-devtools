@@ -69,6 +69,8 @@ export function verifyBuild(directory: string): { manifest: PluginManifest; file
   const files = pluginFiles(directory);
   if (!files.includes(BUILD_RECORD)) throw new Error("Missing build record; run octonodes plugin build first");
   const record = JSON.parse(readFileSync(join(directory, BUILD_RECORD), "utf8")) as PluginBuildRecord;
+  if (manifest.app && (record.runtime || record.ui?.length))
+    throw new Error("Self-hosted apps cannot include a prepared runtime or packaged UI");
   if (record.runtime) {
     const runtime = PreparedPluginRuntime.parse(record.runtime);
     if ((manifest.integration?.npm || manifest.integration?.npmDependencies?.length) && !runtime.dependencies)
@@ -91,6 +93,20 @@ export function verifyBuild(directory: string): { manifest: PluginManifest; file
   for (const file of expected) {
     if (record.files[file] !== fileHash(join(directory, file)))
       throw new Error(`Plugin file changed since build: ${file}`);
+  }
+  if (manifest.app) {
+    const assets = manifest.app.hosting === "extension-only" ? manifest.app.extensions : [];
+    const allowed = ["octonode.json", ...assets.map((extension) => extension.path)].sort();
+    if (JSON.stringify(expected) !== JSON.stringify(allowed))
+      throw new Error("App artifacts contain registration metadata only and declared static bundles");
+    for (const extension of assets) {
+      if (
+        lstatSync(join(directory, extension.path)).size > 2 * 1024 * 1024 ||
+        `sha256:${fileHash(join(directory, extension.path))}` !== extension.sha256
+      )
+        throw new Error(`Invalid app bundle: ${extension.path}`);
+    }
+    return { manifest, files };
   }
   if (
     !expected.includes("dist/index.js") ||
