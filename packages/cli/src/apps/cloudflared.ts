@@ -41,7 +41,7 @@ export async function ensureCloudflared(
       await x({
         file: archive,
         cwd: stage,
-        filter: (path, entry) => path === "cloudflared" && entry.type === "File",
+        filter: (path) => path === "cloudflared",
       });
     } else await writeFile(staged, bytes);
     if (digest(await readFile(staged)) !== binaryHash) throw new Error("Tunnel executable checksum mismatch");
