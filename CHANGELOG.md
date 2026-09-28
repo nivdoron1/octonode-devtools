@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.11] - 2026-09-28
+
+### Added
+
+- Create full Vite apps by default, with explicit Vite, Next.js, plain HTML, and extension-only scaffolds.
+- Generate an Octonode welcome page and bundle static web output with the verified app backend and extensions.
+- Show branded, colored progress, tunnel links, and login status in interactive terminals.
+
+### Changed
+
+- Point the default Studio development preview at `https://octonodes.com`.
+- Document how Octonode app creation and configuration compare with Shopify CLI.
+
 ## [0.2.0] - 2026-09-26
 
 ### Added
