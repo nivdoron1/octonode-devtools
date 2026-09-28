@@ -5,7 +5,7 @@ export interface AppSource {
   name: string;
   version: string;
   description?: string;
-  web?: { entry: string; applicationUrl?: string; requestedActions?: AppAction[] };
+  web?: { entry: string; platform?: "plain" | "vite" | "next"; applicationUrl?: string; requestedActions?: AppAction[] };
   settings?: ExtensionOnlyApp["settings"];
   extensions: Array<{ id: string; target: "workspace.block" | "app.page"; entry: string }>;
 }

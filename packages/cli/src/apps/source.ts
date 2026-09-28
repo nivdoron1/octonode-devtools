@@ -64,8 +64,9 @@ export function readAppSource(root: string): AppSource {
   if (source.web) {
     if (
       typeof source.web !== "object" ||
-      Object.keys(source.web).some((key) => !["entry", "applicationUrl", "requestedActions"].includes(key)) ||
+      Object.keys(source.web).some((key) => !["entry", "platform", "applicationUrl", "requestedActions"].includes(key)) ||
       typeof source.web.entry !== "string" ||
+      (source.web.platform !== undefined && !["plain", "vite", "next"].includes(source.web.platform)) ||
       !/^src\/.+\.[cm]?[jt]s$/.test(source.web.entry)
     )
       throw new Error("web.entry must be a server module under src/");

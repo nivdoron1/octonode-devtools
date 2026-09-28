@@ -6,7 +6,8 @@ wraps `@octonodes/sdk`, so every generated SDK operation is available without wr
 ## Create an app
 
 Use Node 24 and a CLI release containing `octonodes app`. The default scaffold
-is an extension-only workspace block: no page, backend, or Cloudflare account.
+is a full Vite app with a welcome page, backend, and workspace block.
+Use `--template extension` for an extension-only app.
 
 ```sh
 octonodes app create workspace-notice
@@ -22,27 +23,45 @@ a verified, automatically managed HTTPS tunnel. `--use-localhost` skips the
 tunnel; `--tunnel-url <https-origin> --port <port>` uses your own. Preview
 in Studio with `octonodes login` followed by
 `octonodes app dev --workspace user:<id>`.
+Octonode colors are enabled automatically in interactive terminals.
+Redirected output stays plain for scripts.
 
 ```sh
 octonodes app extension add overview --target app.page
 octonodes app publish --workspace user:<id>
 ```
 
-Adding a page is optional. Install through Studio → Apps; a block appears on
+The default app includes a page. Extension-only apps can add one with the command above.
+Install through Studio → Apps; a block appears on
 workspace home, and a page-capable app opens from Apps. An administrator can
 configure or disable an installation. The first publication returns the app ID
 and revision. Increment the source version and publish an update with
 `--app-id <id> --revision <current-revision>`; existing installs remain pinned
 until their administrator approves an update.
 
-For a connected backend, use `octonodes app create inventory-labels --template
-full`. Set `web.applicationUrl` in `octonode.app.json` to a permanent HTTPS
+Full apps include a connected backend. Set `web.applicationUrl` in `octonode.app.json` to a permanent HTTPS
 origin, add only necessary `web.requestedActions`, and run `npm test`. The CLI
-publishes release metadata; deploy `dist/web/inventory-labels` to a Node 24
+publishes release metadata; deploy `dist/web/<app-id>` to a Node 24
 host yourself, set `OCTONODE_APP_ID` and `OCTONODE_API_URL`, and run
 `node start.cjs`. Keep prior content-hashed assets for pinned installations.
 The [Playbook app guide](https://playbook.octonodes.com/docs/apps) covers the
 project file, SDKs, hosting, consent, publishing and updates.
+
+Choose the web platform (Vite is the default):
+
+```sh
+octonodes app create my-app                     # Vite
+octonodes app create my-vite-app --platform vite
+octonodes app create my-next-app --platform next
+octonodes app create my-plain-app --platform plain
+```
+
+Vite and Next.js create a full app with a real framework page in `src/web/App.tsx`,
+an Octonode welcome page, a workspace block, and the verified `/api/context` backend. The CLI
+builds Vite or a Next.js static export into the same verified web artifact and
+serves it through the development tunnel. Next.js server features are outside
+this static export; add backend routes in `src/server.ts`.
+Plain uses `src/welcome.html` and the same backend without Vite or Next.js.
 
 ## Create and publish plugins
 

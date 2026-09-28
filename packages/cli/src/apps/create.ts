@@ -3,6 +3,7 @@ import { join, resolve } from "node:path";
 import { APP_SOURCE } from "./constants";
 import { appManifest, readAppSource } from "./source";
 import type { AppSource } from "./types";
+import { welcomeCss, welcomeHtml, welcomeReact } from "./welcome";
 
 const json = (value: unknown) => JSON.stringify(value, null, 2) + "\n";
 function extensionCode(target: "app.page" | "workspace.block") {
@@ -13,9 +14,12 @@ export default defineExtension(${JSON.stringify(target)}, function Notice() {
 });
 `;
 }
-export function createApp(name: string, version: string, template = "extension"): string {
+export function createApp(name: string, version: string, template = "full", platform: string | undefined = template === "full" ? "vite" : undefined): string {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(name)) throw new Error("App name must be lowercase alphanumeric/dash");
   if (!["extension", "full"].includes(template)) throw new Error("Choose --template extension or full");
+  if (platform && !["plain", "vite", "next"].includes(platform)) throw new Error("Choose --platform plain, vite or next");
+  if (platform && template !== "full") throw new Error("--platform requires --template full");
+  const framework = platform === "vite" || platform === "next";
   const root = resolve(name);
   mkdirSync(root);
   try {
@@ -28,19 +32,29 @@ export function createApp(name: string, version: string, template = "extension")
         id: name,
         name,
         version: "0.1.0",
-        ...(template === "full" ? { web: { entry: "src/server.ts" } } : {}),
+        ...(template === "full" ? { web: { entry: "src/server.ts", ...(platform ? { platform } : {}) } } : {}),
         ...(template === "extension"
           ? { settings: [{ id: "message", label: "Message", defaultValue: "Welcome to the workspace" }] }
           : {}),
-        extensions: [{ id: "notice", target: "workspace.block", entry: "src/extensions/notice.tsx" }],
+        extensions: [
+          { id: "notice", target: "workspace.block", entry: "src/extensions/notice.tsx" },
+          ...(template === "full" ? [{ id: "welcome", target: "app.page", entry: "src/extensions/welcome.tsx" }] : []),
+        ],
       }),
     );
     writeFileSync(join(root, "src/extensions/notice.tsx"), extensionCode("workspace.block"));
-    if (template === "full")
+    if (template === "full") {
+      writeFileSync(join(root, "src/extensions/welcome.tsx"), `import { defineExtension, Section } from "@octonodes/ui-extensions/react";
+export default defineExtension("app.page", function Welcome() {
+  return <Section title="Welcome to ${name}">Your app is ready. Open the developer-hosted page to see its backend connection.</Section>;
+});
+`);
+      if (!framework) writeFileSync(join(root, "src/welcome.html"), welcomeHtml(name));
       writeFileSync(
         join(root, "src/server.ts"),
         `// Export a Fetch API handler. app dev and app serve adapt it to Node HTTP.
 import { connectAppServer } from "@octonodes/ui-extensions/app/server";
+${framework ? "" : 'import { readFileSync } from "node:fs";\nimport { join } from "node:path";'}
 export default async function handle(request: Request): Promise<Response> {
   const path = new URL(request.url).pathname;
   if (path === "/api/context") {
@@ -55,19 +69,26 @@ export default async function handle(request: Request): Promise<Response> {
   }
   if (path === "/api/hello") return Response.json({ message: "Hello from your app backend" });
   if (path !== "/") return new Response("Not found", { status: 404 });
-  return new Response(\`<!doctype html><html><head><meta charset="utf-8"><title>My Octonode app</title></head>
-<body><h1>My Octonode app</h1><p id="message" role="status">Loading…</p>
-<script>const bearer = new URLSearchParams(location.hash.slice(1)).get('octonode_session');
-history.replaceState(null, '', location.pathname + location.search);
-const output = document.getElementById('message');
-if (!bearer) output.textContent = 'Open this app from Octonode Apps to connect your workspace.';
-else fetch('/api/context', {headers:{authorization:'Bearer '+bearer}}).then(async response=>{
-  if(!response.ok) throw Error('Your session expired or access was revoked. Reopen this app from Octonode Apps.');
-  const data=await response.json(); output.textContent='Connected to '+data.workspace.kind+':'+data.workspace.id;
-}).catch(error=>output.textContent=error.message);</script></body></html>\`, { headers: { "content-type": "text/html; charset=utf-8" } });
+  ${framework ? 'return new Response("Not found", { status: 404 });' : 'return new Response(readFileSync(join(__dirname, "welcome.html"), "utf8"), { headers: { "content-type": "text/html; charset=utf-8" } });'}
 }
 `,
       );
+      if (framework) {
+        mkdirSync(join(root, "src/web"), { recursive: true });
+        writeFileSync(join(root, "src/web/App.tsx"), welcomeReact(name));
+        writeFileSync(join(root, "src/web/welcome.css"), welcomeCss + "\n");
+        if (platform === "vite") {
+          writeFileSync(join(root, "index.html"), `<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name} · Octonode</title></head><body><div id="root"></div><script type="module" src="/src/web/main.tsx"></script></body></html>\n`);
+          writeFileSync(join(root, "src/web/main.tsx"), 'import { createRoot } from "react-dom/client";\nimport App from "./App";\nimport "./welcome.css";\ncreateRoot(document.getElementById("root")!).render(<App />);\n');
+          writeFileSync(join(root, "vite.config.mjs"), 'export default { build: { outDir: "web-dist" } };\n');
+        } else {
+          mkdirSync(join(root, "app"));
+          writeFileSync(join(root, "app/page.tsx"), 'import App from "../src/web/App";\nexport default App;\n');
+          writeFileSync(join(root, "app/layout.tsx"), `import "../src/web/welcome.css";\nexport const metadata = { title: "${name} · Octonode" };\nexport default function Layout({ children }: { children: React.ReactNode }) { return <html lang="en"><body>{children}</body></html>; }\n`);
+          writeFileSync(join(root, "next.config.mjs"), 'export default { output: "export" };\n');
+        }
+      }
+    }
     writeFileSync(
       join(root, "package.json"),
       json({
@@ -79,14 +100,17 @@ else fetch('/api/context', {headers:{authorization:'Bearer '+bearer}}).then(asyn
           dev: "octonodes app dev",
           ...(template === "full" ? { start: "octonodes app serve" } : {}),
           build: "tsc --noEmit && octonodes app build",
-          test: "npm run build && node --test tests/*.test.cjs",
+          test: `tsc --noEmit && octonodes app build${template === "full" ? " --app-url https://development.example" : ""} && node --test tests/*.test.cjs`,
         },
         dependencies: { "@octonodes/ui-extensions": version, react: "^19.0.0", "react-dom": "^19.0.0" },
         devDependencies: {
           "@octonodes/cli": version,
           typescript: "5.9.3",
           "@types/react": "^19.0.0",
+          ...(platform === "vite" ? { "@types/react-dom": "^19.0.0" } : {}),
           "@types/node": "^24.0.0",
+          ...(platform === "vite" ? { vite: "8.3.1" } : {}),
+          ...(platform === "next" ? { next: "16.3.6" } : {}),
         },
       }),
     );
@@ -102,10 +126,10 @@ else fetch('/api/context', {headers:{authorization:'Bearer '+bearer}}).then(asyn
           skipLibCheck: true,
           noEmit: true,
         },
-        include: ["src/**/*.ts", "src/**/*.tsx"],
+        include: ["src/**/*.ts", "src/**/*.tsx", ...(platform === "next" ? ["app/**/*.tsx"] : [])],
       }),
     );
-    writeFileSync(join(root, ".gitignore"), "node_modules/\ndist/\n.env\n.env.*\n");
+    writeFileSync(join(root, ".gitignore"), "node_modules/\ndist/\nweb-dist/\n.next/\nout/\n.env\n.env.*\n");
     writeFileSync(
       join(root, "tests/app.test.cjs"),
       `const { test } = require("node:test");
@@ -128,8 +152,8 @@ test("release bundles match the manifest", () => {
       join(root, "README.md"),
       `# ${name}
 
-An Octonode app created by \`octonodes app create\`. The default contribution is a
-\`workspace.block\` on workspace home. Add a page only if the app needs one.
+An Octonode app created by \`octonodes app create\`. It includes a
+\`workspace.block\` on workspace home.${template === "full" ? " The full app also has an Octonode app page and a hosted welcome page." : " Add a page only if the app needs one."}
 
 ## Work locally
 
@@ -142,9 +166,9 @@ npm run dev
 The CLI opens a live HTTPS preview and downloads a verified tunnel helper on first
 use. No Cloudflare account or separate installation is needed. Use
 \`octonodes app dev --use-localhost\` for offline UI work.
-Edit \`octonode.app.json\` and \`src/extensions/notice.tsx\`. The descriptor owns
+Edit \`octonode.app.json\` and \`src/extensions/notice.tsx\`. ${framework ? `The ${platform === "next" ? "Next.js" : "Vite"} welcome page lives in \`src/web/App.tsx\`. ` : ""}The descriptor owns
 app identity, version, extension targets and entry files. Do not edit \`dist/\`.
-Add a page with \`octonodes app extension add overview --target app.page\`.
+${template === "extension" ? "Add a page with `octonodes app extension add overview --target app.page`." : "Edit `src/extensions/welcome.tsx` for the Octonode app page."}
 
 ## Preview and publish in Octonode
 
@@ -173,6 +197,8 @@ Edit \`src/server.ts\`, which default-exports a Fetch API handler. Set
 before building and publishing. Add only the \`web.requestedActions\` your
 app needs. The generated \`/api/context\` route verifies an installed app
 bearer through \`@octonodes/ui-extensions/app/server\`.
+
+${framework ? `The ${platform === "next" ? "Next.js" : "Vite"} page is a native React project. \`octonodes app dev\` builds its static output and serves it together with the Octonode backend. Static export does not support server-only framework features; use \`src/server.ts\` for app API routes.\n\n` : ""}
 
 Publishing registers metadata but does not deploy the backend. After the first
 publish returns the app ID, copy the entire \`dist/web/${name}\` directory

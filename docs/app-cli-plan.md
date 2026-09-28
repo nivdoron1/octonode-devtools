@@ -7,15 +7,22 @@ contracts and artifact verification remain authoritative.
 ## Developer loop
 
 ```sh
-octonodes app create my-app --template full
+octonodes app create my-app
 cd my-app
 npm install
 npm run dev
 ```
 
-Omit `--template full` for a static extension-only app. Both templates start with a
+Use `--template extension` for a static extension-only app. Both templates start with a
 workspace block. Add a page explicitly with
 `octonodes app extension add overview --target app.page`.
+The default is a full Vite app, identical to `--platform vite`. Use
+`--platform next` for Next.js or `--platform plain` for an HTML welcome page and
+Fetch API backend without a frontend framework. Vite and Next.js provide a native
+React welcome page, an `app.page` contribution and a workspace block. The CLI builds the framework's static output into the
+verified web artifact while `src/server.ts` handles authenticated API requests.
+The Next.js variant uses static export; server-only Next.js features require a
+different deployment adapter.
 
 `app dev` starts the HTTP adapter, builds declared extensions/backend, automatically prepares a
 Cloudflare Quick Tunnel, waits for public reachability, and opens the local preview.
@@ -29,6 +36,20 @@ release downloads. Unsupported platforms can use a custom tunnel. Use
 The descriptor never receives the temporary URL. Source changes rebuild automatically;
 build errors preserve the working version. Preview refresh uses polling because Quick
 Tunnels do not support SSE. Ctrl-C cleans up resources.
+In a terminal, development displays Octonode's mark, build steps, tunnel state,
+and separate app and Studio/preview links. Redirected stdout retains the JSON
+line for scripts and tests.
+
+The terminal uses the real Octonode charcoal and coral palette: an octagonal
+mark, short progress lines, a ready state, the app URL, the Studio or local
+preview URL, and a Ctrl-C hint. Login shows the same mark and clear completion
+state. Colors are automatic in interactive terminals, including environments
+that set `NO_COLOR`. Redirected output remains plain JSON.
+
+The starter welcome page uses the Octonode logo and a connection map to explain
+the handoff from Studio to the app backend. It clears the session token from the
+URL before calling `/api/context`, then shows the verified workspace or a useful
+reopen instruction. It works at mobile widths and keeps keyboard focus visible.
 
 For Studio rendering, run `octonodes login`, then
 `octonodes app dev --workspace user:<id>` (also `team:<id>` and `org:<id>`).

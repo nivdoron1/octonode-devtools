@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { createClient, OCTONODE_API_URL, OctonodeClient } from "@octonodes/sdk";
 import { accessToken, login, logout } from "./auth";
+import { terminal } from "./terminal";
 import { CONNECT_HELP, connectCommand } from "./connect.js";
 
 const VERSION = (require("../package.json") as { version: string }).version;
@@ -105,8 +106,10 @@ async function main(): Promise<void> {
     return;
   }
   if (command === "login") {
+    terminal.brand();
     const baseUrl = flag("--base-url") ?? process.env.OCTONODE_URL ?? OCTONODE_API_URL;
-    process.stdout.write(`${await login(baseUrl, { token: flag("--token"), email: flag("--email") })}\n`);
+    const message = await login(baseUrl, { token: flag("--token"), email: flag("--email") });
+    if (!terminal.login(message)) process.stdout.write(`${message}\n`);
     return;
   }
   if (command === "logout") {

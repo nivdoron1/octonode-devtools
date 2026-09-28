@@ -10,11 +10,14 @@ import { ensureCloudflared } from "./cloudflared";
 import { publicOrigin, startTunnel } from "./tunnel";
 import { createDevelopmentSession } from "./development";
 import type { DevOptions } from "./types";
+import { terminal } from "../terminal";
 
 export async function startAppDev(directory: string, options: DevOptions = {}) {
   if (options.localhost && options.tunnelUrl) throw new Error("Choose --use-localhost or --tunnel-url");
   if (options.workspace && options.localhost)
     throw new Error("Studio preview requires an HTTPS tunnel; omit --use-localhost");
+  terminal.brand();
+  terminal.step(options.workspace ? `Connecting to ${options.workspace}` : "Preparing local preview");
   const development = options.workspace
     ? await createDevelopmentSession(options.workspace, options.baseUrl, options.studioUrl)
     : undefined;
@@ -65,6 +68,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
   process.once("SIGTERM", onSignal);
   try {
     const port = await host.listen();
+    terminal.step(options.localhost ? "Starting local server" : "Opening secure tunnel");
     const executable = !options.localhost && !options.tunnelUrl ? await ensureCloudflared(startup.signal) : undefined;
     startup.signal.throwIfAborted();
     const origin = options.localhost
@@ -74,6 +78,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
         : await (tunnel = startTunnel(port, executable)).url;
     host.setOrigin(origin);
     if (!options.localhost) {
+      terminal.step("Checking public reachability");
       let reachable = false;
       for (let attempt = 0; attempt < 30; attempt++) {
         try {
@@ -111,7 +116,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
             if (typeof backend !== "function") throw new Error("web.entry must default-export a Fetch API handler");
           }
           host.update(source, web ?? built.directory, backend);
-          process.stderr.write("App rebuilt\n");
+          terminal.rebuilt();
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           host.fail(message);
@@ -120,12 +125,13 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       });
       return buildTask;
     };
+    terminal.step(`Building ${source.name}`);
     await rebuild();
     if (development && !development.url)
       throw new Error("Workspace preview could not start; see the development error above");
     watcher = watch(root, { recursive: true }, (_event, filename) => {
       const file = String(filename ?? "").replaceAll("\\", "/");
-      if (file !== "octonode.app.json" && !file.startsWith("src/")) return;
+      if (file !== "octonode.app.json" && !file.startsWith("src/") && !file.startsWith("app/") && !["index.html", "next.config.mjs", "vite.config.mjs"].includes(file)) return;
       clearTimeout(timer);
       timer = setTimeout(() => void rebuild(), 150);
     });
@@ -142,15 +148,16 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
         }, 60_000)
       : undefined;
     const previewUrl = `${origin}/_octonode/#preview=${host.secret}`;
-    process.stdout.write(
-      JSON.stringify({
-        url: origin,
-        previewUrl,
-        port,
-        studioUrl: development?.url,
-        mode: options.localhost ? "localhost" : "tunnel",
-      }) + "\n",
-    );
+    if (!terminal.ready(source.name, origin, previewUrl, development?.url))
+      process.stdout.write(
+        JSON.stringify({
+          url: origin,
+          previewUrl,
+          port,
+          studioUrl: development?.url,
+          mode: options.localhost ? "localhost" : "tunnel",
+        }) + "\n",
+      );
     if (options.open !== false) {
       const command = process.platform === "darwin" ? "open" : process.platform === "win32" ? "cmd" : "xdg-open";
       const openUrl = development?.url ?? previewUrl;

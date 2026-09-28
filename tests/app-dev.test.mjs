@@ -15,7 +15,7 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
   const parent = mkdtempSync(join(tmpdir(), "octonodes-full-app-"));
   let dev;
   try {
-    const result = spawnSync(process.execPath, [cli, "app", "create", "full", "--template", "full"], {
+    const result = spawnSync(process.execPath, [cli, "app", "create", "full", "--platform", "plain"], {
       cwd: parent,
       encoding: "utf8",
     });
@@ -29,7 +29,7 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
     assert.equal((await fetch(dev.origin + "/_octonode/state")).status, 401);
     const headers = { authorization: `Bearer ${dev.secret}` };
     const state = await (await fetch(dev.origin + "/_octonode/state", { headers })).json();
-    assert.equal(state.extensions.length, 1);
+    assert.equal(state.extensions.length, 2);
     assert.equal(state.session.token, "development-preview");
     const backend = join(root, "src/server.ts");
     writeFileSync(backend, readFileSync(backend, "utf8").replace("Hello from your app backend", "Updated backend"));
@@ -52,7 +52,7 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
 test("full app release requires a production URL and separates server code from registration", async () => {
   const parent = mkdtempSync(join(tmpdir(), "octonodes-full-release-"));
   try {
-    const result = spawnSync(process.execPath, [cli, "app", "create", "full", "--template", "full"], {
+    const result = spawnSync(process.execPath, [cli, "app", "create", "full", "--platform", "plain"], {
       cwd: parent,
       encoding: "utf8",
     });
@@ -213,7 +213,7 @@ test("publisher dev sessions refresh and revoke; publication sends fresh verifie
     process.env.OCTONODE_TOKEN = "test-publisher-token";
     await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
     const baseUrl = `http://127.0.0.1:${server.address().port}`;
-    const result = spawnSync(process.execPath, [cli, "app", "create", "draft"], {
+    const result = spawnSync(process.execPath, [cli, "app", "create", "draft", "--template", "extension"], {
       cwd: parent,
       encoding: "utf8",
     });

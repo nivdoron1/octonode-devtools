@@ -6,6 +6,7 @@ import { createApp, addAppExtension } from "./create";
 import { publishApp } from "./publish";
 import { startAppDev, serveApp } from "./dev";
 import { APP_HELP } from "./constants";
+import { terminal } from "../terminal";
 export async function appCommand(args: string[], version: string): Promise<void> {
   const { values, positionals } = parseArgs({
     args,
@@ -14,6 +15,7 @@ export async function appCommand(args: string[], version: string): Promise<void>
       cwd: { type: "string" },
       target: { type: "string" },
       template: { type: "string" },
+      platform: { type: "string" },
       port: { type: "string" },
       "use-localhost": { type: "boolean" },
       "tunnel-url": { type: "string" },
@@ -64,9 +66,11 @@ export async function appCommand(args: string[], version: string): Promise<void>
     return;
   }
   if (command === "create" && target && positionals.length === 2 && !values.cwd && !values.target) {
-    process.stdout.write(
-      `Created ${createApp(target, version, values.template)}\nNext: npm install, then npm run dev in that directory.\n`,
-    );
+    const template = values.template ?? "full";
+    const platform = values.platform ?? (template === "full" ? "vite" : undefined);
+    const created = createApp(target, version, template, platform);
+    if (!terminal.created(created, platform))
+      process.stdout.write(`Created ${created}\nNext: npm install, then npm run dev in that directory.\n`);
     return;
   }
   if (command === "extension" && target === "add" && id && positionals.length === 3) {

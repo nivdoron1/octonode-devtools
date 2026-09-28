@@ -7,6 +7,7 @@ import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { createClient, type Session } from "@supabase/supabase-js";
+import { terminal } from "./terminal";
 
 interface AuthConfig {
   supabaseUrl: string;
@@ -243,7 +244,8 @@ async function browserLogin(config: AuthConfig, launch: (url: string) => Promise
     });
     if (started.error) throw new Error(started.error.message);
     if (!started.data.url) throw new Error("Supabase did not return a GitHub login URL");
-    process.stdout.write(`Opening GitHub login in your browser.\nIf it does not open, visit:\n${started.data.url}\n`);
+    if (process.stdout.isTTY) terminal.step("Opening GitHub login in your browser");
+    process.stdout.write(`If it does not open, visit:\n${started.data.url}\n`);
     void launch(started.data.url).catch((error) => {
       process.stderr.write(`Could not open a browser: ${error instanceof Error ? error.message : String(error)}\n`);
     });
@@ -277,7 +279,8 @@ export async function login(apiUrl: string, options: LoginOptions = {}): Promise
   const supabase = authClient(config);
   const sent = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
   if (sent.error) throw new Error(sent.error.message);
-  process.stdout.write(`Verification code sent to ${email}.\n`);
+  if (process.stdout.isTTY) terminal.step(`Verification code sent to ${email}`);
+  else process.stdout.write(`Verification code sent to ${email}.\n`);
 
   const code =
     options.code?.trim() ||

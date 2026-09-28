@@ -15,7 +15,7 @@ const ok = (result) => {
 test("app CLI creates, compiles, extends and validates an app without authentication", () => {
   const parent = mkdtempSync(join(tmpdir(), "octonodes-app-"));
   try {
-    ok(run(parent, "create", "notice"));
+    ok(run(parent, "create", "notice", "--template", "extension"));
     const root = join(parent, "notice");
     symlinkSync(dependencies, join(root, "node_modules"), "dir");
     const descriptor = join(root, "octonode.app.json");
@@ -46,7 +46,7 @@ test("app CLI creates, compiles, extends and validates an app without authentica
     assert.equal(readFileSync(join(result.directory, "octonode.json"), "utf8"), manifest);
     writeFileSync(join(result.directory, "extensions/notice.js"), "tampered");
     assert.notEqual(run(root, "validate", result.directory).status, 0);
-    assert.notEqual(run(parent, "create", "notice").status, 0);
+    assert.notEqual(run(parent, "create", "notice", "--template", "extension").status, 0);
     assert.notEqual(run(parent, "create", "../escape").status, 0);
   } finally {
     rmSync(parent, { recursive: true, force: true });
@@ -56,7 +56,7 @@ test("app CLI creates, compiles, extends and validates an app without authentica
 test("app build rejects source escapes and symlinks", () => {
   const parent = mkdtempSync(join(tmpdir(), "octonodes-app-paths-"));
   try {
-    ok(run(parent, "create", "notice"));
+    ok(run(parent, "create", "notice", "--template", "extension"));
     const root = join(parent, "notice");
     symlinkSync(dependencies, join(root, "node_modules"), "dir");
     const descriptor = join(root, "octonode.app.json");
