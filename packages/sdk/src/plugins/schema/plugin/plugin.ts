@@ -127,6 +127,16 @@ export const PluginNode = z.object({
     .object({
       module: z.string(),
       export: z.string(),
+      methodPath: z
+        .array(
+          z
+            .string()
+            .regex(/^[$A-Z_a-z][$\w]*$/)
+            .refine((part) => !["__proto__", "prototype", "constructor"].includes(part)),
+        )
+        .min(1)
+        .max(8)
+        .optional(),
       parameters: z.array(z.string()),
     })
     .strict()

@@ -115,7 +115,7 @@ ${cases}
   }
   } catch (error) {
     // SDK errors can embed authorization headers or response bodies. Never forward them over IPC.
-    if (Object.keys(node.bindings || {}).length && !(error instanceof NodeError))
+    if ((Object.keys(node.bindings || {}).length || node.methodPath) && !(error instanceof NodeError))
       throw new NodeError("SDK invocation failed; check the connection and request", "RUNTIME_ERROR");
     throw error;
   }
@@ -179,12 +179,22 @@ function nodeBody(node: NpmNodeDescriptor): string {
       : ""
   }`;
 
-  return `  const fn = resolveExport(pkg, ${JSON.stringify(node.exportName)});
+  return `  let receiver = pkg;
+  let fn = resolveExport(pkg, ${JSON.stringify(node.exportName)});
+  if (node.methodPath) {
+    if (typeof fn !== "function") throw new NodeError("SDK client factory is unavailable", "VALIDATION_ERROR");
+    receiver = await fn();
+    for (const segment of node.methodPath.slice(0, -1)) {
+      receiver = receiver && receiver[segment];
+      if (receiver == null) throw new NodeError("SDK client method is unavailable", "VALIDATION_ERROR");
+    }
+    fn = receiver[node.methodPath[node.methodPath.length - 1]];
+  }
   if (typeof fn !== "function") {
     throw new NodeError('export ${node.exportName} is not a function', "VALIDATION_ERROR");
   }
 ${argsLines}
-  return { result: toJson(await fn(...args)), dryRun: false };`;
+  return { result: toJson(await (node.methodPath ? fn.apply(receiver, args) : fn(...args))), dryRun: false };`;
 }
 
 /** Render every generated file for the plugin (paths relative to the plugin folder). */

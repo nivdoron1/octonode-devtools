@@ -34,6 +34,7 @@ export interface NpmNodeHandle {
     id: string;
     exportName: string;
     moduleSpecifier?: string;
+    methodPath?: string[];
     params: { name: string; required: boolean; rest: boolean; schema: Record<string, unknown> }[];
     inputsSchema: Record<string, unknown>;
     outputsSchema: Record<string, unknown>;
