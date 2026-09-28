@@ -1368,6 +1368,7 @@ var require_plugin = __commonJS({
       implementation: zod_1.z.object({
         module: zod_1.z.string(),
         export: zod_1.z.string(),
+        methodPath: zod_1.z.array(zod_1.z.string().regex(/^[$A-Z_a-z][$\w]*$/).refine((part) => !["__proto__", "prototype", "constructor"].includes(part))).min(1).max(8).optional(),
         parameters: zod_1.z.array(zod_1.z.string())
       }).strict().optional()
     });
@@ -11876,7 +11877,8 @@ var require_toolkit = __commonJS({
   "packages/schema/dist/toolkit.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ToolkitInstallRequest = exports2.ToolkitRelease = exports2.ToolkitResolvedMember = exports2.ToolkitQuery = exports2.ToolkitDefinition = exports2.ToolkitMember = exports2.ToolkitVisibility = exports2.ToolkitOwner = void 0;
+    exports2.ToolkitInstallRequest = exports2.ToolkitRelease = exports2.ToolkitResolvedMember = exports2.ToolkitQuery = exports2.ToolkitDefinition = exports2.ToolkitAction = exports2.ToolkitMember = exports2.ToolkitVisibility = exports2.ToolkitOwner = void 0;
+    exports2.toolkitForMode = toolkitForMode2;
     var zod_1 = require("zod");
     var plugin_1 = require_plugin();
     var version_1 = require_version();
@@ -11886,9 +11888,21 @@ var require_toolkit = __commonJS({
     }).strict();
     exports2.ToolkitVisibility = zod_1.z.enum(["user", "team", "org", "public"]);
     exports2.ToolkitMember = zod_1.z.object({
+      development: zod_1.z.boolean().optional(),
       pluginId: zod_1.z.string().min(1).max(240),
       version: version_1.PluginVersion,
       alias: zod_1.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100)
+    }).strict();
+    exports2.ToolkitAction = zod_1.z.object({
+      id: zod_1.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100),
+      development: zod_1.z.boolean().optional(),
+      description: zod_1.z.string().max(1e3).default(""),
+      kind: zod_1.z.enum(["plugin", "script", "command"]),
+      plugin: zod_1.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100),
+      target: zod_1.z.string().regex(/^[a-zA-Z0-9_@][a-zA-Z0-9_@:./-]*$/).max(200),
+      expected: zod_1.z.string().max(4e3).optional(),
+      args: zod_1.z.array(zod_1.z.string().max(4e3)).max(100).default([]),
+      timeoutMs: zod_1.z.number().int().min(100).max(3e5).default(6e4)
     }).strict();
     exports2.ToolkitDefinition = zod_1.z.object({
       name: zod_1.z.string().trim().min(1).max(200),
@@ -11896,10 +11910,20 @@ var require_toolkit = __commonJS({
       version: version_1.PluginVersion,
       owner: exports2.ToolkitOwner,
       visibility: exports2.ToolkitVisibility,
-      plugins: zod_1.z.array(exports2.ToolkitMember).max(100)
+      plugins: zod_1.z.array(exports2.ToolkitMember).max(100),
+      actions: zod_1.z.array(exports2.ToolkitAction).max(100).optional()
     }).strict().superRefine((value, ctx) => {
       if (value.visibility !== "public" && value.visibility !== value.owner.kind)
         ctx.addIssue({ code: "custom", path: ["visibility"], message: "Visibility must match the owner or be public" });
+      if (new Set(value.actions?.map((action) => action.id)).size !== (value.actions?.length ?? 0))
+        ctx.addIssue({ code: "custom", path: ["actions"], message: "Duplicate action ID" });
+      for (const [index, action] of (value.actions ?? []).entries())
+        if (!value.plugins.some((plugin) => plugin.alias === action.plugin))
+          ctx.addIssue({
+            code: "custom",
+            path: ["actions", index, "plugin"],
+            message: "Action must reference an included plugin"
+          });
       for (const field of ["pluginId", "alias"])
         if (new Set(value.plugins.map((plugin) => plugin[field])).size !== value.plugins.length)
           ctx.addIssue({ code: "custom", path: ["plugins"], message: `Duplicate plugin ${field}` });
@@ -11946,13 +11970,22 @@ var require_toolkit = __commonJS({
       revision: zod_1.z.number().int(),
       sha256: zod_1.z.string().nullable(),
       status: zod_1.z.enum(["draft", "published"]),
-      plugins: zod_1.z.array(exports2.ToolkitResolvedMember).max(100)
+      plugins: zod_1.z.array(exports2.ToolkitResolvedMember).max(100),
+      actions: zod_1.z.array(exports2.ToolkitAction).max(100).optional()
     });
     exports2.ToolkitInstallRequest = zod_1.z.object({
       version: version_1.PluginVersion,
       sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
       destination: exports2.ToolkitOwner
     }).strict();
+    function toolkitForMode2(release2, mode) {
+      const plugins = release2.plugins.filter((plugin) => mode === "development" || !plugin.development);
+      return {
+        ...release2,
+        plugins,
+        actions: release2.actions?.map((action) => release2.plugins.find((plugin) => plugin.alias === action.plugin)?.development ? { ...action, development: true } : action).filter((action) => (mode === "development" || !action.development) && plugins.some((plugin) => plugin.alias === action.plugin))
+      };
+    }
   }
 });
 
@@ -12049,7 +12082,7 @@ var require_dist = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.schemaVersion = exports2.octonodeJsonSchema = void 0;
+    exports2.ToolkitAction = exports2.schemaVersion = exports2.octonodeJsonSchema = void 0;
     __exportStar(require_ipc_envelope(), exports2);
     __exportStar(require_octonode_config(), exports2);
     __exportStar(require_entry(), exports2);
@@ -12099,6 +12132,10 @@ var require_dist = __commonJS({
     __exportStar(require_toolkit(), exports2);
     __exportStar(require_allowlist(), exports2);
     __exportStar(require_app_runtime(), exports2);
+    var toolkit_1 = require_toolkit();
+    Object.defineProperty(exports2, "ToolkitAction", { enumerable: true, get: function() {
+      return toolkit_1.ToolkitAction;
+    } });
   }
 });
 
@@ -13191,6 +13228,7 @@ var LockEntry = import_zod.z.object({
 var Lockfile = import_zod.z.object({
   lockfileVersion: import_zod.z.literal(1).default(1),
   plugins: import_zod.z.record(LockEntry).default({}),
+  managedDependencies: import_zod.z.record(import_zod.z.string()).optional(),
   toolkits: import_zod.z.record(
     import_zod.z.object({
       id: import_zod.z.string(),
@@ -13198,7 +13236,10 @@ var Lockfile = import_zod.z.object({
       version: import_zod.z.string(),
       sha256: import_zod.z.string().regex(/^[a-f0-9]{64}$/),
       plugins: import_zod.z.array(import_zod.z.string()),
-      destination: import_schema.ToolkitOwner
+      developmentPlugins: import_zod.z.array(import_zod.z.string()).optional(),
+      destination: import_schema.ToolkitOwner,
+      mode: import_zod.z.enum(["development", "production"]).optional(),
+      actions: import_zod.z.array(import_schema.ToolkitAction).max(100).optional()
     }).strict()
   ).optional(),
   generated: import_zod.z.object({
@@ -13825,7 +13866,7 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
         );
   }
   const reusable = dependencies.length > 0 && !options.remove?.length && dependencies.every(
-    ({ name, spec }) => existing[name] === spec && /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(spec)
+    ({ name, spec, development }) => (development ? declared.devDependencies?.[name] === spec : declared.dependencies?.[name] === spec) && existing[name] === spec && /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(spec)
   );
   const reuse = reusable && await verifyProjectDependencies(
     project,
@@ -13919,16 +13960,27 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
       await run(current, [current.manager, [...args, ...options.remove]], current.target, options.cacheRoot);
     }
     const restored = snapshot ? restoreDependencySnapshot(snapshot) : false;
-    if (!restored)
-      await run(
-        current,
-        dependencies.length ? packageManagerAdd(
+    if (!restored) {
+      if (!dependencies.length)
+        await run(current, installCommand(current, options.frozen ?? false), current.root, options.cacheRoot);
+      for (const development of [false, true]) {
+        const group = dependencies.filter((item) => !!item.development === development);
+        if (!group.length) continue;
+        const manifest2 = JSON.parse((0, import_node_fs6.readFileSync)(packageJson, "utf8"));
+        const previousSection = development ? "dependencies" : "devDependencies";
+        if (group.some(({ name }) => manifest2[previousSection]?.[name])) {
+          for (const { name } of group) delete manifest2[previousSection]?.[name];
+          (0, import_node_fs6.writeFileSync)(packageJson, JSON.stringify(manifest2, null, 2) + "\n");
+        }
+        const [command, args] = packageManagerAdd(
           current.manager,
-          ...dependencies.map(({ name, spec }) => spec.startsWith(`${name}@`) ? spec : `${name}@${spec}`)
-        ) : installCommand(current, options.frozen ?? false),
-        dependencies.length ? current.target : current.root,
-        options.cacheRoot
-      );
+          ...group.map(({ name, spec }) => spec.startsWith(`${name}@`) ? spec : `${name}@${spec}`)
+        );
+        if (development) args.splice(1, 0, current.manager === "yarn" ? "--dev" : "--save-dev");
+        else if (current.manager === "npm") args.splice(1, 0, "--save-prod");
+        await run(current, [command, args], current.target, options.cacheRoot);
+      }
+    }
     await verifyProjectDependencies(
       current,
       dependencies.flatMap(({ name, subpaths }) => subpaths ? subpaths.map((path) => name + path.slice(1)) : [name])
@@ -14372,7 +14424,9 @@ async function reconcilePluginLock(cwd, next, options = {}) {
     const manifest2 = loadPluginManifest(directory);
     if (manifest2.id !== (pin.pluginId ?? alias) || manifest2.version !== pin.version || hashPluginDir(directory) !== pin.sha256)
       throw new Error(`Plugin identity or integrity mismatch: ${alias}`);
-    return { alias, directory, sha256: pin.sha256, manifest: manifest2, remote: preparedPluginPin(directory, pin) };
+    const users = Object.values(next.toolkits ?? {}).filter((toolkit) => toolkit.plugins.includes(alias));
+    const development = pin.direct === false && users.length > 0 && users.every((toolkit) => toolkit.developmentPlugins?.includes(alias));
+    return { alias, development, directory, sha256: pin.sha256, manifest: manifest2, remote: preparedPluginPin(directory, pin) };
   });
   assertUniqueNpmPlugins([
     ...discoverPluginCatalog({ cwd, storeRoot: options.storeRoot }).plugins.filter((item) => item.source === "project" && !loaded.some((pin) => pin.alias === item.manifest.id)).map((item) => ({ alias: item.manifest.id, manifest: item.manifest })),
@@ -14388,7 +14442,7 @@ async function reconcilePluginLock(cwd, next, options = {}) {
       "Existing @octonodes/plugin dependency is not managed by this lock; pass --migrate to replace it explicitly"
     );
   const dependencies = loaded.filter((item) => !item.remote || item.manifest.library).flatMap(
-    ({ manifest: manifest2 }) => pluginNpmDependencies(manifest2).map((npm) => {
+    ({ manifest: manifest2, development }) => pluginNpmDependencies(manifest2).map((npm) => {
       const spec = npm.spec.startsWith(`${npm.package}@`) ? npm.spec.slice(npm.package.length + 1) : npm.spec;
       const sameLocal = typeof declared[npm.package] === "string" && declared[npm.package].startsWith("file:") && spec.startsWith("file:") && (0, import_node_path10.resolve)(project.target, declared[npm.package].slice(5)) === (0, import_node_path10.resolve)(project.target, spec.slice(5));
       if (declared[npm.package] && declared[npm.package] !== spec && !sameLocal)
@@ -14398,27 +14452,58 @@ async function reconcilePluginLock(cwd, next, options = {}) {
       const subpaths = manifest2.nodes.filter((node) => node.source?.kind === "npm" && node.source.package === npm.package).flatMap(
         (node) => node.implementation?.module.startsWith(`${npm.package}/`) ? ["." + node.implementation.module.slice(npm.package.length)] : []
       );
-      return { name: npm.package, spec, ...subpaths.length ? { subpaths: [...new Set(subpaths)] } : {} };
+      return {
+        name: npm.package,
+        spec,
+        development: development && (!packageJson.dependencies?.[npm.package] || before.managedDependencies?.[npm.package] === declared[npm.package]) && !packageJson.optionalDependencies?.[npm.package] ? true : void 0,
+        ...subpaths.length ? { subpaths: [...new Set(subpaths)] } : {}
+      };
     })
   );
-  const unique = [...new Map(dependencies.map((item) => [item.name, item])).values()];
+  const unique = [
+    ...new Map(
+      dependencies.map((item) => [
+        item.name,
+        {
+          ...item,
+          development: dependencies.filter((other) => other.name === item.name).every((other) => other.development) ? true : void 0
+        }
+      ])
+    ).values()
+  ];
   if (dependencies.some((item) => unique.some((other) => item.name === other.name && item.spec !== other.spec)))
     throw new Error("Selected plugins require conflicting npm dependency versions");
-  const committed = { ...next, generated };
+  const managedDependencies = Object.fromEntries(
+    unique.filter((item) => !declared[item.name] || before.managedDependencies?.[item.name] === declared[item.name]).map((item) => [item.name, item.spec])
+  );
+  const remove = Object.entries(before.managedDependencies ?? {}).filter(([name, spec]) => declared[name] === spec && !unique.some((item) => item.name === name)).map(([name]) => name);
+  if (!generated && before.generated) remove.push(before.generated.name);
+  const committed = { ...next, generated, managedDependencies };
   if (options.dryRun) return committed;
-  if (generated || before.generated || unique.length || options.commit) {
+  if (generated || before.generated || unique.length || remove.length || options.commit) {
     await reconcileDependencies(project.target, [...unique, ...generated ? [generated] : []], {
       cacheRoot: options.cacheRoot,
-      metadataOnly: !generated && !before.generated && !unique.length,
-      remove: !generated && before.generated ? [before.generated.name] : void 0,
+      metadataOnly: !generated && !before.generated && !unique.length && !remove.length,
+      remove,
       transactionFiles: [lockfilePath(cwd), ...options.transactionFiles ?? []],
       commit: () => {
         options.commit?.();
-        writeLockfile(cwd, committed);
+        const installedManifest = (0, import_node_fs10.existsSync)(packageFile) ? JSON.parse((0, import_node_fs10.readFileSync)(packageFile, "utf8")) : {};
+        const installedDependencies = {
+          ...installedManifest.devDependencies,
+          ...installedManifest.optionalDependencies,
+          ...installedManifest.dependencies
+        };
+        writeLockfile(cwd, {
+          ...committed,
+          managedDependencies: Object.fromEntries(
+            Object.keys(managedDependencies).filter((name) => installedDependencies[name]).map((name) => [name, installedDependencies[name]])
+          )
+        });
       }
     });
   } else writeLockfile(cwd, committed);
-  return committed;
+  return readLockfile(cwd);
 }
 async function activatePluginPin(alias, pin, options = {}) {
   const cwd = resolveDependencyProject(options.cwd ?? process.cwd()).target;
@@ -14460,6 +14545,8 @@ async function removePluginPin(alias, options = {}) {
 }
 
 // packages/plugin/src/restore.ts
+var import_node_util3 = require("node:util");
+var import_schema7 = __toESM(require_dist());
 var import_node_fs14 = require("node:fs");
 var import_node_path14 = require("node:path");
 
@@ -15044,7 +15131,7 @@ async function installFromLock(opts = {}) {
     for (const toolkit of Object.values(lock.toolkits ?? {})) {
       try {
         if (opts.offline) throw new Error("Toolkit access must be reauthorized online before restore");
-        const release2 = await new RemoteRegistry({ baseUrl: toolkit.registry, token: opts.token }).resolveToolkit(
+        const resolved = await new RemoteRegistry({ baseUrl: toolkit.registry, token: opts.token }).resolveToolkit(
           toolkit.id,
           {
             version: toolkit.version,
@@ -15052,7 +15139,8 @@ async function installFromLock(opts = {}) {
             destination: toolkit.destination
           }
         );
-        if (release2.plugins.length !== toolkit.plugins.length || release2.plugins.some((member) => {
+        const release2 = (0, import_schema7.toolkitForMode)(resolved, toolkit.mode ?? "development");
+        if (!(0, import_node_util3.isDeepStrictEqual)(release2.actions ?? [], toolkit.actions ?? []) || release2.plugins.length !== toolkit.plugins.length || release2.plugins.some((member) => {
           const pin = lock.plugins[member.alias];
           return !toolkit.plugins.includes(member.alias) || !pin || pin.remoteId !== member.pluginId || pin.registry !== toolkit.registry || pin.version !== member.version || pin.archiveSha256 !== member.sha256;
         }))
@@ -15064,6 +15152,8 @@ async function installFromLock(opts = {}) {
     if (result.errors.length) return result;
     const libraries = [];
     const dependencies = [];
+    const packageFile = (0, import_node_path14.join)(cwd, "package.json");
+    const packageJson = (0, import_node_fs14.existsSync)(packageFile) ? JSON.parse((0, import_node_fs14.readFileSync)(packageFile, "utf8")) : {};
     for (const [alias, pin] of Object.entries(lock.plugins)) {
       try {
         const id = pin.pluginId ?? alias;
@@ -15124,7 +15214,13 @@ async function installFromLock(opts = {}) {
             if (installed.depsError) throw new Error(installed.depsError);
           }
         }
-        dependencies.push(...pluginNpmDependencies(manifest2).map((npm) => ({ name: npm.package, spec: npm.spec })));
+        dependencies.push(
+          ...pluginNpmDependencies(manifest2).map((npm) => ({
+            name: npm.package,
+            spec: npm.spec,
+            development: !!packageJson.devDependencies?.[npm.package] && !packageJson.dependencies?.[npm.package] && !packageJson.optionalDependencies?.[npm.package]
+          }))
+        );
       } catch (error) {
         result.errors.push({ id: alias, message: error.message });
       }
@@ -15157,11 +15253,11 @@ async function installFromLock(opts = {}) {
 }
 
 // packages/plugin/src/consumer/lifecycle.ts
-var import_schema7 = __toESM(require_dist());
+var import_schema8 = __toESM(require_dist());
 async function runPluginLifecycle(command, target, flags) {
   const cwd = resolveDependencyProject(typeof flags.cwd === "string" ? (0, import_node_path15.resolve)(flags.cwd) : process.cwd()).target;
   const scope = typeof flags.scope === "string" ? flags.scope : void 0;
-  if (scope && !import_schema7.MARKETPLACE_SCOPES.includes(scope)) throw new Error("Invalid marketplace scope");
+  if (scope && !import_schema8.MARKETPLACE_SCOPES.includes(scope)) throw new Error("Invalid marketplace scope");
   const options = {
     cwd,
     alias: typeof flags.alias === "string" ? flags.alias : void 0,

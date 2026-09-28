@@ -28,6 +28,8 @@ export interface NpmParam {
 export interface NpmNodeDescriptor {
   id: string;
   moduleSpecifier?: string;
+  /** Static properties on a zero-argument factory result, ending at the method to invoke. */
+  methodPath?: string[];
   bindings?: Record<string, NpmClientBinding>;
   /** Export name on the package; "default" for the default export; "" for the generic call node. */
   exportName: string;

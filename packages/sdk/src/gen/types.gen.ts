@@ -5804,6 +5804,7 @@ export type GetApiMarketplaceToolkitsResponses = {
             status: 'draft' | 'published';
             sha256: string | null;
             pluginCount: number;
+            actionCount?: number;
             installed: number;
         }>;
     };

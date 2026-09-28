@@ -206,7 +206,20 @@ export function compileDefinition(
         /[\\%:]/.test(moduleSpecifier)
       )
         throw new Error("npm module must belong to the original package");
-      const identity = `${moduleSpecifier}:${npm.descriptor.generic ? "<call>" : npm.descriptor.exportName}`;
+      if (
+        npm.descriptor.methodPath &&
+        (!Array.isArray(npm.descriptor.methodPath) ||
+          npm.descriptor.methodPath.length < 1 ||
+          npm.descriptor.methodPath.length > 8 ||
+          npm.descriptor.methodPath.some(
+            (segment) =>
+              typeof segment !== "string" ||
+              !/^[$A-Z_a-z][$\w]*$/.test(segment) ||
+              ["__proto__", "prototype", "constructor"].includes(segment),
+          ))
+      )
+        throw new Error("Invalid npm client method path");
+      const identity = `${moduleSpecifier}:${npm.descriptor.generic ? "<call>" : [npm.descriptor.exportName, ...(npm.descriptor.methodPath ?? [])].join(".")}`;
       if (identities.has(identity)) throw new Error(`Duplicate node function: ${identity}`);
       identities.add(identity);
       const customization = PluginNode.omit({
@@ -471,6 +484,7 @@ export function compileDefinition(
                   ? {
                       module: node.npm.descriptor.moduleSpecifier ?? node.npm.packageName,
                       export: node.exportName,
+                      ...(node.npm.descriptor.methodPath ? { methodPath: node.npm.descriptor.methodPath } : {}),
                       parameters: node.npm.descriptor.params.map((param) => param.name),
                     }
                   : { module: node.path, export: node.exportName, parameters: node.parameters },
