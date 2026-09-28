@@ -14,14 +14,14 @@ octonodes app create workspace-notice
 cd workspace-notice
 npm install
 npm test
-npx octonodes login
 npm run dev
 ```
 
 Edit `octonode.app.json` and `src/extensions/notice.tsx`. `npm test`
 checks types and verifies build hashes. `npm run dev` watches changes and starts
-a verified HTTPS tunnel with a branded preview after login.
-Use `--quick-tunnel` for an anonymous temporary URL. `--use-localhost` skips the
+a verified HTTPS Quick Tunnel automatically. Signed-in developers get a branded
+preview URL when the service is available; otherwise the direct tunnel remains usable.
+Use `--use-localhost` to skip the
 tunnel; `--tunnel-url <https-origin> --port <port>` uses your own. Preview
 in Studio with `octonodes login` followed by
 `octonodes app dev --workspace user:<id>`.

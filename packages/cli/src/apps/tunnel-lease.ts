@@ -10,12 +10,12 @@ export async function registerTunnel(upstream: string, previewToken: string, wor
   if (workspace && !scope) throw new Error("--workspace must be user:<id>, team:<id> or org:<id>");
   const request = async (path: string, method: string, body?: unknown) => {
     const token = await accessToken();
-    if (!token) throw new Error("Run octonodes login to use branded tunnels, or pass --quick-tunnel");
+    if (!token) throw new Error("Run octonodes login to use branded previews");
     const response = await fetch(new URL(`/api/marketplace/publisher/app-tunnels${path}`, base), {
       method, headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
       ...(body ? { body: JSON.stringify(body) } : {}), redirect: "error", signal: AbortSignal.timeout(15_000),
     });
-    if (!response.ok) throw new Error(`Branded tunnel ${method} failed (${response.status}); check login and service availability, or use --quick-tunnel`);
+    if (!response.ok) throw new Error(`Branded tunnel ${method} failed (${response.status}); check login and service availability`);
     return response.json();
   };
   const lease = await request("", "POST", { upstream, previewToken, ...(scope ? { workspace: { kind: scope[1], id: scope[2] } } : {}) }) as { id: string; url: string; expiresAt: number };

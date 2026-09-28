@@ -15,9 +15,6 @@ import { accessToken } from "../auth";
 import { terminal } from "../terminal";
 
 export async function startAppDev(directory: string, options: DevOptions = {}) {
-  if (options.quickTunnel && (options.localhost || options.tunnelUrl)) throw new Error("Choose --quick-tunnel, --use-localhost or --tunnel-url");
-  const branded = !options.localhost && !options.tunnelUrl && !options.quickTunnel;
-  if (branded && !(await accessToken())) throw new Error("Run octonodes login to use branded tunnels, or pass --quick-tunnel");
   if (options.localhost && options.tunnelUrl) throw new Error("Choose --use-localhost or --tunnel-url");
   if (options.workspace && options.localhost)
     throw new Error("Studio preview requires an HTTPS tunnel; omit --use-localhost");
@@ -83,6 +80,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       : options.tunnelUrl
         ? publicOrigin(options.tunnelUrl)
         : await (tunnel = startTunnel(port, executable)).url;
+    const transportOrigin = origin;
     host.setOrigin(origin);
     if (!options.localhost) {
       terminal.step("Checking public reachability");
@@ -103,13 +101,29 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       if (!reachable)
         throw new Error("Tunnel URL does not reach this app server; check DNS or your custom tunnel's local port");
     }
-    if (branded) {
-      terminal.step("Registering branded preview");
-      lease = await registerTunnel(origin, host.secret, options.workspace, options.baseUrl);
-      host.setOrigin(lease.url, origin);
-      origin = lease.url;
-      const response = await fetch(`${origin}/_octonode/ping`, { redirect: "error", signal: AbortSignal.timeout(10_000) });
-      if (!response.ok || await response.text() !== host.challenge) throw new Error("Branded preview is unreachable; check its DNS and gateway deployment");
+    if (tunnel) {
+      let signedIn = false;
+      try {
+        signedIn = Boolean(await accessToken());
+      } catch {
+        process.stderr.write("Saved sign-in needs attention; using the direct Quick Tunnel. Run octonodes login to restore branded previews.\n");
+      }
+      if (signedIn) {
+        terminal.step("Registering branded preview");
+        let candidate: Awaited<ReturnType<typeof registerTunnel>> | undefined;
+        try {
+          candidate = await registerTunnel(origin, host.secret, options.workspace, options.baseUrl);
+          host.setOrigin(candidate.url, origin);
+          const response = await fetch(`${candidate.url}/_octonode/ping`, { redirect: "error", signal: AbortSignal.timeout(10_000) });
+          if (!response.ok || await response.text() !== host.challenge) throw new Error("Branded preview is unreachable");
+          lease = candidate;
+          origin = candidate.url;
+        } catch (error) {
+          host.setOrigin(transportOrigin);
+          await candidate?.close().catch(() => {});
+          process.stderr.write(`Branded preview unavailable (${error instanceof Error ? error.message : String(error)}); using Quick Tunnel ${transportOrigin}\n`);
+        }
+      }
     }
     const rebuild = () => {
       buildTask = buildTask.then(async () => {
@@ -161,13 +175,19 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       ? setInterval(() => {
           void development?.sync().catch((error) => process.stderr.write(`${error.message}\n`));
           void lease?.renew().catch((error) => {
-            process.stderr.write(`${error.message}\n`);
-            process.exitCode = 1;
-            void close();
+            if (closed) return;
+            const expired = lease;
+            lease = undefined;
+            origin = transportOrigin;
+            host.setOrigin(origin);
+            previewUrl = `${origin}/_octonode/#preview=${host.secret}`;
+            process.stderr.write(`Branded preview expired (${error.message}); continuing at ${previewUrl}\n`);
+            void expired?.close().catch(() => {});
+            void rebuild();
           });
         }, 60_000)
       : undefined;
-    const previewUrl = `${origin}/_octonode/#preview=${host.secret}`;
+    let previewUrl = `${origin}/_octonode/#preview=${host.secret}`;
     if (!terminal.ready(source.name, origin, previewUrl, development?.url))
       process.stdout.write(
         JSON.stringify({
@@ -186,7 +206,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       browser.on("error", () => {});
       browser.unref();
     }
-    return { ...host, close, origin, previewUrl, rebuild };
+    return { ...host, close, get origin() { return origin; }, get previewUrl() { return previewUrl; }, rebuild };
   } catch (error) {
     await close();
     throw error;

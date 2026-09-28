@@ -4,6 +4,7 @@ import { mkdtempSync, symlinkSync, rmSync, readFileSync, writeFileSync } from "n
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { createRequire } from "node:module";
+import { EventEmitter } from "node:events";
 import { test } from "node:test";
 import { get } from "node:http";
 import { runInNewContext } from "node:vm";
@@ -57,6 +58,42 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
     await assert.rejects(fetch(origin));
   } finally {
     await dev?.close();
+    rmSync(parent, { recursive: true, force: true });
+  }
+});
+
+test("app dev opens a Quick Tunnel by default without login or branded service", async () => {
+  const parent = mkdtempSync(join(tmpdir(), "octonodes-default-tunnel-"));
+  const auth = require("../packages/cli/dist/auth.js");
+  const cloudflared = require("../packages/cli/dist/apps/cloudflared.js");
+  const tunnel = require("../packages/cli/dist/apps/tunnel.js");
+  const leases = require("../packages/cli/dist/apps/tunnel-lease.js");
+  const original = [auth.accessToken, cloudflared.ensureCloudflared, tunnel.startTunnel, leases.registerTunnel];
+  let dev;
+  let registrations = 0;
+  try {
+    const result = spawnSync(process.execPath, [cli, "app", "create", "default", "--platform", "plain"], {
+      cwd: parent,
+      encoding: "utf8",
+    });
+    assert.equal(result.status, 0, result.stderr);
+    const root = join(parent, "default");
+    symlinkSync(resolve("node_modules"), join(root, "node_modules"), "dir");
+    cloudflared.ensureCloudflared = async () => "/test/cloudflared";
+    tunnel.startTunnel = (port) => ({ url: Promise.resolve(`http://127.0.0.1:${port}`), process: new EventEmitter(), stop() {} });
+    leases.registerTunnel = async () => { registrations++; throw new Error("preview service offline"); };
+    for (const token of [undefined, "signed-in"]) {
+      auth.accessToken = async () => token;
+      dev = await startAppDev(root, { open: false });
+      assert.match(dev.origin, /^http:\/\/127\.0\.0\.1:\d+$/);
+      assert.equal((await fetch(dev.origin + "/_octonode/ping")).status, 200);
+      await dev.close();
+      dev = undefined;
+    }
+    assert.equal(registrations, 1);
+  } finally {
+    await dev?.close();
+    [auth.accessToken, cloudflared.ensureCloudflared, tunnel.startTunnel, leases.registerTunnel] = original;
     rmSync(parent, { recursive: true, force: true });
   }
 });

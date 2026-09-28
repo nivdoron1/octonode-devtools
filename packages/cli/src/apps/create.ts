@@ -160,12 +160,11 @@ An Octonode app created by \`octonodes app create\`. It includes a
 \`\`\`sh
 npm install
 npm test
-npx octonodes login
 npm run dev
 \`\`\`
 
 The CLI opens a live HTTPS preview and downloads a verified tunnel helper on first
-use. Sign in with \`octonodes login\` for a branded URL, or use \`octonodes app dev --quick-tunnel\` for an anonymous temporary URL. No Cloudflare account or separate installation is needed. Use
+use. Development opens a Quick Tunnel automatically. Sign in with \`octonodes login\` for a branded URL when the preview service is available. No Cloudflare account or separate installation is needed. Use
 \`octonodes app dev --use-localhost\` for offline UI work.
 Edit \`octonode.app.json\` and \`src/extensions/notice.tsx\`. ${framework ? `The ${platform === "next" ? "Next.js" : "Vite"} welcome page lives in \`src/web/App.tsx\`. ` : ""}The descriptor owns
 app identity, version, extension targets and entry files. Do not edit \`dist/\`.
