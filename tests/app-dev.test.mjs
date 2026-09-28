@@ -5,6 +5,7 @@ import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { createRequire } from "node:module";
 import { test } from "node:test";
+import { get } from "node:http";
 import { runInNewContext } from "node:vm";
 const require = createRequire(import.meta.url);
 const { startAppDev, serveApp } = require("../packages/cli/dist/apps/dev.js");
@@ -28,6 +29,8 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
     });
     assert.equal((await fetch(dev.origin + "/_octonode/state")).status, 401);
     const headers = { authorization: `Bearer ${dev.secret}` };
+    assert.equal((await fetch(dev.origin + "/_octonode/verify")).status, 401);
+    assert.equal((await fetch(dev.origin + "/_octonode/verify", { headers })).status, 204);
     const state = await (await fetch(dev.origin + "/_octonode/state", { headers })).json();
     assert.equal(state.extensions.length, 2);
     assert.equal(state.session.token, "development-preview");
@@ -39,6 +42,15 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
     await dev.rebuild();
     assert.equal((await (await fetch(dev.origin + "/api/hello")).json()).message, "Updated backend");
     assert.match((await (await fetch(dev.origin + "/_octonode/state", { headers })).json()).error, /Build failed/);
+    dev.setOrigin("https://branded.example.test", "https://transport.trycloudflare.com");
+    const withHost = (host) => new Promise((resolve, reject) => {
+      get(dev.origin + "/_octonode/ping", { headers: { host } }, (response) => {
+        response.resume();
+        resolve(response.statusCode);
+      }).on("error", reject);
+    });
+    assert.equal(await withHost("transport.trycloudflare.com"), 200);
+    assert.equal(await withHost("evil.example.test"), 403);
     const origin = dev.origin;
     await dev.close();
     dev = undefined;

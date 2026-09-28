@@ -10,9 +10,14 @@ import { ensureCloudflared } from "./cloudflared";
 import { publicOrigin, startTunnel } from "./tunnel";
 import { createDevelopmentSession } from "./development";
 import type { DevOptions } from "./types";
+import { registerTunnel } from "./tunnel-lease";
+import { accessToken } from "../auth";
 import { terminal } from "../terminal";
 
 export async function startAppDev(directory: string, options: DevOptions = {}) {
+  if (options.quickTunnel && (options.localhost || options.tunnelUrl)) throw new Error("Choose --quick-tunnel, --use-localhost or --tunnel-url");
+  const branded = !options.localhost && !options.tunnelUrl && !options.quickTunnel;
+  if (branded && !(await accessToken())) throw new Error("Run octonodes login to use branded tunnels, or pass --quick-tunnel");
   if (options.localhost && options.tunnelUrl) throw new Error("Choose --use-localhost or --tunnel-url");
   if (options.workspace && options.localhost)
     throw new Error("Studio preview requires an HTTPS tunnel; omit --use-localhost");
@@ -40,6 +45,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
     source,
     development: true,
   });
+  let lease: Awaited<ReturnType<typeof registerTunnel>> | undefined;
   let tunnel: ReturnType<typeof startTunnel> | undefined;
   let watcher: ReturnType<typeof watch> | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -57,6 +63,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
     tunnel?.stop();
     await host.close();
     await buildTask;
+    await lease?.close().catch(() => process.stderr.write("Tunnel cleanup failed; the branded URL expires automatically\n"));
     await development?.close();
     process.off("SIGINT", onSignal);
     process.off("SIGTERM", onSignal);
@@ -71,7 +78,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
     terminal.step(options.localhost ? "Starting local server" : "Opening secure tunnel");
     const executable = !options.localhost && !options.tunnelUrl ? await ensureCloudflared(startup.signal) : undefined;
     startup.signal.throwIfAborted();
-    const origin = options.localhost
+    let origin = options.localhost
       ? `http://127.0.0.1:${port}`
       : options.tunnelUrl
         ? publicOrigin(options.tunnelUrl)
@@ -95,6 +102,14 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       }
       if (!reachable)
         throw new Error("Tunnel URL does not reach this app server; check DNS or your custom tunnel's local port");
+    }
+    if (branded) {
+      terminal.step("Registering branded preview");
+      lease = await registerTunnel(origin, host.secret, options.workspace, options.baseUrl);
+      host.setOrigin(lease.url, origin);
+      origin = lease.url;
+      const response = await fetch(`${origin}/_octonode/ping`, { redirect: "error", signal: AbortSignal.timeout(10_000) });
+      if (!response.ok || await response.text() !== host.challenge) throw new Error("Branded preview is unreachable; check its DNS and gateway deployment");
     }
     const rebuild = () => {
       buildTask = buildTask.then(async () => {
@@ -142,9 +157,14 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
         void close();
       }
     });
-    heartbeat = development
+    heartbeat = development || lease
       ? setInterval(() => {
-          void development.sync().catch((error) => process.stderr.write(`${error.message}\n`));
+          void development?.sync().catch((error) => process.stderr.write(`${error.message}\n`));
+          void lease?.renew().catch((error) => {
+            process.stderr.write(`${error.message}\n`);
+            process.exitCode = 1;
+            void close();
+          });
         }, 60_000)
       : undefined;
     const previewUrl = `${origin}/_octonode/#preview=${host.secret}`;

@@ -29,6 +29,7 @@ export function createAppServer(options: {
   let revision = 0;
   let error: string | undefined;
   let origin = "";
+  let transportHost = "";
   let immutable = new Map<string, string>();
   let site = new Map<string, Buffer>();
   let extensions: Array<{ id: string; target: string; code: string }> = [];
@@ -49,6 +50,7 @@ export function createAppServer(options: {
       if (
         ![
           new URL(origin).host,
+          transportHost,
           `127.0.0.1:${(server.address() as AddressInfo).port}`,
           `localhost:${(server.address() as AddressInfo).port}`,
         ].includes(host)
@@ -62,6 +64,10 @@ export function createAppServer(options: {
       if (url.pathname.startsWith("/_octonode")) {
         if (!options.development) {
           response.writeHead(404).end();
+          return;
+        }
+        if (url.pathname === "/_octonode/verify") {
+          response.writeHead(request.method === "GET" && allowed(request) ? 204 : 401).end();
           return;
         }
         if (url.pathname === "/_octonode/ping") {
@@ -194,7 +200,8 @@ export function createAppServer(options: {
       origin = `http://127.0.0.1:${port}`;
       return port;
     },
-    setOrigin(value: string) {
+    setOrigin(value: string, transportOrigin?: string) {
+      transportHost = transportOrigin ? new URL(transportOrigin).host : "";
       origin = value;
     },
     update(source: AppSource, directory: string, backend?: (request: Request) => Response | Promise<Response>) {

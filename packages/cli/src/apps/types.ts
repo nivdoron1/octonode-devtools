@@ -13,6 +13,7 @@ export interface AppSource {
 export interface DevOptions {
   port?: number;
   localhost?: boolean;
+  quickTunnel?: boolean;
   tunnelUrl?: string;
   open?: boolean;
   workspace?: string;

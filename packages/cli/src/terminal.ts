@@ -32,7 +32,7 @@ export const terminal = {
     this.brand();
     process.stdout.write(
       `  ${color(32, "●")} Created ${color(1, path)}${platform ? ` ${color(90, `(${platform})`)}` : ""}\n\n` +
-        `  ${color(90, "Next steps")}\n  ${color(coral, `cd ${path}`)}\n  ${color(coral, "npm install")}\n  ${color(coral, "npm run dev")}\n\n`,
+        `  ${color(90, "Next steps")}\n  ${color(coral, `cd ${path}`)}\n  ${color(coral, "npm install")}\n  ${color(coral, "npx octonodes login")}\n  ${color(coral, "npm run dev")}\n\n`,
     );
     return true;
   },

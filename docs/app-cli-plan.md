@@ -10,6 +10,7 @@ contracts and artifact verification remain authoritative.
 octonodes app create my-app
 cd my-app
 npm install
+npx octonodes login
 npm run dev
 ```
 
@@ -25,13 +26,13 @@ The Next.js variant uses static export; server-only Next.js features require a
 different deployment adapter.
 
 `app dev` starts the HTTP adapter, builds declared extensions/backend, automatically prepares a
-Cloudflare Quick Tunnel, waits for public reachability, and opens the local preview.
+Cloudflare Quick Tunnel and registers a branded preview after login, waits for public reachability, and opens the local preview.
 No Cloudflare account, Homebrew, administrator privileges or separate installation is needed.
 The CLI downloads the pinned official helper on first use, verifies SHA-256 before execution,
 and reuses its verified cache under `~/.octonode/cache/cloudflared` (or `OCTONODE_CONFIG_DIR`).
 macOS and Linux support x64/arm64; Windows supports x64. The first run needs access to GitHub
 release downloads. Unsupported platforms can use a custom tunnel. Use
-`--use-localhost` for offline development, `--no-open` for terminal-only startup, or
+`--quick-tunnel` for an anonymous temporary URL, `--use-localhost` for offline development, `--no-open` for terminal-only startup, or
 `--port 3000 --tunnel-url https://your-tunnel-host` with your existing tunnel.
 The descriptor never receives the temporary URL. Source changes rebuild automatically;
 build errors preserve the working version. Preview refresh uses polling because Quick
@@ -57,7 +58,7 @@ For Studio rendering, run `octonodes login`, then
 must have workspace publish permission. Private drafts rotate tokens, expire after ten
 minutes, and heartbeat every minute. Only their owner can access them. Preview tokens
 have no project data or workflow grants; the local-only preview uses mock context.
-The server deployment needs control migration 0023 and matching development API/UI.
+Studio preview requires the matching development API/UI. Branded tunnels require the deployed preview service. Registration fails explicitly if it is unavailable; use `--quick-tunnel` during rollout. Branded previews use signed-in user sessions (not API tokens), expire after ten minutes without renewal, and support bearer authentication. Cookie-based sessions, WebSockets and SSE are not supported by this preview relay.
 
 ## Project and release structure
 
@@ -102,7 +103,7 @@ octonodes app publish --workspace user:<id> --app-id <id> --revision <revision>
 
 Publication always rebuilds production configuration and uses the existing publisher
 API. Static releases upload their verified bundles; full releases register metadata and
-remote asset hashes. Temporary Quick Tunnel URLs cannot be published. Backend hosting
+remote asset hashes. Temporary branded preview and Quick Tunnel URLs cannot be published. Backend hosting
 is developer-managed; publication does not deploy a backend or change installation pins.
 An administrator installs/updates the release through Studio consent.
 

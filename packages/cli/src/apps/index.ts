@@ -18,6 +18,7 @@ export async function appCommand(args: string[], version: string): Promise<void>
       platform: { type: "string" },
       port: { type: "string" },
       "use-localhost": { type: "boolean" },
+      "quick-tunnel": { type: "boolean" },
       "tunnel-url": { type: "string" },
       "no-open": { type: "boolean" },
       "app-url": { type: "string" },
@@ -57,6 +58,7 @@ export async function appCommand(args: string[], version: string): Promise<void>
     await startAppDev(target ?? values.cwd ?? ".", {
       port,
       localhost: values["use-localhost"],
+      quickTunnel: values["quick-tunnel"],
       tunnelUrl: values["tunnel-url"],
       open: !values["no-open"],
       workspace: values.workspace,
