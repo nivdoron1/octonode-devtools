@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.2.14] - 2026-09-29
+
+### Added
+
+- Generate a full app with one hosted page, sample project rows, and browser routes; contributions can be added explicitly.
+- Connect hosted pages to Studio sessions and route history through the UI extensions SDK.
+- Reload the development page after a successful source rebuild while preserving the page across ordinary heartbeats.
+
+### Changed
+
+- Generate Yarn workspace settings that install and build cleanly in a monorepo.
+- Keep requested actions in development manifests so Studio can request explicit, temporary consent.
+
+### Fixed
+
+- Use the Studio gateway for app development and publishing commands.
+- Serve the app shell for HTML deep links while retaining normal API and asset 404 responses.
+- Preserve authorization and upstream errors in generated app backends.
+
 ## [0.2.13] - 2026-09-28
 
 ### Changed

@@ -66,6 +66,16 @@ export function createAppServer(options: {
           response.writeHead(404).end();
           return;
         }
+        if (url.pathname === "/_octonode/revision") {
+          response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ revision }));
+          return;
+        }
+        if (url.pathname === "/_octonode/reload.js") {
+          response.writeHead(200, { "content-type": "text/javascript" }).end(
+            `(() => { const revision = new URL(document.currentScript.src).searchParams.get("revision"); setInterval(async () => { try { const response = await fetch("/_octonode/revision", { cache: "no-store" }); if (response.ok && String((await response.json()).revision) !== revision) location.reload(); } catch {} }, 1000); })();`,
+          );
+          return;
+        }
         if (url.pathname === "/_octonode/verify") {
           response.writeHead(request.method === "GET" && allowed(request) ? 204 : 401).end();
           return;
@@ -139,7 +149,7 @@ export function createAppServer(options: {
       }
       const pathname = url.pathname === "/" ? "/index.html" : url.pathname;
       const pagePath = site.has(pathname) ? pathname : site.has(pathname + ".html") ? pathname + ".html" : pathname.replace(/\/$/, "") + "/index.html";
-      const page = url.pathname.startsWith("/api/") ? undefined : site.get(pagePath);
+      const page = url.pathname.startsWith("/api/") ? undefined : site.get(pagePath) ?? (!extname(url.pathname) && request.headers.accept?.includes("text/html") ? site.get("/index.html") : undefined);
       if (page && ["GET", "HEAD"].includes(request.method ?? "")) {
         const mime: Record<string, string> = {
           ".html": "text/html; charset=utf-8",
@@ -151,7 +161,10 @@ export function createAppServer(options: {
           ".ico": "image/x-icon",
           ".woff2": "font/woff2",
         };
-        response.writeHead(200, { "content-type": mime[extname(pagePath)] ?? "application/octet-stream" }).end(request.method === "HEAD" ? undefined : page);
+        const content = options.development && extname(pagePath) === ".html"
+          ? Buffer.from(page.toString("utf8").replace(/<\/body>/i, `<script src="/_octonode/reload.js?revision=${revision}"></script></body>`))
+          : page;
+        response.writeHead(200, { "content-type": mime[extname(pagePath)] ?? "application/octet-stream" }).end(request.method === "HEAD" ? undefined : content);
         return;
       }
       if (!handler) {
@@ -220,7 +233,7 @@ export function createAppServer(options: {
       site = new Map(
         existsSync(join(directory, "site"))
           ? pluginFiles(join(directory, "site")).map((file) => ["/" + file, readFileSync(join(directory, "site", file))])
-          : [],
+          : existsSync(join(directory, "welcome.html")) ? [["/index.html", readFileSync(join(directory, "welcome.html"))]] : [],
       );
       error = undefined;
       revision++;

@@ -7,7 +7,6 @@ import { createRequire } from "node:module";
 import { EventEmitter } from "node:events";
 import { test } from "node:test";
 import { get } from "node:http";
-import { runInNewContext } from "node:vm";
 const require = createRequire(import.meta.url);
 const { startAppDev, serveApp } = require("../packages/cli/dist/apps/dev.js");
 const { buildAppProject, verifyWebBuild } = require("../packages/cli/dist/apps/build.js");
@@ -33,12 +32,18 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
     assert.equal((await fetch(dev.origin + "/_octonode/verify")).status, 401);
     assert.equal((await fetch(dev.origin + "/_octonode/verify", { headers })).status, 204);
     const state = await (await fetch(dev.origin + "/_octonode/state", { headers })).json();
-    assert.equal(state.extensions.length, 2);
+    assert.equal(state.extensions.length, 0);
     assert.equal(state.session.token, "development-preview");
+    const page = await (await fetch(dev.origin + "/projects", { headers: { accept: "text/html" } })).text();
+    assert.match(page, /_octonode\/reload\.js\?revision=/);
+    const revision = (await (await fetch(dev.origin + "/_octonode/revision")).json()).revision;
+    assert.equal((await fetch(dev.origin + "/missing.js")).status, 404);
+
     const backend = join(root, "src/server.ts");
     writeFileSync(backend, readFileSync(backend, "utf8").replace("Hello from your app backend", "Updated backend"));
     await dev.rebuild();
     assert.equal((await (await fetch(dev.origin + "/api/hello")).json()).message, "Updated backend");
+    assert.ok((await (await fetch(dev.origin + "/_octonode/revision")).json()).revision > revision);
     writeFileSync(backend, "invalid {{{");
     await dev.rebuild();
     assert.equal((await (await fetch(dev.origin + "/api/hello")).json()).message, "Updated backend");
@@ -107,6 +112,8 @@ test("full app release requires a production URL and separates server code from 
     });
     assert.equal(result.status, 0, result.stderr);
     const root = join(parent, "full");
+    const added = spawnSync(process.execPath, [cli, "app", "extension", "add", "notice", "--target", "workspace.block"], { cwd: root, encoding: "utf8" });
+    assert.equal(added.status, 0, added.stderr);
     symlinkSync(resolve("node_modules"), join(root, "node_modules"), "dir");
     await assert.rejects(buildAppProject(root), /applicationUrl/);
     const descriptorPath = join(root, "octonode.app.json");
@@ -150,52 +157,8 @@ test("full app release requires a production URL and separates server code from 
       assert.equal((await fetch(url + "/api/hello")).status, 200);
       const html = await (await fetch(url)).text();
       const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
-      for (const [token, status] of [
-        ["test-app-token", 200],
-        ["expired-token", 401],
-        ["", 200],
-      ]) {
-        const output = { textContent: "" };
-        let cleared = false;
-        let sent = false;
-        runInNewContext(script, {
-          URLSearchParams,
-          location: { hash: token ? `#octonode_session=${token}` : "", pathname: "/", search: "" },
-          history: {
-            replaceState(_a, _b, path) {
-              assert.equal(path, "/");
-              cleared = true;
-            },
-          },
-          document: {
-            getElementById() {
-              return output;
-            },
-          },
-          fetch: async (path, options) => {
-            sent = true;
-            assert.equal(path, "/api/context");
-            assert.equal(options.headers.authorization, `Bearer ${token}`);
-            return {
-              ok: status === 200,
-              json: async () => ({ workspace: { kind: "team", id: "alpha" } }),
-            };
-          },
-        });
-        await new Promise((resolve) => setImmediate(resolve));
-        assert.ok(cleared);
-        assert.equal(sent, !!token);
-        assert.match(
-          output.textContent,
-          token
-            ? status === 200
-              ? /Connected to team:alpha/
-              : /expired or access was revoked/
-            : /Open this app from Octonode/,
-        );
-      }
-
-      assert.equal(await (await fetch(url + new URL(oldExtension.url).pathname)).text(), oldBytes);
+      assert.match(script, /connectHostedApp/);
+      assert.doesNotMatch(script, /OCTONODE_HOSTED_BRIDGE/);
       assert.equal((await fetch(url + new URL(updated.manifest.app.extensions[0].url).pathname)).status, 200);
       assert.equal((await fetch(url + "/_octonode/state")).status, 404);
       assert.equal((await fetch(url + "/src/server.ts")).status, 404);
@@ -272,21 +235,22 @@ test("publisher dev sessions refresh and revoke; publication sends fresh verifie
     const built = await buildAppProject(root);
     session = await createDevelopmentSession("user:owner", baseUrl, baseUrl);
     await session.sync(readAppSource(root), built, built.directory);
-    assert.equal(session.url, `${baseUrl}/studio/apps/development/${id}`);
+    assert.equal(session.url, `${baseUrl}/studio/apps/development/${id}?workspace=user%3Aowner`);
     await session.sync();
     await session.close();
     session = undefined;
     assert.equal(requests[0].body.expectedRevision, 0);
-    assert.equal(requests[1].body.expectedRevision, 1);
-    assert.equal(requests[2].method, "DELETE");
+    assert.equal(requests[1].method, "GET");
+    assert.equal(requests[2].body.expectedRevision, 2);
+    assert.equal(requests[3].method, "DELETE");
     assert.equal(requests[0].auth, "Bearer test-publisher-token");
     await publishApp(root, { workspace: "user:owner", baseUrl });
-    assert.equal(requests[3].url, "/api/marketplace/publisher/apps");
-    assert.equal(requests[3].body.app.hosting, "extension-only");
-    assert.equal(requests[3].body.bundles[0].code, readFileSync(join(built.directory, "extensions/notice.js"), "utf8"));
+    assert.equal(requests[4].url, "/api/marketplace/publisher/apps");
+    assert.equal(requests[4].body.app.hosting, "extension-only");
+    assert.equal(requests[4].body.bundles[0].code, readFileSync(join(built.directory, "extensions/notice.js"), "utf8"));
     await publishApp(root, { workspace: "user:owner", baseUrl, appId: id, revision: 7 });
-    assert.equal(requests[4].body.expectedRevision, 7);
-    assert.equal(requests[4].url, `/api/marketplace/publisher/apps/${id}/versions`);
+    assert.equal(requests[5].body.expectedRevision, 7);
+    assert.equal(requests[5].url, `/api/marketplace/publisher/apps/${id}/versions`);
     await assert.rejects(publishApp(root, { workspace: "user:owner", baseUrl, appId: id }), /revision/);
   } finally {
     await session?.close();

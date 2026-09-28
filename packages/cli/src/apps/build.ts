@@ -116,7 +116,13 @@ export async function buildAppProject(directory: string, applicationUrl?: string
       pluginFiles(site);
       cpSync(site, join(stage, "site"), { recursive: true, dereference: false });
     } else if (existsSync(join(root, "src/welcome.html"))) {
-      copyFileSync(sourceFile(root, "src/welcome.html"), join(stage, "welcome.html"));
+      let html = readFileSync(sourceFile(root, "src/welcome.html"), "utf8");
+      if (html.includes("/* OCTONODE_HOSTED_BRIDGE */")) {
+        const browser = await build({ entryPoints: [sourceFile(root, "src/hosted.ts")], absWorkingDir: root, bundle: true, platform: "browser", format: "iife", preserveSymlinks: true, write: false, metafile: true, logLevel: "silent" });
+        assertSourceInputs(root, Object.keys(browser.metafile.inputs));
+        html = html.replace("/* OCTONODE_HOSTED_BRIDGE */", browser.outputFiles[0].text.replaceAll("</script", "<\\/script"));
+      }
+      writeFileSync(join(stage, "welcome.html"), html);
     }
     const previousWeb = join(root, "dist/web", source.id);
     if (existsSync(previousWeb)) {
