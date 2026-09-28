@@ -1,11 +1,12 @@
 import { createServer, type IncomingMessage } from "node:http";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import type { AddressInfo } from "node:net";
-import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { extname, join } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import type { AppSource } from "./types";
+import { pluginFiles } from "../plugins/artifact";
 
 export async function bodyBytes(request: IncomingMessage) {
   const chunks: Buffer[] = [];
@@ -28,7 +29,9 @@ export function createAppServer(options: {
   let revision = 0;
   let error: string | undefined;
   let origin = "";
+  let transportHost = "";
   let immutable = new Map<string, string>();
+  let site = new Map<string, Buffer>();
   let extensions: Array<{ id: string; target: string; code: string }> = [];
   let handler: ((request: Request) => Response | Promise<Response>) | undefined;
   const allowed = (request: IncomingMessage) => {
@@ -47,6 +50,7 @@ export function createAppServer(options: {
       if (
         ![
           new URL(origin).host,
+          transportHost,
           `127.0.0.1:${(server.address() as AddressInfo).port}`,
           `localhost:${(server.address() as AddressInfo).port}`,
         ].includes(host)
@@ -60,6 +64,10 @@ export function createAppServer(options: {
       if (url.pathname.startsWith("/_octonode")) {
         if (!options.development) {
           response.writeHead(404).end();
+          return;
+        }
+        if (url.pathname === "/_octonode/verify") {
+          response.writeHead(request.method === "GET" && allowed(request) ? 204 : 401).end();
           return;
         }
         if (url.pathname === "/_octonode/ping") {
@@ -129,6 +137,23 @@ export function createAppServer(options: {
           .end(request.method === "HEAD" ? undefined : extension.code);
         return;
       }
+      const pathname = url.pathname === "/" ? "/index.html" : url.pathname;
+      const pagePath = site.has(pathname) ? pathname : site.has(pathname + ".html") ? pathname + ".html" : pathname.replace(/\/$/, "") + "/index.html";
+      const page = url.pathname.startsWith("/api/") ? undefined : site.get(pagePath);
+      if (page && ["GET", "HEAD"].includes(request.method ?? "")) {
+        const mime: Record<string, string> = {
+          ".html": "text/html; charset=utf-8",
+          ".js": "text/javascript; charset=utf-8",
+          ".css": "text/css; charset=utf-8",
+          ".json": "application/json",
+          ".svg": "image/svg+xml",
+          ".png": "image/png",
+          ".ico": "image/x-icon",
+          ".woff2": "font/woff2",
+        };
+        response.writeHead(200, { "content-type": mime[extname(pagePath)] ?? "application/octet-stream" }).end(request.method === "HEAD" ? undefined : page);
+        return;
+      }
       if (!handler) {
         response.writeHead(302, { location: "/_octonode/" }).end();
         return;
@@ -175,7 +200,8 @@ export function createAppServer(options: {
       origin = `http://127.0.0.1:${port}`;
       return port;
     },
-    setOrigin(value: string) {
+    setOrigin(value: string, transportOrigin?: string) {
+      transportHost = transportOrigin ? new URL(transportOrigin).host : "";
       origin = value;
     },
     update(source: AppSource, directory: string, backend?: (request: Request) => Response | Promise<Response>) {
@@ -190,6 +216,11 @@ export function createAppServer(options: {
         readdirSync(join(directory, "extensions"))
           .filter((file) => /^[a-f0-9]{64}\.js$/.test(file))
           .map((file) => [`/extensions/${file}`, readFileSync(join(directory, "extensions", file), "utf8")]),
+      );
+      site = new Map(
+        existsSync(join(directory, "site"))
+          ? pluginFiles(join(directory, "site")).map((file) => ["/" + file, readFileSync(join(directory, "site", file))])
+          : [],
       );
       error = undefined;
       revision++;

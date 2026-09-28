@@ -8,7 +8,7 @@ import type { AppSource } from "./types";
 export async function createDevelopmentSession(
   workspace: string,
   baseUrl = OCTONODE_API_URL,
-  studioUrl = "https://octonode.dev",
+  studioUrl = "https://octonodes.com",
 ) {
   const match = workspace.match(/^(user|team|org):([^:]{1,128})$/);
   if (!match) throw new Error("--workspace must be user:<id>, team:<id> or org:<id>");

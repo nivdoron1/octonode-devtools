@@ -10,11 +10,16 @@ import { ensureCloudflared } from "./cloudflared";
 import { publicOrigin, startTunnel } from "./tunnel";
 import { createDevelopmentSession } from "./development";
 import type { DevOptions } from "./types";
+import { registerTunnel } from "./tunnel-lease";
+import { accessToken } from "../auth";
+import { terminal } from "../terminal";
 
 export async function startAppDev(directory: string, options: DevOptions = {}) {
   if (options.localhost && options.tunnelUrl) throw new Error("Choose --use-localhost or --tunnel-url");
   if (options.workspace && options.localhost)
     throw new Error("Studio preview requires an HTTPS tunnel; omit --use-localhost");
+  terminal.brand();
+  terminal.step(options.workspace ? `Connecting to ${options.workspace}` : "Preparing local preview");
   const development = options.workspace
     ? await createDevelopmentSession(options.workspace, options.baseUrl, options.studioUrl)
     : undefined;
@@ -37,6 +42,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
     source,
     development: true,
   });
+  let lease: Awaited<ReturnType<typeof registerTunnel>> | undefined;
   let tunnel: ReturnType<typeof startTunnel> | undefined;
   let watcher: ReturnType<typeof watch> | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -54,6 +60,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
     tunnel?.stop();
     await host.close();
     await buildTask;
+    await lease?.close().catch(() => process.stderr.write("Tunnel cleanup failed; the branded URL expires automatically\n"));
     await development?.close();
     process.off("SIGINT", onSignal);
     process.off("SIGTERM", onSignal);
@@ -65,15 +72,18 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
   process.once("SIGTERM", onSignal);
   try {
     const port = await host.listen();
+    terminal.step(options.localhost ? "Starting local server" : "Opening secure tunnel");
     const executable = !options.localhost && !options.tunnelUrl ? await ensureCloudflared(startup.signal) : undefined;
     startup.signal.throwIfAborted();
-    const origin = options.localhost
+    let origin = options.localhost
       ? `http://127.0.0.1:${port}`
       : options.tunnelUrl
         ? publicOrigin(options.tunnelUrl)
         : await (tunnel = startTunnel(port, executable)).url;
+    const transportOrigin = origin;
     host.setOrigin(origin);
     if (!options.localhost) {
+      terminal.step("Checking public reachability");
       let reachable = false;
       for (let attempt = 0; attempt < 30; attempt++) {
         try {
@@ -90,6 +100,30 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       }
       if (!reachable)
         throw new Error("Tunnel URL does not reach this app server; check DNS or your custom tunnel's local port");
+    }
+    if (tunnel) {
+      let signedIn = false;
+      try {
+        signedIn = Boolean(await accessToken());
+      } catch {
+        process.stderr.write("Saved sign-in needs attention; using the direct Quick Tunnel. Run octonodes login to restore branded previews.\n");
+      }
+      if (signedIn) {
+        terminal.step("Registering branded preview");
+        let candidate: Awaited<ReturnType<typeof registerTunnel>> | undefined;
+        try {
+          candidate = await registerTunnel(origin, host.secret, options.workspace, options.baseUrl);
+          host.setOrigin(candidate.url, origin);
+          const response = await fetch(`${candidate.url}/_octonode/ping`, { redirect: "error", signal: AbortSignal.timeout(10_000) });
+          if (!response.ok || await response.text() !== host.challenge) throw new Error("Branded preview is unreachable");
+          lease = candidate;
+          origin = candidate.url;
+        } catch (error) {
+          host.setOrigin(transportOrigin);
+          await candidate?.close().catch(() => {});
+          process.stderr.write(`Branded preview unavailable (${error instanceof Error ? error.message : String(error)}); using Quick Tunnel ${transportOrigin}\n`);
+        }
+      }
     }
     const rebuild = () => {
       buildTask = buildTask.then(async () => {
@@ -111,7 +145,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
             if (typeof backend !== "function") throw new Error("web.entry must default-export a Fetch API handler");
           }
           host.update(source, web ?? built.directory, backend);
-          process.stderr.write("App rebuilt\n");
+          terminal.rebuilt();
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           host.fail(message);
@@ -120,12 +154,13 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       });
       return buildTask;
     };
+    terminal.step(`Building ${source.name}`);
     await rebuild();
     if (development && !development.url)
       throw new Error("Workspace preview could not start; see the development error above");
     watcher = watch(root, { recursive: true }, (_event, filename) => {
       const file = String(filename ?? "").replaceAll("\\", "/");
-      if (file !== "octonode.app.json" && !file.startsWith("src/")) return;
+      if (file !== "octonode.app.json" && !file.startsWith("src/") && !file.startsWith("app/") && !["index.html", "next.config.mjs", "vite.config.mjs"].includes(file)) return;
       clearTimeout(timer);
       timer = setTimeout(() => void rebuild(), 150);
     });
@@ -136,21 +171,33 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
         void close();
       }
     });
-    heartbeat = development
+    heartbeat = development || lease
       ? setInterval(() => {
-          void development.sync().catch((error) => process.stderr.write(`${error.message}\n`));
+          void development?.sync().catch((error) => process.stderr.write(`${error.message}\n`));
+          void lease?.renew().catch((error) => {
+            if (closed) return;
+            const expired = lease;
+            lease = undefined;
+            origin = transportOrigin;
+            host.setOrigin(origin);
+            previewUrl = `${origin}/_octonode/#preview=${host.secret}`;
+            process.stderr.write(`Branded preview expired (${error.message}); continuing at ${previewUrl}\n`);
+            void expired?.close().catch(() => {});
+            void rebuild();
+          });
         }, 60_000)
       : undefined;
-    const previewUrl = `${origin}/_octonode/#preview=${host.secret}`;
-    process.stdout.write(
-      JSON.stringify({
-        url: origin,
-        previewUrl,
-        port,
-        studioUrl: development?.url,
-        mode: options.localhost ? "localhost" : "tunnel",
-      }) + "\n",
-    );
+    let previewUrl = `${origin}/_octonode/#preview=${host.secret}`;
+    if (!terminal.ready(source.name, origin, previewUrl, development?.url))
+      process.stdout.write(
+        JSON.stringify({
+          url: origin,
+          previewUrl,
+          port,
+          studioUrl: development?.url,
+          mode: options.localhost ? "localhost" : "tunnel",
+        }) + "\n",
+      );
     if (options.open !== false) {
       const command = process.platform === "darwin" ? "open" : process.platform === "win32" ? "cmd" : "xdg-open";
       const openUrl = development?.url ?? previewUrl;
@@ -159,7 +206,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       browser.on("error", () => {});
       browser.unref();
     }
-    return { ...host, close, origin, previewUrl, rebuild };
+    return { ...host, close, get origin() { return origin; }, get previewUrl() { return previewUrl; }, rebuild };
   } catch (error) {
     await close();
     throw error;

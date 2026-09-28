@@ -8,8 +8,11 @@ import {
   renameSync,
   existsSync,
   copyFileSync,
+  cpSync,
 } from "node:fs";
 import { join, relative, resolve } from "node:path";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { build } from "esbuild";
 import { PluginManifest } from "@octonodes/sdk/plugins";
 import { buildApp } from "../plugins/app";
@@ -103,6 +106,18 @@ export async function buildAppProject(directory: string, applicationUrl?: string
     });
     assertSourceInputs(root, Object.keys(backend.metafile.inputs));
     if (backend.warnings.length) throw new Error(backend.warnings.map((warning) => warning.text).join("\n"));
+    if (source.web.platform === "vite" || source.web.platform === "next") {
+      const command = source.web.platform === "next" ? "next/dist/bin/next" : "vite/bin/vite.js";
+      await promisify(execFile)(process.execPath, [join(root, "node_modules", command), "build"], {
+        cwd: root,
+        maxBuffer: 8 * 1024 * 1024,
+      });
+      const site = join(root, source.web.platform === "next" ? "out" : "web-dist");
+      pluginFiles(site);
+      cpSync(site, join(stage, "site"), { recursive: true, dereference: false });
+    } else if (existsSync(join(root, "src/welcome.html"))) {
+      copyFileSync(sourceFile(root, "src/welcome.html"), join(stage, "welcome.html"));
+    }
     const previousWeb = join(root, "dist/web", source.id);
     if (existsSync(previousWeb)) {
       verifyWebBuild(previousWeb);

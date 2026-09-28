@@ -7,18 +7,25 @@ contracts and artifact verification remain authoritative.
 ## Developer loop
 
 ```sh
-octonodes app create my-app --template full
+octonodes app create my-app
 cd my-app
 npm install
 npm run dev
 ```
 
-Omit `--template full` for a static extension-only app. Both templates start with a
+Use `--template extension` for a static extension-only app. Both templates start with a
 workspace block. Add a page explicitly with
 `octonodes app extension add overview --target app.page`.
+The default is a full Vite app, identical to `--platform vite`. Use
+`--platform next` for Next.js or `--platform plain` for an HTML welcome page and
+Fetch API backend without a frontend framework. Vite and Next.js provide a native
+React welcome page, an `app.page` contribution and a workspace block. The CLI builds the framework's static output into the
+verified web artifact while `src/server.ts` handles authenticated API requests.
+The Next.js variant uses static export; server-only Next.js features require a
+different deployment adapter.
 
 `app dev` starts the HTTP adapter, builds declared extensions/backend, automatically prepares a
-Cloudflare Quick Tunnel, waits for public reachability, and opens the local preview.
+Cloudflare Quick Tunnel, waits for public reachability, and opens the local preview. Signed-in developers also receive a branded address when the preview service is available; registration failure leaves the direct tunnel working and prints a warning.
 No Cloudflare account, Homebrew, administrator privileges or separate installation is needed.
 The CLI downloads the pinned official helper on first use, verifies SHA-256 before execution,
 and reuses its verified cache under `~/.octonode/cache/cloudflared` (or `OCTONODE_CONFIG_DIR`).
@@ -29,6 +36,20 @@ release downloads. Unsupported platforms can use a custom tunnel. Use
 The descriptor never receives the temporary URL. Source changes rebuild automatically;
 build errors preserve the working version. Preview refresh uses polling because Quick
 Tunnels do not support SSE. Ctrl-C cleans up resources.
+In a terminal, development displays Octonode's mark, build steps, tunnel state,
+and separate app and Studio/preview links. Redirected stdout retains the JSON
+line for scripts and tests.
+
+The terminal uses the real Octonode charcoal and coral palette: an octagonal
+mark, short progress lines, a ready state, the app URL, the Studio or local
+preview URL, and a Ctrl-C hint. Login shows the same mark and clear completion
+state. Colors are automatic in interactive terminals, including environments
+that set `NO_COLOR`. Redirected output remains plain JSON.
+
+The starter welcome page uses the Octonode logo and a connection map to explain
+the handoff from Studio to the app backend. It clears the session token from the
+URL before calling `/api/context`, then shows the verified workspace or a useful
+reopen instruction. It works at mobile widths and keeps keyboard focus visible.
 
 For Studio rendering, run `octonodes login`, then
 `octonodes app dev --workspace user:<id>` (also `team:<id>` and `org:<id>`).
@@ -36,7 +57,7 @@ For Studio rendering, run `octonodes login`, then
 must have workspace publish permission. Private drafts rotate tokens, expire after ten
 minutes, and heartbeat every minute. Only their owner can access them. Preview tokens
 have no project data or workflow grants; the local-only preview uses mock context.
-The server deployment needs control migration 0023 and matching development API/UI.
+Studio preview requires the matching development API/UI. Branded tunnels require the deployed preview service. During rollout, `app dev` continues with its direct Quick Tunnel when that service is unavailable. Branded previews use signed-in user sessions (not API tokens), expire after ten minutes without renewal, and support bearer authentication. Cookie-based sessions, WebSockets and SSE are not supported by this preview relay.
 
 ## Project and release structure
 
@@ -81,7 +102,7 @@ octonodes app publish --workspace user:<id> --app-id <id> --revision <revision>
 
 Publication always rebuilds production configuration and uses the existing publisher
 API. Static releases upload their verified bundles; full releases register metadata and
-remote asset hashes. Temporary Quick Tunnel URLs cannot be published. Backend hosting
+remote asset hashes. Temporary branded preview and Quick Tunnel URLs cannot be published. Backend hosting
 is developer-managed; publication does not deploy a backend or change installation pins.
 An administrator installs/updates the release through Studio consent.
 

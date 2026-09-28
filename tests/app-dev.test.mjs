@@ -4,7 +4,9 @@ import { mkdtempSync, symlinkSync, rmSync, readFileSync, writeFileSync } from "n
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { createRequire } from "node:module";
+import { EventEmitter } from "node:events";
 import { test } from "node:test";
+import { get } from "node:http";
 import { runInNewContext } from "node:vm";
 const require = createRequire(import.meta.url);
 const { startAppDev, serveApp } = require("../packages/cli/dist/apps/dev.js");
@@ -15,7 +17,7 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
   const parent = mkdtempSync(join(tmpdir(), "octonodes-full-app-"));
   let dev;
   try {
-    const result = spawnSync(process.execPath, [cli, "app", "create", "full", "--template", "full"], {
+    const result = spawnSync(process.execPath, [cli, "app", "create", "full", "--platform", "plain"], {
       cwd: parent,
       encoding: "utf8",
     });
@@ -28,8 +30,10 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
     });
     assert.equal((await fetch(dev.origin + "/_octonode/state")).status, 401);
     const headers = { authorization: `Bearer ${dev.secret}` };
+    assert.equal((await fetch(dev.origin + "/_octonode/verify")).status, 401);
+    assert.equal((await fetch(dev.origin + "/_octonode/verify", { headers })).status, 204);
     const state = await (await fetch(dev.origin + "/_octonode/state", { headers })).json();
-    assert.equal(state.extensions.length, 1);
+    assert.equal(state.extensions.length, 2);
     assert.equal(state.session.token, "development-preview");
     const backend = join(root, "src/server.ts");
     writeFileSync(backend, readFileSync(backend, "utf8").replace("Hello from your app backend", "Updated backend"));
@@ -39,6 +43,15 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
     await dev.rebuild();
     assert.equal((await (await fetch(dev.origin + "/api/hello")).json()).message, "Updated backend");
     assert.match((await (await fetch(dev.origin + "/_octonode/state", { headers })).json()).error, /Build failed/);
+    dev.setOrigin("https://branded.example.test", "https://transport.trycloudflare.com");
+    const withHost = (host) => new Promise((resolve, reject) => {
+      get(dev.origin + "/_octonode/ping", { headers: { host } }, (response) => {
+        response.resume();
+        resolve(response.statusCode);
+      }).on("error", reject);
+    });
+    assert.equal(await withHost("transport.trycloudflare.com"), 200);
+    assert.equal(await withHost("evil.example.test"), 403);
     const origin = dev.origin;
     await dev.close();
     dev = undefined;
@@ -49,10 +62,46 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
   }
 });
 
+test("app dev opens a Quick Tunnel by default without login or branded service", async () => {
+  const parent = mkdtempSync(join(tmpdir(), "octonodes-default-tunnel-"));
+  const auth = require("../packages/cli/dist/auth.js");
+  const cloudflared = require("../packages/cli/dist/apps/cloudflared.js");
+  const tunnel = require("../packages/cli/dist/apps/tunnel.js");
+  const leases = require("../packages/cli/dist/apps/tunnel-lease.js");
+  const original = [auth.accessToken, cloudflared.ensureCloudflared, tunnel.startTunnel, leases.registerTunnel];
+  let dev;
+  let registrations = 0;
+  try {
+    const result = spawnSync(process.execPath, [cli, "app", "create", "default", "--platform", "plain"], {
+      cwd: parent,
+      encoding: "utf8",
+    });
+    assert.equal(result.status, 0, result.stderr);
+    const root = join(parent, "default");
+    symlinkSync(resolve("node_modules"), join(root, "node_modules"), "dir");
+    cloudflared.ensureCloudflared = async () => "/test/cloudflared";
+    tunnel.startTunnel = (port) => ({ url: Promise.resolve(`http://127.0.0.1:${port}`), process: new EventEmitter(), stop() {} });
+    leases.registerTunnel = async () => { registrations++; throw new Error("preview service offline"); };
+    for (const token of [undefined, "signed-in"]) {
+      auth.accessToken = async () => token;
+      dev = await startAppDev(root, { open: false });
+      assert.match(dev.origin, /^http:\/\/127\.0\.0\.1:\d+$/);
+      assert.equal((await fetch(dev.origin + "/_octonode/ping")).status, 200);
+      await dev.close();
+      dev = undefined;
+    }
+    assert.equal(registrations, 1);
+  } finally {
+    await dev?.close();
+    [auth.accessToken, cloudflared.ensureCloudflared, tunnel.startTunnel, leases.registerTunnel] = original;
+    rmSync(parent, { recursive: true, force: true });
+  }
+});
+
 test("full app release requires a production URL and separates server code from registration", async () => {
   const parent = mkdtempSync(join(tmpdir(), "octonodes-full-release-"));
   try {
-    const result = spawnSync(process.execPath, [cli, "app", "create", "full", "--template", "full"], {
+    const result = spawnSync(process.execPath, [cli, "app", "create", "full", "--platform", "plain"], {
       cwd: parent,
       encoding: "utf8",
     });
@@ -213,7 +262,7 @@ test("publisher dev sessions refresh and revoke; publication sends fresh verifie
     process.env.OCTONODE_TOKEN = "test-publisher-token";
     await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
     const baseUrl = `http://127.0.0.1:${server.address().port}`;
-    const result = spawnSync(process.execPath, [cli, "app", "create", "draft"], {
+    const result = spawnSync(process.execPath, [cli, "app", "create", "draft", "--template", "extension"], {
       cwd: parent,
       encoding: "utf8",
     });
