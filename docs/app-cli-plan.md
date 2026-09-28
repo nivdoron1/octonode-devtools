@@ -25,7 +25,7 @@ The Next.js variant uses static export; server-only Next.js features require a
 different deployment adapter.
 
 `app dev` starts the HTTP adapter, builds declared extensions/backend, automatically prepares a
-Cloudflare Quick Tunnel, waits for public reachability, and opens the local preview. Signed-in developers also receive a branded address when the preview service is available; registration failure leaves the direct tunnel working and prints a warning.
+Cloudflare Quick Tunnel, waits for public reachability, and opens the local preview. The public `trycloudflare.com` address is the current default for signed-in and signed-out developers.
 No Cloudflare account, Homebrew, administrator privileges or separate installation is needed.
 The CLI downloads the pinned official helper on first use, verifies SHA-256 before execution,
 and reuses its verified cache under `~/.octonode/cache/cloudflared` (or `OCTONODE_CONFIG_DIR`).
@@ -57,7 +57,7 @@ For Studio rendering, run `octonodes login`, then
 must have workspace publish permission. Private drafts rotate tokens, expire after ten
 minutes, and heartbeat every minute. Only their owner can access them. Preview tokens
 have no project data or workflow grants; the local-only preview uses mock context.
-Studio preview requires the matching development API/UI. Branded tunnels require the deployed preview service. During rollout, `app dev` continues with its direct Quick Tunnel when that service is unavailable. Branded previews use signed-in user sessions (not API tokens), expire after ten minutes without renewal, and support bearer authentication. Cookie-based sessions, WebSockets and SSE are not supported by this preview relay.
+Studio preview requires the matching development API/UI. Branded tunnel registration is paused until the private preview gateway has wildcard TLS and passes its live smoke test. The lease client remains in `tunnel-lease.ts`; enable `BRANDED_APP_PREVIEWS_ENABLED` in `dev.ts` after the private rollout. Branded previews use signed-in user sessions (not API tokens), expire after ten minutes without renewal, and support bearer authentication. Cookie-based sessions, WebSockets and SSE are not supported by this preview relay.
 
 ## Project and release structure
 

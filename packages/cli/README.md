@@ -19,8 +19,8 @@ npm run dev
 
 Edit `octonode.app.json` and `src/extensions/notice.tsx`. `npm test`
 checks types and verifies build hashes. `npm run dev` watches changes and starts
-a verified HTTPS Quick Tunnel automatically. Signed-in developers get a branded
-preview URL when the service is available; otherwise the direct tunnel remains usable.
+a verified public HTTPS Quick Tunnel automatically. Branded Octonode preview URLs
+are planned for a later rollout.
 Use `--use-localhost` to skip the
 tunnel; `--tunnel-url <https-origin> --port <port>` uses your own. Preview
 in Studio with `octonodes login` followed by

@@ -62,7 +62,7 @@ test("full app dev serves backend, protects preview, rebuilds and shuts down", a
   }
 });
 
-test("app dev opens a Quick Tunnel by default without login or branded service", async () => {
+test("app dev uses the public Quick Tunnel even when signed in", async () => {
   const parent = mkdtempSync(join(tmpdir(), "octonodes-default-tunnel-"));
   const auth = require("../packages/cli/dist/auth.js");
   const cloudflared = require("../packages/cli/dist/apps/cloudflared.js");
@@ -90,7 +90,7 @@ test("app dev opens a Quick Tunnel by default without login or branded service",
       await dev.close();
       dev = undefined;
     }
-    assert.equal(registrations, 1);
+    assert.equal(registrations, 0);
   } finally {
     await dev?.close();
     [auth.accessToken, cloudflared.ensureCloudflared, tunnel.startTunnel, leases.registerTunnel] = original;

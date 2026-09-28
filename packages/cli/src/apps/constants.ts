@@ -12,7 +12,7 @@ Create defaults to a full Vite app (--platform vite). Use --platform plain for H
 --platform next for Next.js. Use --template extension for an extension-only workspace block.
 Build compiles declared browser entries and generates
 release hashes in dist/apps/<id>. Existing projects are never overwritten. No login is needed.
-app dev opens a Quick Tunnel automatically. Signed-in developers get a branded preview when available.
+app dev opens a public Quick Tunnel automatically.
 app dev automatically downloads and caches its tunnel helper. No Cloudflare account or install is needed. --workspace opens an expiring Studio preview after login.
 app publish creates an immutable release; full apps must deploy their backend separately.
 Installation requires Studio consent.
