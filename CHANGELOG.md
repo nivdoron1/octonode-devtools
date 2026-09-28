@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.13] - 2026-09-28
+
+### Changed
+
+- Use the public Cloudflare Quick Tunnel for app development while branded preview TLS is deferred.
+
 ## [0.2.11] - 2026-09-28
 
 ### Added

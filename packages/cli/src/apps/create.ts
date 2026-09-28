@@ -164,7 +164,7 @@ npm run dev
 \`\`\`
 
 The CLI opens a live HTTPS preview and downloads a verified tunnel helper on first
-use. Development opens a Quick Tunnel automatically. Sign in with \`octonodes login\` for a branded URL when the preview service is available. No Cloudflare account or separate installation is needed. Use
+use. Development opens a public Quick Tunnel automatically. No Cloudflare account or separate installation is needed. Use
 \`octonodes app dev --use-localhost\` for offline UI work.
 Edit \`octonode.app.json\` and \`src/extensions/notice.tsx\`. ${framework ? `The ${platform === "next" ? "Next.js" : "Vite"} welcome page lives in \`src/web/App.tsx\`. ` : ""}The descriptor owns
 app identity, version, extension targets and entry files. Do not edit \`dist/\`.

@@ -14,6 +14,9 @@ import { registerTunnel } from "./tunnel-lease";
 import { accessToken } from "../auth";
 import { terminal } from "../terminal";
 
+// Enable after the private preview route has wildcard TLS and passes the live smoke test.
+const BRANDED_APP_PREVIEWS_ENABLED = false;
+
 export async function startAppDev(directory: string, options: DevOptions = {}) {
   if (options.localhost && options.tunnelUrl) throw new Error("Choose --use-localhost or --tunnel-url");
   if (options.workspace && options.localhost)
@@ -101,7 +104,7 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
       if (!reachable)
         throw new Error("Tunnel URL does not reach this app server; check DNS or your custom tunnel's local port");
     }
-    if (tunnel) {
+    if (tunnel && BRANDED_APP_PREVIEWS_ENABLED) {
       let signedIn = false;
       try {
         signedIn = Boolean(await accessToken());
