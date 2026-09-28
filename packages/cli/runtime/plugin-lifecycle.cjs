@@ -1226,7 +1226,7 @@ var require_app = __commonJS({
   "packages/schema/dist/app.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.AppDefinition = exports2.ExtensionOnlyApp = exports2.SelfHostedApp = exports2.SelfHostedAppExtension = exports2.AppAction = void 0;
+    exports2.appTunnelRegistrationSchema = exports2.AppDefinition = exports2.ExtensionOnlyApp = exports2.SelfHostedApp = exports2.SelfHostedAppExtension = exports2.AppAction = void 0;
     var zod_1 = require("zod");
     exports2.AppAction = zod_1.z.enum(["projects:read", "data:read", "data:write", "workflows:run"]);
     var appUrl = zod_1.z.string().max(2048).url().refine((value) => {
@@ -1303,6 +1303,11 @@ var require_app = __commonJS({
       }
     });
     exports2.AppDefinition = zod_1.z.union([exports2.SelfHostedApp, exports2.ExtensionOnlyApp]);
+    exports2.appTunnelRegistrationSchema = zod_1.z.object({
+      upstream: zod_1.z.string().url().max(2048),
+      previewToken: zod_1.z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+      workspace: zod_1.z.object({ kind: zod_1.z.enum(["user", "team", "org"]), id: zod_1.z.string().min(1).max(128) }).strict().optional()
+    }).strict();
   }
 });
 

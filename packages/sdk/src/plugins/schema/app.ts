@@ -144,3 +144,14 @@ export const ExtensionOnlyApp = z
 export type ExtensionOnlyApp = z.infer<typeof ExtensionOnlyApp>;
 export const AppDefinition = z.union([SelfHostedApp, ExtensionOnlyApp]);
 export type AppDefinition = z.infer<typeof AppDefinition>;
+
+export const appTunnelRegistrationSchema = z
+  .object({
+    upstream: z.string().url().max(2048),
+    previewToken: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+    workspace: z
+      .object({ kind: z.enum(["user", "team", "org"]), id: z.string().min(1).max(128) })
+      .strict()
+      .optional(),
+  })
+  .strict();
