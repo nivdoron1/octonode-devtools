@@ -24,7 +24,13 @@ export function appManifest(source: AppSource, hashes: string[] = []) {
     version: source.version,
     description: source.description,
     nodes: [],
-    app: {
+    app: source.web ? {
+      apiVersion: "1", hosting: "self-hosted",
+      applicationUrl: source.web.applicationUrl ?? "https://development.example",
+      redirectUrls: [source.web.applicationUrl ?? "https://development.example"],
+      requestedActions: source.web.requestedActions ?? [],
+      extensions: source.extensions.map((extension, index) => ({ id: extension.id, target: extension.target, url: `${source.web!.applicationUrl ?? "https://development.example"}/extensions/${extension.id}.js`, sha256: hashes[index] ?? `sha256:${"0".repeat(64)}` })),
+    } : {
       apiVersion: "2",
       hosting: "extension-only",
       settings: source.settings,

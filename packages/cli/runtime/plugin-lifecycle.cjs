@@ -11457,7 +11457,7 @@ var require_app_installation = __commonJS({
   "packages/schema/dist/app-installation.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.appSettingsSchema = exports2.appInstallationSchema = exports2.appUninstallSchema = exports2.appInstallSchema = exports2.appGrantsSchema = exports2.appGrantSchema = exports2.appReviewSchema = exports2.appStatusSchema = exports2.appLifecycleSchema = exports2.appPublishSchema = void 0;
+    exports2.appDevelopmentConsentSchema = exports2.appSettingsSchema = exports2.appInstallationSchema = exports2.appUninstallSchema = exports2.appInstallSchema = exports2.appGrantsSchema = exports2.appGrantSchema = exports2.appReviewSchema = exports2.appStatusSchema = exports2.appLifecycleSchema = exports2.appPublishSchema = void 0;
     var zod_1 = require("zod");
     var app_1 = require_app();
     var collaboration_1 = require_collaboration();
@@ -11515,6 +11515,10 @@ var require_app_installation = __commonJS({
       expectedRevision: zod_1.z.number().int().min(1).max(Number.MAX_SAFE_INTEGER - 1),
       enabled: zod_1.z.boolean(),
       configuration: zod_1.z.record(zod_1.z.string().max(4e3)).refine((value) => Object.keys(value).length <= 32)
+    }).strict();
+    exports2.appDevelopmentConsentSchema = zod_1.z.object({
+      expectedRevision: zod_1.z.number().int().positive(),
+      grants: exports2.appGrantsSchema
     }).strict();
   }
 });

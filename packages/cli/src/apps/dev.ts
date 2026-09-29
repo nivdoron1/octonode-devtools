@@ -183,14 +183,14 @@ export async function startAppDev(directory: string, options: DevOptions = {}) {
             lease = undefined;
             origin = transportOrigin;
             host.setOrigin(origin);
-            previewUrl = `${origin}/_octonode/#preview=${host.secret}`;
+            previewUrl = source.web ? origin : `${origin}/_octonode/#preview=${host.secret}`;
             process.stderr.write(`Branded preview expired (${error.message}); continuing at ${previewUrl}\n`);
             void expired?.close().catch(() => {});
             void rebuild();
           });
         }, 60_000)
       : undefined;
-    let previewUrl = `${origin}/_octonode/#preview=${host.secret}`;
+    let previewUrl = source.web ? origin : `${origin}/_octonode/#preview=${host.secret}`;
     if (!terminal.ready(source.name, origin, previewUrl, development?.url))
       process.stdout.write(
         JSON.stringify({

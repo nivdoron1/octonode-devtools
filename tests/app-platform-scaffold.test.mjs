@@ -25,15 +25,15 @@ test("platform scaffolds contain native entry points and keep the Octonode backe
       const pkg = JSON.parse(readFileSync(join(app, "package.json"), "utf8"));
       assert.equal(descriptor.web.platform, platform);
       assert.equal(descriptor.web.entry, "src/server.ts");
-      assert.ok(descriptor.extensions.some((extension) => extension.target === "workspace.block"));
-      assert.ok(descriptor.extensions.some((extension) => extension.target === "app.page"));
+      assert.deepEqual(descriptor.extensions, []);
+      assert.equal(pkg.installConfig.hoistingLimits, "workspaces");
       if (platform === "plain") {
         assert.ok(!pkg.devDependencies.vite && !pkg.devDependencies.next);
-        assert.match(readFileSync(join(app, "src/welcome.html"), "utf8"), /octonode_session/);
+        assert.match(readFileSync(join(app, "src/welcome.html"), "utf8"), /OCTONODE_HOSTED_BRIDGE/);
         continue;
       }
       assert.ok(pkg.devDependencies[platform]);
-      assert.match(readFileSync(join(app, "src/web/App.tsx"), "utf8"), /octonode_session/);
+      assert.match(readFileSync(join(app, "src/web/App.tsx"), "utf8"), /connectHostedApp/);
       assert.match(readFileSync(join(app, "src/server.ts"), "utf8"), /connectAppServer/);
       assert.match(
         readFileSync(join(app, platform === "vite" ? "index.html" : "app/page.tsx"), "utf8"),

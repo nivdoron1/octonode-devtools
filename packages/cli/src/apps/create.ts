@@ -36,24 +36,33 @@ export function createApp(name: string, version: string, template = "full", plat
         ...(template === "extension"
           ? { settings: [{ id: "message", label: "Message", defaultValue: "Welcome to the workspace" }] }
           : {}),
-        extensions: [
-          { id: "notice", target: "workspace.block", entry: "src/extensions/notice.tsx" },
-          ...(template === "full" ? [{ id: "welcome", target: "app.page", entry: "src/extensions/welcome.tsx" }] : []),
-        ],
+        extensions: template === "extension" ? [{ id: "notice", target: "workspace.block", entry: "src/extensions/notice.tsx" }] : [],
       }),
     );
-    writeFileSync(join(root, "src/extensions/notice.tsx"), extensionCode("workspace.block"));
+    if (template === "extension") writeFileSync(join(root, "src/extensions/notice.tsx"), extensionCode("workspace.block"));
     if (template === "full") {
-      writeFileSync(join(root, "src/extensions/welcome.tsx"), `import { defineExtension, Section } from "@octonodes/ui-extensions/react";
-export default defineExtension("app.page", function Welcome() {
-  return <Section title="Welcome to ${name}">Your app is ready. Open the developer-hosted page to see its backend connection.</Section>;
-});
-`);
       if (!framework) writeFileSync(join(root, "src/welcome.html"), welcomeHtml(name));
+      if (!framework) writeFileSync(join(root, "src/hosted.ts"), `import { connectHostedApp } from "@octonodes/ui-extensions/app";
+const app = connectHostedApp();
+const output = document.getElementById("message")!;
+let token: string | undefined;
+const update = () => {
+  const current = app.getSnapshot();
+  if (current.status === "expired") output.textContent = "Session expired. Reopen the app from Studio.";
+  if (current.status !== "ready" || current.token === token) return;
+  token = current.token;
+  app.fetch("/api/context").then(async response => {
+    if (!response.ok) throw Error("Could not load context (" + response.status + ").");
+    const data = await response.json(); output.textContent = "Connected to " + data.workspace.kind + ":" + data.workspace.id;
+  }).catch(error => { output.textContent = error.message; });
+};
+output.textContent = "Open this app from Studio to connect your workspace.";
+app.subscribe(update); update();
+`);
       writeFileSync(
         join(root, "src/server.ts"),
         `// Export a Fetch API handler. app dev and app serve adapt it to Node HTTP.
-import { connectAppServer } from "@octonodes/ui-extensions/app/server";
+import { connectAppServer, AppRequestError } from "@octonodes/ui-extensions/app/server";
 ${framework ? "" : 'import { readFileSync } from "node:fs";\nimport { join } from "node:path";'}
 export default async function handle(request: Request): Promise<Response> {
   const path = new URL(request.url).pathname;
@@ -65,7 +74,21 @@ export default async function handle(request: Request): Promise<Response> {
       const token = request.headers.get("authorization")?.replace(/^Bearer /, "") ?? "";
       const app = await connectAppServer(token, { appId, baseUrl });
       return Response.json({ workspace: app.workspace });
-    } catch { return new Response("App session required", { status: 401 }); }
+    } catch (error) { return new Response("Could not load app context", { status: error instanceof AppRequestError ? error.status : 502 }); }
+  }
+  if (path === "/api/projects") {
+    if (request.method !== "GET") return new Response("Method not allowed", { status: 405 });
+    const appId = process.env.OCTONODE_APP_ID;
+    const baseUrl = process.env.OCTONODE_API_URL;
+    if (!appId || !baseUrl) return new Response("App identity is not configured", { status: 503 });
+    try {
+      const app = await connectAppServer(request.headers.get("authorization")?.replace(/^Bearer /, "") ?? "", { appId, baseUrl });
+      const ids = [...new Set(app.grants.filter(grant => grant.action === "projects:read").map(grant => grant.projectId))];
+      const results = await Promise.allSettled(ids.map(id => app.forProject(id).get()));
+      const authError = results.find(result => result.status === "rejected" && result.reason instanceof AppRequestError && result.reason.status === 401);
+      if (authError?.status === "rejected") throw authError.reason;
+      return Response.json({ projects: results.flatMap(result => result.status === "fulfilled" ? [result.value] : []), failed: results.filter(result => result.status === "rejected").length });
+    } catch (error) { return new Response("Could not load granted projects", { status: error instanceof AppRequestError ? error.status : 502 }); }
   }
   if (path === "/api/hello") return Response.json({ message: "Hello from your app backend" });
   if (path !== "/") return new Response("Not found", { status: 404 });
@@ -96,6 +119,7 @@ export default async function handle(request: Request): Promise<Response> {
         private: true,
         type: "module",
         engines: { node: ">=24" },
+        installConfig: { hoistingLimits: "workspaces" },
         scripts: {
           dev: "octonodes app dev",
           ...(template === "full" ? { start: "octonodes app serve" } : {}),
@@ -140,7 +164,7 @@ test("release bundles match the manifest", () => {
   const root = ${JSON.stringify(`dist/apps/${name}`)};
   const { plugin } = JSON.parse(readFileSync(root + "/octonode.json", "utf8"));
   assert.equal(plugin.app.hosting, ${JSON.stringify(template === "full" ? "self-hosted" : "extension-only")});
-  assert.ok(plugin.app.extensions.length);
+  assert.ok(Array.isArray(plugin.app.extensions));
   for (const extension of plugin.app.extensions) {
     const bytes = readFileSync(${JSON.stringify(template === "full" ? `dist/web/${name}/extensions/` : `dist/apps/${name}/extensions/`)} + extension.id + ".js");
     assert.equal(extension.sha256, "sha256:" + createHash("sha256").update(bytes).digest("hex"));
@@ -152,10 +176,13 @@ test("release bundles match the manifest", () => {
       join(root, "README.md"),
       `# ${name}
 
-An Octonode app created by \`octonodes app create\`. It includes a
-\`workspace.block\` on workspace home.${template === "full" ? " The full app also has an Octonode app page and a hosted welcome page." : " Add a page only if the app needs one."}
+An Octonode app created by \`octonodes app create\`. ${template === "full" ? "It includes a hosted page and backend. Contributions are optional." : "It includes a workspace block. Add an app page only if needed."}
 
 ## Work locally
+
+Yarn workspaces use the generated \`installConfig.hoistingLimits: workspaces\`. Keep it
+and run \`yarn install\` at the workspace root. Full React apps include sample data
+and a Projects route; the SDK mirrors navigation into Studio without reloading.
 
 \`\`\`sh
 npm install
@@ -166,9 +193,9 @@ npm run dev
 The CLI opens a live HTTPS preview and downloads a verified tunnel helper on first
 use. Development opens a public Quick Tunnel automatically. No Cloudflare account or separate installation is needed. Use
 \`octonodes app dev --use-localhost\` for offline UI work.
-Edit \`octonode.app.json\` and \`src/extensions/notice.tsx\`. ${framework ? `The ${platform === "next" ? "Next.js" : "Vite"} welcome page lives in \`src/web/App.tsx\`. ` : ""}The descriptor owns
+Edit \`octonode.app.json\` and the generated source files. ${framework ? `The ${platform === "next" ? "Next.js" : "Vite"} welcome page lives in \`src/web/App.tsx\`. ` : ""}The descriptor owns
 app identity, version, extension targets and entry files. Do not edit \`dist/\`.
-${template === "extension" ? "Add a page with `octonodes app extension add overview --target app.page`." : "Edit `src/extensions/welcome.tsx` for the Octonode app page."}
+${template === "extension" ? "Add a page with `octonodes app extension add overview --target app.page`." : "Add a contribution with `octonodes app extension add notice --target workspace.block`."}
 
 ## Preview and publish in Octonode
 
@@ -181,7 +208,7 @@ octonodes app publish --workspace user:<your-user-id>
 \`\`\`
 
 Use \`team:<id>\` or \`org:<id>\` if that is the publisher workspace. Studio
-preview is private and expiring, with no project grants. The first publication
+preview is private and expiring. It starts without project grants; use Studio to explicitly consent to selected development projects for up to one hour. The first publication
 returns the registered app ID and revision. Install through **Studio → Apps**;
 a block appears on workspace home. An administrator can change shared settings
 or disable an extension-only installation. Shared settings are not secrets.
@@ -211,11 +238,11 @@ The development tunnel URL is temporary and must not be published.
 
 ` : ""}## SDK and deployment guides
 
-- [App quickstart](https://playbook.octonodes.com/docs/apps-quickstart)
-- [Configuration](https://playbook.octonodes.com/docs/apps-configuration)
-- [App SDKs](https://playbook.octonodes.com/docs/apps-sdk)
-- [Hosting](https://playbook.octonodes.com/docs/apps-hosting)
-- [Publishing and updates](https://playbook.octonodes.com/docs/apps-publishing)
+- [App quickstart](https://playbook.octonodes.com/docs/apps/quickstart)
+- [Configuration](https://playbook.octonodes.com/docs/apps/configuration)
+- [App SDKs](https://playbook.octonodes.com/docs/apps/sdk)
+- [Hosting](https://playbook.octonodes.com/docs/apps/hosting)
+- [Publishing and updates](https://playbook.octonodes.com/docs/apps/publishing)
 `,
     );
     return root;

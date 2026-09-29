@@ -102,7 +102,33 @@ Host the compiled JavaScript with CORS enabled for the Studio origin. Hash the e
 
 The five-minute `octo_app_` bearer is specific to the app installation, approved version, and opening user. Your backend must verify it on **every request** with `GET https://octonodes.com/api/apps/runtime/session`, then check that the returned `appId` equals your registered app ID. Use the verified workspace/user identity rather than values supplied by the browser. Never log the bearer or cache verification. Uninstall, consent changes, session expiry, and removed membership revoke subsequent access.
 
-For standalone pages, Octonode opens the registered application URL with `#octonode_session=…`. Read the fragment and immediately remove it using `history.replaceState`; keep the credential in memory. App backends can use `POST /api/apps/runtime/data` for consented project/table/row operations, and `POST /api/apps/runtime/executions` on the cloud gateway for workflow execution. Neither credential works as a general Octonode login. See the engine’s `docs/plugins.md` for request examples.
+## Hosted pages and routing
+
+Use `connectHostedApp()` once when the page mounts, subscribe to its snapshot, and
+call `dispose()` on unmount. Studio displays the hosted page inline and delivers
+short-lived sessions through an origin-checked, window-bound handshake. Tokens stay
+in memory. `app.fetch("/api/projects")` sends the bearer only to your own backend;
+that backend must still verify it with `connectAppServer` on every request.
+
+```ts
+import { connectHostedApp } from "@octonodes/ui-extensions/app";
+const app = connectHostedApp();
+const unsubscribe = app.subscribe(() => render(app.getSnapshot()));
+app.navigate("/products?sort=name");
+// On unmount: unsubscribe(); app.dispose();
+```
+
+Normal `history.pushState`, `replaceState`, and back/forward navigation work with
+browser routers. Embedded paths appear in Studio’s `appPath` query parameter;
+standalone pages use their own URL. Serve your app shell for nested page routes.
+Do not use Studio’s `/studio/apps/...` path as your app router basename.
+
+Development starts with zero data grants. Explicit administrator consent selects
+actions and projects for one hour; heartbeats extend only the ten-minute idle
+session, not the consent. Source edits on the same host retain consent; host or
+action changes clear it. See the [development guide](https://playbook.octonodes.com/docs/apps/development).
+
+For standalone fallback pages, Octonode opens the registered application URL with `#octonode_session=…`. Read the fragment and immediately remove it using `history.replaceState`; keep the credential in memory. App backends can use `POST /api/apps/runtime/data` for consented project/table/row operations, and `POST /api/apps/runtime/executions` on the cloud gateway for workflow execution. Neither credential works as a general Octonode login. See the engine’s `docs/plugins.md` for request examples.
 
 For legacy self-hosted v1 apps, developers host app backends and versioned extension assets themselves. Octonode-managed app hosting is reserved for a future paid service. App release metadata pins extension URLs and SHA-256 digests; publishing metadata does not deploy a backend.
 
@@ -139,9 +165,9 @@ The backend helper verifies the bearer on each `connectAppServer` call and uses 
 ## End-to-end app guides
 
 The public Playbook is the source for the complete authoring path:
-[quickstart](https://playbook.octonodes.com/docs/apps-quickstart),
-[project configuration](https://playbook.octonodes.com/docs/apps-configuration),
-[SDK imports and permissions](https://playbook.octonodes.com/docs/apps-sdk),
-[hosting](https://playbook.octonodes.com/docs/apps-hosting), and
-[publishing and updates](https://playbook.octonodes.com/docs/apps-publishing).
+[quickstart](https://playbook.octonodes.com/docs/apps/quickstart),
+[project configuration](https://playbook.octonodes.com/docs/apps/configuration),
+[SDK imports and permissions](https://playbook.octonodes.com/docs/apps/sdk),
+[hosting](https://playbook.octonodes.com/docs/apps/hosting), and
+[publishing and updates](https://playbook.octonodes.com/docs/apps/publishing).
 The CLI scaffold supplies a runnable extension-only or full app example.

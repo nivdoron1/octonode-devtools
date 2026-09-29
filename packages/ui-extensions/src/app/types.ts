@@ -1,6 +1,21 @@
 // Generated from packages/ui-extensions/src/app/types.ts. Do not edit; run the Octonode SDK sync.
 import type { AppSession } from "../index.js";
 
+export type HostedAppState = {
+  embedded: boolean;
+  status: "connecting" | "ready" | "standalone" | "expired";
+  token?: string;
+  expiresAt?: number;
+  path: string;
+};
+export type HostedApp = {
+  getSnapshot(): HostedAppState;
+  subscribe(listener: () => void): () => void;
+  navigate(path: string, options?: { replace?: boolean }): void;
+  fetch(input: string, init?: RequestInit): Promise<Response>;
+  dispose(): void;
+};
+
 export type AppGrant = {
   action: "projects:read" | "data:read" | "data:write" | "workflows:run";
   projectId: string;

@@ -1,14 +1,14 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { OCTONODE_API_URL } from "@octonodes/sdk";
+import { APP_STUDIO_URL } from "./constants";
 import type { PluginBuild } from "../plugins/types";
 import { accessToken } from "../auth";
 import type { AppSource } from "./types";
 
 export async function createDevelopmentSession(
   workspace: string,
-  baseUrl = OCTONODE_API_URL,
-  studioUrl = "https://octonodes.com",
+  baseUrl = APP_STUDIO_URL,
+  studioUrl = APP_STUDIO_URL,
 ) {
   const match = workspace.match(/^(user|team|org):([^:]{1,128})$/);
   if (!match) throw new Error("--workspace must be user:<id>, team:<id> or org:<id>");
@@ -37,7 +37,7 @@ export async function createDevelopmentSession(
     });
     if (!response.ok)
       throw new Error(
-        `Development session ${method} failed (${response.status}); check publisher access and server migration 0023`,
+        `Development session ${method} failed (${response.status}); check publisher access and server migrations 0023 and 0025`,
       );
     return response.json() as Promise<{ id: string; revision: number; expiresAt: number }>;
   }
@@ -52,13 +52,14 @@ export async function createDevelopmentSession(
             slug: source.id,
             name: source.name,
             version: source.version,
-            app: { ...built.manifest.app, requestedActions: [] },
+            app: built.manifest.app,
             bundles: source.extensions.map((extension) => ({
               id: extension.id,
               code: readFileSync(join(bundleDirectory, `extensions/${extension.id}.js`), "utf8"),
             })),
           };
         if (!body) return;
+        if (id) revision = (await request("GET")).revision;
         const result = await request("POST", { ...body, expectedRevision: revision });
         id = result.id;
         revision = result.revision;
@@ -71,7 +72,7 @@ export async function createDevelopmentSession(
   return {
     sync,
     get url() {
-      return id ? new URL(`/studio/apps/development/${id}`, studio).href : undefined;
+      return id ? new URL(`/studio/apps/development/${id}?workspace=${encodeURIComponent(workspace)}`, studio).href : undefined;
     },
     async close() {
       stopped = true;

@@ -28,9 +28,8 @@ remain separate.
 
 ## Create an app
 
-`octonodes` creates a complete app project. Use the default extension-only template
-for a workspace block with no backend; add an `app.page` when you want an Apps
-page. Use `--template full` when your app needs its own hosted page or server.
+`octonodes` creates a complete app project. The default is a full Vite app with a hosted page and backend. Use `--template extension`
+for a static workspace block without a backend. Contributions are optional for full apps.
 
 ```sh
 npm install --global @octonodes/cli
@@ -41,8 +40,8 @@ npm test
 npm run dev
 ```
 
-The project contains `octonode.app.json`, a TypeScript/React extension, and a
-build check. `app dev` runs a live preview and automatically provisions a
+The project contains `octonode.app.json`, a React page, a backend, sample data, routing, and a
+build check. Yarn workspaces use the generated `installConfig.hoistingLimits: workspaces`. `app dev` runs a live preview and automatically provisions a
 verified HTTPS tunnel. It needs no Cloudflare account or separate tunnel install.
 Use `octonodes app dev --use-localhost` for offline UI work. To preview in a real
 workspace, run `octonodes login` and `octonodes app dev --workspace user:<id>`.

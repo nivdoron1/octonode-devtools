@@ -1,3 +1,5 @@
+// App installation and preview routes are served by the Studio gateway.
+export const APP_STUDIO_URL = "https://octonodes.com";
 export const APP_SOURCE = "octonode.app.json";
 export const APP_HELP = `Usage:
   octonodes app create <name> [--template extension|full] [--platform plain|vite|next]

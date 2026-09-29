@@ -6,7 +6,7 @@ wraps `@octonodes/sdk`, so every generated SDK operation is available without wr
 ## Create an app
 
 Use Node 24 and a CLI release containing `octonodes app`. The default scaffold
-is a full Vite app with a welcome page, backend, and workspace block.
+is a full Vite app with one hosted page and a backend. Contributions are optional.
 Use `--template extension` for an extension-only app.
 
 ```sh
@@ -17,7 +17,7 @@ npm test
 npm run dev
 ```
 
-Edit `octonode.app.json` and `src/extensions/notice.tsx`. `npm test`
+Edit `octonode.app.json`, `src/web/App.tsx`, and `src/server.ts`. `npm test`
 checks types and verifies build hashes. `npm run dev` watches changes and starts
 a verified public HTTPS Quick Tunnel automatically. Branded Octonode preview URLs
 are planned for a later rollout.
@@ -33,7 +33,7 @@ octonodes app extension add overview --target app.page
 octonodes app publish --workspace user:<id>
 ```
 
-The default app includes a page. Extension-only apps can add one with the command above.
+The default app opens its hosted page inside Studio. The command above adds an optional app-page contribution.
 Install through Studio → Apps; a block appears on
 workspace home, and a page-capable app opens from Apps. An administrator can
 configure or disable an installation. The first publication returns the app ID
@@ -59,11 +59,17 @@ octonodes app create my-plain-app --platform plain
 ```
 
 Vite and Next.js create a full app with a real framework page in `src/web/App.tsx`,
-an Octonode welcome page, a workspace block, and the verified `/api/context` backend. The CLI
+sample project data, client-side navigation, and the verified `/api/context` and `/api/projects` backend routes. The CLI
 builds Vite or a Next.js static export into the same verified web artifact and
 serves it through the development tunnel. Next.js server features are outside
 this static export; add backend routes in `src/server.ts`.
-Plain uses `src/welcome.html` and the same backend without Vite or Next.js.
+Plain uses `src/welcome.html`, `src/hosted.ts`, and the same backend without Vite or Next.js.
+
+Generated workspaces include `installConfig.hoistingLimits: workspaces` for Yarn 4.
+The hosted SDK keeps normal browser history and mirrors embedded routes into Studio’s
+`appPath` query parameter. Development starts with no grants; use explicit sample data
+or approve temporary, selected-project access in Studio. See the
+[Apps development guide](https://playbook.octonodes.com/docs/apps/development).
 
 ## Create and publish plugins
 

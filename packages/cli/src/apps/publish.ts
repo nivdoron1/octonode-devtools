@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { OCTONODE_API_URL } from "@octonodes/sdk";
+import { APP_STUDIO_URL } from "./constants";
 import { accessToken } from "../auth";
 import { buildAppProject } from "./build";
 export async function publishApp(
@@ -14,7 +14,7 @@ export async function publishApp(
     (!/^[a-f0-9-]{36}$/.test(options.appId) || !Number.isSafeInteger(options.revision) || options.revision! < 1)
   )
     throw new Error("Updates require --app-id <id> and --revision <current-revision>");
-  const base = new URL(options.baseUrl ?? OCTONODE_API_URL);
+  const base = new URL(options.baseUrl ?? APP_STUDIO_URL);
   if (base.protocol !== "https:" && !(base.protocol === "http:" && ["localhost", "127.0.0.1"].includes(base.hostname)))
     throw new Error("API origin must use HTTPS");
   const token = await accessToken();

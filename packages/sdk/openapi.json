@@ -85,6 +85,13 @@
       ]
     },
     {
+      "name": "Apps",
+      "tags": [
+        "Apps runtime",
+        "Marketplace apps"
+      ]
+    },
+    {
       "name": "Workspaces",
       "tags": [
         "Workspaces"
@@ -7047,6 +7054,14 @@
               "enum": [
                 "true"
               ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "workspace",
+            "schema": {
+              "type": "string",
+              "maxLength": 256
             }
           },
           {
