@@ -162,6 +162,35 @@ test("CLI consumes generated SSE operations as JSON Lines", async () => {
   }
 });
 
+test("CLI calls generated operations with tree and dotted paths", async () => {
+  const server = createServer((request, response) => {
+    response.setHeader("content-type", "application/json");
+    response.end(JSON.stringify({ path: request.url }));
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const address = server.address();
+  assert.ok(address && typeof address === "object");
+  try {
+    for (const command of [["projects", "api", "get"], ["projects.api.get"]]) {
+      const result = await new Promise((resolve, reject) => {
+        const child = spawn(process.execPath, [
+          "packages/cli/dist/index.js", ...command, "--base-url", `http://127.0.0.1:${address.port}`,
+        ], { env: { ...process.env, OCTONODE_TOKEN: "tree-token" } });
+        let stdout = "";
+        let stderr = "";
+        child.stdout.setEncoding("utf8").on("data", (chunk) => (stdout += chunk));
+        child.stderr.setEncoding("utf8").on("data", (chunk) => (stderr += chunk));
+        child.once("error", reject);
+        child.once("close", (status) => resolve({ status, stdout, stderr }));
+      });
+      assert.equal(result.status, 0, result.stderr);
+      assert.deepEqual(JSON.parse(result.stdout), { path: "/api/store/projects" });
+    }
+  } finally {
+    server.close();
+  }
+});
+
 test("CLI login stores a reusable token with user-only permissions", async () => {
   const configDir = mkdtempSync(join(tmpdir(), "octonodes-cli-"));
   const env = { ...process.env, OCTONODE_CONFIG_DIR: configDir };
