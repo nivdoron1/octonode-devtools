@@ -1894,6 +1894,7 @@ export type GetApiProjectsSearchData = {
     path?: never;
     query?: {
         summary?: 'true';
+        workspace?: string;
         q?: string;
         offset?: number;
         limit?: number;
