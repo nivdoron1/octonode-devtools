@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.15] - 2026-09-29
+
+### Changed
+
+- Browse SDK API operations with space-separated commands and help at each level; dotted paths remain supported.
+
 ## [0.2.14] - 2026-09-29
 
 ### Added

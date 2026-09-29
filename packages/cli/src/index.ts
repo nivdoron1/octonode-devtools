@@ -8,6 +8,8 @@ const VERSION = (require("../package.json") as { version: string }).version;
 const argv = process.argv.slice(2);
 const command = argv[0];
 const helpRequested = argv.some((value) => value === "-h" || value === "--h" || value === "--help");
+const firstFlag = argv.findIndex((value) => value.startsWith("-"));
+const path = argv.slice(0, firstFlag < 0 ? undefined : firstFlag).join(".");
 
 function listOperations(target: object, path: string[] = []): string[] {
   const operations: string[] = [];
@@ -77,12 +79,19 @@ function usage(topic?: string): void {
     process.stdout.write("Usage:\n  octonodes logout\n\nRemoves the locally saved access token.\n");
     return;
   }
+  if (topic) {
+    const children = [...new Set(operations.filter((name) => name.startsWith(`${topic}.`)).map((name) => name.slice(topic.length + 1).split(".")[0]))];
+    if (children.length) {
+      process.stdout.write(`Usage:\n  octonodes ${topic.replaceAll(".", " ")} <command>\n\nCommands:\n${children.map((name) => `  ${name}`).join("\n")}\n`);
+      return;
+    }
+  }
   if (topic && operations.includes(topic)) {
-    process.stdout.write(`Usage:\n  octonodes ${topic} [--input <json>] [--base-url <url>]\n`);
+    process.stdout.write(`Usage:\n  octonodes ${topic.replaceAll(".", " ")} [--input <json>] [--base-url <url>]\n`);
     return;
   }
   process.stdout.write("Apps: octonodes app <create|extension add|dev|build|validate|serve|publish> (see octonodes app --help)\nPlugins: octonodes plugin <create|build|validate|test|publish|install|update|remove|list|recover> (see octonodes plugin --help)\nFrozen restore: octonodes install --frozen --artifacts-only\nMCP clients: octonodes connect <codex|claude|cursor|headers> (see octonodes connect --help)\n\n");
-  process.stdout.write(`octonodes v${VERSION}\n\nUsage:\n  octonodes login [--base-url <url>]\n  octonodes login --email <email> [--base-url <url>]\n  octonodes login --token <api-token>\n  octonodes logout\n  octonodes connect <codex|claude|cursor|headers> --workspace <kind:id> --project <id>\n  octonodes operations [filter]\n  octonodes <operation> [--input <json>] [--base-url <url>]\n\nFlags:\n  -h, --h, --help  Show help\n  -v, --version     Show version\n\nEnvironment:\n  OCTONODE_TOKEN       Overrides the saved login\n  OCTONODE_URL         Overrides ${OCTONODE_API_URL}\n  OCTONODE_CONFIG_DIR  Overrides ~/.octonode\n`);
+  process.stdout.write(`octonodes v${VERSION}\n\nUsage:\n  octonodes login [--base-url <url>]\n  octonodes login --email <email> [--base-url <url>]\n  octonodes login --token <api-token>\n  octonodes logout\n  octonodes connect <codex|claude|cursor|headers> --workspace <kind:id> --project <id>\n  octonodes operations [filter]\n  octonodes <resource> <command> [--input <json>] [--base-url <url>]\n\nAPI resources:\n${[...new Set(operations.map((name) => name.split(".")[0]))].map((name) => `  ${name}`).join("\n")}\n\nFlags:\n  -h, --h, --help  Show help\n  -v, --version     Show version\n\nEnvironment:\n  OCTONODE_TOKEN       Overrides the saved login\n  OCTONODE_URL         Overrides ${OCTONODE_API_URL}\n  OCTONODE_CONFIG_DIR  Overrides ~/.octonode\n`);
 }
 
 async function main(): Promise<void> {
@@ -91,7 +100,7 @@ async function main(): Promise<void> {
     process.stdout.write(`${VERSION}\n`);
     return;
   }
-  if (helpRequested) return usage(command.startsWith("-") ? undefined : command);
+  if (helpRequested) return usage(command.startsWith("-") ? undefined : path);
   if (command === "app") {
     if (argv.length === 1) return usage("app");
     return (await import("./apps/index.js")).appCommand(argv.slice(1), VERSION);
@@ -126,17 +135,19 @@ async function main(): Promise<void> {
     process.stdout.write(
       operations
         .filter((name) => !filter || name.toLowerCase().includes(filter))
+        .map((name) => name.replaceAll(".", " "))
         .join("\n") + "\n",
     );
     return;
   }
 
-  if (!operations.includes(command)) throw new Error(`unknown operation "${command}"; run "octonodes operations"`);
+  if (operations.some((name) => name.startsWith(`${path}.`)) && !operations.includes(path)) return usage(path);
+  if (!operations.includes(path)) throw new Error(`unknown operation "${path}"; run "octonodes operations"`);
 
   const baseUrl = flag("--base-url") ?? process.env.OCTONODE_URL;
   const token = await accessToken();
   if (!token) throw new Error("run \"octonodes login\" or set OCTONODE_TOKEN");
-  const operation = resolveOperation(createClient(token, { url: baseUrl }), command)!;
+  const operation = resolveOperation(createClient(token, { url: baseUrl }), path)!;
 
   const input = JSON.parse(flag("--input") ?? "{}") as unknown;
   if (!input || typeof input !== "object" || Array.isArray(input)) throw new Error("--input must be a JSON object");

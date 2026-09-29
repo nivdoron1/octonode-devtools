@@ -244,15 +244,23 @@ octonodes operations
 octonodes operations projects
 ```
 
-Call an operation by its SDK path and pass its generated input as JSON:
+Use `--help` at each level to browse commands, then pass the generated input as JSON:
 
 ```sh
-octonodes projects.api.get
+octonodes projects --help
+octonodes projects api --help
+octonodes projects api projectId --help
+```
 
-octonodes projects.api.projectId.get \
+Call an operation by its SDK path:
+
+```sh
+octonodes projects api get
+
+octonodes projects api projectId get \
   --input '{"path":{"projectId":"project-id"}}'
 
-octonodes workflows.api.workflowId.run.post \
+octonodes workflows api workflowId run post \
   --input '{"path":{"workflowId":"daily-report"},"body":{}}'
 ```
 
@@ -262,8 +270,8 @@ events, are consumed to completion and printed as one JSON value per line.
 Use a different API deployment with either form:
 
 ```sh
-octonodes projects.api.get --base-url http://localhost:4000
-OCTONODE_URL=http://localhost:4000 octonodes projects.api.get
+octonodes projects api get --base-url http://localhost:4000
+OCTONODE_URL=http://localhost:4000 octonodes projects api get
 ```
 
 ### Logout

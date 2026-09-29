@@ -52,7 +52,7 @@ test("CLI exposes generated SDK operations", () => {
     encoding: "utf8",
   });
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /projects\.api\.get/);
+  assert.match(result.stdout, /projects api get/);
 
   const version = spawnSync(process.execPath, ["packages/cli/dist/index.js", "--version"], {
     encoding: "utf8",
@@ -139,7 +139,7 @@ test("CLI consumes generated SSE operations as JSON Lines", async () => {
         process.execPath,
         [
           "packages/cli/dist/index.js",
-          "workflows.api.workflowId.run.post",
+          "workflows", "api", "workflowId", "run", "post",
           "--base-url",
           `http://127.0.0.1:${address.port}`,
           "--input",
@@ -157,6 +157,35 @@ test("CLI consumes generated SSE operations as JSON Lines", async () => {
     assert.equal(result.status, 0, result.stderr);
     assert.equal(result.stdout, '{"status":"started"}\n{"status":"completed"}\n');
     assert.equal(authorization, "Bearer stream-token");
+  } finally {
+    server.close();
+  }
+});
+
+test("CLI calls generated operations with tree and dotted paths", async () => {
+  const server = createServer((request, response) => {
+    response.setHeader("content-type", "application/json");
+    response.end(JSON.stringify({ path: request.url }));
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const address = server.address();
+  assert.ok(address && typeof address === "object");
+  try {
+    for (const command of [["projects", "api", "get"], ["projects.api.get"]]) {
+      const result = await new Promise((resolve, reject) => {
+        const child = spawn(process.execPath, [
+          "packages/cli/dist/index.js", ...command, "--base-url", `http://127.0.0.1:${address.port}`,
+        ], { env: { ...process.env, OCTONODE_TOKEN: "tree-token" } });
+        let stdout = "";
+        let stderr = "";
+        child.stdout.setEncoding("utf8").on("data", (chunk) => (stdout += chunk));
+        child.stderr.setEncoding("utf8").on("data", (chunk) => (stderr += chunk));
+        child.once("error", reject);
+        child.once("close", (status) => resolve({ status, stdout, stderr }));
+      });
+      assert.equal(result.status, 0, result.stderr);
+      assert.deepEqual(JSON.parse(result.stdout), { path: "/api/store/projects" });
+    }
   } finally {
     server.close();
   }
@@ -568,7 +597,7 @@ test("CLI rejects unknown operations and invalid input", () => {
     assert.equal(unknown.status, 1);
     assert.match(unknown.stderr, /unknown operation/);
 
-    const noToken = spawnSync(process.execPath, ["packages/cli/dist/index.js", "projects.api.get"], {
+    const noToken = spawnSync(process.execPath, ["packages/cli/dist/index.js", "projects", "api", "get"], {
       encoding: "utf8",
       env: unauthenticatedEnv,
     });
@@ -578,13 +607,13 @@ test("CLI rejects unknown operations and invalid input", () => {
     const authenticatedEnv = { ...unauthenticatedEnv, OCTONODE_TOKEN: "octo_pat_test" };
     const invalidInput = spawnSync(
       process.execPath,
-      ["packages/cli/dist/index.js", "projects.api.get", "--input", "[]"],
+      ["packages/cli/dist/index.js", "projects", "api", "get", "--input", "[]"],
       { encoding: "utf8", env: authenticatedEnv },
     );
     assert.equal(invalidInput.status, 1);
     assert.match(invalidInput.stderr, /--input must be a JSON object/);
 
-    const missingInput = spawnSync(process.execPath, ["packages/cli/dist/index.js", "projects.api.get", "--input"], {
+    const missingInput = spawnSync(process.execPath, ["packages/cli/dist/index.js", "projects", "api", "get", "--input"], {
       encoding: "utf8",
       env: authenticatedEnv,
     });
@@ -607,9 +636,30 @@ test("CLI supports every help spelling globally and per command", () => {
   assert.match(login.stdout, /octonodes login --email <email>/);
   assert.match(login.stdout, /octonodes login --token <api-token>/);
 
-  for (const topic of ["operations", "logout", "projects.api.get"]) {
-    const result = spawnSync(process.execPath, ["packages/cli/dist/index.js", topic, "--help"], { encoding: "utf8" });
+  for (const topic of [["operations"], ["logout"], ["projects", "api", "get"]]) {
+    const result = spawnSync(process.execPath, ["packages/cli/dist/index.js", ...topic, "--help"], { encoding: "utf8" });
     assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stdout, new RegExp(`octonodes ${topic.replaceAll(".", "\\.")}`));
+    assert.match(result.stdout, new RegExp(`octonodes ${topic.join(" ")}`));
   }
+
+  for (const [topic, child] of [
+    [["projects"], "api"],
+    [["projects", "api"], "get"],
+    [["projects", "api", "projectId"], "get"],
+  ]) {
+    for (const flag of ["-h", "--h", "--help"]) {
+      const result = spawnSync(process.execPath, ["packages/cli/dist/index.js", ...topic, flag], { encoding: "utf8" });
+      assert.equal(result.status, 0, result.stderr);
+      assert.match(result.stdout, new RegExp(`octonodes ${topic.join(" ")} <command>`));
+      assert.match(result.stdout, new RegExp(`  ${child}\\b`));
+    }
+  }
+
+  const partial = spawnSync(process.execPath, ["packages/cli/dist/index.js", "projects", "api"], { encoding: "utf8" });
+  assert.equal(partial.status, 0, partial.stderr);
+  assert.match(partial.stdout, /  get\b/);
+
+  const dotted = spawnSync(process.execPath, ["packages/cli/dist/index.js", "projects.api.get", "--help"], { encoding: "utf8" });
+  assert.equal(dotted.status, 0, dotted.stderr);
+  assert.match(dotted.stdout, /octonodes projects api get/);
 });
