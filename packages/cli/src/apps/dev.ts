@@ -1,4 +1,4 @@
-import { watch, existsSync } from "node:fs";
+import { watch, existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { spawn } from "node:child_process";
@@ -226,7 +226,7 @@ export async function serveApp(directory: string, port: number) {
   if (typeof backend !== "function") throw new Error("web.entry must default-export a Fetch API handler");
   const source = {
     apiVersion: "octonode.app/v1" as const,
-    id: "web",
+    id: JSON.parse(readFileSync(join(web, "octonode-web.json"), "utf8")).id,
     name: "App",
     version: "1.0.0",
     extensions: app.extensions.map((extension) => ({

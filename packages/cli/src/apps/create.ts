@@ -1,4 +1,5 @@
 import { mkdirSync, mkdtempSync, renameSync, rmSync, writeFileSync, lstatSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { join, resolve } from "node:path";
 import { APP_SOURCE } from "./constants";
 import { appManifest, readAppSource } from "./source";
@@ -20,6 +21,7 @@ export function createApp(name: string, version: string, template = "full", plat
   if (platform && !["plain", "vite", "next"].includes(platform)) throw new Error("Choose --platform plain, vite or next");
   if (platform && template !== "full") throw new Error("--platform requires --template full");
   const framework = platform === "vite" || platform === "next";
+  const appId = randomUUID();
   const root = resolve(name);
   mkdirSync(root);
   try {
@@ -29,7 +31,7 @@ export function createApp(name: string, version: string, template = "full", plat
       join(root, APP_SOURCE),
       json({
         apiVersion: "octonode.app/v1",
-        id: name,
+        id: appId,
         name,
         version: "0.1.0",
         ...(template === "full" ? { web: { entry: "src/server.ts", ...(platform ? { platform } : {}) } } : {}),
@@ -161,12 +163,12 @@ const assert = require("node:assert/strict");
 const { readFileSync } = require("node:fs");
 const { createHash } = require("node:crypto");
 test("release bundles match the manifest", () => {
-  const root = ${JSON.stringify(`dist/apps/${name}`)};
+  const root = ${JSON.stringify(`dist/apps/${appId}`)};
   const { plugin } = JSON.parse(readFileSync(root + "/octonode.json", "utf8"));
   assert.equal(plugin.app.hosting, ${JSON.stringify(template === "full" ? "self-hosted" : "extension-only")});
   assert.ok(Array.isArray(plugin.app.extensions));
   for (const extension of plugin.app.extensions) {
-    const bytes = readFileSync(${JSON.stringify(template === "full" ? `dist/web/${name}/extensions/` : `dist/apps/${name}/extensions/`)} + extension.id + ".js");
+    const bytes = readFileSync(${JSON.stringify(template === "full" ? `dist/web/${appId}/extensions/` : `dist/apps/${appId}/extensions/`)} + extension.id + ".js");
     assert.equal(extension.sha256, "sha256:" + createHash("sha256").update(bytes).digest("hex"));
   }
 });
@@ -203,7 +205,7 @@ ${template === "extension" ? "Add a page with `octonodes app extension add overv
 octonodes login
 octonodes app dev --workspace user:<your-user-id>
 npm test
-octonodes app validate dist/apps/${name}
+octonodes app validate dist/apps/${appId}
 octonodes app publish --workspace user:<your-user-id>
 \`\`\`
 
@@ -228,7 +230,7 @@ bearer through \`@octonodes/ui-extensions/app/server\`.
 ${framework ? `The ${platform === "next" ? "Next.js" : "Vite"} page is a native React project. \`octonodes app dev\` builds its static output and serves it together with the Octonode backend. Static export does not support server-only framework features; use \`src/server.ts\` for app API routes.\n\n` : ""}
 
 Publishing registers metadata but does not deploy the backend. After the first
-publish returns the app ID, copy the entire \`dist/web/${name}\` directory
+publish returns the app ID, copy the entire \`dist/web/${appId}\` directory
 to a Node 24 host. Configure HTTPS, \`PORT\`, \`OCTONODE_APP_ID\` and
 \`OCTONODE_API_URL\`, then run \`node start.cjs\` from that directory.
 Check the public page and every hashed \`/extensions/<hash>.js\` asset

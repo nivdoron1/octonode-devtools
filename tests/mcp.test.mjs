@@ -94,6 +94,7 @@ test("lists the curated Octonode tools", async () => {
   );
   assert.equal(body.result.tools[0].description, "Read the server-declared platform mode and feature availability.");
   assert.deepEqual(body.result.tools[18].inputSchema.required, ["query"]);
+  assert.deepEqual(body.result.tools.find((tool) => tool.name === "project_workflow_create").inputSchema.required, ["label"]);
 });
 
 test("publishes the authoring instructions and resources", async () => {

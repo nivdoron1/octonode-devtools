@@ -1,4 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { generateNodeCatalog } from "@octonodes/sdk/definitions/compiler";
 import { join, resolve } from "node:path";
 
@@ -6,6 +7,8 @@ export function createPlugin(name: string, version: string): string {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(name))
     throw new Error("Plugin name must be lowercase alphanumeric/dash");
   const root = resolve(name);
+  const pluginId = randomUUID();
+  const nodeId = randomUUID();
   mkdirSync(root); // Never overwrite an existing project.
   mkdirSync(join(root, "src"));
   mkdirSync(join(root, "tests"));
@@ -51,7 +54,7 @@ export function createPlugin(name: string, version: string): string {
   writeFileSync(
     join(root, "octonode.plugin.json"),
     JSON.stringify(
-      { apiVersion: "octonode.plugin/v1", id: name, version: "0.1.0", scope: "user" },
+      { apiVersion: "octonode.plugin/v1", id: pluginId, version: "0.1.0", scope: "user" },
       null,
       2,
     ) + "\n",
@@ -66,8 +69,8 @@ export function createPlugin(name: string, version: string): string {
     `import { definePlugin, defineNode } from "@octonodes/sdk/plugin";
 import { nodes } from "./octonode.nodes.js";
 export default definePlugin({
-  id: ${JSON.stringify(name)}, name: ${JSON.stringify(name)}, version: "0.1.0", license: "MIT",
-  nodes: [defineNode(nodes.echo, { label: "Echo text", defaults: { text: "hello" } })],
+  id: ${JSON.stringify(pluginId)}, name: ${JSON.stringify(name)}, version: "0.1.0", license: "MIT",
+  nodes: [defineNode(nodes.echo, { id: ${JSON.stringify(nodeId)}, label: "Echo text", defaults: { text: "hello" } })],
 });
 `,
   );
@@ -77,8 +80,8 @@ export default definePlugin({
 const assert = require("node:assert/strict");
 const { execFileSync } = require("node:child_process");
 test("echo runs through the packaged plugin", () => {
-  const result = JSON.parse(execFileSync(process.execPath, ["dist/index.js", "echo"], {
-    cwd: ${JSON.stringify(`dist/plugins/${name}`)}, encoding: "utf8",
+  const result = JSON.parse(execFileSync(process.execPath, ["dist/index.js", ${JSON.stringify(nodeId)}], {
+    cwd: ${JSON.stringify(`dist/plugins/${pluginId}`)}, encoding: "utf8",
     input: JSON.stringify({octonode:"1",type:"invoke",invocationId:"test",inputs:{text:"hello"}}),
   }));
   assert.equal(result.status, "ok");
