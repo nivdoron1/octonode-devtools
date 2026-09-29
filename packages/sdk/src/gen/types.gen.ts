@@ -524,6 +524,7 @@ export type GetApiRunsData = {
     path?: never;
     query?: {
         project?: string;
+        allProjects?: boolean;
         workflowId?: string;
         search?: string;
         status?: 'ok' | 'error' | 'partial';
@@ -541,6 +542,7 @@ export type GetApiRunsResponses = {
      */
     200: {
         items: Array<{
+            projectId?: string;
             runId: string;
             workflowId: string;
             status: 'ok' | 'error' | 'partial';
@@ -614,7 +616,9 @@ export type GetApiRunsByRunIdData = {
     path: {
         runId: string;
     };
-    query?: never;
+    query?: {
+        project?: string;
+    };
     url: '/api/runs/{runId}';
 };
 
@@ -634,6 +638,7 @@ export type GetApiRunsByRunIdResponses = {
      * Success
      */
     200: {
+        projectId?: string;
         runId: string;
         workflowId: string;
         status: 'ok' | 'error' | 'partial';

@@ -2028,6 +2028,9 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "projectId": {
+                            "type": "string"
+                          },
                           "runId": {
                             "type": "string"
                           },
@@ -2316,6 +2319,13 @@
           },
           {
             "in": "query",
+            "name": "allProjects",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
             "name": "workflowId",
             "schema": {
               "type": "string",
@@ -2396,6 +2406,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "projectId": {
+                      "type": "string"
+                    },
                     "runId": {
                       "type": "string"
                     },
@@ -2656,6 +2669,14 @@
           }
         },
         "parameters": [
+          {
+            "in": "query",
+            "name": "project",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
           {
             "schema": {
               "type": "string"
