@@ -4094,7 +4094,8 @@ export type GetApiWorkflowsResponse = GetApiWorkflowsResponses[keyof GetApiWorkf
 
 export type PostApiWorkflowsData = {
     body: {
-        id: string;
+        id?: string;
+        label?: string;
         description?: string;
     };
     path?: never;

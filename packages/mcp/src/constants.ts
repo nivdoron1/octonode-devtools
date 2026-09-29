@@ -296,12 +296,12 @@ const projectTools: ToolDefinition[] = [
   }),
   projectTool({
     name: "project_workflow_create",
-    description: "Create a workflow with a stable id; fails safely when it already exists.",
+    description: "Create a workflow with an automatic UUID and a display name.",
     path: "/api/workflows",
     method: "POST",
-    properties: { id, description: string(1_000) },
-    required: ["id"],
-    body: ["id", "description"],
+    properties: { id, label: string(200), description: string(1_000) },
+    required: ["label"],
+    body: ["id", "label", "description"],
   }),
   projectTool({
     name: "project_workflow_save",
