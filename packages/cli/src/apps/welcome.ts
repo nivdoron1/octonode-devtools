@@ -10,7 +10,7 @@ export function welcomeReact(name: string) {
   return `"use client";
 import { useEffect, useState } from "react";
 import { connectHostedApp, type HostedApp, type HostedAppState } from "@octonodes/ui-extensions/app";
-const sampleProjects = [{ id: "sample-catalog", name: "Product catalog" }, { id: "sample-orders", name: "Orders" }];
+const sampleProjects = [{ id: "c6ea7fe7-1682-4767-b3b4-cc59353cb1b0", name: "Product catalog" }, { id: "db256c82-6f9d-4c12-8e98-0e5f7c6aa7b7", name: "Orders" }];
 export default function App() {
   const [bridge, setBridge] = useState<HostedApp>();
   const [session, setSession] = useState<HostedAppState>();

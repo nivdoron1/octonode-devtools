@@ -15,7 +15,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
 import { createRequire } from "node:module";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { defineNode, definePlugin, processRequest } from "@octonodes/sdk/plugins";
 import { buildPlugins } from "../packages/cli/dist/plugins/build.js";
 import { verifyBuild } from "../packages/cli/dist/plugins/artifact.js";
@@ -24,9 +24,13 @@ import { publishPlugin } from "../packages/cli/dist/plugins/publish.js";
 const require = createRequire(import.meta.url);
 const cli = resolve("packages/cli/dist/index.js");
 const schema = { type: "object", properties: { text: { type: "string" } }, required: ["text"] };
+const ids = Object.fromEntries([
+  "echo", "workflow", "custom", "math", "sum", "issues", "readIssue", "text", "credentials",
+  "alpha", "run", "messages", "send", "sample",
+].map((name) => [name, randomUUID()]));
 const node = () =>
   defineNode({
-    id: "echo",
+    id: ids.echo,
     inputs: schema,
     outputs: schema,
     defaults: { text: "hello" },
@@ -55,7 +59,7 @@ test("workflow handles package verified runtime files and preserve custom public
     writeFileSync(join(root, "workflow.cjs"), runtime);
     const handle = {
       definition: {
-        id: "original",
+        id: ids.custom,
         language: "javascript",
         command: "node workflow.cjs",
         inputs: schema,
@@ -72,11 +76,11 @@ test("workflow handles package verified runtime files and preserve custom public
     );
     writeFileSync(
       join(root, "octonode.plugin.ts"),
-      `import {definePlugin,defineNode} from "@octonodes/sdk/plugin"; import {nodes} from "./octonode.nodes.js"; export default definePlugin({id:"workflow",name:"Workflow",version:"1.0.0",nodes:[defineNode(nodes.flow,{id:"custom"})]});`,
+      `import {definePlugin,defineNode} from "@octonodes/sdk/plugin"; import {nodes} from "./octonode.nodes.js"; export default definePlugin({id:"${ids.workflow}",name:"Workflow",version:"1.0.0",nodes:[defineNode(nodes.flow,{id:"${ids.custom}"})]});`,
     );
     const [built] = await buildPlugins(undefined, root);
     const result = JSON.parse(
-      execFileSync(process.execPath, ["dist/index.js", "custom"], {
+      execFileSync(process.execPath, ["dist/index.js", ids.custom], {
         cwd: built.directory,
         encoding: "utf8",
         input: request({ text: "hello" }),
@@ -121,12 +125,12 @@ test("generated npm handles preserve adapter behavior, defaults and custom publi
     writeFileSync(join(root, "octonode.nodes.ts"), inventory);
     writeFileSync(
       join(root, "octonode.plugin.ts"),
-      `import {definePlugin,defineNode} from "@octonodes/sdk/plugin"; import {nodes} from "./octonode.nodes.js"; export default definePlugin({id:"math",name:"Math",version:"1.0.0",nodes:[defineNode(nodes.add,{id:"sum",label:"Sum",defaults:{b:3}})]});`,
+      `import {definePlugin,defineNode} from "@octonodes/sdk/plugin"; import {nodes} from "./octonode.nodes.js"; export default definePlugin({id:"${ids.math}",name:"Math",version:"1.0.0",nodes:[defineNode(nodes.add,{id:"${ids.sum}",label:"Sum",defaults:{b:3}})]});`,
     );
     const [built] = await buildPlugins(undefined, root);
-    assert.equal(built.manifest.nodes[0].id, "sum");
+    assert.equal(built.manifest.nodes[0].id, ids.sum);
     const result = JSON.parse(
-      execFileSync(process.execPath, [join(built.directory, "dist/index.js"), "sum"], {
+      execFileSync(process.execPath, [join(built.directory, "dist/index.js"), ids.sum], {
         cwd: consumer,
         encoding: "utf8",
         input: request({ a: 2 }),
@@ -177,11 +181,11 @@ test("npm SDK bindings use original subpaths, hide clients, require credentials 
     writeFileSync(join(root, "octonode.plugin.ts"), `
       import {definePlugin,defineNode} from "@octonodes/sdk/plugin";
       import {nodes} from "./octonode.nodes.js";
-      export default definePlugin({id:"issues",name:"Issues",version:"1.0.0",
+      export default definePlugin({id:"${ids.issues}",name:"Issues",version:"1.0.0",
         source:{kind:"npm",package:"fixture",version:"1.0.0"},
         permissions:[{resource:"secrets",access:"read"}],
         connections:{service:{label:"Service",fields:{OCTONODES_TEST_BINDING_TOKEN:{label:"Token"}}}},
-        nodes:[defineNode(nodes.getIssue,{id:"read-issue",connections:["service"],bindings:{client:{
+        nodes:[defineNode(nodes.getIssue,{id:"${ids.readIssue}",connections:["service"],bindings:{client:{
           module:"fixture/core",export:"createClient",options:{host:"https://fixture.example",auth:{}},
           env:{"auth.token":"OCTONODES_TEST_BINDING_TOKEN"}
         }}})]});`);
@@ -190,7 +194,7 @@ test("npm SDK bindings use original subpaths, hide clients, require credentials 
     assert.deepEqual(built.manifest.nodes[0].inputs.required, ["parameters"]);
     assert.doesNotMatch(readFileSync(join(built.directory, "octonode.yml"), "utf8"), /binding-secret/);
     const invoke = (inputs, token = "binding-secret") => {
-      const result = spawnSync(process.execPath, [join(built.directory, "dist/index.js"), "read-issue"], {
+      const result = spawnSync(process.execPath, [join(built.directory, "dist/index.js"), ids.readIssue], {
         cwd: consumer, encoding: "utf8", input: request(inputs),
         env: { ...process.env, OCTONODE_PROJECT_ROOT: consumer, OCTONODES_TEST_BINDING_TOKEN: token },
       });
@@ -218,18 +222,18 @@ test("npm SDK bindings use original subpaths, hide clients, require credentials 
 });
 
 test("code-defined plugins share the runtime contract, defaults, validation and credential checks", async () => {
-  const plugin = definePlugin({ id: "text", name: "Text", version: "1.0.0", nodes: [node()] });
-  assert.equal(plugin.manifest.nodes[0].command, "node dist/index.js echo");
+  const plugin = definePlugin({ id: ids.text, name: "Text", version: "1.0.0", nodes: [node()] });
+  assert.equal(plugin.manifest.nodes[0].command, `node dist/index.js ${ids.echo}`);
   assert.deepEqual(plugin.manifest.scope, ["user"]);
-  assert.deepEqual((await processRequest(plugin.nodes.echo, request({}))).outputs, {
+  assert.deepEqual((await processRequest(plugin.nodes[ids.echo], request({}))).outputs, {
     text: "hello",
   });
-  assert.equal((await processRequest(plugin.nodes.echo, request({ text: 1 }))).status, "error");
-  assert.throws(() => definePlugin({ id: "text", name: "Text", version: "1.0.0", nodes: [node(), node()] }), /unique/);
+  assert.equal((await processRequest(plugin.nodes[ids.echo], request({ text: 1 }))).status, "error");
+  assert.throws(() => definePlugin({ id: ids.text, name: "Text", version: "1.0.0", nodes: [node(), node()] }), /unique/);
   assert.throws(
     () =>
       definePlugin({
-        id: "text",
+        id: ids.text,
         name: "Text",
         version: "1.0.0",
         nodes: [{ ...node(), connections: ["absent"] }],
@@ -237,7 +241,7 @@ test("code-defined plugins share the runtime contract, defaults, validation and 
     /unknown connection/,
   );
   const credentials = definePlugin({
-    id: "credentials",
+    id: ids.credentials,
     name: "Credentials",
     version: "1.0.0",
     permissions: [{ resource: "secrets", access: "read" }],
@@ -250,11 +254,11 @@ test("code-defined plugins share the runtime contract, defaults, validation and 
     nodes: [{ ...node(), connections: ["service"] }],
   });
   assert.match(
-    (await processRequest(credentials.nodes.echo, request({}))).error.message,
+    (await processRequest(credentials.nodes[ids.echo], request({}))).error.message,
     /Missing connection credentials/,
   );
-  const legacy = definePlugin(plugin.manifest, { echo: (inputs) => inputs });
-  assert.equal((await processRequest(legacy.nodes.echo, request({ text: "legacy" }))).status, "ok");
+  const legacy = definePlugin(plugin.manifest, { [ids.echo]: (inputs) => inputs });
+  assert.equal((await processRequest(legacy.nodes[ids.echo], request({ text: "legacy" }))).status, "ok");
 });
 
 test("ESM project plugins build independently, relocate, run, and publish the exact inspected artifact", async () => {
@@ -276,13 +280,13 @@ test("ESM project plugins build independently, relocate, run, and publish the ex
       `
       import { defineNode, definePlugin } from '@octonodes/sdk/plugin';
       import { nodes } from './octonode.nodes.js';
-      export default definePlugin({ id: 'alpha', name: 'Alpha', version: '1.0.0', nodes: [defineNode(nodes.run)] });
+      export default definePlugin({ id: '${ids.alpha}', name: 'Alpha', version: '1.0.0', nodes: [defineNode(nodes.run, { id: '${ids.run}' })] });
     `,
     );
     const result = await buildPlugins(undefined, root);
     assert.deepEqual(
       result.map((plugin) => plugin.manifest.id),
-      ["alpha"],
+      [ids.alpha],
     );
     await buildPlugins("octonode.plugin.ts", root);
     await assert.rejects(buildPlugins("plugins/alpha.plugin.ts", root), /octonode.plugin.ts/);
@@ -290,22 +294,22 @@ test("ESM project plugins build independently, relocate, run, and publish the ex
     cpSync(built, relocated, { recursive: true });
     assert.ok(!existsSync(join(relocated, "node_modules")));
     assert.ok(!existsSync(join(relocated, ".env")));
-    assert.equal(verifyBuild(relocated).manifest.id, "alpha");
+    assert.equal(verifyBuild(relocated).manifest.id, ids.alpha);
     rmSync(root, { recursive: true, force: true });
     const output = JSON.parse(
-      execFileSync(process.execPath, ["dist/index.js", "run"], {
+      execFileSync(process.execPath, ["dist/index.js", ids.run], {
         cwd: relocated,
         input: request({ text: "portable" }),
         encoding: "utf8",
       }),
     );
     assert.deepEqual(output.outputs, { text: "PORTABLE" });
-    const invoke = spawnSync(process.execPath, [cli, "plugin", "test", relocated, "run", "--input", '{"text":"cli"}'], {
+    const invoke = spawnSync(process.execPath, [cli, "plugin", "test", relocated, ids.run, "--input", '{"text":"cli"}'], {
       encoding: "utf8",
     });
     assert.equal(invoke.status, 0, invoke.stderr);
     assert.equal(JSON.parse(invoke.stdout).outputs.text, "CLI");
-    const invalid = spawnSync(process.execPath, [cli, "plugin", "test", relocated, "run", "--input", '{"text":1}'], {
+    const invalid = spawnSync(process.execPath, [cli, "plugin", "test", relocated, ids.run, "--input", '{"text":1}'], {
       encoding: "utf8",
     });
     assert.equal(invalid.status, 1);
@@ -313,11 +317,11 @@ test("ESM project plugins build independently, relocate, run, and publish the ex
     let uploads = 0;
     globalThis.fetch = async (url, init) => {
       uploads++;
-      assert.equal(url, "https://registry.test/marketplace/plugins/alpha/versions");
+      assert.equal(url, `https://registry.test/marketplace/plugins/${ids.alpha}/versions`);
       assert.equal(init.headers.authorization, "Bearer fake-token");
       assert.equal(init.redirect, "error");
       const manifest = JSON.parse(init.body.get("manifest"));
-      assert.equal(manifest.id, "alpha");
+      assert.equal(manifest.id, ids.alpha);
       const archive = join(tmpdir(), `octonodes-test-${crypto.randomUUID()}.tgz`);
       try {
         writeFileSync(archive, Buffer.from(await init.body.get("bundle").arrayBuffer()));
@@ -331,7 +335,7 @@ test("ESM project plugins build independently, relocate, run, and publish the ex
       return Response.json({ id: manifest.id, version: manifest.version });
     };
     assert.deepEqual(await publishPlugin(relocated, "https://registry.test", "fake-token"), {
-      id: "alpha",
+      id: ids.alpha,
       version: "1.0.0",
     });
     writeFileSync(join(relocated, "dist/index.js"), "tampered");
@@ -366,7 +370,7 @@ test("plugin UI entries build into the immutable artifact", async () => {
       `
       import { defineNode, definePlugin } from '@octonodes/sdk/plugin';
       import { nodes } from './octonode.nodes.js';
-      export default definePlugin({ id:'messages', name:'Messages', version:'1.0.0', nodes:[defineNode(nodes.send, {
+      export default definePlugin({ id:'${ids.messages}', name:'Messages', version:'1.0.0', nodes:[defineNode(nodes.send, { id:'${ids.send}',
         ui:{apiVersion:'1',renderers:{composer:{label:'Composer',targets:{'node.inspector.inputs':'ui/MessageForm.tsx'}}}},
       })] });`,
     );
@@ -377,7 +381,7 @@ test("plugin UI entries build into the immutable artifact", async () => {
     assert.equal(verifyBuild(built.directory).manifest.nodes[0].ui.apiVersion, "1");
     const record = JSON.parse(readFileSync(join(built.directory, "octonode-build.json"), "utf8"));
     assert.deepEqual(record.ui[0], {
-      nodeId: "send",
+      nodeId: ids.send,
       apiVersion: "1",
       renderer: "composer",
       target: "node.inspector.inputs",
@@ -399,8 +403,8 @@ test("build rejects duplicate identities and unsafe assets without replacing pre
     symlinkSync(resolve("node_modules"), join(root, "node_modules"), "junction");
     const source = (assets = []) => `import { definePlugin, defineNode } from '@octonodes/sdk/plugin';
       import { nodes } from './octonode.nodes.js';
-      export default definePlugin({ id:'sample', name:'Sample', version:'1.0.0', assets: ${JSON.stringify(assets)},
-      nodes:[defineNode(nodes.run)] });`;
+      export default definePlugin({ id:'${ids.sample}', name:'Sample', version:'1.0.0', assets: ${JSON.stringify(assets)},
+      nodes:[defineNode(nodes.run, { id:'${ids.run}' })] });`;
     writeFileSync(join(root, "action.ts"), "export function run() { return { ok: true }; }");
     const entry = join(root, "octonode.plugin.ts");
     writeFileSync(entry, source());
@@ -479,6 +483,7 @@ test("release config builds, bumps and deploys through GitHub identity without a
   try {
     execFileSync(process.execPath, [cli, "plugin", "create", "release-plugin"], { cwd: parent });
     const root = join(parent, "release-plugin");
+    const releaseId = JSON.parse(readFileSync(join(root, "octonode.plugin.json"), "utf8")).id;
     symlinkSync(resolve("node_modules"), join(root, "node_modules"), "junction");
     execFileSync("git", ["init"], { cwd: parent, stdio: "ignore" });
     execFileSync(process.execPath, [cli, "plugin", "version", "minor", "--cwd", root]);
@@ -501,7 +506,7 @@ test("release config builds, bumps and deploys through GitHub identity without a
         return Response.json({ value: "short-lived-github-identity" });
       assert.equal(options.headers.authorization, "Bearer short-lived-github-identity");
       assert.equal(new URL(url).searchParams.get("config"), "release-plugin/octonode.plugin.json");
-      if (!options.method) return Response.json({ status: "ready", id: "release-plugin", version: "0.2.0" });
+      if (!options.method) return Response.json({ status: "ready", id: releaseId, version: "0.2.0" });
       const bytes = Buffer.from(await options.body.get("bundle").arrayBuffer());
       const hash = createHash("sha256").update(bytes).digest("hex");
       assert.equal(options.headers["x-octonode-sha256"], hash);
@@ -514,7 +519,7 @@ test("release config builds, bumps and deploys through GitHub identity without a
       Response.json(
         String(url).includes("token.actions.test")
           ? { value: "short-lived" }
-          : { status: "unchanged", id: "release-plugin", version: "0.2.0" },
+          : { status: "unchanged", id: releaseId, version: "0.2.0" },
       );
     assert.equal((await deployPlugin(root, undefined, undefined, true)).status, "unchanged");
     writeFileSync(join(root, "plugin.octonode.yml"), "apiVersion: octonode.plugin/v1");
@@ -538,11 +543,12 @@ test("deploy-all discovers a tracked legacy manifest and publishes its verified 
     const source = join(parent, "legacy-example");
     symlinkSync(resolve("node_modules"), join(source, "node_modules"), "junction");
     const [built] = await buildPlugins(undefined, source);
+    const pluginId = built.manifest.id;
     const manifestPath = join(parent, "packages/legacy-example/octonode.plugin.json");
     mkdirSync(join(parent, "packages/legacy-example"), { recursive: true });
     writeFileSync(manifestPath, JSON.stringify(built.manifest));
     assert.equal(readPluginRelease(join(parent, "packages/legacy-example")), undefined);
-    const artifact = join(parent, "dist/marketplace/legacy-example");
+    const artifact = join(parent, "dist/marketplace", pluginId);
     cpSync(built.directory, artifact, { recursive: true });
     execFileSync("git", ["init"], { cwd: parent, stdio: "ignore" });
     execFileSync("git", ["add", "packages/legacy-example/octonode.plugin.json"], { cwd: parent });
@@ -554,7 +560,7 @@ test("deploy-all discovers a tracked legacy manifest and publishes its verified 
     globalThis.fetch = async (url, options) => {
       if (String(url).includes("token.actions.test")) return Response.json({ value: "identity" });
       assert.equal(new URL(url).searchParams.get("config"), "packages/legacy-example/octonode.plugin.json");
-      if (!options.method) return Response.json({ status: "ready", id: "legacy-example", version: built.manifest.version });
+      if (!options.method) return Response.json({ status: "ready", id: pluginId, version: built.manifest.version });
       const bytes = Buffer.from(await options.body.get("bundle").arrayBuffer());
       return Response.json({ sha256: createHash("sha256").update(bytes).digest("hex") });
     };
@@ -570,10 +576,10 @@ test("deploy-all discovers a tracked legacy manifest and publishes its verified 
       if (String(url).includes("token.actions.test")) return Response.json({ value: "identity" });
       assert.equal(new URL(url).searchParams.get("config"), "legacy-example/octonode.plugin.json");
       assert.equal(options.method, undefined);
-      return Response.json({ status: "unchanged", id: "legacy-example", version: built.manifest.version });
+      return Response.json({ status: "unchanged", id: pluginId, version: built.manifest.version });
     };
     assert.deepEqual(await deployAllPlugins(undefined, parent), [
-      { id: "legacy-example", version: built.manifest.version, status: "unchanged" },
+      { id: pluginId, version: built.manifest.version, status: "unchanged" },
     ]);
   } finally {
     globalThis.fetch = fetchBefore;

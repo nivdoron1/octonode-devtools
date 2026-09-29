@@ -98,7 +98,7 @@ export const PluginNpmDependency = z.object({ package: z.string(), version: z.st
  * to the plugin folder, so a plugin is a self-contained, relocatable bundle.
  */
 export const PluginNode = z.object({
-  id: z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i, "node id must be alphanumeric/dash/underscore"),
+  id: z.string().uuid(),
   /** The command the engine spawns, relative to the plugin folder. */
   command: z.string(),
   language: z.string().optional(),
@@ -180,7 +180,7 @@ export const PluginManifest = z
   .object({
     schemaVersion: z.string().default(PLUGIN_SCHEMA_VERSION),
     /** Stable plugin id; namespaces its nodes as `<id>/<nodeId>`. */
-    id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/, "plugin id must be lowercase alphanumeric/dash"),
+    id: z.string().uuid(),
     name: z.string(),
     version: z.string(),
     description: z.string().optional(),

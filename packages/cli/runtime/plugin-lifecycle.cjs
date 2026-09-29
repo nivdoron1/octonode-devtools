@@ -35,9 +35,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// packages/plugin-runtime/dist/define-node.js
+// ../packages/plugin-runtime/dist/define-node.js
 var require_define_node = __commonJS({
-  "packages/plugin-runtime/dist/define-node.js"(exports2) {
+  "../packages/plugin-runtime/dist/define-node.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defineNode = defineNode;
@@ -89,9 +89,9 @@ var require_define_node = __commonJS({
   }
 });
 
-// packages/schema/dist/icons.js
+// ../packages/schema/dist/icons.js
 var require_icons = __commonJS({
-  "packages/schema/dist/icons.js"(exports2) {
+  "../packages/schema/dist/icons.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IconName = exports2.ICON_NAMES = void 0;
@@ -155,9 +155,9 @@ var require_icons = __commonJS({
   }
 });
 
-// packages/schema/dist/ipc-envelope.js
+// ../packages/schema/dist/ipc-envelope.js
 var require_ipc_envelope = __commonJS({
-  "packages/schema/dist/ipc-envelope.js"(exports2) {
+  "../packages/schema/dist/ipc-envelope.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ManifestEnvelope = exports2.NodeManifest = exports2.ResultEnvelope = exports2.NodeError = exports2.RequestEnvelope = exports2.DescribeRequest = exports2.InvokeRequest = exports2.InvocationContext = exports2.ErrorCode = exports2.JsonSchema = exports2.PROTOCOL_VERSION = void 0;
@@ -332,9 +332,9 @@ var require_ipc_envelope = __commonJS({
   }
 });
 
-// node_modules/croner/dist/croner.cjs
+// ../node_modules/croner/dist/croner.cjs
 var require_croner = __commonJS({
-  "node_modules/croner/dist/croner.cjs"(exports2, module2) {
+  "../node_modules/croner/dist/croner.cjs"(exports2, module2) {
     var D = Object.defineProperty;
     var x = Object.getOwnPropertyDescriptor;
     var E = Object.getOwnPropertyNames;
@@ -721,9 +721,9 @@ var require_croner = __commonJS({
   }
 });
 
-// packages/schema/dist/workflow/triggers.js
+// ../packages/schema/dist/workflow/triggers.js
 var require_triggers = __commonJS({
-  "packages/schema/dist/workflow/triggers.js"(exports2) {
+  "../packages/schema/dist/workflow/triggers.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WorkflowTriggerUpdate = exports2.WorkflowTriggerState = exports2.WorkflowTriggers = exports2.WorkflowTrigger = void 0;
@@ -805,9 +805,9 @@ var require_triggers = __commonJS({
   }
 });
 
-// packages/schema/dist/workflow/entry.js
+// ../packages/schema/dist/workflow/entry.js
 var require_entry = __commonJS({
-  "packages/schema/dist/workflow/entry.js"(exports2) {
+  "../packages/schema/dist/workflow/entry.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WorkflowEntryNodes = exports2.WorkflowNodeRole = void 0;
@@ -825,9 +825,9 @@ var require_entry = __commonJS({
   }
 });
 
-// packages/schema/dist/constants.js
+// ../packages/schema/dist/constants.js
 var require_constants = __commonJS({
-  "packages/schema/dist/constants.js"(exports2) {
+  "../packages/schema/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PLUGIN_PUBLISH_MAX_BYTES = exports2.PLUGIN_CONFIG_MAX_BYTES = exports2.PLUGIN_PUBLISH_AUDIENCE = exports2.PLUGIN_RELEASE_FILES = exports2.CAPABILITY_UNAVAILABLE_REASONS = exports2.CAPABILITY_MODES = exports2.PLATFORM_CAPABILITIES = exports2.SOURCE_CONTROL_REGION_KINDS = exports2.TASK_RELEASE_STATES = exports2.TASK_SPRINT_STATES = exports2.TASK_LINK_TYPES = exports2.TASK_VIEW_SORTS = exports2.TASK_VIEW_GROUPS = exports2.TASK_VIEW_LAYOUTS = exports2.TASK_FIELD_TYPES = exports2.WORK_ITEM_PRIORITIES = exports2.BUILTIN_WORK_ITEM_TYPES = exports2.WORK_ITEM_LEVELS = exports2.TASK_STATUS_CATEGORIES = exports2.TASK_SPACE_TEMPLATES = exports2.COLLABORATION_ACTIONS = exports2.AGENT_TOOL_RISKS = exports2.AGENT_ERROR_CODES = exports2.AGENT_RUN_STATUSES = exports2.WORKSPACE_ACTIONS = exports2.SETTINGS_SECTIONS = exports2.SETTINGS_API_VERSION = exports2.MARKETPLACE_SCOPES = exports2.PLUGIN_DEFINITION_FILENAMES = exports2.PLUGIN_MANIFEST_FILENAME = exports2.COMMUNITY_MEDIA_TYPES = exports2.COMMUNITY_MEDIA_BODY_BYTES = exports2.COMMUNITY_MEDIA_VIDEO_BYTES = exports2.COMMUNITY_MEDIA_IMAGE_BYTES = exports2.PROJECT_JOB_PROTOCOL = exports2.PLUGIN_SCHEMA_VERSION = void 0;
@@ -1046,9 +1046,9 @@ var require_constants = __commonJS({
   }
 });
 
-// packages/schema/dist/source-index.js
+// ../packages/schema/dist/source-index.js
 var require_source_index = __commonJS({
-  "packages/schema/dist/source-index.js"(exports2) {
+  "../packages/schema/dist/source-index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProjectPackageExports = exports2.ProjectSourceIndex = exports2.SourceFileIndex = exports2.SourceImport = exports2.SourceRecursion = exports2.SourceReference = exports2.SourceSymbol = exports2.SourceControlRegion = exports2.SourceDiagnostic = exports2.SourceClassMember = exports2.SourceParameter = exports2.SourceDecorator = exports2.SourceSymbolKind = exports2.SourceLocation = void 0;
@@ -1221,9 +1221,9 @@ var require_source_index = __commonJS({
   }
 });
 
-// packages/schema/dist/app.js
+// ../packages/schema/dist/app.js
 var require_app = __commonJS({
-  "packages/schema/dist/app.js"(exports2) {
+  "../packages/schema/dist/app.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.appTunnelRegistrationSchema = exports2.AppDefinition = exports2.ExtensionOnlyApp = exports2.SelfHostedApp = exports2.SelfHostedAppExtension = exports2.AppAction = void 0;
@@ -1311,9 +1311,9 @@ var require_app = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin/plugin.js
+// ../packages/schema/dist/plugin/plugin.js
 var require_plugin = __commonJS({
-  "packages/schema/dist/plugin/plugin.js"(exports2) {
+  "../packages/schema/dist/plugin/plugin.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginManifest = exports2.PluginConnection = exports2.PluginIntegration = exports2.PluginPermission = exports2.PluginNode = exports2.PluginNpmDependency = exports2.PluginImplementationSource = exports2.NpmClientBinding = exports2.PluginNodeUi = exports2.PLUGIN_UI_BUNDLE_MAX_BYTES = exports2.PluginUiTarget = exports2.PluginScope = void 0;
@@ -1500,9 +1500,9 @@ var require_plugin = __commonJS({
   }
 });
 
-// packages/schema/dist/octonode-config.js
+// ../packages/schema/dist/octonode-config.js
 var require_octonode_config = __commonJS({
-  "packages/schema/dist/octonode-config.js"(exports2) {
+  "../packages/schema/dist/octonode-config.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.OctonodeConfig = exports2.WorkflowExecutionPlan = exports2.Workflow = exports2.WorkflowSource = exports2.WorkflowInputBinding = exports2.WorkflowTestWorkflow = exports2.WorkflowEvaluation = exports2.WorkflowPromise = exports2.WorkflowPromiseMode = exports2.WorkflowEdge = exports2.ProjectAttachments = exports2.ProjectDefaults = exports2.Environment = exports2.NodeConfig = exports2.NodePresentation = exports2.NodeRuntime = exports2.NodeSignature = exports2.NodeKind = exports2.CONFIG_API_VERSION = void 0;
@@ -1826,9 +1826,9 @@ var require_octonode_config = __commonJS({
   }
 });
 
-// packages/schema/dist/store.js
+// ../packages/schema/dist/store.js
 var require_store = __commonJS({
-  "packages/schema/dist/store.js"(exports2) {
+  "../packages/schema/dist/store.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.StoredRun = exports2.InstalledPlugin = exports2.WorkflowRecord = exports2.NodeRecord = exports2.Identity = exports2.Visibility = exports2.Origin = exports2.Scope = void 0;
@@ -1883,9 +1883,9 @@ var require_store = __commonJS({
   }
 });
 
-// packages/schema/dist/data-tables.js
+// ../packages/schema/dist/data-tables.js
 var require_data_tables = __commonJS({
-  "packages/schema/dist/data-tables.js"(exports2) {
+  "../packages/schema/dist/data-tables.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.UpdateProjectInput = exports2.CreateProjectInput = exports2.ProjectMetadata = exports2.ProjectRepoMetadata = exports2.SqlQueryResult = exports2.SqlQueryInput = exports2.ImportRowsResult = exports2.ImportRowsInput = exports2.BulkRowsResult = exports2.BulkRowsInput = exports2.BulkRowMutation = exports2.UpdateRowInput = exports2.InsertRowInput = exports2.ListRowsInput = exports2.UpdateDataTableInput = exports2.CreateDataTableInput = exports2.DataTableRowsPage = exports2.DataTableRow = exports2.DataTable = exports2.DataTableColumn = exports2.DataTableColumnType = exports2.StorageMode = void 0;
@@ -2024,9 +2024,9 @@ var require_data_tables = __commonJS({
   }
 });
 
-// packages/schema/dist/data-table-schema.js
+// ../packages/schema/dist/data-table-schema.js
 var require_data_table_schema = __commonJS({
-  "packages/schema/dist/data-table-schema.js"(exports2) {
+  "../packages/schema/dist/data-table-schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DataTableViewPage = exports2.DataTableViewPageInput = exports2.DataTableViewUpdate = exports2.DataTableView = exports2.DataTableViewInput = exports2.DataTableViewFilter = exports2.DataTableRelationship = exports2.DataTableRelationshipInput = void 0;
@@ -2069,9 +2069,9 @@ var require_data_table_schema = __commonJS({
   }
 });
 
-// packages/schema/dist/workflow/layout.js
+// ../packages/schema/dist/workflow/layout.js
 var require_layout = __commonJS({
-  "packages/schema/dist/workflow/layout.js"(exports2) {
+  "../packages/schema/dist/workflow/layout.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WorkflowLayout = exports2.GroupLayout = exports2.StickyNoteLayout = void 0;
@@ -2102,9 +2102,9 @@ var require_layout = __commonJS({
   }
 });
 
-// packages/schema/dist/test-workflow-graph.js
+// ../packages/schema/dist/test-workflow-graph.js
 var require_test_workflow_graph = __commonJS({
-  "packages/schema/dist/test-workflow-graph.js"(exports2) {
+  "../packages/schema/dist/test-workflow-graph.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TestWorkflowGraph = exports2.TestWorkflowGraphAction = exports2.TestWorkflowGraphDiagnostic = exports2.TestWorkflowGraphEdge = exports2.TestWorkflowGraphNode = exports2.TestWorkflowGraphEdgeKind = exports2.TestWorkflowGraphNodeKind = void 0;
@@ -2235,9 +2235,9 @@ var require_test_workflow_graph = __commonJS({
   }
 });
 
-// packages/schema/dist/collaboration.js
+// ../packages/schema/dist/collaboration.js
 var require_collaboration = __commonJS({
-  "packages/schema/dist/collaboration.js"(exports2) {
+  "../packages/schema/dist/collaboration.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.collaborationErrorSchema = exports2.realtimeInvalidationSchema = exports2.githubPublicationStateSchema = exports2.notificationSchema = exports2.reviewSuggestionSchema = exports2.suggestionCreateSchema = exports2.reviewCommentSchema = exports2.reviewThreadCreateSchema = exports2.reviewThreadSchema = exports2.reviewAnchorSchema = exports2.reviewFragmentSchema = exports2.reviewContextSchema = exports2.pullRequestStateSchema = exports2.messageUpdateSchema = exports2.messageCreateSchema = exports2.messageSchema = exports2.assistantSessionListQuerySchema = exports2.assistantSessionOrderSchema = exports2.assistantSessionSortSchema = exports2.assistantSessionCreateSchema = exports2.conversationCreateSchema = exports2.conversationSchema = exports2.conversationKindSchema = exports2.workspaceAgentCreateSchema = exports2.workspaceAgentSchema = exports2.profileUpdateSchema = exports2.profileSchema = exports2.pageSchema = exports2.revisionSchema = exports2.sha256Schema = exports2.gitShaSchema = exports2.entityIdSchema = exports2.idempotencyKeySchema = exports2.opaqueCursorSchema = exports2.principalSchema = exports2.agentScopeSchema = exports2.collaborationActionSchema = exports2.workspaceRefSchema = exports2.workspaceKindSchema = void 0;
@@ -2528,9 +2528,9 @@ var require_collaboration = __commonJS({
   }
 });
 
-// packages/schema/dist/task-management/common.js
+// ../packages/schema/dist/task-management/common.js
 var require_common = __commonJS({
-  "packages/schema/dist/task-management/common.js"(exports2) {
+  "../packages/schema/dist/task-management/common.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.taskTagUpdateSchema = exports2.taskTagCreateSchema = exports2.taskTagSchema = exports2.workItemFieldValueSchema = exports2.taskFieldValueSchema = exports2.taskFieldUpdateSchema = exports2.taskFieldCreateSchema = exports2.taskFieldDefinitionSchema = exports2.taskFieldOptionUpdateSchema = exports2.taskFieldOptionCreateSchema = exports2.taskFieldOptionSchema = exports2.workItemTypeUpdateSchema = exports2.workItemTypeCreateSchema = exports2.workItemTypeSchema = exports2.taskStatusUpdateSchema = exports2.taskStatusCreateSchema = exports2.taskStatusSchema = exports2.taskSpaceUpdateSchema = exports2.taskSpaceCreateSchema = exports2.taskSpaceSchema = exports2.workItemKeySchema = exports2.taskSpaceKeySchema = exports2.taskFieldTypeSchema = exports2.workItemPrioritySchema = exports2.builtinWorkItemTypeSchema = exports2.workItemLevelSchema = exports2.taskStatusCategorySchema = exports2.taskSpaceTemplateSchema = exports2.taskUserIdSchema = exports2.taskColorSchema = exports2.nullableTaskTimestampSchema = exports2.taskTimestampSchema = exports2.taskDescriptionSchema = exports2.taskNameSchema = void 0;
@@ -2725,9 +2725,9 @@ var require_common = __commonJS({
   }
 });
 
-// packages/schema/dist/task-management/planning.js
+// ../packages/schema/dist/task-management/planning.js
 var require_planning = __commonJS({
-  "packages/schema/dist/task-management/planning.js"(exports2) {
+  "../packages/schema/dist/task-management/planning.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.taskReleaseOperationSchema = exports2.releaseResolutionSchema = exports2.sprintCompleteSchema = exports2.sprintCompletionDestinationSchema = exports2.sprintStartSchema = exports2.taskSprintUpdateSchema = exports2.taskSprintCreateSchema = exports2.taskSprintSchema = exports2.taskReleaseProgressSchema = exports2.taskReleaseUpdateSchema = exports2.taskReleaseCreateSchema = exports2.taskReleaseSchema = exports2.taskSprintStateSchema = exports2.taskReleaseStateSchema = void 0;
@@ -2845,9 +2845,9 @@ var require_planning = __commonJS({
   }
 });
 
-// packages/schema/dist/task-management/work-items.js
+// ../packages/schema/dist/task-management/work-items.js
 var require_work_items = __commonJS({
-  "packages/schema/dist/task-management/work-items.js"(exports2) {
+  "../packages/schema/dist/task-management/work-items.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.workItemLinkMutationSchema = exports2.workItemMoveSchema = exports2.workItemUpdateSchema = exports2.workItemCreateSchema = exports2.workItemSchema = exports2.workItemPullRequestLinkSchema = exports2.workItemWorkflowLinkSchema = exports2.workItemLinkSchema = exports2.taskLinkTypeSchema = void 0;
@@ -2981,9 +2981,9 @@ var require_work_items = __commonJS({
   }
 });
 
-// packages/schema/dist/task-management/views.js
+// ../packages/schema/dist/task-management/views.js
 var require_views = __commonJS({
-  "packages/schema/dist/task-management/views.js"(exports2) {
+  "../packages/schema/dist/task-management/views.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.taskViewUpdateSchema = exports2.taskViewCreateSchema = exports2.taskViewSchema = exports2.taskViewColumnSchema = exports2.taskViewFilterSchema = exports2.taskFieldFilterSchema = exports2.taskViewSortSchema = exports2.taskViewGroupSchema = exports2.taskViewLayoutSchema = void 0;
@@ -3094,9 +3094,9 @@ var require_views = __commonJS({
   }
 });
 
-// packages/schema/dist/task-management/activity.js
+// ../packages/schema/dist/task-management/activity.js
 var require_activity = __commonJS({
-  "packages/schema/dist/task-management/activity.js"(exports2) {
+  "../packages/schema/dist/task-management/activity.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.workItemActivityPageSchema = exports2.workItemCommentPageSchema = exports2.taskReleasePageSchema = exports2.taskSprintPageSchema = exports2.workItemPageSchema = exports2.taskSpacePageSchema = exports2.taskErrorSchema = exports2.workItemActivitySchema = exports2.workItemCommentCreateSchema = exports2.workItemCommentSchema = void 0;
@@ -3168,9 +3168,9 @@ var require_activity = __commonJS({
   }
 });
 
-// packages/schema/dist/task-management/index.js
+// ../packages/schema/dist/task-management/index.js
 var require_task_management = __commonJS({
-  "packages/schema/dist/task-management/index.js"(exports2) {
+  "../packages/schema/dist/task-management/index.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -3197,9 +3197,9 @@ var require_task_management = __commonJS({
   }
 });
 
-// packages/schema/dist/design/collaboration.js
+// ../packages/schema/dist/design/collaboration.js
 var require_collaboration2 = __commonJS({
-  "packages/schema/dist/design/collaboration.js"(exports2) {
+  "../packages/schema/dist/design/collaboration.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.designReviewThreadCreateSchema = exports2.designReviewThreadPageSchema = exports2.designReviewThreadSchema = exports2.designAnchorProjectionSchema = exports2.commentTargetSchema = exports2.pullRequestCommentTargetSchema = exports2.designCommentTargetSchema = exports2.designSourceReferenceSchema = exports2.designArtifactRevisionCreateSchema = exports2.designArtifactCreateSchema = exports2.designArtifactPageSchema = exports2.designArtifactSummarySchema = exports2.designArtifactSchema = exports2.designArtifactRevisionSchema = exports2.designPreviewDescriptorSchema = exports2.projectRevisionSchema = void 0;
@@ -3321,9 +3321,9 @@ var require_collaboration2 = __commonJS({
   }
 });
 
-// packages/schema/dist/design/documents.js
+// ../packages/schema/dist/design/documents.js
 var require_documents = __commonJS({
-  "packages/schema/dist/design/documents.js"(exports2) {
+  "../packages/schema/dist/design/documents.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.designDocumentShareSchema = exports2.designDocumentUpdateSchema = exports2.designDocumentCreateSchema = exports2.designDocumentDetailSchema = exports2.designDocumentSchema = exports2.designDocumentRevisionSchema = exports2.designDocumentScopeSchema = exports2.designDocumentAccessSchema = exports2.designDocumentFormatSchema = void 0;
@@ -3380,9 +3380,9 @@ var require_documents = __commonJS({
   }
 });
 
-// packages/schema/dist/analytics-dashboard.js
+// ../packages/schema/dist/analytics-dashboard.js
 var require_analytics_dashboard = __commonJS({
-  "packages/schema/dist/analytics-dashboard.js"(exports2) {
+  "../packages/schema/dist/analytics-dashboard.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.UpdateAnalyticsDashboardInput = exports2.CreateAnalyticsDashboardInput = exports2.AnalyticsDashboard = exports2.AnalyticsDays = exports2.AnalyticsWidget = void 0;
@@ -3435,9 +3435,9 @@ var require_analytics_dashboard = __commonJS({
   }
 });
 
-// packages/schema/dist/capabilities.constants.js
+// ../packages/schema/dist/capabilities.constants.js
 var require_capabilities_constants = __commonJS({
-  "packages/schema/dist/capabilities.constants.js"(exports2) {
+  "../packages/schema/dist/capabilities.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.REPOSITORY = exports2.CLOUD = exports2.EVERYWHERE = exports2.COMMUNITY_RANK = void 0;
@@ -3469,9 +3469,9 @@ var require_capabilities_constants = __commonJS({
   }
 });
 
-// packages/schema/dist/capabilities.js
+// ../packages/schema/dist/capabilities.js
 var require_capabilities = __commonJS({
-  "packages/schema/dist/capabilities.js"(exports2) {
+  "../packages/schema/dist/capabilities.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CapabilityDocument = exports2.Capability = exports2.CapabilityUnavailableReason = exports2.CapabilityMode = exports2.CapabilityName = void 0;
@@ -3531,9 +3531,9 @@ var require_capabilities = __commonJS({
   }
 });
 
-// packages/schema/dist/agent-chat.js
+// ../packages/schema/dist/agent-chat.js
 var require_agent_chat = __commonJS({
-  "packages/schema/dist/agent-chat.js"(exports2) {
+  "../packages/schema/dist/agent-chat.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.canTransitionAgentRun = exports2.claudeSandboxRequestSchema = exports2.agentServiceRunRequestSchema = exports2.agentToolAuditSchema = exports2.agentStreamEventSchema = exports2.agentRunSchema = exports2.agentUsageSchema = exports2.assistantConversationUpdateSchema = exports2.assistantConversationConfigSchema = exports2.agentToolRiskSchema = exports2.agentErrorCodeSchema = exports2.agentRunStatusSchema = void 0;
@@ -3758,9 +3758,9 @@ var require_agent_chat = __commonJS({
   }
 });
 
-// packages/schema/dist/knowledge.js
+// ../packages/schema/dist/knowledge.js
 var require_knowledge = __commonJS({
-  "packages/schema/dist/knowledge.js"(exports2) {
+  "../packages/schema/dist/knowledge.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.knowledgeSyncActivateSchema = exports2.knowledgeSyncBatchSchema = exports2.knowledgeCorpusChunkSchema = exports2.knowledgeSearchResponseSchema = exports2.knowledgeMatchSchema = exports2.knowledgeSearchRequestSchema = void 0;
@@ -3799,9 +3799,9 @@ var require_knowledge = __commonJS({
   }
 });
 
-// packages/schema/dist/architecture.js
+// ../packages/schema/dist/architecture.js
 var require_architecture = __commonJS({
-  "packages/schema/dist/architecture.js"(exports2) {
+  "../packages/schema/dist/architecture.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ArchitectureProjection = exports2.ArchitectureSeed = exports2.ArchitectureEdge = exports2.ArchitectureNode = exports2.ArchitectureScope = exports2.ArchitectureEntityKind = exports2.ArchitectureMode = void 0;
@@ -3875,9 +3875,9 @@ var require_architecture = __commonJS({
   }
 });
 
-// packages/schema/dist/repository-registry.js
+// ../packages/schema/dist/repository-registry.js
 var require_repository_registry = __commonJS({
-  "packages/schema/dist/repository-registry.js"(exports2) {
+  "../packages/schema/dist/repository-registry.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RegistryPublicSummary = exports2.RegisteredProjectSummary = exports2.SourceRepositorySummary = exports2.RegistryMigrationReport = exports2.RepositoryDiscovery = exports2.RepositoryDiscoveryCandidate = exports2.WorkspaceRegistryV2 = exports2.LegacyProjectAlias = exports2.RegisteredProjectRecord = exports2.SourceRepositoryRecord = exports2.RegistryDiagnostic = exports2.RegistryGeneration = exports2.SourceRepositoryId = exports2.ProjectId = void 0;
@@ -4004,9 +4004,9 @@ var require_repository_registry = __commonJS({
   }
 });
 
-// packages/schema/dist/community/publications.js
+// ../packages/schema/dist/community/publications.js
 var require_publications = __commonJS({
-  "packages/schema/dist/community/publications.js"(exports2) {
+  "../packages/schema/dist/community/publications.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.publicationTransitions = exports2.publicationTopicsSchema = exports2.publicationTopicSchema = exports2.publicationModerationPageSchema = exports2.publicationModerationItemSchema = exports2.communityKnowledgeSearchResponseSchema = exports2.communityKnowledgeMatchSchema = exports2.communityKnowledgeSearchRequestSchema = exports2.publicationRatingSchema = exports2.publicationReportSchema = exports2.publicationModerateSchema = exports2.publicationArchiveSchema = exports2.publicationSubmitSchema = exports2.publicationRevisionCreateSchema = exports2.publicationUpdateSchema = exports2.publicationCreateSchema = exports2.publicationCommentCreateSchema = exports2.publicationCommentListQuerySchema = exports2.publicationCommentPageSchema = exports2.publicationCommentSchema = exports2.publicationPageSchema = exports2.publicationMineListQuerySchema = exports2.publicationListQuerySchema = exports2.publicationDetailSchema = exports2.publicationSummarySchema = exports2.publicationRevisionSchema = exports2.publicationLinkSchema = exports2.cslCitationSchema = exports2.publicationAuthorSchema = exports2.creatorProfileSchema = exports2.creatorHandleSchema = exports2.publicationSlugSchema = exports2.publicationModerationDecisionSchema = exports2.publicationOrderSchema = exports2.publicationSortSchema = exports2.publicationStatusSchema = exports2.publicationKindSchema = void 0;
@@ -4235,9 +4235,9 @@ var require_publications = __commonJS({
   }
 });
 
-// packages/schema/dist/community/media.js
+// ../packages/schema/dist/community/media.js
 var require_media = __commonJS({
-  "packages/schema/dist/community/media.js"(exports2) {
+  "../packages/schema/dist/community/media.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.communityMediaBlockSchema = exports2.communityMediaItemSchema = exports2.communityMediaUploadSchema = void 0;
@@ -4288,17 +4288,17 @@ ${JSON.stringify(exports2.communityMediaBlockSchema.parse(block))}
   }
 });
 
-// packages/schema/dist/community/media.types.js
+// ../packages/schema/dist/community/media.types.js
 var require_media_types = __commonJS({
-  "packages/schema/dist/community/media.types.js"(exports2) {
+  "../packages/schema/dist/community/media.types.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
   }
 });
 
-// packages/schema/dist/workflow/templates.js
+// ../packages/schema/dist/workflow/templates.js
 var require_templates = __commonJS({
-  "packages/schema/dist/workflow/templates.js"(exports2) {
+  "../packages/schema/dist/workflow/templates.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.workflowTemplateDetailSchema = exports2.workflowTemplateSummarySchema = exports2.workflowTemplateListQuerySchema = exports2.workflowTemplateCreateSchema = exports2.workflowTemplateSnapshotSchema = exports2.workflowTemplatePermissionSchema = exports2.workflowTemplatePlaceholderSchema = exports2.workflowTemplateEdgeSchema = exports2.workflowTemplateNodeSchema = exports2.workflowTemplateDefinitionSchema = void 0;
@@ -4476,9 +4476,9 @@ var require_templates = __commonJS({
   }
 });
 
-// packages/schema/dist/json-schema-definitions.js
+// ../packages/schema/dist/json-schema-definitions.js
 var require_json_schema_definitions = __commonJS({
-  "packages/schema/dist/json-schema-definitions.js"(exports2) {
+  "../packages/schema/dist/json-schema-definitions.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WORKFLOW_SCHEMA = exports2.NODE_SCHEMA = void 0;
@@ -4748,9 +4748,9 @@ var require_json_schema_definitions = __commonJS({
   }
 });
 
-// packages/schema/dist/json-schema.js
+// ../packages/schema/dist/json-schema.js
 var require_json_schema = __commonJS({
-  "packages/schema/dist/json-schema.js"(exports2) {
+  "../packages/schema/dist/json-schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.schemaVersion = schemaVersion;
@@ -4845,9 +4845,9 @@ var require_json_schema = __commonJS({
   }
 });
 
-// node_modules/re2js/build/index.cjs
+// ../node_modules/re2js/build/index.cjs
 var require_build = __commonJS({
-  "node_modules/re2js/build/index.cjs"(exports2) {
+  "../node_modules/re2js/build/index.cjs"(exports2) {
     Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
     var RE2Flags = class RE2Flags2 {
       static FOLD_CASE = 1;
@@ -11168,9 +11168,9 @@ var require_build = __commonJS({
   }
 });
 
-// packages/schema/dist/settings.js
+// ../packages/schema/dist/settings.js
 var require_settings = __commonJS({
-  "packages/schema/dist/settings.js"(exports2) {
+  "../packages/schema/dist/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.OctonodeSettings = exports2.OctonodeSettingsValues = exports2.OctonodeSettingsDocument = exports2.SettingsFileReference = exports2.SettingsViews = exports2.SettingsLayers = exports2.SettingsOverrides = exports2.SettingsAppearance = exports2.SettingsNodeSelector = exports2.SettingsWorkflowSelector = exports2.SettingsPresentation = exports2.SettingsDetail = exports2.SettingsDiscovery = exports2.SettingsPathPattern = void 0;
@@ -11359,9 +11359,9 @@ var require_settings = __commonJS({
   }
 });
 
-// packages/schema/dist/access-tokens.js
+// ../packages/schema/dist/access-tokens.js
 var require_access_tokens = __commonJS({
-  "packages/schema/dist/access-tokens.js"(exports2) {
+  "../packages/schema/dist/access-tokens.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.accessTokenUpdateSchema = exports2.accessTokenCreateSchema = exports2.accessTokenOriginSchema = exports2.accessTokenListQuerySchema = void 0;
@@ -11395,9 +11395,9 @@ var require_access_tokens = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin/version.js
+// ../packages/schema/dist/plugin/version.js
 var require_version = __commonJS({
-  "packages/schema/dist/plugin/version.js"(exports2) {
+  "../packages/schema/dist/plugin/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginVersion = void 0;
@@ -11452,12 +11452,12 @@ var require_version = __commonJS({
   }
 });
 
-// packages/schema/dist/app-installation.js
+// ../packages/schema/dist/app-installation.js
 var require_app_installation = __commonJS({
-  "packages/schema/dist/app-installation.js"(exports2) {
+  "../packages/schema/dist/app-installation.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.appDevelopmentConsentSchema = exports2.appSettingsSchema = exports2.appInstallationSchema = exports2.appUninstallSchema = exports2.appInstallSchema = exports2.appGrantsSchema = exports2.appGrantSchema = exports2.appReviewSchema = exports2.appStatusSchema = exports2.appLifecycleSchema = exports2.appPublishSchema = void 0;
+    exports2.appSettingsSchema = exports2.appInstallationSchema = exports2.appUninstallSchema = exports2.appInstallSchema = exports2.appGrantsSchema = exports2.appGrantSchema = exports2.appReviewSchema = exports2.appStatusSchema = exports2.appLifecycleSchema = exports2.appPublishSchema = void 0;
     var zod_1 = require("zod");
     var app_1 = require_app();
     var collaboration_1 = require_collaboration();
@@ -11516,16 +11516,12 @@ var require_app_installation = __commonJS({
       enabled: zod_1.z.boolean(),
       configuration: zod_1.z.record(zod_1.z.string().max(4e3)).refine((value) => Object.keys(value).length <= 32)
     }).strict();
-    exports2.appDevelopmentConsentSchema = zod_1.z.object({
-      expectedRevision: zod_1.z.number().int().positive(),
-      grants: exports2.appGrantsSchema
-    }).strict();
   }
 });
 
-// packages/schema/dist/app-analytics.js
+// ../packages/schema/dist/app-analytics.js
 var require_app_analytics = __commonJS({
-  "packages/schema/dist/app-analytics.js"(exports2) {
+  "../packages/schema/dist/app-analytics.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.appAnalyticsQuerySchema = void 0;
@@ -11549,9 +11545,9 @@ var require_app_analytics = __commonJS({
   }
 });
 
-// packages/schema/dist/github.js
+// ../packages/schema/dist/github.js
 var require_github = __commonJS({
-  "packages/schema/dist/github.js"(exports2) {
+  "../packages/schema/dist/github.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.GitHubUserRepositories = exports2.GitHubUserRepositoriesQuery = exports2.GitHubAutoSyncUpdate = exports2.GitHubAutoSyncSettings = exports2.GitHubAutoSyncDispatch = exports2.GitHubAutoSyncTarget = void 0;
@@ -11594,9 +11590,9 @@ var require_github = __commonJS({
   }
 });
 
-// packages/schema/dist/project/lifecycle.js
+// ../packages/schema/dist/project/lifecycle.js
 var require_lifecycle = __commonJS({
-  "packages/schema/dist/project/lifecycle.js"(exports2) {
+  "../packages/schema/dist/project/lifecycle.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProjectLifecycleRecord = exports2.ProjectLifecycle = void 0;
@@ -11619,9 +11615,9 @@ var require_lifecycle = __commonJS({
   }
 });
 
-// packages/schema/dist/project/jobs.js
+// ../packages/schema/dist/project/jobs.js
 var require_jobs = __commonJS({
-  "packages/schema/dist/project/jobs.js"(exports2) {
+  "../packages/schema/dist/project/jobs.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProjectJobNotification = exports2.ProjectJobStatus = exports2.ProjectJobResult = exports2.ProjectJobInput = void 0;
@@ -11680,9 +11676,9 @@ var require_jobs = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin/execution.constants.js
+// ../packages/schema/dist/plugin/execution.constants.js
 var require_execution_constants = __commonJS({
-  "packages/schema/dist/plugin/execution.constants.js"(exports2) {
+  "../packages/schema/dist/plugin/execution.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PREPARED_RUNTIME_ARCHIVE = exports2.PREPARED_RUNTIME_MAX_FILES = exports2.PREPARED_RUNTIME_MAX_BYTES = exports2.PLUGIN_EXECUTION_TIMEOUT_MS = exports2.PLUGIN_EXECUTION_MAX_BYTES = exports2.PLUGIN_RUNNER_PORT = exports2.PLUGIN_RUNNER_ORIGIN = void 0;
@@ -11696,9 +11692,9 @@ var require_execution_constants = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin/execution.js
+// ../packages/schema/dist/plugin/execution.js
 var require_execution = __commonJS({
-  "packages/schema/dist/plugin/execution.js"(exports2) {
+  "../packages/schema/dist/plugin/execution.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.AuthorizedPluginRelease = exports2.PluginExecutionRequest = exports2.PluginExecutionReference = exports2.PreparedPluginRuntime = void 0;
@@ -11732,9 +11728,9 @@ var require_execution = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin/publishing.js
+// ../packages/schema/dist/plugin/publishing.js
 var require_publishing = __commonJS({
-  "packages/schema/dist/plugin/publishing.js"(exports2) {
+  "../packages/schema/dist/plugin/publishing.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginCloudBuild = exports2.PluginPublisherBuildDetail = exports2.PluginPublisherBuilds = exports2.PluginPublisherBuildQuery = exports2.PluginPublisherListQuery = exports2.PluginPublisherApplied = exports2.PluginPublisherApply = exports2.PluginPublisherReview = exports2.PluginPublisherReviewItem = exports2.PluginPublisherOperation = exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherAutomatic = exports2.PluginPublisherRepository = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
@@ -11881,9 +11877,9 @@ var require_publishing = __commonJS({
   }
 });
 
-// packages/schema/dist/toolkit.js
+// ../packages/schema/dist/toolkit.js
 var require_toolkit = __commonJS({
-  "packages/schema/dist/toolkit.js"(exports2) {
+  "../packages/schema/dist/toolkit.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ToolkitInstallRequest = exports2.ToolkitRelease = exports2.ToolkitResolvedMember = exports2.ToolkitQuery = exports2.ToolkitDefinition = exports2.ToolkitAction = exports2.ToolkitMember = exports2.ToolkitVisibility = exports2.ToolkitOwner = void 0;
@@ -11998,9 +11994,9 @@ var require_toolkit = __commonJS({
   }
 });
 
-// packages/schema/dist/plugin/allowlist.js
+// ../packages/schema/dist/plugin/allowlist.js
 var require_allowlist = __commonJS({
-  "packages/schema/dist/plugin/allowlist.js"(exports2) {
+  "../packages/schema/dist/plugin/allowlist.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginAllowlistPage = exports2.PluginAllowlistInput = exports2.PluginAllowlistQuery = exports2.PluginAllowlistKind = void 0;
@@ -12035,9 +12031,9 @@ var require_allowlist = __commonJS({
   }
 });
 
-// packages/schema/dist/app-runtime.js
+// ../packages/schema/dist/app-runtime.js
 var require_app_runtime = __commonJS({
-  "packages/schema/dist/app-runtime.js"(exports2) {
+  "../packages/schema/dist/app-runtime.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.appExecutionRequestSchema = exports2.appDataRequestSchema = void 0;
@@ -12070,9 +12066,9 @@ var require_app_runtime = __commonJS({
   }
 });
 
-// packages/schema/dist/index.js
+// ../packages/schema/dist/index.js
 var require_dist = __commonJS({
-  "packages/schema/dist/index.js"(exports2) {
+  "../packages/schema/dist/index.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -12148,9 +12144,9 @@ var require_dist = __commonJS({
   }
 });
 
-// packages/plugin-runtime/dist/json-schema.js
+// ../packages/plugin-runtime/dist/json-schema.js
 var require_json_schema2 = __commonJS({
-  "packages/plugin-runtime/dist/json-schema.js"(exports2) {
+  "../packages/plugin-runtime/dist/json-schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.validate = validate;
@@ -12232,9 +12228,9 @@ var require_json_schema2 = __commonJS({
   }
 });
 
-// packages/plugin-runtime/dist/runner.js
+// ../packages/plugin-runtime/dist/runner.js
 var require_runner = __commonJS({
-  "packages/plugin-runtime/dist/runner.js"(exports2) {
+  "../packages/plugin-runtime/dist/runner.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.NodeError = void 0;
@@ -12522,9 +12518,9 @@ var require_runner = __commonJS({
   }
 });
 
-// packages/common/dist/constants.js
+// ../packages/common/dist/constants.js
 var require_constants2 = __commonJS({
-  "packages/common/dist/constants.js"(exports2) {
+  "../packages/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PYTHONPATH = exports2.PORT = exports2.PATH = exports2.OPENROUTER_API_KEY = exports2.CLOUDFLARE_ACCOUNT_ID = exports2.CLOUDFLARE_API_KEY = exports2.OPENAI_API_KEY = exports2.OTEL_SERVICE_NAME = exports2.OTEL_SDK_DISABLED = exports2.OTEL_EXPORTER_OTLP_ENDPOINT = exports2.OCTONODE_WORKSPACE = exports2.OCTONODE_VISUAL_PORT = exports2.OCTONODE_USER_EMAIL = exports2.OCTONODE_USER = exports2.OCTONODE_STUDIO_URL = exports2.OCTONODE_STORE_DIR = exports2.OCTONODE_SOURCE_WATCH_CONCURRENCY = exports2.OCTONODE_SHUTDOWN_TIMEOUT_MS = exports2.OCTONODE_SERVER_PROFILE = exports2.OCTONODE_RUNTIME = exports2.OCTONODE_REPOSITORY_REGISTRY_V2 = exports2.OCTONODE_RUN_RETENTION_COUNT = exports2.OCTONODE_RUN_RETENTION_BYTES = exports2.OCTONODE_RUN_RETENTION_AGE_MS = exports2.OCTONODE_STATE_NAMESPACE = exports2.OCTONODE_RUN_QUEUE = exports2.OCTONODE_RUN_CONCURRENCY = exports2.DEFAULT_MARKETPLACE_URL = exports2.OCTONODE_MARKETPLACE_URL = exports2.OCTONODE_MARKETPLACE_TOKEN = exports2.OCTONODE_PACKAGE_CACHE = exports2.OCTONODE_PROJECT = exports2.OCTONODE_CWD = exports2.OCTONODE_COMMUNITY_ROLLOUT = exports2.OCTONODE_CHAT_SERVICE_URL = exports2.OCTONODE_CHAT_SERVICE_TOKEN = exports2.OCTONODE_CHAT_SERVICE_AVAILABLE = exports2.OCTONODE_CHAT_MODEL = exports2.OCTONODE_CLOUD_INTERNAL_TOKEN = exports2.OCTONODE_CORS_ORIGINS = exports2.OCTONODE_API_TOKEN = exports2.OCTONODE_API_URL = exports2.OCTONODE_AUTH_TOKEN = exports2.OCTONODE_AUTH_PRINCIPAL = exports2.HOST = exports2.CONFIG_PATH = exports2.setEnvironmentVariable = exports2.childProcessEnvironment = exports2.workflowEnvironment = exports2.PROCESS_ENV = void 0;
@@ -12658,9 +12654,9 @@ var require_constants2 = __commonJS({
   }
 });
 
-// packages/common/dist/legal.constants.js
+// ../packages/common/dist/legal.constants.js
 var require_legal_constants = __commonJS({
-  "packages/common/dist/legal.constants.js"(exports2) {
+  "../packages/common/dist/legal.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DODO_BUYER_TERMS_URL = exports2.LEGAL_CONTACT_EMAIL = exports2.LEGAL_BILLING_PATH = exports2.LEGAL_PRIVACY_PATH = exports2.LEGAL_TERMS_PATH = exports2.LEGAL_TERMS_VERSION = void 0;
@@ -12673,9 +12669,9 @@ var require_legal_constants = __commonJS({
   }
 });
 
-// packages/common/dist/package-cache.js
+// ../packages/common/dist/package-cache.js
 var require_package_cache = __commonJS({
-  "packages/common/dist/package-cache.js"(exports2) {
+  "../packages/common/dist/package-cache.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.packageCacheEnvironment = packageCacheEnvironment3;
@@ -12697,9 +12693,9 @@ var require_package_cache = __commonJS({
   }
 });
 
-// packages/common/dist/api-exposure.js
+// ../packages/common/dist/api-exposure.js
 var require_api_exposure = __commonJS({
-  "packages/common/dist/api-exposure.js"(exports2) {
+  "../packages/common/dist/api-exposure.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PRIVATE_API_DOC_EMAIL = void 0;
@@ -12780,9 +12776,9 @@ var require_api_exposure = __commonJS({
   }
 });
 
-// packages/common/dist/graph-layout.js
+// ../packages/common/dist/graph-layout.js
 var require_graph_layout = __commonJS({
-  "packages/common/dist/graph-layout.js"(exports2) {
+  "../packages/common/dist/graph-layout.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.layeredLayout = layeredLayout;
@@ -12845,9 +12841,9 @@ var require_graph_layout = __commonJS({
   }
 });
 
-// packages/common/dist/plugin-nodes.js
+// ../packages/common/dist/plugin-nodes.js
 var require_plugin_nodes = __commonJS({
-  "packages/common/dist/plugin-nodes.js"(exports2) {
+  "../packages/common/dist/plugin-nodes.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.installedPluginNodesPage = installedPluginNodesPage;
@@ -12873,9 +12869,9 @@ var require_plugin_nodes = __commonJS({
   }
 });
 
-// packages/common/dist/index.js
+// ../packages/common/dist/index.js
 var require_dist2 = __commonJS({
-  "packages/common/dist/index.js"(exports2) {
+  "../packages/common/dist/index.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -12913,9 +12909,9 @@ var require_dist2 = __commonJS({
   }
 });
 
-// packages/plugin-runtime/dist/plugin.js
+// ../packages/plugin-runtime/dist/plugin.js
 var require_plugin2 = __commonJS({
-  "packages/plugin-runtime/dist/plugin.js"(exports2) {
+  "../packages/plugin-runtime/dist/plugin.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.definePlugin = definePlugin;
@@ -12987,9 +12983,9 @@ var require_plugin2 = __commonJS({
   }
 });
 
-// packages/plugin-runtime/dist/plugin-file.js
+// ../packages/plugin-runtime/dist/plugin-file.js
 var require_plugin_file = __commonJS({
-  "packages/plugin-runtime/dist/plugin-file.js"(exports2) {
+  "../packages/plugin-runtime/dist/plugin-file.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.pluginDefinitionPath = pluginDefinitionPath2;
@@ -13031,9 +13027,9 @@ var require_plugin_file = __commonJS({
   }
 });
 
-// packages/plugin-runtime/dist/index.js
+// ../packages/plugin-runtime/dist/index.js
 var require_dist3 = __commonJS({
-  "packages/plugin-runtime/dist/index.js"(exports2) {
+  "../packages/plugin-runtime/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;

@@ -43,7 +43,11 @@ test("platform scaffolds contain native entry points and keep the Octonode backe
         .filter((file) => statSync(join(app, file)).isFile())
         .map((file) => [file, readFileSync(join(app, file), "utf8")]));
     }
-    assert.deepEqual(snapshots.default, snapshots.vite);
+    const normalizeIds = (files) => Object.fromEntries(Object.entries(files).map(([path, contents]) => [
+      path,
+      contents.replaceAll(/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/g, "<uuid>"),
+    ]));
+    assert.deepEqual(normalizeIds(snapshots.default), normalizeIds(snapshots.vite));
     const unsupported = spawnSync(process.execPath, [cli, "app", "create", "bad-platform", "--platform", "unknown"], { cwd: root, encoding: "utf8" });
     assert.notEqual(unsupported.status, 0);
     assert.match(unsupported.stderr, /Choose --platform plain, vite or next/);

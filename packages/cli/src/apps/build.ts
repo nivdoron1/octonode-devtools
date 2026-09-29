@@ -145,7 +145,7 @@ const actual=files("").filter(file=>file!=="octonode-web.json").sort();
 if(record.format!==1 || JSON.stringify(actual)!==JSON.stringify(Object.keys(record.files).sort()))throw Error("Web build changed");
 for(const file of actual)if(createHash("sha256").update(readFileSync(join(root,file))).digest("hex")!==record.files[file])throw Error("Web build changed");
 const port=Number(process.env.PORT??3000);if(!Number.isInteger(port)||port<0||port>65535)throw Error("Invalid PORT");
-const source={id:"web",version:"1.0.0",extensions:record.app.extensions};
+const source={id:record.id,version:"1.0.0",extensions:record.app.extensions};
 const host=createAppServer({port,source,development:false});
 host.listen().then(()=>{host.setOrigin(record.app.applicationUrl);host.update(source,root,require(join(root,"server.cjs")).default);process.stdout.write("App server ready\\n");});
 process.once("SIGINT",()=>host.close());process.once("SIGTERM",()=>host.close());`,
@@ -162,6 +162,7 @@ process.once("SIGINT",()=>host.close());process.once("SIGTERM",()=>host.close())
       join(stage, "octonode-web.json"),
       JSON.stringify({
         format: 1,
+        id: source.id,
         app: manifest.app,
         files: Object.fromEntries(pluginFiles(stage).map((file) => [file, fileHash(join(stage, file))])),
       }),
@@ -203,7 +204,7 @@ export function verifyWebBuild(directory: string) {
     throw new Error("Web build changed; rebuild first");
   for (const file of actual)
     if (record.files[file] !== fileHash(join(directory, file))) throw new Error("Web build changed; rebuild first");
-  const manifest = PluginManifest.parse({ id: "web", name: "web", version: "1.0.0", app: record.app });
+  const manifest = PluginManifest.parse({ id: record.id, name: "web", version: "1.0.0", app: record.app });
   return manifest.app!;
 }
 
