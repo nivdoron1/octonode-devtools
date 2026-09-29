@@ -2008,6 +2008,7 @@ var require_data_tables = __commonJS({
       updatedAt: zod_1.z.number()
     });
     exports2.CreateProjectInput = zod_1.z.object({
+      id: zod_1.z.string().uuid().optional(),
       name: zod_1.z.string().min(1),
       slug: zod_1.z.string().min(1).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/, "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'").optional(),
       description: zod_1.z.string().optional(),
