@@ -158,7 +158,7 @@ For CI and temporary shell sessions, set `OCTONODE_TOKEN` instead of saving a lo
 
 ```sh
 export OCTONODE_TOKEN=octo_svc_...
-octonodes projects.api.get
+octonodes projects api get
 ```
 
 Authentication is resolved in this order: `OCTONODE_TOKEN`, a saved API token, then a saved Studio
@@ -182,8 +182,9 @@ octonodes operations projects
 octonodes operations workflows
 ```
 
-Operation names follow the SDK property path and HTTP method. For example,
-`GET /api/projects/{projectId}` becomes `projects.api.projectId.get`. Use the
+Operation commands follow the SDK property path and HTTP method. For example,
+`GET /api/projects/{projectId}` becomes `projects api projectId get`. Run
+`octonodes projects --help` or `octonodes projects api --help` to browse each level. Use the
 [API reference](https://octonodes.com/api/docs) to find endpoints and their parameters.
 
 ## Call the API
@@ -192,22 +193,22 @@ Pass path parameters, query parameters, and request bodies together as JSON thro
 
 ```sh
 # List projects
-octonodes projects.api.get
+octonodes projects api get
 
 # Read one project
-octonodes projects.api.projectId.get \
+octonodes projects api projectId get \
   --input '{"path":{"projectId":"project_123"}}'
 
 # List runs with query parameters
-octonodes runs.api.get \
+octonodes runs api get \
   --input '{"query":{"workflowId":"daily-report","limit":20}}'
 
 # Search project knowledge
-octonodes knowledge.api.search.post \
+octonodes knowledge api search post \
   --input '{"query":{"workspace":"acme","project":"support"},"body":{"query":"refund policy","topK":5}}'
 
 # Cancel an execution
-octonodes executions.api.runId.cancel.post \
+octonodes executions api runId cancel post \
   --input '{"path":{"runId":"run_123"}}'
 ```
 
@@ -215,12 +216,12 @@ Normal responses are printed as formatted JSON. Server-sent event operations pri
 per line, which works well with `jq` and shell pipelines:
 
 ```sh
-octonodes workflows.api.workflowId.run.post \
+octonodes workflows api workflowId run post \
   --input '{"path":{"workflowId":"daily-report"},"body":{"input":{"date":"2026-09-18"}}}' \
   | jq -c .
 ```
 
-Run `octonodes <operation> --help` for the accepted flags. The exact input shape for each operation
+Run `octonodes <resource> <command> --help` for the accepted flags. The exact input shape for each operation
 is defined by the exported TypeScript types in `@octonodes/sdk`. For workflow behavior and setup,
 see the [Playbook documentation](https://playbook.octonodes.com/docs); for shared examples, browse
 the [Octonode community](https://community.octonodes.com/community).
@@ -236,7 +237,7 @@ the [Octonode community](https://community.octonodes.com/community).
 Use `--base-url <url>` to override the API URL for one login or API command:
 
 ```sh
-octonodes projects.api.get --base-url http://localhost:4000
+octonodes projects api get --base-url http://localhost:4000
 ```
 
 ## Log out
