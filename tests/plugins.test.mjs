@@ -209,9 +209,11 @@ test("npm SDK bindings use original subpaths, hide clients, require credentials 
     const success = invoke({ parameters: { id: "42" } });
     assert.equal(success.status, "ok", JSON.stringify(success));
     assert.deepEqual(success.outputs.result, { id: "42", originalSdk: true });
+    rmSync(marker);
     const attemptedOverride = invoke({ parameters: { id: "43" }, client: { read: "attacker" } });
     assert.equal(attemptedOverride.status, "error");
-    assert.match(attemptedOverride.error.message, /cannot be supplied as inputs/);
+    assert.match(attemptedOverride.error.message, /^(SDK client parameters cannot be supplied as inputs|Inputs failed schema validation: \$\.client unexpected property)$/);
+    assert.equal(existsSync(marker), false);
     const failed = invoke({ parameters: { id: "fail" } });
     assert.equal(failed.status, "error");
     assert.doesNotMatch(JSON.stringify(failed), /binding-secret/);
