@@ -54,6 +54,42 @@ await octonode.executions.api.runId.cancel.post({
 For example, `GET /api/projects/{projectId}` maps to
 `octonode.projects.api.projectId.get({ path: { projectId } })`.
 
+## Data tables
+
+Bind a table once using its workspace and table ID from Studio's **API** tab:
+
+```ts
+const client = createClient(process.env.OCTONODE_API_TOKEN!, {
+  url: "https://api.octonodes.com",
+});
+const table = client.table("customers", {
+  workspace: { kind: "team", id: "TEAM_ID" },
+});
+
+const { rows, nextCursor } = await table.rows.list({ limit: 50 });
+if (nextCursor) {
+  const nextPage = await table.rows.list({ limit: 50, cursor: nextCursor });
+}
+const row = await table.rows.insert({ name: "Ada" });
+await table.rows.update(row.id, {
+  data: { name: "Ada Lovelace" },
+  expectedVersion: row.version,
+});
+await table.rows.delete(row.id);
+const schema = await table.get();
+await table.update({ description: "Customer contacts" });
+const result = await table.sql('SELECT * FROM "customers" LIMIT 10');
+```
+
+Workspace kinds are `org`, `team`, and `user`. The table ID identifies both global and
+project tables; permissions are enforced by the server. Updates replace the row data;
+a stale `expectedVersion` throws the server's 409 error. SQL is read-only and requires
+SQLite storage. `table.delete()` permanently deletes the table and all its rows.
+
+For a trusted local server, use `createClient("local", { url: "http://localhost:4000" })`
+and `client.table("customers", { projectId: "PROJECT_ID" })`. The placeholder token is
+only for a local server that requires no authentication.
+
 ## Streaming operations
 
 Workflow runs and execution events use server-sent events. Iterate over the returned stream:
