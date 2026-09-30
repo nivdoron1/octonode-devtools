@@ -1,5 +1,5 @@
 // Generated from packages/ui-extensions/src/app/hosted.ts. Do not edit; run the Octonode SDK sync.
-import type { HostedApp, HostedAppState } from "./types.js";
+import type { HostedApp, HostedAppNavigationItem, HostedAppState } from "./types.js";
 import { HOSTED_APP_PROTOCOL } from "./constants.js";
 
 /** Only app-relative routes may cross the Studio boundary. */
@@ -59,6 +59,7 @@ export function connectHostedApp(): HostedApp {
     path: location.pathname + location.search + location.hash,
   };
   let disposed = false;
+  let navigation: HostedAppNavigationItem[] = [];
   const publish = (patch: Partial<HostedAppState>) => {
     state = { ...state, ...patch };
     listeners.forEach((listener) => listener());
@@ -104,6 +105,7 @@ export function connectHostedApp(): HostedApp {
     ) {
       publish({ status: "ready", token: message.token, expiresAt: message.expiresAt });
       send({ type: "ack" });
+      if (navigation.length) send({ type: "navigation", items: navigation });
     }
     if (message.type === "expired") publish({ status: "expired", token: undefined });
     if (message.type === "route") {
@@ -136,6 +138,15 @@ export function connectHostedApp(): HostedApp {
       if (!route) throw new Error("Expected an app-relative route");
       history[options.replace ? "replaceState" : "pushState"](null, "", route);
       dispatchEvent(new PopStateEvent("popstate"));
+    },
+    setNavigation(items) {
+      if (
+        items.length > 12 ||
+        items.some((item) => !item.label.trim() || item.label.length > 40 || !appRoute(item.path))
+      )
+        throw new Error("Expected up to 12 app-relative navigation items");
+      navigation = items;
+      if (state.status === "ready") send({ type: "navigation", items });
     },
     async fetch(input, init) {
       const url = new URL(input, location.href);

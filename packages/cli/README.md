@@ -59,7 +59,7 @@ octonodes app create my-plain-app --platform plain
 ```
 
 Vite and Next.js create a full app with a real framework page in `src/web/App.tsx`,
-sample project data, client-side navigation, and the verified `/api/context` and `/api/projects` backend routes. The CLI
+verified workspace content, a Projects route registered in Studio, and the verified `/api/context` and `/api/projects` backend routes. The CLI
 builds Vite or a Next.js static export into the same verified web artifact and
 serves it through the development tunnel. Next.js server features are outside
 this static export; add backend routes in `src/server.ts`.
@@ -67,8 +67,8 @@ Plain uses `src/welcome.html`, `src/hosted.ts`, and the same backend without Vit
 
 Generated workspaces include `installConfig.hoistingLimits: workspaces` for Yarn 4.
 The hosted SDK keeps normal browser history and mirrors embedded routes into Studio’s
-`appPath` query parameter. Development starts with no grants; use explicit sample data
-or approve temporary, selected-project access in Studio. See the
+`appPath` query parameter. Development starts with no grants; approve temporary,
+selected-project access in Studio to load project data. See the
 [Apps development guide](https://playbook.octonodes.com/docs/apps/development).
 
 ## Create and publish plugins

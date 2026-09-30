@@ -4,7 +4,7 @@ import { appContext } from "./project.js";
 import type { AppBridgeRequest, AppBridgeResponse, AppContext, AppGrant } from "./types.js";
 
 export type { AppBridgeRequest, AppBridgeResponse, AppContext, AppExecution, AppGrant, AppProject } from "./types.js";
-export type { HostedApp, HostedAppState } from "./types.js";
+export type { HostedApp, HostedAppNavigationItem, HostedAppState } from "./types.js";
 export { connectHostedApp, appRoute } from "./hosted.js";
 export { HOSTED_APP_PROTOCOL } from "./constants.js";
 

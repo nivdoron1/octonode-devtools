@@ -1,5 +1,7 @@
 import { createClient as createHttpClient } from "./gen/client";
 import { OctonodeApi } from "./gen/sdk.gen";
+import { dataTable } from "./data-tables/table";
+import type { DataTableScope } from "./data-tables/types";
 import { CLOUD_API_URL } from "./constants";
 
 export interface OctonodeClientOptions {
@@ -13,11 +15,11 @@ export class OctonodeClient extends OctonodeApi {
     this.configureOctonode(token, url, headers);
   }
 
-  configureOctonode(
-    token: string,
-    url = CLOUD_API_URL,
-    headers?: HeadersInit,
-  ): void {
+  table(tableId: string, scope: DataTableScope) {
+    return dataTable(this.client, tableId, scope);
+  }
+
+  configureOctonode(token: string, url = CLOUD_API_URL, headers?: HeadersInit): void {
     if (!token.trim()) throw new Error("token is required");
     const baseUrl = new URL(url);
     if (baseUrl.protocol !== "https:" && baseUrl.protocol !== "http:") {

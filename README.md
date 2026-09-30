@@ -40,8 +40,8 @@ npm test
 npm run dev
 ```
 
-The project contains `octonode.app.json`, a React page, a backend, sample data, routing, and a
-build check. Yarn workspaces use the generated `installConfig.hoistingLimits: workspaces`. `app dev` runs a live preview and automatically provisions a
+The project contains `octonode.app.json`, a React page, a backend, a Projects route, and a
+build check. The React page verifies the workspace session before showing content and registers its navigation in Studio. Yarn workspaces use the generated `installConfig.hoistingLimits: workspaces`. `app dev` runs a live preview and automatically provisions a
 verified HTTPS tunnel. It needs no Cloudflare account or separate tunnel install.
 Use `octonodes app dev --use-localhost` for offline UI work. To preview in a real
 workspace, run `octonodes login` and `octonodes app dev --workspace user:<id>`.

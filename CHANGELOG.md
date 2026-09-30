@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.17] - 2026-09-30
+
+### Added
+
+- Bind data tables to a workspace or project for typed row CRUD, pagination, and read-only SQL.
+- Verify hosted React app workspace sessions before rendering content and register navigation in Studio.
+
+### Changed
+
+- Generate React apps with verified workspace content and a Projects route.
+
 ## [0.2.15] - 2026-09-29
 
 ### Changed

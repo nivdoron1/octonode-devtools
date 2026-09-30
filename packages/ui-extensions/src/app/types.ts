@@ -8,10 +8,12 @@ export type HostedAppState = {
   expiresAt?: number;
   path: string;
 };
+export type HostedAppNavigationItem = { label: string; path: string };
 export type HostedApp = {
   getSnapshot(): HostedAppState;
   subscribe(listener: () => void): () => void;
   navigate(path: string, options?: { replace?: boolean }): void;
+  setNavigation(items: HostedAppNavigationItem[]): void;
   fetch(input: string, init?: RequestInit): Promise<Response>;
   dispose(): void;
 };
