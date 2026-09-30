@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, statSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, statSync, rmSync, symlinkSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { test } from "node:test";
@@ -33,7 +33,12 @@ test("platform scaffolds contain native entry points and keep the Octonode backe
         continue;
       }
       assert.ok(pkg.devDependencies[platform]);
-      assert.match(readFileSync(join(app, "src/web/App.tsx"), "utf8"), /connectHostedApp/);
+      assert.match(readFileSync(join(app, "src/web/App.tsx"), "utf8"), /OctonodeAppProvider/);
+      if (platform === "vite") {
+        symlinkSync(resolve("node_modules"), join(app, "node_modules"), process.platform === "win32" ? "junction" : "dir");
+        const types = spawnSync(process.execPath, [resolve("node_modules/typescript/bin/tsc"), "--noEmit"], { cwd: app, encoding: "utf8" });
+        assert.equal(types.status, 0, types.stderr || types.stdout);
+      }
       assert.match(readFileSync(join(app, "src/server.ts"), "utf8"), /connectAppServer/);
       assert.match(
         readFileSync(join(app, platform === "vite" ? "index.html" : "app/page.tsx"), "utf8"),

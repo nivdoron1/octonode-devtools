@@ -4,7 +4,7 @@ import { join, resolve } from "node:path";
 import { APP_SOURCE } from "./constants";
 import { appManifest, readAppSource } from "./source";
 import type { AppSource } from "./types";
-import { welcomeCss, welcomeHtml, welcomeReact } from "./welcome";
+import { appCss, welcomeHtml, welcomeReact } from "./welcome";
 
 const json = (value: unknown) => JSON.stringify(value, null, 2) + "\n";
 function extensionCode(target: "app.page" | "workspace.block") {
@@ -101,7 +101,7 @@ export default async function handle(request: Request): Promise<Response> {
       if (framework) {
         mkdirSync(join(root, "src/web"), { recursive: true });
         writeFileSync(join(root, "src/web/App.tsx"), welcomeReact(name));
-        writeFileSync(join(root, "src/web/welcome.css"), welcomeCss + "\n");
+        writeFileSync(join(root, "src/web/welcome.css"), appCss + "\n");
         if (platform === "vite") {
           writeFileSync(join(root, "index.html"), `<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name} · Octonode</title></head><body><div id="root"></div><script type="module" src="/src/web/main.tsx"></script></body></html>\n`);
           writeFileSync(join(root, "src/web/main.tsx"), 'import { createRoot } from "react-dom/client";\nimport App from "./App";\nimport "./welcome.css";\ncreateRoot(document.getElementById("root")!).render(<App />);\n');
@@ -183,8 +183,8 @@ An Octonode app created by \`octonodes app create\`. ${template === "full" ? "It
 ## Work locally
 
 Yarn workspaces use the generated \`installConfig.hoistingLimits: workspaces\`. Keep it
-and run \`yarn install\` at the workspace root. Full React apps include sample data
-and a Projects route; the SDK mirrors navigation into Studio without reloading.
+and run \`yarn install\` at the workspace root. Full React apps verify the
+workspace session before showing content and register a Projects route in Studio.
 
 \`\`\`sh
 npm install

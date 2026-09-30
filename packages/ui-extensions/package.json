@@ -1,6 +1,6 @@
 {
   "name": "@octonodes/ui-extensions",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "type": "module",
   "license": "MIT",
   "description": "Portable contracts and React primitives for Octonode plugin UI extensions.",
@@ -18,6 +18,10 @@
     "./app": {
       "types": "./dist/app/index.d.ts",
       "import": "./dist/app/index.js"
+    },
+    "./app/react": {
+      "types": "./dist/app/OctonodeAppProvider/index.d.ts",
+      "import": "./dist/app/OctonodeAppProvider/index.js"
     },
     "./app/server": {
       "types": "./dist/app/server.d.ts",

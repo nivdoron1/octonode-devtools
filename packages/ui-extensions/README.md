@@ -110,6 +110,12 @@ short-lived sessions through an origin-checked, window-bound handshake. Tokens s
 in memory. `app.fetch("/api/projects")` sends the bearer only to your own backend;
 that backend must still verify it with `connectAppServer` on every request.
 
+For React apps, wrap the workspace UI in `OctonodeAppProvider` from
+`@octonodes/ui-extensions/app/react`. It verifies `/api/context` before rendering
+children. Pass app-relative navigation items to display them in Studio's app sidebar.
+The generated server verifies this route with `connectAppServer`. A direct visit
+without a session shows an access message and no workspace UI.
+
 ```ts
 import { connectHostedApp } from "@octonodes/ui-extensions/app";
 const app = connectHostedApp();
@@ -128,7 +134,7 @@ actions and projects for one hour; heartbeats extend only the ten-minute idle
 session, not the consent. Source edits on the same host retain consent; host or
 action changes clear it. See the [development guide](https://playbook.octonodes.com/docs/apps/development).
 
-For standalone fallback pages, Octonode opens the registered application URL with `#octonode_session=…`. Read the fragment and immediately remove it using `history.replaceState`; keep the credential in memory. App backends can use `POST /api/apps/runtime/data` for consented project/table/row operations, and `POST /api/apps/runtime/executions` on the cloud gateway for workflow execution. Neither credential works as a general Octonode login. See the engine’s `docs/plugins.md` for request examples.
+The hosted page's HTML and static assets must be loadable before the iframe session handoff. Keep private workspace content behind the provider and private backend routes behind bearer verification. App backends can use `POST /api/apps/runtime/data` for consented project/table/row operations, and `POST /api/apps/runtime/executions` on the cloud gateway for workflow execution. Neither credential works as a general Octonode login. See the engine’s `docs/plugins.md` for request examples.
 
 For legacy self-hosted v1 apps, developers host app backends and versioned extension assets themselves. Octonode-managed app hosting is reserved for a future paid service. App release metadata pins extension URLs and SHA-256 digests; publishing metadata does not deploy a backend.
 
