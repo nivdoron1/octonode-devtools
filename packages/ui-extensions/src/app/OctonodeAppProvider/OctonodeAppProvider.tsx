@@ -1,5 +1,6 @@
 // Generated from packages/ui-extensions/src/app/OctonodeAppProvider/OctonodeAppProvider.tsx. Do not edit; run the Octonode SDK sync.
 import { createContext, useContext, useEffect, useState } from "react";
+import { AppAccessScreen } from "./AppAccessScreen/index.js";
 import { connectHostedApp } from "../hosted.js";
 import type { HostedApp, HostedAppState } from "../types.js";
 import type { OctonodeAppContext, OctonodeAppProviderProps } from "./OctonodeAppProvider.types.js";
@@ -43,7 +44,10 @@ export function OctonodeAppProvider({ children, navigation = defaultNavigation }
         if (!response.ok) throw new Error("Workspace access could not be verified");
         const context = (await response.json()) as { workspace?: OctonodeAppContext["workspace"] };
         if (!context.workspace?.kind || !context.workspace.id) throw new Error("Missing workspace scope");
-        if (!controller.signal.aborted) setVerified({ token, workspace: context.workspace });
+        if (!controller.signal.aborted) {
+          setVerified({ token, workspace: context.workspace });
+          setError(false);
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
@@ -51,10 +55,11 @@ export function OctonodeAppProvider({ children, navigation = defaultNavigation }
     return () => controller.abort();
   }, [bridge, session?.status, session?.token]);
 
-  if (error || session?.status === "standalone") return <p role="alert">Open this app from Octonode.</p>;
-  if (session?.status === "expired") return <p role="alert">Your session expired. Reopen the app from Octonode.</p>;
+  if (session?.status === "expired") return <AppAccessScreen status="expired" />;
+  if (error) return <AppAccessScreen status="error" />;
+  if (session?.status === "standalone") return <AppAccessScreen status="standalone" />;
   if (!bridge || !session || !verified || verified.token !== session.token)
-    return <p role="status">Connecting to Octonode…</p>;
+    return <AppAccessScreen status="connecting" />;
   return <Context.Provider value={{ bridge, session, workspace: verified.workspace }}>{children}</Context.Provider>;
 }
 

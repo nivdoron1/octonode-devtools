@@ -1,0 +1,22 @@
+{
+  "standaloneTitle": "ワークスペースまで、あとワンクリック。",
+  "standaloneDescription": "このアプリはOctonode内で利用できます。ワークスペースから開いて、プロジェクトに接続し、作業を続けましょう。",
+  "standaloneStatus": "ワークスペースへの接続が必要です",
+  "expiredTitle": "もう一度接続しましょう。",
+  "expiredDescription": "セッションの有効期限が切れました。Octonodeのワークスペースからこのアプリを開き直してください。",
+  "expiredStatus": "セッションの有効期限切れ",
+  "errorTitle": "ワークスペースに接続できませんでした。",
+  "errorDescription": "アクセスを確認できませんでした。Octonodeからアプリを開き直してください。問題が続く場合は、管理者にアクセス権の確認を依頼してください。",
+  "errorStatus": "接続に失敗しました",
+  "connectingTitle": "ワークスペースに接続しています。",
+  "connectingDescription": "セッションを確認し、このアプリをOctonodeに接続しています。まもなく準備が整います。",
+  "connectingStatus": "安全に接続中",
+  "open": "Octonodeを開く",
+  "about": "使い方",
+  "guide": "アプリガイド",
+  "hint": "ワークスペースで「アプリ」を開き、このアプリを選択してください。セッションが自動的に接続されます。",
+  "workspace": "ワークスペース",
+  "caption": "アプリとプロジェクトを、ひとつのワークスペースに。",
+  "footer": "Octonodeでつながるワークスペース。",
+  "help": "お困りですか？"
+}

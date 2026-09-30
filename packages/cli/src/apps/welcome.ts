@@ -6,14 +6,14 @@ export function welcomeHtml(name: string) {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name} · Octonode</title><style>${welcomeCss}</style></head><body><header class="top shell"><div class="brand"><img class="mark" src="${logoSrc}" alt=""/>octonode</div><a href="https://playbook.octonodes.com/docs/apps">App guide ↗</a></header><main class="hero shell"><div><div class="eyebrow">Your app is running</div><h1>Hello, <span>world.</span></h1><p class="intro">A small beginning for something useful. Your page and backend are ready to shape.</p><div class="actions"><a class="button" href="https://playbook.octonodes.com/docs/apps">Build your app</a><a class="button secondary" href="https://octonodes.com/studio">Open Studio</a></div><p class="steps">Start in <code>src/server.ts</code> · Add optional contributions with <code>app extension add</code></p></div><div class="stage"><div class="stage-title"><span>Connection map</span><span>${name}</span></div><div class="flow"><div class="node"><span class="node-symbol">◇</span><strong>Studio</strong></div><div class="wire"></div><div class="node main"><span class="node-symbol">◆</span><strong>Your app</strong></div><div class="wire"></div><div class="node"><span class="node-symbol">◈</span><strong>Backend</strong></div></div><div class="connection" role="status"><span id="message">Checking connection…</span></div></div></main><script>/* OCTONODE_HOSTED_BRIDGE */</script></body></html>`;
 }
 
-export const appCss = `:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#181721;background:#fff}*{box-sizing:border-box}body{margin:0;min-width:320px}.app-page{max-width:920px;padding:44px clamp(20px,5vw,64px)}h1{font-size:clamp(28px,3vw,40px);letter-spacing:-.04em;line-height:1.15;margin:0 0 12px}p{color:#5f6470;line-height:1.6}.eyebrow{font-size:13px;font-weight:700;color:#92513f;margin:0 0 12px}.project-list{list-style:none;margin:28px 0 0;padding:0;border:1px solid #e4e6ea;border-radius:12px;overflow:hidden}.project-list li{padding:16px 20px;border-bottom:1px solid #e4e6ea}.project-list li:last-child{border-bottom:0}.project-list strong{display:block}.project-list small{display:block;margin-top:4px;color:#5f6470;overflow-wrap:anywhere}`;
+export const appCss = `:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#181721;background:#fff}*{box-sizing:border-box}body{margin:0;min-width:320px}.app-navbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 24px;border-bottom:1px solid #e4e6ea}.app-navbar nav{display:flex;gap:8px;flex-wrap:wrap}.app-navbar a{color:#555b67;text-decoration:none;padding:8px 12px;border-radius:8px}.app-navbar a[aria-current=page]{background:#eceef1;color:#181721}.app-navbar a:focus-visible{outline:2px solid #b65b49}.app-page{max-width:920px;padding:44px clamp(20px,5vw,64px)}h1{font-size:clamp(28px,3vw,40px);letter-spacing:-.04em;line-height:1.15;margin:0 0 12px}p{color:#5f6470;line-height:1.6}.eyebrow{font-size:13px;font-weight:700;color:#92513f;margin:0 0 12px}.project-list{list-style:none;margin:28px 0 0;padding:0;border:1px solid #e4e6ea;border-radius:12px;overflow:hidden}.project-list li{padding:16px 20px;border-bottom:1px solid #e4e6ea}.project-list li:last-child{border-bottom:0}.project-list strong{display:block}.project-list small{display:block;margin-top:4px;color:#5f6470;overflow-wrap:anywhere}`;
 
 export function welcomeReact(name: string) {
   return `"use client";
 import { useEffect, useState } from "react";
 import { OctonodeAppProvider, useOctonodeApp } from "@octonodes/ui-extensions/app/react";
-const navigation = [{ label: "Projects", path: "/projects" }];
-function WorkspacePage() {
+const navigation = [{ label: "Overview", path: "/" }, { label: "Projects", path: "/projects" }];
+function WorkspacePage({ showNavbar }: { showNavbar: boolean }) {
   const { bridge, session, workspace } = useOctonodeApp();
   const [projects, setProjects] = useState<{ id: string; name: string }[]>([]);
   const [status, setStatus] = useState("Loading granted projects…");
@@ -30,15 +30,17 @@ function WorkspacePage() {
     return () => controller.abort();
   }, [bridge, session.token]);
   const projectsPage = session.path.split("?")[0] === "/projects";
-  return <main className="app-page">
+  return <>
+    {showNavbar && <header className="app-navbar"><strong>${name}</strong><nav aria-label="App navigation">{navigation.map(item => <a key={item.path} href={item.path} aria-current={session.path.split("?")[0] === item.path ? "page" : undefined} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); bridge.navigate(item.path); }}>{item.label}</a>)}</nav></header>}
+    <main className="app-page">
     <p className="eyebrow">${name}</p>
     <h1>{projectsPage ? "Projects" : "Workspace overview"}</h1>
     <p>Connected to {workspace.kind}:{workspace.id}</p>
     {projectsPage && <><p role="status">{status}</p><ul className="project-list">{projects.map(project => <li key={project.id}><strong>{project.name}</strong><small>{project.id}</small></li>)}</ul></>}
-  </main>;
+  </main></>;
 }
-export default function App() {
-  return <OctonodeAppProvider navigation={navigation}><WorkspacePage /></OctonodeAppProvider>;
+export default function App({ showNavbar = false }: { showNavbar?: boolean }) {
+  return <OctonodeAppProvider navigation={navigation}><WorkspacePage showNavbar={showNavbar} /></OctonodeAppProvider>;
 }
 `;
 }
