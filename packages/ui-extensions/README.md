@@ -123,7 +123,7 @@ The provider also shows connecting, expired-session, and verification-error stat
 Customizing this UI does not replace backend session and installation checks.
 
 In the Octonode source checkout, preview the screen with
-`yarn workspace @octonode/ui-extensions dev` at `http://127.0.0.1:5185/dev/`.
+`yarn workspace @octonode/ui-extensions dev` on port 5185, then open `/dev/` in your browser.
 Use `?state=expired`, `?state=connecting`, or `?state=error` to preview the other states.
 With that preview running, run `node --test packages/ui-extensions/tests/app-access.test.mjs`
 to check mobile reflow, private-content protection, and recovery after a refreshed token.
