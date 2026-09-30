@@ -112,9 +112,21 @@ that backend must still verify it with `connectAppServer` on every request.
 
 For React apps, wrap the workspace UI in `OctonodeAppProvider` from
 `@octonodes/ui-extensions/app/react`. It verifies `/api/context` before rendering
-children. Pass app-relative navigation items to display them in Studio's app sidebar.
+children. Pass every page route in `navigation`, including the overview (`/`), to
+display them in Studio's app sidebar. Studio does not discover routes from your
+hosting provider or browser router. An app can render its own top navbar inside
+the provider; this does not replace sidebar registration. The generated React
+app keeps its navbar off by default; render `<App showNavbar />` to enable it.
 The generated server verifies this route with `connectAppServer`. A direct visit
-without a session shows an access message and no workspace UI.
+without a session shows a translated access landing screen and no workspace UI.
+The provider also shows connecting, expired-session, and verification-error states.
+Customizing this UI does not replace backend session and installation checks.
+
+In the Octonode source checkout, preview the screen with
+`yarn workspace @octonode/ui-extensions dev` on port 5185, then open `/dev/` in your browser.
+Use `?state=expired`, `?state=connecting`, or `?state=error` to preview the other states.
+With that preview running, run `node --test packages/ui-extensions/tests/app-access.test.mjs`
+to check mobile reflow, private-content protection, and recovery after a refreshed token.
 
 ```ts
 import { connectHostedApp } from "@octonodes/ui-extensions/app";

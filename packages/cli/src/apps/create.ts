@@ -184,7 +184,10 @@ An Octonode app created by \`octonodes app create\`. ${template === "full" ? "It
 
 Yarn workspaces use the generated \`installConfig.hoistingLimits: workspaces\`. Keep it
 and run \`yarn install\` at the workspace root. Full React apps verify the
-workspace session before showing content and register a Projects route in Studio.
+workspace session before showing content and register Overview (\`/\`) and
+Projects (\`/projects\`) routes in Studio’s sidebar. The top navbar is optional: render
+\`<App showNavbar />\` in \`src/web/main.tsx\` to enable it for Vite, or render
+\`<App showNavbar />\` from \`app/page.tsx\` for Next.js. Sidebar registration is always enabled.
 
 \`\`\`sh
 npm install

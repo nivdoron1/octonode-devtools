@@ -1,0 +1,22 @@
+{
+  "standaloneTitle": "Tu espacio de trabajo está a un clic.",
+  "standaloneDescription": "Esta aplicación forma parte de Octonode. Ábrela desde tu espacio de trabajo para conectar tus proyectos y continuar donde lo dejaste.",
+  "standaloneStatus": "Se requiere conexión al espacio de trabajo",
+  "expiredTitle": "Vamos a conectarte de nuevo.",
+  "expiredDescription": "Tu sesión ha caducado. Vuelve a abrir esta aplicación desde tu espacio de trabajo de Octonode para continuar.",
+  "expiredStatus": "Sesión caducada",
+  "errorTitle": "No pudimos conectar tu espacio de trabajo.",
+  "errorDescription": "No pudimos verificar tu acceso. Vuelve a abrir la aplicación desde Octonode. Si el problema continúa, pide al responsable que revise tu acceso.",
+  "errorStatus": "Conexión fallida",
+  "connectingTitle": "Conectando con tu espacio de trabajo.",
+  "connectingDescription": "Estamos verificando tu sesión y conectando esta aplicación a Octonode. Tu espacio estará listo en breve.",
+  "connectingStatus": "Conexión segura en curso",
+  "open": "Abrir Octonode",
+  "about": "Cómo funciona",
+  "guide": "Guía de aplicaciones",
+  "hint": "En tu espacio de trabajo, abre Aplicaciones y selecciona esta aplicación. Tu sesión se conecta automáticamente.",
+  "workspace": "Tu espacio de trabajo",
+  "caption": "Tus aplicaciones. Tus proyectos. Un espacio conectado.",
+  "footer": "Un espacio de trabajo conectado con Octonode.",
+  "help": "¿Necesitas ayuda?"
+}

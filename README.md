@@ -59,7 +59,7 @@ host. The first publish returns `OCTONODE_APP_ID`; set it and
 `OCTONODE_API_URL` on the host before inviting installations. Publication does
 not deploy the backend. Read the [end-to-end Playbook](https://playbook.octonodes.com/docs/apps),
 [CLI app commands](packages/cli/README.md#create-an-app), and
-[app SDK guide](packages/ui-extensions/README.md#app-sdk-entry-points).
+[app SDK guide](packages/ui-extensions/README.md#hosted-pages-and-routing).
 
 ## Packages
 

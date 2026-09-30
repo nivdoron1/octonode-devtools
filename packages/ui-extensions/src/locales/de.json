@@ -1,0 +1,22 @@
+{
+  "standaloneTitle": "Dein Arbeitsbereich ist nur einen Klick entfernt.",
+  "standaloneDescription": "Diese App gehört zu Octonode. Öffne sie aus deinem Arbeitsbereich, um deine Projekte zu verbinden und weiterzuarbeiten.",
+  "standaloneStatus": "Verbindung zum Arbeitsbereich erforderlich",
+  "expiredTitle": "Verbinden wir dich erneut.",
+  "expiredDescription": "Deine Sitzung ist abgelaufen. Öffne diese App erneut aus deinem Octonode-Arbeitsbereich.",
+  "expiredStatus": "Sitzung abgelaufen",
+  "errorTitle": "Die Verbindung ist fehlgeschlagen.",
+  "errorDescription": "Dein Zugriff konnte nicht bestätigt werden. Öffne die App erneut aus Octonode. Falls das Problem bleibt, bitte die verantwortliche Person, deinen Zugriff zu prüfen.",
+  "errorStatus": "Verbindung fehlgeschlagen",
+  "connectingTitle": "Verbindung zum Arbeitsbereich wird hergestellt.",
+  "connectingDescription": "Wir prüfen deine Sitzung und verbinden diese App mit Octonode. Dein Arbeitsbereich ist gleich bereit.",
+  "connectingStatus": "Sichere Verbindung wird hergestellt",
+  "open": "Octonode öffnen",
+  "about": "So funktioniert’s",
+  "guide": "App-Leitfaden",
+  "hint": "Öffne Apps in deinem Arbeitsbereich und wähle diese App. Deine Sitzung wird automatisch verbunden.",
+  "workspace": "Dein Arbeitsbereich",
+  "caption": "Deine Apps. Deine Projekte. Ein verbundener Arbeitsbereich.",
+  "footer": "Ein verbundener Arbeitsbereich mit Octonode.",
+  "help": "Brauchst du Hilfe?"
+}

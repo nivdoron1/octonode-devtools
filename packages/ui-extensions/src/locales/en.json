@@ -1,0 +1,22 @@
+{
+  "standaloneTitle": "Your workspace is one click away.",
+  "standaloneDescription": "This app lives inside Octonode. Open it from your workspace to connect your projects and pick up where you left off.",
+  "standaloneStatus": "Workspace connection required",
+  "expiredTitle": "Let’s get you connected again.",
+  "expiredDescription": "Your session has expired. Reopen this app from your Octonode workspace to continue.",
+  "expiredStatus": "Session expired",
+  "errorTitle": "We couldn’t connect your workspace.",
+  "errorDescription": "Your workspace access could not be verified. Open the app again from Octonode. If this continues, ask your workspace owner to check your access.",
+  "errorStatus": "Connection unsuccessful",
+  "connectingTitle": "Connecting to your workspace.",
+  "connectingDescription": "We’re checking your session and connecting this app to Octonode. Your workspace will be ready here shortly.",
+  "connectingStatus": "Connecting securely",
+  "open": "Open Octonode",
+  "about": "How it works",
+  "guide": "App guide",
+  "hint": "In your workspace, open Apps and select this app. Your workspace session connects automatically.",
+  "workspace": "Your workspace",
+  "caption": "Your apps. Your projects. One connected workspace.",
+  "footer": "A connected workspace, powered by Octonode.",
+  "help": "Need a hand?"
+}
