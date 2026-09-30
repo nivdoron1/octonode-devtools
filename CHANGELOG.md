@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.18] - 2026-09-30
+
+### Fixed
+
+- Replace plain hosted-app access messages with a responsive landing screen for standalone, expired, connecting, and verification-error states, translated into all five supported languages.
+- Register Overview and Projects in the generated React app sidebar and provide an optional top navbar through `<App showNavbar />`.
+- Recover verified app content after a refreshed session succeeds and keep the public React entry point importable in Node.
+
 ## [0.2.17] - 2026-09-30
 
 ### Added
