@@ -1,5 +1,5 @@
 // Generated from packages/plugin-runtime/src/definitions/types.ts. Do not edit; run the Octonode SDK sync.
-import type { PluginManifestInput, PluginNode } from "../../schema/plugin-sdk";
+import type { PluginManifestInput, PluginNode, NpmClientDefinition } from "../../schema/plugin-sdk";
 
 export type NodeCustomization = Partial<
   Pick<
@@ -15,6 +15,7 @@ export type NodeCustomization = Partial<
     | "trigger"
     | "ui"
     | "bindings"
+    | "client"
     | "source"
     | "libraryExport"
   >
@@ -35,6 +36,8 @@ export interface NpmNodeHandle {
     exportName: string;
     moduleSpecifier?: string;
     methodPath?: string[];
+    client?: NpmClientDefinition;
+    outputStreams?: string[][];
     params: { name: string; required: boolean; rest: boolean; schema: Record<string, unknown> }[];
     inputsSchema: Record<string, unknown>;
     outputsSchema: Record<string, unknown>;
@@ -56,7 +59,13 @@ export interface ProjectDefinition {
   readonly nodes?: readonly NodeReference[];
 }
 
-export type PluginDefinition = Omit<PluginManifestInput, "nodes" | "library"> & {
+export type PluginDefinition = Omit<PluginManifestInput, "nodes" | "library" | "clients"> & {
+  readonly clients?: Readonly<
+    Record<
+      string,
+      NpmClientDefinition | { handle: NpmClientDefinition; label?: string; fields?: NpmClientDefinition["fields"] }
+    >
+  >;
   readonly nodes: readonly NodeReference[];
   readonly assets?: readonly string[];
   readonly library?: { readonly entry: string };

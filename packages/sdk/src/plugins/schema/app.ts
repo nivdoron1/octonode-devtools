@@ -1,5 +1,6 @@
 // Generated from packages/schema/src/app.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
+import { IconName } from "./icons.js";
 
 export const AppAction = z.enum(["projects:read", "data:read", "data:write", "workflows:run"]);
 export type AppAction = z.infer<typeof AppAction>;
@@ -32,6 +33,8 @@ const appUrl = z
     }
   }, "App URLs must use public HTTPS hostnames without credentials, query strings or fragments");
 
+export const AppIconUrl = appUrl;
+
 export const SelfHostedAppExtension = z
   .object({
     id: z
@@ -51,6 +54,7 @@ export const SelfHostedApp = z
     apiVersion: z.literal("1"),
     hosting: z.literal("self-hosted"),
     applicationUrl: appUrl,
+    icon: IconName.optional(),
     iconUrl: appUrl.optional(),
     privacyUrl: appUrl.optional(),
     supportUrl: appUrl.optional(),
@@ -92,6 +96,7 @@ export const ExtensionOnlyApp = z
   .object({
     apiVersion: z.literal("2"),
     hosting: z.literal("extension-only"),
+    icon: IconName.optional(),
     iconUrl: appUrl.optional(),
     settings: z
       .array(

@@ -429,6 +429,7 @@ export type GetApiMarketplaceAppsResponses = {
                 apiVersion: '1';
                 hosting: 'self-hosted';
                 applicationUrl: string;
+                icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
                 iconUrl?: string;
                 privacyUrl?: string;
                 supportUrl?: string;
@@ -444,6 +445,7 @@ export type GetApiMarketplaceAppsResponses = {
             } | {
                 apiVersion: '2';
                 hosting: 'extension-only';
+                icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
                 iconUrl?: string;
                 settings?: Array<{
                     id: string;
@@ -4329,6 +4331,7 @@ export type GetApiWorkflowsByWorkflowIdGraphResponses = {
             sourceExpressions?: {
                 [key: string]: string;
             };
+            hasSdkClient?: boolean;
             kind?: 'function' | 'class' | 'service' | 'const';
             setup?: {
                 [key: string]: unknown;
@@ -4623,6 +4626,7 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
                 sourceExpressions?: {
                     [key: string]: string;
                 };
+                hasSdkClient?: boolean;
                 kind?: 'function' | 'class' | 'service' | 'const';
                 setup?: {
                     [key: string]: unknown;
@@ -4807,6 +4811,7 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
                 sourceExpressions?: {
                     [key: string]: string;
                 };
+                hasSdkClient?: boolean;
                 kind?: 'function' | 'class' | 'service' | 'const';
                 setup?: {
                     [key: string]: unknown;
@@ -5066,6 +5071,9 @@ export type GetApiMarketplacePluginsByIdData = {
         q?: string;
         offset?: number;
         limit?: number;
+        version?: string;
+        versionOffset?: number;
+        versionLimit?: number;
         scope?: string;
     };
     url: '/api/marketplace/plugins/{id}';
@@ -5087,6 +5095,7 @@ export type GetApiMarketplacePluginsByIdResponses = {
      * Success
      */
     200: {
+        installedAt?: number | null;
         id: string;
         name: string;
         version: string;
@@ -5142,11 +5151,18 @@ export type GetApiMarketplacePluginsByIdResponses = {
                 };
             };
         }>;
+        nextVersionOffset?: number | null;
         library?: {
             format: 1;
             entry: 'library/index.js';
             types: 'library/index.d.ts';
             exports: Array<string>;
+        };
+        contents?: {
+            types: Array<string>;
+            services: Array<string>;
+            constants: Array<string>;
+            classes: Array<string>;
         };
         official?: boolean;
         installCount?: number;
@@ -5213,6 +5229,7 @@ export type GetApiPluginsResponses = {
      * Success
      */
     200: Array<{
+        installedAt?: number | null;
         id: string;
         name: string;
         version: string;
@@ -5278,6 +5295,12 @@ export type GetApiPluginsSearchData = {
     path?: never;
     query?: {
         q?: string;
+        category?: string;
+        source?: 'store' | 'workspace' | 'project' | 'user';
+        sort?: 'name' | 'installed' | 'nodes';
+        direction?: 'asc' | 'desc';
+        installedAfter?: string;
+        installedBefore?: string;
         offset?: number;
         limit?: number;
         global?: 'true';
@@ -5291,7 +5314,11 @@ export type GetApiPluginsSearchResponses = {
      * Success
      */
     200: {
+        facets: {
+            categories: Array<string>;
+        };
         items: Array<{
+            installedAt?: number | null;
             id: string;
             name: string;
             version: string;
@@ -5466,6 +5493,7 @@ export type GetApiPluginsByPluginIdResponses = {
      * Success
      */
     200: {
+        installedAt?: number | null;
         id: string;
         name: string;
         version: string;
@@ -5530,6 +5558,12 @@ export type GetApiPluginsByPluginIdResponses = {
             entry: 'library/index.js';
             types: 'library/index.d.ts';
             exports: Array<string>;
+        };
+        contents?: {
+            types: Array<string>;
+            services: Array<string>;
+            constants: Array<string>;
+            classes: Array<string>;
         };
         installed: true;
         connections?: {
@@ -5659,6 +5693,7 @@ export type PostApiPluginsByPluginIdNodesByNodeIdAddResponses = {
             sourceExpressions?: {
                 [key: string]: string;
             };
+            hasSdkClient?: boolean;
             kind?: 'function' | 'class' | 'service' | 'const';
             setup?: {
                 [key: string]: unknown;

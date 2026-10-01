@@ -1,6 +1,6 @@
 // Generated from packages/schema/src/ipc-envelope.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
-import { IconName } from "./icons";
+import { IconValue } from "./icons";
 
 /**
  * The IPC protocol version. Every envelope carries this in its `octonode`
@@ -136,7 +136,7 @@ export const NodeManifest = z.object({
   /** Setup params for non-function kinds (constructor/config shape). */
   setup: JsonSchema.optional(),
   /** Advisory default icon — a one-time seed; config owns it thereafter. */
-  icon: IconName.optional(),
+  icon: IconValue.optional(),
   /** Advisory default config — a one-time seed; config owns it thereafter. */
   config: z.record(z.unknown()).optional(),
   /** Explicit service exposure. Plain classes never populate this field. */

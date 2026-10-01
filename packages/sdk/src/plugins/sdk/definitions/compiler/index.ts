@@ -2,7 +2,7 @@
 import * as ts from "typescript";
 import { existsSync, realpathSync } from "node:fs";
 import { dirname, isAbsolute, relative, resolve } from "node:path";
-import { PluginManifest, PluginNode } from "../../../schema/plugin-sdk";
+import { PluginManifest, PluginNode, NpmClientDefinition } from "../../../schema/plugin-sdk";
 import {
   DEFINITION_FILENAME,
   PLUGIN_FILENAME,
@@ -260,7 +260,11 @@ export function compileDefinition(
         exportName: npm.descriptor.exportName,
         symbol: npm.descriptor.id,
         parameters: [],
-        customization: { description: npm.descriptor.description, ...customization },
+        customization: {
+          description: npm.descriptor.description,
+          ...(npm.descriptor.client ? { client: npm.descriptor.exportName } : {}),
+          ...customization,
+        },
         inputs,
         outputs: npm.descriptor.outputsSchema,
         npm,
@@ -365,11 +369,57 @@ export function compileDefinition(
     }
     nodes.push(node);
   }
+  const clientMetadata = fields.get("clients");
+  const declaredClients = clientMetadata
+    ? Object.fromEntries(
+        properties(clientMetadata).map(([key, expression]) => {
+          const values = new Map(properties(expression));
+          const handle = values.get("handle");
+          if (!handle) return [key, NpmClientDefinition.parse(literal(expression))];
+          if (!ts.isPropertyAccessExpression(handle) || !ts.isIdentifier(handle.expression))
+            throw new Error("Client handles must use clients.name from octonode.nodes.ts");
+          const imported = imports.get(handle.expression.text);
+          if (
+            imported?.name !== "clients" ||
+            resolve(
+              root,
+              ts.resolveModuleName(imported.module, entry, options, ts.sys).resolvedModule?.resolvedFileName ?? "",
+            ) !== resolve(root, NODES_FILENAME)
+          )
+            throw new Error("Import clients directly from octonode.nodes.ts");
+          const declaration = checker
+            .getTypeAtLocation(handle.expression)
+            .getProperty(handle.name.text)?.valueDeclaration;
+          if (!declaration || !ts.isPropertyAssignment(declaration)) throw new Error("Unknown generated client handle");
+          const overrides = Object.fromEntries(
+            [...values].filter(([name]) => name !== "handle").map(([name, value]) => [name, literal(value)]),
+          );
+          if (Object.keys(overrides).some((name) => !["label", "fields"].includes(name)))
+            throw new Error("Client overrides support label and fields only");
+          return [
+            key,
+            NpmClientDefinition.parse({ ...NpmClientDefinition.parse(literal(declaration.initializer)), ...overrides }),
+          ];
+        }),
+      )
+    : {};
+  for (const node of nodes)
+    if (node.npm?.descriptor.client) {
+      const name = node.customization.client ?? node.exportName;
+      const original = NpmClientDefinition.parse(node.npm.descriptor.client);
+      const declared = declaredClients[name];
+      if (declared) {
+        const { label: _label, fields: _fields, ...identity } = declared;
+        if (JSON.stringify(identity) !== JSON.stringify(original))
+          throw new Error("Client definition must match the generated inventory");
+      } else declaredClients[name] = original;
+    }
   const metadata = Object.fromEntries(
-    [...fields].filter(([key]) => key !== "nodes").map(([key, value]) => [key, literal(value)]),
+    [...fields].filter(([key]) => key !== "nodes" && key !== "clients").map(([key, value]) => [key, literal(value)]),
   );
   if (kind === "project" && Object.keys(metadata).length) throw new Error("defineProject accepts only nodes");
   const { assets = [], library, ...pluginMetadata } = metadata;
+  if (Object.keys(declaredClients).length) pluginMetadata.clients = declaredClients;
   const npm = nodes.find((node) => node.npm)?.npm;
   const npmOnly =
     nodes.length > 0 &&
@@ -429,6 +479,11 @@ export function compileDefinition(
       npmDependencies: unique,
     };
   }
+  if (nodes.some((node) => node.npm?.descriptor.client)) {
+    const permissions = (pluginMetadata.permissions ?? []) as Array<{ resource: string; access: string }>;
+    if (!permissions.some((permission) => permission.resource === "project_data"))
+      pluginMetadata.permissions = [...permissions, { resource: "project_data", access: "read" }];
+  }
   let libraryEntry: { entry: string } | undefined;
   if (library !== undefined) {
     if (
@@ -485,7 +540,13 @@ export function compileDefinition(
                       module: node.npm.descriptor.moduleSpecifier ?? node.npm.packageName,
                       export: node.exportName,
                       ...(node.npm.descriptor.methodPath ? { methodPath: node.npm.descriptor.methodPath } : {}),
+                      ...(node.npm.descriptor.outputStreams
+                        ? { outputStreams: node.npm.descriptor.outputStreams }
+                        : {}),
                       parameters: node.npm.descriptor.params.map((param) => param.name),
+                      ...(node.npm.descriptor.params.some((param) => param.rest)
+                        ? { rest: node.npm.descriptor.params.find((param) => param.rest)!.name }
+                        : {}),
                     }
                   : { module: node.path, export: node.exportName, parameters: node.parameters },
                 inputs: node.inputs,

@@ -1416,6 +1416,64 @@
                                     "type": "string",
                                     "format": "uri"
                                   },
+                                  "icon": {
+                                    "type": "string",
+                                    "enum": [
+                                      "arrow-up-down",
+                                      "binary",
+                                      "bomb",
+                                      "boxes",
+                                      "braces",
+                                      "calculator",
+                                      "calendar",
+                                      "camera",
+                                      "clock",
+                                      "code",
+                                      "copy-x",
+                                      "database",
+                                      "dices",
+                                      "filter",
+                                      "flag",
+                                      "flask",
+                                      "function",
+                                      "git-branch",
+                                      "git-merge",
+                                      "group",
+                                      "hook",
+                                      "list-filter",
+                                      "merge",
+                                      "octagon-x",
+                                      "package",
+                                      "package-x",
+                                      "pencil",
+                                      "play",
+                                      "regex",
+                                      "repeat",
+                                      "replace",
+                                      "ruler",
+                                      "scan-eye",
+                                      "scissors",
+                                      "search",
+                                      "server-cog",
+                                      "settings",
+                                      "sigma",
+                                      "split",
+                                      "terminal",
+                                      "test-tube",
+                                      "text-cursor-input",
+                                      "ticket",
+                                      "truck",
+                                      "type",
+                                      "typescript",
+                                      "ungroup",
+                                      "variable",
+                                      "wand",
+                                      "wave",
+                                      "webhook",
+                                      "workflow",
+                                      "x"
+                                    ]
+                                  },
                                   "iconUrl": {
                                     "type": "string",
                                     "format": "uri"
@@ -1509,6 +1567,64 @@
                                   "hosting": {
                                     "type": "string",
                                     "const": "extension-only"
+                                  },
+                                  "icon": {
+                                    "type": "string",
+                                    "enum": [
+                                      "arrow-up-down",
+                                      "binary",
+                                      "bomb",
+                                      "boxes",
+                                      "braces",
+                                      "calculator",
+                                      "calendar",
+                                      "camera",
+                                      "clock",
+                                      "code",
+                                      "copy-x",
+                                      "database",
+                                      "dices",
+                                      "filter",
+                                      "flag",
+                                      "flask",
+                                      "function",
+                                      "git-branch",
+                                      "git-merge",
+                                      "group",
+                                      "hook",
+                                      "list-filter",
+                                      "merge",
+                                      "octagon-x",
+                                      "package",
+                                      "package-x",
+                                      "pencil",
+                                      "play",
+                                      "regex",
+                                      "repeat",
+                                      "replace",
+                                      "ruler",
+                                      "scan-eye",
+                                      "scissors",
+                                      "search",
+                                      "server-cog",
+                                      "settings",
+                                      "sigma",
+                                      "split",
+                                      "terminal",
+                                      "test-tube",
+                                      "text-cursor-input",
+                                      "ticket",
+                                      "truck",
+                                      "type",
+                                      "typescript",
+                                      "ungroup",
+                                      "variable",
+                                      "wand",
+                                      "wave",
+                                      "webhook",
+                                      "workflow",
+                                      "x"
+                                    ]
                                   },
                                   "iconUrl": {
                                     "type": "string",
@@ -10164,6 +10280,7 @@
                         "position"
                       ]
                     },
+                    "maxItems": 64,
                     "default": []
                   }
                 },
@@ -10598,7 +10715,8 @@
                         "type",
                         "position"
                       ]
-                    }
+                    },
+                    "maxItems": 64
                   }
                 }
               }
@@ -14445,6 +14563,9 @@
                               "type": "string"
                             }
                           },
+                          "hasSdkClient": {
+                            "type": "boolean"
+                          },
                           "kind": {
                             "type": "string",
                             "enum": [
@@ -15255,6 +15376,9 @@
                                   "type": "string"
                                 }
                               },
+                              "hasSdkClient": {
+                                "type": "boolean"
+                              },
                               "kind": {
                                 "type": "string",
                                 "enum": [
@@ -16033,6 +16157,9 @@
                                 "additionalProperties": {
                                   "type": "string"
                                 }
+                              },
+                              "hasSdkClient": {
+                                "type": "boolean"
                               },
                               "kind": {
                                 "type": "string",
@@ -17255,6 +17382,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "installedAt": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
                     "id": {
                       "type": "string"
                     },
@@ -17460,6 +17593,12 @@
                         ]
                       }
                     },
+                    "nextVersionOffset": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
                     "library": {
                       "type": "object",
                       "properties": {
@@ -17487,6 +17626,41 @@
                         "entry",
                         "types",
                         "exports"
+                      ]
+                    },
+                    "contents": {
+                      "type": "object",
+                      "properties": {
+                        "types": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "services": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "constants": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "classes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "types",
+                        "services",
+                        "constants",
+                        "classes"
                       ]
                     },
                     "official": {
@@ -17761,6 +17935,32 @@
           },
           {
             "in": "query",
+            "name": "version",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionOffset",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionLimit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "in": "query",
             "name": "scope",
             "schema": {
               "type": "string"
@@ -17794,6 +17994,12 @@
                   "items": {
                     "type": "object",
                     "properties": {
+                      "installedAt": {
+                        "type": [
+                          "number",
+                          "null"
+                        ]
+                      },
                       "id": {
                         "type": "string"
                       },
@@ -18050,11 +18256,31 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "facets": {
+                      "type": "object",
+                      "properties": {
+                        "categories": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "categories"
+                      ]
+                    },
                     "items": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
+                          "installedAt": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
                           "id": {
                             "type": "string"
                           },
@@ -18281,6 +18507,7 @@
                     }
                   },
                   "required": [
+                    "facets",
                     "items",
                     "total",
                     "offset",
@@ -18295,6 +18522,65 @@
           {
             "in": "query",
             "name": "q",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          {
+            "in": "query",
+            "name": "source",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "store",
+                "workspace",
+                "project",
+                "user"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "installed",
+                "nodes"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "installedAfter",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "installedBefore",
             "schema": {
               "type": "string"
             }
@@ -18610,6 +18896,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "installedAt": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
                     "id": {
                       "type": "string"
                     },
@@ -18857,6 +19149,41 @@
                         "entry",
                         "types",
                         "exports"
+                      ]
+                    },
+                    "contents": {
+                      "type": "object",
+                      "properties": {
+                        "types": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "services": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "constants": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "classes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "types",
+                        "services",
+                        "constants",
+                        "classes"
                       ]
                     },
                     "installed": {
@@ -19257,6 +19584,9 @@
                           "additionalProperties": {
                             "type": "string"
                           }
+                        },
+                        "hasSdkClient": {
+                          "type": "boolean"
                         },
                         "kind": {
                           "type": "string",

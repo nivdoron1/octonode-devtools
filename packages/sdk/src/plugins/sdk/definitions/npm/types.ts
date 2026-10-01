@@ -1,6 +1,6 @@
 // Generated from packages/plugin/src/npm/types.ts. Do not edit; run the Octonode SDK sync.
 // packages/plugin/src/npm/types.ts
-import type { NpmClientBinding } from "../../../schema/plugin-sdk";
+import type { NpmClientBinding, NpmClientDefinition, NpmSdkExport } from "../../../schema/plugin-sdk";
 
 export interface NpmPackageMeta {
   /** Real npm package name (e.g. "@scope/pkg"). */
@@ -10,6 +10,10 @@ export interface NpmPackageMeta {
   /** Resolved, pinned version. */
   version: string;
   description?: string;
+  author?: string;
+  license?: string;
+  homepage?: string;
+  repository?: string;
   /** Entry type-declaration file, or null when the package ships no types. */
   dtsPath: string | null;
   /** Fallback export names discovered at runtime when dtsPath is null. */
@@ -28,8 +32,11 @@ export interface NpmParam {
 export interface NpmNodeDescriptor {
   id: string;
   moduleSpecifier?: string;
-  /** Static properties on a zero-argument factory result, ending at the method to invoke. */
+  /** Static properties on a constructor/factory result, ending at the method to invoke. */
   methodPath?: string[];
+  client?: NpmClientDefinition;
+  /** Async iterable output locations collected into bounded JSON arrays. */
+  outputStreams?: string[][];
   bindings?: Record<string, NpmClientBinding>;
   /** Export name on the package; "default" for the default export; "" for the generic call node. */
   exportName: string;
@@ -44,6 +51,11 @@ export interface NpmNodeDescriptor {
   permissive?: boolean;
 }
 
+export interface NpmOutputStreams {
+  paths: string[][];
+  path: string[];
+}
+
 export interface CompiledNpmPlugin {
   /** A valid octonode.plugin.json object. */
   manifest: Record<string, unknown>;
@@ -52,6 +64,8 @@ export interface CompiledNpmPlugin {
   packageVersion: string;
   nodes: NpmNodeDescriptor[];
   warnings: string[];
+  clients?: Record<string, NpmClientDefinition>;
+  sdkExports?: NpmSdkExport[];
 }
 
 export interface NpmGenerateOptions {
@@ -65,6 +79,10 @@ export interface NpmGenerateOptions {
   description?: string;
   version?: string;
   include?: string[];
+  /** Discover public typed client methods without executing upstream code. */
+  discoverClients?: boolean;
+  /** Zero-based constructor/factory overload per exported client name. */
+  overloads?: Record<string, number>;
   exclude?: string[];
   dir?: string;
   force?: boolean;

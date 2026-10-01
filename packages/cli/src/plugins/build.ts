@@ -67,6 +67,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
     ...(release
       ? {
           version: release.version,
+          ...(!definition.manifest.icon && release.icon ? { icon: release.icon } : {}),
           scope: [pluginReleaseScope(release)],
           ...(release.contributors ? { contributors: release.contributors } : {}),
         }
