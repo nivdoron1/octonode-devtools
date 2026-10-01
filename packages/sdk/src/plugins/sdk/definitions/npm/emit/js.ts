@@ -1,6 +1,7 @@
 // Generated from packages/plugin/src/npm/emit/js.ts. Do not edit; run the Octonode SDK sync.
 // packages/plugin/src/npm/emit/js.ts
 import type { CompiledNpmPlugin, NpmNodeDescriptor } from "../types";
+import { clientOutputSource } from "../../clients/output";
 
 /** Render the single IPC adapter used by every node extracted from a package. */
 function runner(plan: CompiledNpmPlugin): string {
@@ -40,6 +41,7 @@ function toJson(value) {
     throw new NodeError("npm export returned a value that is not JSON-serializable", "VALIDATION_ERROR");
   }
 }
+${plan.nodes.some((node) => node.outputStreams?.length) ? clientOutputSource("javascript") : ""}
 const NODES = ${JSON.stringify(descriptors, null, 2)};
 const node = NODES[process.argv[2]];
 if (require.main === module && !node) throw new Error('unknown generated npm node "' + process.argv[2] + '"');
@@ -172,7 +174,7 @@ function nodeBody(node: NpmNodeDescriptor): string {
   const argsLines = node.permissive
     ? `  const args = Array.isArray(inputs.args) ? inputs.args : [];`
     : `  const args = ${JSON.stringify(positional)}.map((n) => Object.hasOwn(bound, n) ? bound[n] : inputs[n]);
-  while (args.length && args[args.length - 1] === undefined) args.pop();${
+  ${rest ? `if (!inputs[${JSON.stringify(rest.name)}]?.length) ` : ""}while (args.length && args[args.length - 1] === undefined) args.pop();${
     rest
       ? `
   if (Array.isArray(inputs[${JSON.stringify(rest.name)}])) args.push(...inputs[${JSON.stringify(rest.name)}]);`
@@ -183,7 +185,8 @@ function nodeBody(node: NpmNodeDescriptor): string {
   let fn = resolveExport(pkg, ${JSON.stringify(node.exportName)});
   if (node.methodPath) {
     if (typeof fn !== "function") throw new NodeError("SDK client factory is unavailable", "VALIDATION_ERROR");
-    receiver = await fn();
+    if (node.client?.parameters.some(parameter => parameter.required)) throw new NodeError("Configure or attach a client in the node form before running", "VALIDATION_ERROR");
+    receiver = node.client?.construction === "new" ? new fn() : await fn();
     for (const segment of node.methodPath.slice(0, -1)) {
       receiver = receiver && receiver[segment];
       if (receiver == null) throw new NodeError("SDK client method is unavailable", "VALIDATION_ERROR");
@@ -194,7 +197,8 @@ function nodeBody(node: NpmNodeDescriptor): string {
     throw new NodeError('export ${node.exportName} is not a function', "VALIDATION_ERROR");
   }
 ${argsLines}
-  return { result: toJson(await (node.methodPath ? fn.apply(receiver, args) : fn(...args))), dryRun: false };`;
+  const result = await (node.methodPath ? fn.apply(receiver, args) : fn(...args));
+  return { result: toJson(${node.outputStreams?.length ? `await __collectClientOutput(result, ${JSON.stringify(node.outputStreams)})` : "result"}), dryRun: false };`;
 }
 
 /** Render every generated file for the plugin (paths relative to the plugin folder). */

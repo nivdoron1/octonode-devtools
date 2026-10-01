@@ -1,5 +1,6 @@
 // Generated from packages/schema/src/plugin/publishing.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
+import { IconValue } from "../icons";
 import { PluginVersion } from "./version";
 
 export const PluginConfigPath = z
@@ -19,6 +20,7 @@ export const PluginReleaseConfig = z
       .max(128)
       .regex(/^[a-z0-9][a-z0-9-]*$/),
     version: PluginVersion,
+    icon: IconValue.optional(),
     scope: z.enum(["user", "team", "organization", "public"]),
     teamId: z.string().min(1).max(128).optional(),
     orgId: z.string().min(1).max(128).optional(),

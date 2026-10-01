@@ -1,5 +1,7 @@
 // Generated from engine plugin authoring. Do not edit.
 export const BUILD_RECORD = "octonode-build.json";
+export const REVISION_RUNNER_MARKER = "// Octonode metadata revision runner";
+export const REVISION_IMPLEMENTATION = "dist/implementation.cjs";
 export const DEFINITION_FILES = ["octonode.yml", "octonode.yaml", "octonode.json", "octonode.plugin.json"];
 export const FORBIDDEN_PART =
   /^(?:\.env(?:\..*)?|\.git|\.npmrc|\.pypirc|\.netrc|\.git-credentials|node_modules)$|\.(?:pem|key|p12)$/i;

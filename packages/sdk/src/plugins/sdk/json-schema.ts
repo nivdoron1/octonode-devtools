@@ -24,6 +24,13 @@ export function validate(schema: JsonSchema | undefined, data: unknown): Validat
 }
 
 function walk(schema: JsonSchema, data: unknown, path: string, errors: ValidationError[]): void {
+  if (
+    Array.isArray(schema.anyOf) &&
+    !schema.anyOf.some((branch) => isPlainObject(branch) && validate(branch, data).length === 0)
+  ) {
+    errors.push({ path, message: "value does not match any allowed shape" });
+    return;
+  }
   const allowed = normalizeTypes(schema.type);
   if (allowed.length > 0 && !allowed.some((t) => matchesType(t, data))) {
     errors.push({ path, message: `expected type ${allowed.join("|")}, got ${jsonType(data)}` });
@@ -46,6 +53,13 @@ function walk(schema: JsonSchema, data: unknown, path: string, errors: Validatio
           walk(sub as JsonSchema, (data as Record<string, unknown>)[key], `${path}.${key}`, errors);
         }
       }
+    }
+    for (const [key, value] of Object.entries(data)) {
+      if (props && Object.hasOwn(props, key)) continue;
+      if (schema.additionalProperties === false)
+        errors.push({ path: `${path}.${key}`, message: "unexpected property" });
+      else if (isPlainObject(schema.additionalProperties))
+        walk(schema.additionalProperties, value, `${path}.${key}`, errors);
     }
   }
 

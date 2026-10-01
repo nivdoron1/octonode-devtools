@@ -94,7 +94,7 @@ var require_icons = __commonJS({
   "packages/schema/dist/icons.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.IconName = exports2.ICON_NAMES = void 0;
+    exports2.IconValue = exports2.HostedIconUrl = exports2.IconName = exports2.ICON_NAMES = void 0;
     var zod_1 = require("zod");
     exports2.ICON_NAMES = [
       "arrow-up-down",
@@ -152,6 +152,15 @@ var require_icons = __commonJS({
       "x"
     ];
     exports2.IconName = zod_1.z.enum(exports2.ICON_NAMES);
+    exports2.HostedIconUrl = zod_1.z.string().max(2048).url().refine((value) => {
+      try {
+        const url = new URL(value);
+        return /^https:\/\//i.test(value) && !/[\p{Cc}\s\\]/u.test(value) && url.protocol === "https:" && !url.username && !url.password;
+      } catch {
+        return false;
+      }
+    }, "Icon images must use an HTTPS URL without credentials");
+    exports2.IconValue = zod_1.z.union([exports2.IconName, exports2.HostedIconUrl]);
   }
 });
 
@@ -246,7 +255,7 @@ var require_ipc_envelope = __commonJS({
       /** Setup params for non-function kinds (constructor/config shape). */
       setup: exports2.JsonSchema.optional(),
       /** Advisory default icon — a one-time seed; config owns it thereafter. */
-      icon: icons_1.IconName.optional(),
+      icon: icons_1.IconValue.optional(),
       /** Advisory default config — a one-time seed; config owns it thereafter. */
       config: zod_1.z.record(zod_1.z.unknown()).optional(),
       /** Explicit service exposure. Plain classes never populate this field. */
@@ -830,8 +839,9 @@ var require_constants = __commonJS({
   "packages/schema/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PLUGIN_PUBLISH_MAX_BYTES = exports2.PLUGIN_CONFIG_MAX_BYTES = exports2.PLUGIN_PUBLISH_AUDIENCE = exports2.PLUGIN_RELEASE_FILES = exports2.CAPABILITY_UNAVAILABLE_REASONS = exports2.CAPABILITY_MODES = exports2.PLATFORM_CAPABILITIES = exports2.SOURCE_CONTROL_REGION_KINDS = exports2.TASK_RELEASE_STATES = exports2.TASK_SPRINT_STATES = exports2.TASK_LINK_TYPES = exports2.TASK_VIEW_SORTS = exports2.TASK_VIEW_GROUPS = exports2.TASK_VIEW_LAYOUTS = exports2.TASK_FIELD_TYPES = exports2.WORK_ITEM_PRIORITIES = exports2.BUILTIN_WORK_ITEM_TYPES = exports2.WORK_ITEM_LEVELS = exports2.TASK_STATUS_CATEGORIES = exports2.TASK_SPACE_TEMPLATES = exports2.COLLABORATION_ACTIONS = exports2.AGENT_TOOL_RISKS = exports2.AGENT_ERROR_CODES = exports2.AGENT_RUN_STATUSES = exports2.WORKSPACE_ACTIONS = exports2.SETTINGS_SECTIONS = exports2.SETTINGS_API_VERSION = exports2.MARKETPLACE_SCOPES = exports2.PLUGIN_DEFINITION_FILENAMES = exports2.PLUGIN_MANIFEST_FILENAME = exports2.COMMUNITY_MEDIA_TYPES = exports2.COMMUNITY_MEDIA_BODY_BYTES = exports2.COMMUNITY_MEDIA_VIDEO_BYTES = exports2.COMMUNITY_MEDIA_IMAGE_BYTES = exports2.PROJECT_JOB_PROTOCOL = exports2.PLUGIN_SCHEMA_VERSION = void 0;
+    exports2.PLUGIN_PUBLISH_MAX_BYTES = exports2.PLUGIN_CONFIG_MAX_BYTES = exports2.PLUGIN_PUBLISH_AUDIENCE = exports2.PLUGIN_RELEASE_FILES = exports2.CAPABILITY_UNAVAILABLE_REASONS = exports2.CAPABILITY_MODES = exports2.PLATFORM_CAPABILITIES = exports2.SOURCE_CONTROL_REGION_KINDS = exports2.TASK_RELEASE_STATES = exports2.TASK_SPRINT_STATES = exports2.TASK_LINK_TYPES = exports2.TASK_VIEW_SORTS = exports2.TASK_VIEW_GROUPS = exports2.TASK_VIEW_LAYOUTS = exports2.TASK_FIELD_TYPES = exports2.WORK_ITEM_PRIORITIES = exports2.BUILTIN_WORK_ITEM_TYPES = exports2.WORK_ITEM_LEVELS = exports2.TASK_STATUS_CATEGORIES = exports2.TASK_SPACE_TEMPLATES = exports2.COLLABORATION_ACTIONS = exports2.AGENT_TOOL_RISKS = exports2.AGENT_ERROR_CODES = exports2.AGENT_RUN_STATUSES = exports2.WORKSPACE_ACTIONS = exports2.SETTINGS_SECTIONS = exports2.SETTINGS_API_VERSION = exports2.MARKETPLACE_SCOPES = exports2.PLUGIN_DEFINITION_FILENAMES = exports2.PLUGIN_MANIFEST_FILENAME = exports2.COMMUNITY_MEDIA_TYPES = exports2.COMMUNITY_MEDIA_BODY_BYTES = exports2.COMMUNITY_MEDIA_VIDEO_BYTES = exports2.COMMUNITY_MEDIA_IMAGE_BYTES = exports2.PROJECT_JOB_PROTOCOL = exports2.PLUGIN_DEFAULT_LICENSE = exports2.PLUGIN_SCHEMA_VERSION = void 0;
     exports2.PLUGIN_SCHEMA_VERSION = "1";
+    exports2.PLUGIN_DEFAULT_LICENSE = "MIT";
     exports2.PROJECT_JOB_PROTOCOL = "octonode.project-job.v1";
     exports2.COMMUNITY_MEDIA_IMAGE_BYTES = 8 * 1024 * 1024;
     exports2.COMMUNITY_MEDIA_VIDEO_BYTES = 20 * 1024 * 1024;
@@ -907,6 +917,7 @@ var require_constants = __commonJS({
       "failed"
     ];
     exports2.AGENT_ERROR_CODES = [
+      "engine_incompatible",
       "provider_not_configured",
       "service_unavailable",
       "provider_rate_limited",
@@ -1226,8 +1237,9 @@ var require_app = __commonJS({
   "packages/schema/dist/app.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.appTunnelRegistrationSchema = exports2.AppDefinition = exports2.ExtensionOnlyApp = exports2.SelfHostedApp = exports2.SelfHostedAppExtension = exports2.AppAction = void 0;
+    exports2.appTunnelRegistrationSchema = exports2.AppDefinition = exports2.ExtensionOnlyApp = exports2.SelfHostedApp = exports2.SelfHostedAppExtension = exports2.AppIconUrl = exports2.AppAction = void 0;
     var zod_1 = require("zod");
+    var icons_js_1 = require_icons();
     exports2.AppAction = zod_1.z.enum(["projects:read", "data:read", "data:write", "workflows:run"]);
     var appUrl = zod_1.z.string().max(2048).url().refine((value) => {
       try {
@@ -1237,6 +1249,7 @@ var require_app = __commonJS({
         return false;
       }
     }, "App URLs must use public HTTPS hostnames without credentials, query strings or fragments");
+    exports2.AppIconUrl = appUrl;
     exports2.SelfHostedAppExtension = zod_1.z.object({
       id: zod_1.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
       target: zod_1.z.enum(["app.page", "workspace.block"]),
@@ -1247,6 +1260,7 @@ var require_app = __commonJS({
       apiVersion: zod_1.z.literal("1"),
       hosting: zod_1.z.literal("self-hosted"),
       applicationUrl: appUrl,
+      icon: icons_js_1.IconName.optional(),
       iconUrl: appUrl.optional(),
       privacyUrl: appUrl.optional(),
       supportUrl: appUrl.optional(),
@@ -1279,6 +1293,7 @@ var require_app = __commonJS({
     exports2.ExtensionOnlyApp = zod_1.z.object({
       apiVersion: zod_1.z.literal("2"),
       hosting: zod_1.z.literal("extension-only"),
+      icon: icons_js_1.IconName.optional(),
       iconUrl: appUrl.optional(),
       settings: zod_1.z.array(zod_1.z.object({
         id: zod_1.z.string().regex(/^[a-z][a-zA-Z0-9_]*$/).max(100),
@@ -1316,7 +1331,7 @@ var require_plugin = __commonJS({
   "packages/schema/dist/plugin/plugin.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PluginManifest = exports2.PluginConnection = exports2.PluginIntegration = exports2.PluginPermission = exports2.PluginNode = exports2.PluginNpmDependency = exports2.PluginImplementationSource = exports2.NpmClientBinding = exports2.PluginNodeUi = exports2.PLUGIN_UI_BUNDLE_MAX_BYTES = exports2.PluginUiTarget = exports2.PluginScope = void 0;
+    exports2.PluginManifest = exports2.PluginConnection = exports2.PluginIntegration = exports2.PluginLicense = exports2.PluginCategory = exports2.PluginPermission = exports2.PluginNode = exports2.NpmSdkExport = exports2.NpmClientDefinition = exports2.PluginNpmDependency = exports2.PluginImplementationSource = exports2.NpmClientBinding = exports2.PluginNodeUi = exports2.PLUGIN_UI_BUNDLE_MAX_BYTES = exports2.PluginUiTarget = exports2.PluginScope = void 0;
     var zod_1 = require("zod");
     var ipc_envelope_1 = require_ipc_envelope();
     var icons_1 = require_icons();
@@ -1348,6 +1363,28 @@ var require_plugin = __commonJS({
       }).strict()
     ]);
     exports2.PluginNpmDependency = zod_1.z.object({ package: zod_1.z.string(), version: zod_1.z.string(), spec: zod_1.z.string() }).strict();
+    exports2.NpmClientDefinition = zod_1.z.object({
+      module: exports2.NpmClientBinding.shape.module,
+      export: exports2.NpmClientBinding.shape.export,
+      construction: zod_1.z.enum(["call", "new"]),
+      overload: zod_1.z.number().int().nonnegative().optional(),
+      async: zod_1.z.boolean(),
+      parameters: zod_1.z.array(zod_1.z.object({
+        name: zod_1.z.string().regex(/^[A-Za-z_$][\w$]*$/),
+        required: zod_1.z.boolean(),
+        rest: zod_1.z.boolean(),
+        schema: ipc_envelope_1.JsonSchema
+      })),
+      inputs: ipc_envelope_1.JsonSchema,
+      label: zod_1.z.string().optional(),
+      fields: zod_1.z.record(zod_1.z.object({ label: zod_1.z.string(), secret: zod_1.z.boolean().optional() })).optional()
+    }).strict();
+    exports2.NpmSdkExport = zod_1.z.object({
+      name: zod_1.z.string(),
+      kind: zod_1.z.enum(["type", "constant", "function", "client"]),
+      type: zod_1.z.string(),
+      schema: ipc_envelope_1.JsonSchema.optional()
+    }).strict();
     exports2.PluginNode = zod_1.z.object({
       id: zod_1.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i, "node id must be alphanumeric/dash/underscore"),
       /** The command the engine spawns, relative to the plugin folder. */
@@ -1356,7 +1393,7 @@ var require_plugin = __commonJS({
       label: zod_1.z.string().min(1).max(240).optional(),
       symbol: zod_1.z.string().min(1).max(16).optional(),
       description: zod_1.z.string().optional(),
-      icon: icons_1.IconName.optional(),
+      icon: icons_1.IconValue.optional(),
       trigger: zod_1.z.boolean().optional(),
       inputs: ipc_envelope_1.JsonSchema.optional(),
       outputs: ipc_envelope_1.JsonSchema.optional(),
@@ -1364,6 +1401,7 @@ var require_plugin = __commonJS({
       env: zod_1.z.array(zod_1.z.string()).optional(),
       connections: zod_1.z.array(zod_1.z.string().min(1)).optional(),
       defaults: zod_1.z.record(zod_1.z.unknown()).optional(),
+      client: zod_1.z.string().optional(),
       bindings: zod_1.z.record(zod_1.z.string().regex(/^[A-Za-z_$][\w$]*$/), exports2.NpmClientBinding).optional(),
       ui: exports2.PluginNodeUi.optional(),
       source: exports2.PluginImplementationSource.optional(),
@@ -1374,14 +1412,31 @@ var require_plugin = __commonJS({
         module: zod_1.z.string(),
         export: zod_1.z.string(),
         methodPath: zod_1.z.array(zod_1.z.string().regex(/^[$A-Z_a-z][$\w]*$/).refine((part) => !["__proto__", "prototype", "constructor"].includes(part))).min(1).max(8).optional(),
-        parameters: zod_1.z.array(zod_1.z.string())
+        parameters: zod_1.z.array(zod_1.z.string()),
+        rest: zod_1.z.string().optional(),
+        outputStreams: zod_1.z.array(zod_1.z.array(zod_1.z.string().refine((part) => !["__proto__", "prototype", "constructor"].includes(part))).max(8)).max(16).optional()
       }).strict().optional()
     });
     exports2.PluginPermission = zod_1.z.object({
       resource: zod_1.z.enum(["project_data", "secrets", "network"]),
       access: zod_1.z.enum(["read", "write", "outbound"])
     });
+    exports2.PluginCategory = zod_1.z.enum([
+      "ai",
+      "api",
+      "communication",
+      "database",
+      "development",
+      "finance",
+      "npm",
+      "productivity",
+      "storage",
+      "utilities",
+      "other"
+    ]);
+    exports2.PluginLicense = zod_1.z.enum(["MIT", "Apache-2.0"]);
     exports2.PluginIntegration = zod_1.z.object({
+      // Keep historical/custom categories readable; creation selectors use PluginCategory.
       category: zod_1.z.string().optional(),
       tags: zod_1.z.array(zod_1.z.string()).default([]),
       /** Secrets/env the integration needs to authenticate (e.g. ["JIRA_TOKEN"]). */
@@ -1415,7 +1470,14 @@ var require_plugin = __commonJS({
         types: zod_1.z.literal("library/index.d.ts"),
         exports: zod_1.z.array(zod_1.z.string().regex(/^[$A-Z_a-z][$\w]*$/)).min(1)
       }).strict().optional(),
-      icon: icons_1.IconName.optional(),
+      /** Source-level inventory shown alongside executable nodes in plugin overviews. */
+      contents: zod_1.z.object({
+        types: zod_1.z.array(zod_1.z.string().min(1).max(240)).max(1e3),
+        services: zod_1.z.array(zod_1.z.string().min(1).max(240)).max(1e3),
+        constants: zod_1.z.array(zod_1.z.string().min(1).max(240)).max(1e3),
+        classes: zod_1.z.array(zod_1.z.string().min(1).max(240)).max(1e3)
+      }).strict().optional(),
+      icon: icons_1.IconValue.optional(),
       author: zod_1.z.string().optional(),
       contributors: zod_1.z.array(zod_1.z.string().trim().min(1).max(240)).max(100).optional(),
       repository: zod_1.z.string().url().regex(/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/).optional(),
@@ -1428,9 +1490,11 @@ var require_plugin = __commonJS({
       app: app_1.AppDefinition.optional(),
       integration: exports2.PluginIntegration.optional(),
       connections: zod_1.z.record(zod_1.z.string().regex(/^[a-z0-9][a-z0-9-]*$/), exports2.PluginConnection).optional(),
+      clients: zod_1.z.record(exports2.NpmClientDefinition).optional(),
+      sdkExports: zod_1.z.array(exports2.NpmSdkExport).optional(),
       nodes: zod_1.z.array(exports2.PluginNode).default([])
     }).superRefine((manifest2, ctx) => {
-      if (manifest2.app && (manifest2.nodes.length || manifest2.library || manifest2.permissions.length || Object.keys(manifest2.connections ?? {}).length || manifest2.integration?.npm || manifest2.integration?.npmDependencies?.length))
+      if (manifest2.app && (manifest2.nodes.length || manifest2.library || manifest2.permissions.length || Object.keys(manifest2.connections ?? {}).length || Object.keys(manifest2.clients ?? {}).length || manifest2.sdkExports?.length || manifest2.integration?.npm || manifest2.integration?.npmDependencies?.length))
         ctx.addIssue({
           code: "custom",
           path: ["app"],
@@ -1465,6 +1529,15 @@ var require_plugin = __commonJS({
             path: ["nodes", index, "libraryExport"],
             message: "custom export must exist in the plugin library"
           });
+        if (node.client) {
+          const client = manifest2.clients?.[node.client];
+          if (!client || !node.implementation?.methodPath || client.module !== node.implementation.module || client.export !== node.implementation.export || !nodeNpm || client.module !== nodeNpm.package && !client.module.startsWith(`${nodeNpm.package}/`))
+            ctx.addIssue({
+              code: "custom",
+              path: ["nodes", index, "client"],
+              message: "Client must match the verified npm method receiver"
+            });
+        }
         for (const binding of Object.values(node.bindings ?? {})) {
           if (!nodeNpm || binding.module !== nodeNpm.package && !binding.module.startsWith(`${nodeNpm.package}/`))
             ctx.addIssue({
@@ -1500,6 +1573,181 @@ var require_plugin = __commonJS({
   }
 });
 
+// packages/schema/dist/plugin/clients.js
+var require_clients = __commonJS({
+  "packages/schema/dist/plugin/clients.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.NodeClientView = exports2.NodeClientRequest = exports2.ClientConfiguration = exports2.ClientValue = exports2.ProjectClientReference = void 0;
+    var zod_1 = require("zod");
+    var plugin_1 = require_plugin();
+    var identifier = zod_1.z.string().regex(/^[A-Za-z_$][\w$]*$/);
+    exports2.ProjectClientReference = zod_1.z.object({ path: zod_1.z.string().min(1), export: identifier }).strict();
+    exports2.ClientValue = zod_1.z.discriminatedUnion("kind", [
+      zod_1.z.object({ kind: zod_1.z.literal("sdk"), export: identifier }).strict(),
+      zod_1.z.object({ kind: zod_1.z.literal("literal"), value: zod_1.z.unknown() }).strict(),
+      zod_1.z.object({ kind: zod_1.z.literal("env"), name: zod_1.z.string().regex(/^[A-Za-z_][A-Za-z0-9_]*$/) }).strict(),
+      zod_1.z.object({ kind: zod_1.z.literal("symbol"), ...exports2.ProjectClientReference.shape }).strict()
+    ]);
+    exports2.ClientConfiguration = zod_1.z.record(zod_1.z.string().min(1), exports2.ClientValue);
+    exports2.NodeClientRequest = zod_1.z.object({
+      revision: zod_1.z.string().min(1),
+      selection: zod_1.z.discriminatedUnion("kind", [
+        zod_1.z.object({ kind: zod_1.z.literal("keep") }).strict(),
+        zod_1.z.object({ kind: zod_1.z.literal("existing"), ...exports2.ProjectClientReference.shape }).strict(),
+        zod_1.z.object({ kind: zod_1.z.literal("create"), name: identifier.optional(), values: exports2.ClientConfiguration }).strict(),
+        zod_1.z.object({ kind: zod_1.z.literal("configure"), values: exports2.ClientConfiguration }).strict()
+      ]),
+      arguments: zod_1.z.array(zod_1.z.string().max(1e5)).optional()
+    }).strict();
+    exports2.NodeClientView = zod_1.z.object({
+      revision: zod_1.z.string(),
+      definition: plugin_1.NpmClientDefinition,
+      exports: zod_1.z.array(plugin_1.NpmSdkExport).optional(),
+      existing: zod_1.z.array(exports2.ProjectClientReference),
+      selected: exports2.ProjectClientReference.optional(),
+      values: exports2.ClientConfiguration.optional(),
+      arguments: zod_1.z.array(zod_1.z.string()).optional(),
+      parameters: zod_1.z.array(zod_1.z.string()),
+      usedBy: zod_1.z.array(zod_1.z.string()),
+      editable: zod_1.z.boolean()
+    });
+  }
+});
+
+// packages/schema/dist/test-workflow-graph.js
+var require_test_workflow_graph = __commonJS({
+  "packages/schema/dist/test-workflow-graph.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.TestWorkflowGraph = exports2.TestWorkflowGraphAction = exports2.TestWorkflowGraphDiagnostic = exports2.TestWorkflowGraphEdge = exports2.TestWorkflowGraphNode = exports2.TestWorkflowGraphEdgeKind = exports2.TestWorkflowGraphNodeKind = void 0;
+    var zod_1 = require("zod");
+    var source_index_1 = require_source_index();
+    exports2.TestWorkflowGraphNodeKind = zod_1.z.enum([
+      "file",
+      "suite",
+      "test",
+      "hook",
+      "before-all",
+      "before-each",
+      "after-each",
+      "after-all",
+      "module-mock",
+      "ordered-module-mock",
+      "function-mock",
+      "hoisted-mock",
+      "spy",
+      "mock-operation",
+      "test-data",
+      "mock-data",
+      "snapshot-artifact",
+      "assertion",
+      "source-call",
+      "source-helper",
+      "source-import",
+      "source-symbol",
+      "source-type",
+      "source-constant",
+      "source-class",
+      "source-service"
+    ]);
+    exports2.TestWorkflowGraphEdgeKind = zod_1.z.enum([
+      "contains",
+      "invokes",
+      "executes",
+      "applies-to",
+      "replaces-module",
+      "spies-on",
+      "configures-mock",
+      "clears",
+      "resets",
+      "restores",
+      "uses-type",
+      "uses-value",
+      "constructs",
+      "calls-service"
+    ]);
+    exports2.TestWorkflowGraphNode = zod_1.z.object({
+      id: zod_1.z.string(),
+      kind: exports2.TestWorkflowGraphNodeKind,
+      label: zod_1.z.string(),
+      location: source_index_1.SourceLocation,
+      detail: zod_1.z.string().optional(),
+      framework: zod_1.z.enum(["vitest", "jest", "playwright"]).optional(),
+      sourceSymbolId: zod_1.z.string().optional(),
+      sourceSymbolKind: zod_1.z.enum([
+        "workflow",
+        "module-workflow",
+        "function",
+        "type-alias",
+        "interface",
+        "enum",
+        "constant",
+        "variable",
+        "class",
+        "service"
+      ]).optional(),
+      mockPhase: zod_1.z.enum(["hoisted", "ordered", "runner-controlled"]).optional(),
+      runnable: zod_1.z.boolean().optional()
+    });
+    exports2.TestWorkflowGraphEdge = zod_1.z.object({
+      id: zod_1.z.string(),
+      from: zod_1.z.string(),
+      to: zod_1.z.string(),
+      kind: exports2.TestWorkflowGraphEdgeKind
+    });
+    exports2.TestWorkflowGraphDiagnostic = zod_1.z.object({
+      severity: zod_1.z.enum(["warning", "error"]),
+      code: zod_1.z.string(),
+      message: zod_1.z.string(),
+      location: source_index_1.SourceLocation.optional()
+    });
+    exports2.TestWorkflowGraphAction = zod_1.z.discriminatedUnion("kind", [
+      zod_1.z.object({
+        kind: zod_1.z.literal("create-node"),
+        nodeKind: zod_1.z.enum([
+          "suite",
+          "test",
+          "helper",
+          "before-all",
+          "before-each",
+          "after-all",
+          "after-each",
+          "module-mock"
+        ]),
+        parentId: zod_1.z.string().optional(),
+        label: zod_1.z.string().optional(),
+        module: zod_1.z.string().optional(),
+        body: zod_1.z.string().optional(),
+        parameters: zod_1.z.string().optional(),
+        async: zod_1.z.boolean().optional()
+      }),
+      zod_1.z.object({
+        kind: zod_1.z.literal("create-data"),
+        dataKind: zod_1.z.enum(["fixture", "mock-data"]),
+        scopeId: zod_1.z.string().optional(),
+        name: zod_1.z.string(),
+        typeName: zod_1.z.string(),
+        value: zod_1.z.record(zod_1.z.string(), zod_1.z.unknown())
+      }),
+      zod_1.z.object({ kind: zod_1.z.literal("rename-node"), nodeId: zod_1.z.string(), label: zod_1.z.string() }),
+      zod_1.z.object({ kind: zod_1.z.literal("delete-node"), nodeId: zod_1.z.string() }),
+      zod_1.z.object({ kind: zod_1.z.literal("import-symbol"), symbolId: zod_1.z.string(), sourceIndexRevision: zod_1.z.string().length(64) })
+    ]);
+    exports2.TestWorkflowGraph = zod_1.z.object({
+      path: zod_1.z.string(),
+      revision: zod_1.z.string().length(64),
+      sourceIndexRevision: zod_1.z.string().length(64),
+      runner: zod_1.z.enum(["vitest", "jest", "playwright"]),
+      nodes: zod_1.z.array(exports2.TestWorkflowGraphNode),
+      edges: zod_1.z.array(exports2.TestWorkflowGraphEdge),
+      referencedSymbols: zod_1.z.array(zod_1.z.string()),
+      diagnostics: zod_1.z.array(exports2.TestWorkflowGraphDiagnostic),
+      truncated: zod_1.z.boolean()
+    });
+  }
+});
+
 // packages/schema/dist/octonode-config.js
 var require_octonode_config = __commonJS({
   "packages/schema/dist/octonode-config.js"(exports2) {
@@ -1513,7 +1761,9 @@ var require_octonode_config = __commonJS({
     var icons_1 = require_icons();
     var entry_1 = require_entry();
     var source_index_1 = require_source_index();
+    var clients_1 = require_clients();
     var plugin_1 = require_plugin();
+    var test_workflow_graph_1 = require_test_workflow_graph();
     exports2.CONFIG_API_VERSION = "octonode.dev/v1";
     exports2.NodeKind = zod_1.z.enum(["function", "class", "service", "const"]);
     exports2.NodeSignature = zod_1.z.object({
@@ -1579,7 +1829,7 @@ var require_octonode_config = __commonJS({
       async: zod_1.z.boolean().optional()
     });
     exports2.NodePresentation = zod_1.z.object({
-      icon: icons_1.IconName.optional(),
+      icon: icons_1.IconValue.optional(),
       /** Optional human-facing label used when the node id is implementation detail. */
       label: zod_1.z.string().optional(),
       symbol: zod_1.z.string().max(16).optional(),
@@ -1613,6 +1863,8 @@ var require_octonode_config = __commonJS({
       plugin: zod_1.z.string().optional(),
       /** Resolved from the installed immutable plugin; never edited by project configuration. */
       pluginVersion: zod_1.z.string().optional(),
+      pluginClient: clients_1.ProjectClientReference.optional(),
+      pluginClientChecksum: zod_1.z.string().optional(),
       pluginUi: plugin_1.PluginNodeUi.optional(),
       /** Generated by `octonode scan`. Optional so runtime/presentation can be pre-declared. */
       signature: exports2.NodeSignature.optional(),
@@ -1781,7 +2033,9 @@ var require_octonode_config = __commonJS({
       types: zod_1.z.record(ipc_envelope_1.JsonSchema).default({}),
       /** CONFIG-OWNED stable IDs of projects required by this project. Resolution is capability-gated. */
       projectDependencies: zod_1.z.array(zod_1.z.string().min(1).max(240)).max(1e3).optional(),
-      workflows: zod_1.z.array(exports2.Workflow).default([])
+      workflows: zod_1.z.array(exports2.Workflow).default([]),
+      /** CODE-OWNED test projections, including the exact source used to compile cases and data. */
+      test_workflows: zod_1.z.array(test_workflow_graph_1.TestWorkflowGraph.extend({ source: zod_1.z.string() })).optional()
     }).superRefine((config, ctx) => {
       config.workflows.forEach((workflow, index) => {
         const members = /* @__PURE__ */ new Set([
@@ -1883,19 +2137,39 @@ var require_store = __commonJS({
   }
 });
 
+// packages/schema/dist/data-table.constants.js
+var require_data_table_constants = __commonJS({
+  "packages/schema/dist/data-table.constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.DATA_TABLE_MAX_COLUMNS = exports2.DATA_TABLE_MAX_SQL_LENGTH = exports2.DATA_TABLE_MAX_ROW_BYTES = exports2.DATA_TABLE_RESERVED_COLUMNS = void 0;
+    exports2.DATA_TABLE_RESERVED_COLUMNS = [
+      "_id",
+      "_version",
+      "_created_at",
+      "_updated_at",
+      "__proto__"
+    ];
+    exports2.DATA_TABLE_MAX_ROW_BYTES = 256 * 1024;
+    exports2.DATA_TABLE_MAX_SQL_LENGTH = 16384;
+    exports2.DATA_TABLE_MAX_COLUMNS = 64;
+  }
+});
+
 // packages/schema/dist/data-tables.js
 var require_data_tables = __commonJS({
   "packages/schema/dist/data-tables.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.UpdateProjectInput = exports2.CreateProjectInput = exports2.ProjectMetadata = exports2.ProjectRepoMetadata = exports2.SqlQueryResult = exports2.SqlQueryInput = exports2.ImportRowsResult = exports2.ImportRowsInput = exports2.BulkRowsResult = exports2.BulkRowsInput = exports2.BulkRowMutation = exports2.UpdateRowInput = exports2.InsertRowInput = exports2.ListRowsInput = exports2.UpdateDataTableInput = exports2.CreateDataTableInput = exports2.DataTableRowsPage = exports2.DataTableRow = exports2.DataTable = exports2.DataTableColumn = exports2.DataTableColumnType = exports2.StorageMode = void 0;
+    var data_table_constants_js_1 = require_data_table_constants();
     var zod_1 = require("zod");
     var store_1 = require_store();
     exports2.StorageMode = zod_1.z.enum(["sqlite", "kv_blob"]);
     exports2.DataTableColumnType = zod_1.z.enum(["text", "number", "boolean", "date", "datetime", "json"]);
     exports2.DataTableColumn = zod_1.z.object({
       id: zod_1.z.string(),
-      key: zod_1.z.string().min(1).regex(/^[A-Za-z_][A-Za-z0-9_]*$/, "column key must start with a letter or '_' and contain only letters, digits, or '_'"),
+      key: zod_1.z.string().min(1).regex(/^[A-Za-z_][A-Za-z0-9_]*$/, "column key must start with a letter or '_' and contain only letters, digits, or '_'").refine((key) => !data_table_constants_js_1.DATA_TABLE_RESERVED_COLUMNS.includes(key.toLowerCase()), "reserved column name"),
       name: zod_1.z.string().min(1),
       type: exports2.DataTableColumnType,
       required: zod_1.z.boolean().default(false),
@@ -1927,18 +2201,19 @@ var require_data_tables = __commonJS({
       rows: zod_1.z.array(exports2.DataTableRow),
       nextCursor: zod_1.z.string().optional()
     });
+    var inputColumns = zod_1.z.array(exports2.DataTableColumn.omit({ id: true }).extend({ id: zod_1.z.string().optional() })).max(data_table_constants_js_1.DATA_TABLE_MAX_COLUMNS).refine((columns) => new Set(columns.map(({ key }) => key.toLowerCase())).size === columns.length, "duplicate column name");
     exports2.CreateDataTableInput = zod_1.z.object({
       name: zod_1.z.string().min(1),
       slug: zod_1.z.string().min(1).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/, "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'").optional(),
       description: zod_1.z.string().optional(),
       storageMode: exports2.StorageMode.default("sqlite"),
-      columns: zod_1.z.array(exports2.DataTableColumn.omit({ id: true }).extend({ id: zod_1.z.string().optional() })).default([])
+      columns: inputColumns.default([])
     });
     exports2.UpdateDataTableInput = zod_1.z.object({
       name: zod_1.z.string().min(1).optional(),
       slug: zod_1.z.string().min(1).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/, "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'").optional(),
       description: zod_1.z.string().nullable().optional(),
-      columns: zod_1.z.array(exports2.DataTableColumn.omit({ id: true }).extend({ id: zod_1.z.string().optional() })).optional()
+      columns: inputColumns.optional()
     });
     exports2.ListRowsInput = zod_1.z.object({
       cursor: zod_1.z.string().optional(),
@@ -1975,8 +2250,8 @@ var require_data_tables = __commonJS({
       inserted: zod_1.z.number().int().nonnegative()
     });
     exports2.SqlQueryInput = zod_1.z.object({
-      sql: zod_1.z.string().min(1),
-      params: zod_1.z.array(zod_1.z.unknown()).default([])
+      sql: zod_1.z.string().min(1).max(data_table_constants_js_1.DATA_TABLE_MAX_SQL_LENGTH),
+      params: zod_1.z.array(zod_1.z.unknown()).max(100).default([])
     });
     exports2.SqlQueryResult = zod_1.z.object({
       columns: zod_1.z.array(zod_1.z.string()),
@@ -2070,6 +2345,71 @@ var require_data_table_schema = __commonJS({
   }
 });
 
+// packages/schema/dist/test-data.js
+var require_test_data = __commonJS({
+  "packages/schema/dist/test-data.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.testDataValidator = testDataValidator;
+    var zod_1 = require("zod");
+    function testDataValidator(schema, definitions = {}, depth = 0) {
+      if (depth > 40)
+        return zod_1.z.never();
+      const nested = (schema2) => testDataValidator(schema2, definitions, depth + 1);
+      if (typeof schema.$ref === "string") {
+        const name = schema.$ref.split("/").at(-1);
+        return definitions[name] ? nested(definitions[name]) : zod_1.z.never();
+      }
+      if (Array.isArray(schema.allOf)) {
+        const validators = schema.allOf.map(nested);
+        return zod_1.z.unknown().refine((value) => validators.every((validator2) => validator2.safeParse(value).success));
+      }
+      if (Array.isArray(schema.anyOf) || Array.isArray(schema.oneOf)) {
+        const variants = schema.anyOf ?? schema.oneOf;
+        return zod_1.z.unknown().refine((value) => {
+          const matches = variants.filter((variant) => nested(variant).safeParse(value).success).length;
+          return schema.oneOf ? matches === 1 : matches > 0;
+        }, "Value does not match the fixture type");
+      }
+      if (Array.isArray(schema.enum))
+        return zod_1.z.unknown().refine((value) => schema.enum.some((item) => Object.is(item, value)), "Value is outside the fixture enum");
+      if ("const" in schema)
+        return zod_1.z.unknown().refine((value) => Object.is(value, schema.const));
+      if (schema.type === "string")
+        return zod_1.z.string();
+      if (schema.type === "number")
+        return zod_1.z.number().finite();
+      if (schema.type === "integer")
+        return zod_1.z.number().int();
+      if (schema.type === "boolean")
+        return zod_1.z.boolean();
+      if (schema.type === "null")
+        return zod_1.z.null();
+      if (schema.type === "array") {
+        const prefix = (schema.prefixItems ?? []).map(nested);
+        let validator2 = zod_1.z.array(nested(schema.items ?? {}));
+        if (typeof schema.minItems === "number")
+          validator2 = validator2.min(schema.minItems);
+        if (typeof schema.maxItems === "number")
+          validator2 = validator2.max(schema.maxItems);
+        return validator2.refine((value) => value.every((item, index) => !prefix[index] || prefix[index].safeParse(item).success));
+      }
+      if (schema.type !== "object")
+        return zod_1.z.unknown();
+      const required = new Set(schema.required ?? []);
+      const validator = zod_1.z.object(Object.fromEntries(Object.entries(schema.properties ?? {}).map(([name, child]) => {
+        const validator2 = nested(child);
+        return [name, required.has(name) ? validator2 : validator2.optional()];
+      })));
+      if (schema.additionalProperties === false)
+        return validator.strict();
+      if (schema.additionalProperties && typeof schema.additionalProperties === "object")
+        return validator.catchall(nested(schema.additionalProperties));
+      return validator.passthrough();
+    }
+  }
+});
+
 // packages/schema/dist/workflow/layout.js
 var require_layout = __commonJS({
   "packages/schema/dist/workflow/layout.js"(exports2) {
@@ -2099,139 +2439,6 @@ var require_layout = __commonJS({
       positions: zod_1.z.record(zod_1.z.string(), Point).default({}),
       stickyNotes: zod_1.z.array(exports2.StickyNoteLayout).default([]),
       groups: zod_1.z.array(exports2.GroupLayout).default([])
-    });
-  }
-});
-
-// packages/schema/dist/test-workflow-graph.js
-var require_test_workflow_graph = __commonJS({
-  "packages/schema/dist/test-workflow-graph.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.TestWorkflowGraph = exports2.TestWorkflowGraphAction = exports2.TestWorkflowGraphDiagnostic = exports2.TestWorkflowGraphEdge = exports2.TestWorkflowGraphNode = exports2.TestWorkflowGraphEdgeKind = exports2.TestWorkflowGraphNodeKind = void 0;
-    var zod_1 = require("zod");
-    var source_index_1 = require_source_index();
-    exports2.TestWorkflowGraphNodeKind = zod_1.z.enum([
-      "file",
-      "suite",
-      "test",
-      "hook",
-      "before-all",
-      "before-each",
-      "after-each",
-      "after-all",
-      "module-mock",
-      "ordered-module-mock",
-      "function-mock",
-      "hoisted-mock",
-      "spy",
-      "mock-operation",
-      "test-data",
-      "mock-data",
-      "snapshot-artifact",
-      "assertion",
-      "source-call",
-      "source-helper",
-      "source-import",
-      "source-symbol",
-      "source-type",
-      "source-constant",
-      "source-class",
-      "source-service"
-    ]);
-    exports2.TestWorkflowGraphEdgeKind = zod_1.z.enum([
-      "contains",
-      "invokes",
-      "executes",
-      "applies-to",
-      "replaces-module",
-      "spies-on",
-      "configures-mock",
-      "clears",
-      "resets",
-      "restores",
-      "uses-type",
-      "uses-value",
-      "constructs",
-      "calls-service"
-    ]);
-    exports2.TestWorkflowGraphNode = zod_1.z.object({
-      id: zod_1.z.string(),
-      kind: exports2.TestWorkflowGraphNodeKind,
-      label: zod_1.z.string(),
-      location: source_index_1.SourceLocation,
-      detail: zod_1.z.string().optional(),
-      framework: zod_1.z.enum(["vitest", "jest", "playwright"]).optional(),
-      sourceSymbolId: zod_1.z.string().optional(),
-      sourceSymbolKind: zod_1.z.enum([
-        "workflow",
-        "module-workflow",
-        "function",
-        "type-alias",
-        "interface",
-        "enum",
-        "constant",
-        "variable",
-        "class",
-        "service"
-      ]).optional(),
-      mockPhase: zod_1.z.enum(["hoisted", "ordered", "runner-controlled"]).optional(),
-      runnable: zod_1.z.boolean().optional()
-    });
-    exports2.TestWorkflowGraphEdge = zod_1.z.object({
-      id: zod_1.z.string(),
-      from: zod_1.z.string(),
-      to: zod_1.z.string(),
-      kind: exports2.TestWorkflowGraphEdgeKind
-    });
-    exports2.TestWorkflowGraphDiagnostic = zod_1.z.object({
-      severity: zod_1.z.enum(["warning", "error"]),
-      code: zod_1.z.string(),
-      message: zod_1.z.string(),
-      location: source_index_1.SourceLocation.optional()
-    });
-    exports2.TestWorkflowGraphAction = zod_1.z.discriminatedUnion("kind", [
-      zod_1.z.object({
-        kind: zod_1.z.literal("create-node"),
-        nodeKind: zod_1.z.enum([
-          "suite",
-          "test",
-          "helper",
-          "before-all",
-          "before-each",
-          "after-all",
-          "after-each",
-          "module-mock"
-        ]),
-        parentId: zod_1.z.string().optional(),
-        label: zod_1.z.string().optional(),
-        module: zod_1.z.string().optional(),
-        body: zod_1.z.string().optional(),
-        parameters: zod_1.z.string().optional(),
-        async: zod_1.z.boolean().optional()
-      }),
-      zod_1.z.object({
-        kind: zod_1.z.literal("create-data"),
-        dataKind: zod_1.z.enum(["fixture", "mock-data"]),
-        scopeId: zod_1.z.string().optional(),
-        name: zod_1.z.string(),
-        typeName: zod_1.z.string(),
-        value: zod_1.z.record(zod_1.z.string(), zod_1.z.unknown())
-      }),
-      zod_1.z.object({ kind: zod_1.z.literal("rename-node"), nodeId: zod_1.z.string(), label: zod_1.z.string() }),
-      zod_1.z.object({ kind: zod_1.z.literal("delete-node"), nodeId: zod_1.z.string() }),
-      zod_1.z.object({ kind: zod_1.z.literal("import-symbol"), symbolId: zod_1.z.string(), sourceIndexRevision: zod_1.z.string().length(64) })
-    ]);
-    exports2.TestWorkflowGraph = zod_1.z.object({
-      path: zod_1.z.string(),
-      revision: zod_1.z.string().length(64),
-      sourceIndexRevision: zod_1.z.string().length(64),
-      runner: zod_1.z.enum(["vitest", "jest", "playwright"]),
-      nodes: zod_1.z.array(exports2.TestWorkflowGraphNode),
-      edges: zod_1.z.array(exports2.TestWorkflowGraphEdge),
-      referencedSymbols: zod_1.z.array(zod_1.z.string()),
-      diagnostics: zod_1.z.array(exports2.TestWorkflowGraphDiagnostic),
-      truncated: zod_1.z.boolean()
     });
   }
 });
@@ -3532,13 +3739,133 @@ var require_capabilities = __commonJS({
   }
 });
 
+// packages/schema/dist/assistant-models.js
+var require_assistant_models = __commonJS({
+  "packages/schema/dist/assistant-models.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.assistantModelSchema = exports2.assistantVariableSchema = exports2.assistantEndpointSchema = void 0;
+    exports2.resolveAssistantModel = resolveAssistantModel;
+    exports2.assistantEngine = assistantEngine;
+    exports2.assistantArtifactRequiresClaude = assistantArtifactRequiresClaude;
+    exports2.assistantResourcesCompatible = assistantResourcesCompatible;
+    var zod_1 = require("zod");
+    exports2.assistantEndpointSchema = zod_1.z.string().trim().url().max(2048).refine((value) => {
+      if (!URL.canParse(value))
+        return false;
+      const url = new URL(value);
+      const host = url.hostname.toLowerCase();
+      return url.protocol === "https:" && !url.username && !url.password && !url.hash && !url.search && (!url.port || url.port === "443") && host.includes(".") && !/^[\d.]+$/.test(host) && !host.includes(":") && !/(?:^|\.)(?:localhost|local|internal|test|invalid)$/.test(host);
+    }, "Use a public HTTPS endpoint without credentials, query parameters, or fragments");
+    exports2.assistantVariableSchema = zod_1.z.string().regex(/^[A-Za-z_][A-Za-z0-9_]{0,127}$/);
+    var modelId = zod_1.z.string().trim().min(1).max(128).regex(/^[A-Za-z0-9@][A-Za-z0-9._:/@-]*$/);
+    exports2.assistantModelSchema = zod_1.z.discriminatedUnion("provider", [
+      zod_1.z.object({
+        provider: zod_1.z.literal("anthropic"),
+        model: modelId.refine((id) => /^(?:sonnet|opus|haiku|claude-[a-z0-9.-]+)$/.test(id), "Choose a Claude model or alias"),
+        variable: exports2.assistantVariableSchema
+      }).strict(),
+      zod_1.z.object({ provider: zod_1.z.literal("openai"), model: modelId, variable: exports2.assistantVariableSchema }).strict(),
+      zod_1.z.object({ provider: zod_1.z.literal("google"), model: modelId, variable: exports2.assistantVariableSchema }).strict(),
+      zod_1.z.object({ provider: zod_1.z.literal("workers-ai"), model: modelId }).strict(),
+      zod_1.z.object({
+        provider: zod_1.z.literal("custom"),
+        model: modelId,
+        variable: exports2.assistantVariableSchema,
+        url: exports2.assistantEndpointSchema
+      }).strict()
+    ]);
+    function resolveAssistantModel(settings) {
+      return settings?.model ?? (settings?.gateway ? { provider: "custom", ...settings.gateway } : { provider: "anthropic", model: "sonnet", variable: "ANTHROPIC_API_KEY" });
+    }
+    function assistantEngine(settings) {
+      return resolveAssistantModel(settings).provider === "anthropic" ? "claude" : "generic";
+    }
+    function assistantArtifactRequiresClaude(artifact) {
+      return artifact.requiresClaude || artifact.files.some(({ path }) => path !== ".claude-plugin/plugin.json" && path !== ".mcp.json" && !/^skills\/skill-\d+\/SKILL\.md$/.test(path));
+    }
+    function assistantResourcesCompatible(settings) {
+      return assistantEngine(settings) === "claude" || !(settings?.artifacts ?? []).some(assistantArtifactRequiresClaude);
+    }
+  }
+});
+
+// packages/schema/dist/assistant-artifacts.js
+var require_assistant_artifacts = __commonJS({
+  "packages/schema/dist/assistant-artifacts.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.assistantArtifactSchema = exports2.assistantFileSchema = void 0;
+    exports2.assistantResourceArtifact = assistantResourceArtifact;
+    exports2.assistantArtifactLocation = assistantArtifactLocation;
+    var zod_1 = require("zod");
+    exports2.assistantFileSchema = zod_1.z.object({
+      path: zod_1.z.string().min(1).max(240).refine((path) => !path.startsWith("/") && !path.includes("\\") && !path.includes("\0") && path.split("/").every((part) => part !== ".." && part !== "." && !!part), "Use a relative file path without traversal"),
+      content: zod_1.z.string().max(128e3),
+      executable: zod_1.z.boolean().optional()
+    }).strict();
+    exports2.assistantArtifactSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      kind: zod_1.z.enum(["skill", "plugin", "mcp"]),
+      projectId: zod_1.z.string().min(1).max(128).nullable(),
+      requiresClaude: zod_1.z.boolean().optional(),
+      files: zod_1.z.array(exports2.assistantFileSchema).min(1).max(128)
+    }).strict().superRefine((artifact, ctx) => {
+      const paths = artifact.files.map((file) => file.path.toLowerCase());
+      if (new Set(paths).size !== paths.length || paths.some((path) => paths.some((parent) => path.startsWith(parent + "/"))) || new TextEncoder().encode(JSON.stringify(artifact)).byteLength > 256e3)
+        ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "Artifact exceeds limits or repeats paths" });
+    });
+    function assistantResourceArtifact(record) {
+      const files = [...record.content.files ?? []];
+      const add = (path, content) => {
+        if (!files.some((file) => file.path === path))
+          files.push({ path, content });
+      };
+      add(".claude-plugin/plugin.json", JSON.stringify({ name: `resource-${record.id}`, description: record.name }));
+      record.content.skills.forEach((skill, index) => add(`skills/skill-${index}/SKILL.md`, /^---\r?\n/.test(skill.instructions) ? skill.instructions : `---
+name: skill-${index}
+description: ${JSON.stringify(record.name)}
+---
+
+${skill.instructions}`));
+      if (record.content.connectors.length)
+        add(".mcp.json", JSON.stringify({
+          mcpServers: Object.fromEntries(record.content.connectors.map((connector) => [
+            connector.id,
+            {
+              type: "http",
+              url: connector.url,
+              ...connector.variable ? { headers: { Authorization: `Bearer \${OTTO_MCP_${connector.variable}}` } } : {}
+            }
+          ]))
+        }, null, 2));
+      return exports2.assistantArtifactSchema.parse({
+        id: record.id,
+        kind: record.kind,
+        projectId: record.projectId,
+        ...record.content.files?.length ? { requiresClaude: true } : {},
+        files
+      });
+    }
+    async function assistantArtifactLocation(workspace, artifact) {
+      const body = JSON.stringify(exports2.assistantArtifactSchema.parse(artifact));
+      const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(body));
+      const sha256 = [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+      const key = `ai-resources/${workspace.kind}/${encodeURIComponent(workspace.id)}/${artifact.kind}/${artifact.id}/${sha256}/bundle.json`;
+      return { key, sha256, body };
+    }
+  }
+});
+
 // packages/schema/dist/agent-chat.js
 var require_agent_chat = __commonJS({
   "packages/schema/dist/agent-chat.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.canTransitionAgentRun = exports2.claudeSandboxRequestSchema = exports2.agentServiceRunRequestSchema = exports2.agentToolAuditSchema = exports2.agentStreamEventSchema = exports2.agentRunSchema = exports2.agentUsageSchema = exports2.assistantConversationUpdateSchema = exports2.assistantConversationConfigSchema = exports2.agentToolRiskSchema = exports2.agentErrorCodeSchema = exports2.agentRunStatusSchema = void 0;
+    exports2.canTransitionAgentRun = exports2.claudeSandboxRequestSchema = exports2.agentServiceRunRequestSchema = exports2.agentToolAuditSchema = exports2.agentStreamEventSchema = exports2.agentRunSchema = exports2.agentUsageSchema = exports2.assistantConversationUpdateSchema = exports2.assistantConversationConfigSchema = exports2.assistantSettingsSchema = exports2.agentToolRiskSchema = exports2.agentErrorCodeSchema = exports2.agentRunStatusSchema = void 0;
     var zod_1 = require("zod");
+    var assistant_models_js_1 = require_assistant_models();
+    var assistant_artifacts_js_1 = require_assistant_artifacts();
     var constants_1 = require_constants();
     var collaboration_1 = require_collaboration();
     var projectIdSchema = zod_1.z.string().min(1).max(128);
@@ -3550,11 +3877,33 @@ var require_agent_chat = __commonJS({
     exports2.agentRunStatusSchema = zod_1.z.enum(constants_1.AGENT_RUN_STATUSES);
     exports2.agentErrorCodeSchema = zod_1.z.enum(constants_1.AGENT_ERROR_CODES);
     exports2.agentToolRiskSchema = zod_1.z.enum(constants_1.AGENT_TOOL_RISKS);
+    exports2.assistantSettingsSchema = zod_1.z.object({
+      model: assistant_models_js_1.assistantModelSchema.optional(),
+      artifacts: zod_1.z.array(assistant_artifacts_js_1.assistantArtifactSchema).max(128).refine((artifacts) => new TextEncoder().encode(JSON.stringify(artifacts)).byteLength <= 256e3, "Attached resource files exceed 256 KB").optional(),
+      resourceIds: zod_1.z.array(zod_1.z.string().uuid()).max(128).optional(),
+      excludedResourceIds: zod_1.z.array(zod_1.z.string().uuid()).max(128).optional(),
+      gateway: zod_1.z.object({
+        url: assistant_models_js_1.assistantEndpointSchema,
+        model: zod_1.z.string().trim().min(1).max(128),
+        variable: assistant_models_js_1.assistantVariableSchema
+      }).strict().nullable(),
+      connectors: zod_1.z.array(zod_1.z.object({
+        id: zod_1.z.string().regex(/^[a-z][a-z0-9_-]{0,31}$/),
+        name: zod_1.z.string().trim().min(1).max(80),
+        url: assistant_models_js_1.assistantEndpointSchema,
+        variable: assistant_models_js_1.assistantVariableSchema.nullable()
+      }).strict()).max(8).refine((items) => new Set(items.map(({ id }) => id)).size === items.length, "Duplicate connectors"),
+      skills: zod_1.z.array(zod_1.z.object({
+        name: zod_1.z.string().trim().min(1).max(128),
+        instructions: zod_1.z.string().min(1).max(32e3)
+      }).strict()).max(16).refine((skills) => new Set(skills.map(({ name }) => name)).size === skills.length && skills.reduce((size, skill) => size + new TextEncoder().encode(skill.instructions).length, 0) <= 128e3, "Skills exceed the session limit or repeat names")
+    }).strict();
     exports2.assistantConversationConfigSchema = zod_1.z.object({
       conversationId: collaboration_1.entityIdSchema,
       projectId: projectIdSchema,
       projectIds: projectIdsSchema,
       worktreeId: zod_1.z.string().uuid().nullable().optional(),
+      settings: exports2.assistantSettingsSchema.optional(),
       enabled: zod_1.z.boolean(),
       policyVersion: policyVersionSchema,
       createdByKind: zod_1.z.enum(["user", "agent"]),
@@ -3569,6 +3918,7 @@ var require_agent_chat = __commonJS({
       projectId: projectIdSchema,
       projectIds: projectIdsSchema.optional(),
       worktreeId: zod_1.z.string().uuid().nullable().optional(),
+      settings: exports2.assistantSettingsSchema.optional(),
       enabled: zod_1.z.boolean(),
       expectedVersion: collaboration_1.revisionSchema.nullable()
     }).strict();
@@ -3585,6 +3935,7 @@ var require_agent_chat = __commonJS({
       projectId: projectIdSchema,
       projectIds: projectIdsSchema,
       worktreeId: zod_1.z.string().uuid().nullable().optional(),
+      settings: exports2.assistantSettingsSchema.optional(),
       workflowRunId: zod_1.z.string().min(1).max(128),
       modelAlias: modelAliasSchema,
       policyVersion: policyVersionSchema,
@@ -3719,6 +4070,7 @@ var require_agent_chat = __commonJS({
       projectId: projectIdSchema,
       projectIds: projectIdsSchema,
       worktreeId: zod_1.z.string().uuid().nullable().optional(),
+      settings: exports2.assistantSettingsSchema.optional(),
       workspace: collaboration_1.workspaceRefSchema,
       principal: collaboration_1.principalSchema,
       policyVersion: policyVersionSchema,
@@ -3745,7 +4097,7 @@ var require_agent_chat = __commonJS({
         ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "agent principal project must match the request" });
       }
     });
-    exports2.claudeSandboxRequestSchema = zod_1.z.object({ prompt: zod_1.z.string().trim().min(1).max(8e3) }).strict();
+    exports2.claudeSandboxRequestSchema = zod_1.z.object({ prompt: zod_1.z.string().trim().min(1).max(8e3), settings: exports2.assistantSettingsSchema.optional() }).strict();
     var AGENT_RUN_TRANSITIONS = {
       queued: ["running", "cancelled", "failed"],
       running: ["approval_required", "completed", "cancelled", "failed"],
@@ -4758,6 +5110,18 @@ var require_json_schema = __commonJS({
     exports2.octonodeJsonSchema = octonodeJsonSchema;
     var json_schema_definitions_1 = require_json_schema_definitions();
     var octonode_config_1 = require_octonode_config();
+    var test_workflow_graph_1 = require_test_workflow_graph();
+    var location = {
+      type: "object",
+      required: ["path", "start", "end", "line", "column"],
+      properties: {
+        path: { type: "string" },
+        start: { type: "number" },
+        end: { type: "number" },
+        line: { type: "number" },
+        column: { type: "number" }
+      }
+    };
     var SCHEMA = {
       $schema: "http://json-schema.org/draft-07/schema#",
       title: "Octonode project config (.octonode)",
@@ -4825,7 +5189,80 @@ var require_json_schema = __commonJS({
           uniqueItems: true,
           items: { type: "string", minLength: 1, maxLength: 240 }
         },
-        workflows: { type: "array", items: { $ref: "#/definitions/workflow" } }
+        workflows: { type: "array", items: { $ref: "#/definitions/workflow" } },
+        test_workflows: {
+          type: "array",
+          description: "CODE-OWNED test graphs and exact source snapshots generated by project compilation. Execute with the native test runner.",
+          items: {
+            type: "object",
+            required: [
+              "path",
+              "runner",
+              "revision",
+              "sourceIndexRevision",
+              "source",
+              "nodes",
+              "edges",
+              "referencedSymbols",
+              "diagnostics",
+              "truncated"
+            ],
+            properties: {
+              path: { type: "string" },
+              runner: { enum: ["vitest", "jest", "playwright"] },
+              revision: { type: "string", minLength: 64, maxLength: 64 },
+              sourceIndexRevision: { type: "string", minLength: 64, maxLength: 64 },
+              source: { type: "string" },
+              truncated: { type: "boolean" },
+              referencedSymbols: { type: "array", items: { type: "string" } },
+              nodes: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["id", "kind", "label", "location"],
+                  properties: {
+                    id: { type: "string" },
+                    kind: { enum: test_workflow_graph_1.TestWorkflowGraphNodeKind.options },
+                    label: { type: "string" },
+                    location,
+                    detail: { type: "string" },
+                    framework: { enum: ["vitest", "jest", "playwright"] },
+                    runnable: { type: "boolean" },
+                    sourceSymbolId: { type: "string" },
+                    sourceSymbolKind: { type: "string" },
+                    mockPhase: { enum: ["hoisted", "ordered", "runner-controlled"] }
+                  }
+                }
+              },
+              edges: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["id", "from", "to", "kind"],
+                  properties: {
+                    id: { type: "string" },
+                    from: { type: "string" },
+                    to: { type: "string" },
+                    kind: { enum: test_workflow_graph_1.TestWorkflowGraphEdgeKind.options }
+                  }
+                }
+              },
+              diagnostics: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["severity", "code", "message"],
+                  properties: {
+                    severity: { enum: ["warning", "error"] },
+                    code: { type: "string" },
+                    message: { type: "string" },
+                    location
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       definitions: {
         node: json_schema_definitions_1.NODE_SCHEMA,
@@ -11213,7 +11650,7 @@ var require_settings = __commonJS({
     exports2.SettingsPresentation = zod_1.z.object({
       label: label.optional(),
       description: zod_1.z.string().max(4e3).optional(),
-      icon: icons_1.IconName.optional(),
+      icon: icons_1.IconValue.optional(),
       color: zod_1.z.string().regex(/^(?:[a-z][a-z0-9-]*|#[0-9a-fA-F]{6})$/).optional(),
       style: zod_1.z.object({
         density: zod_1.z.enum(["compact", "comfortable"]).optional(),
@@ -11396,6 +11833,32 @@ var require_access_tokens = __commonJS({
   }
 });
 
+// packages/schema/dist/app-analytics.js
+var require_app_analytics = __commonJS({
+  "packages/schema/dist/app-analytics.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.appAnalyticsQuerySchema = exports2.calendarDateSchema = void 0;
+    var zod_1 = require("zod");
+    exports2.calendarDateSchema = zod_1.z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine((value) => {
+      const timestamp = Date.parse(`${value}T00:00:00Z`);
+      return Number.isFinite(timestamp) && new Date(timestamp).toISOString().slice(0, 10) === value;
+    }, "Invalid calendar date");
+    exports2.appAnalyticsQuerySchema = zod_1.z.object({
+      days: zod_1.z.enum(["7", "30", "90"]).default("30"),
+      from: exports2.calendarDateSchema.optional(),
+      to: exports2.calendarDateSchema.optional()
+    }).refine(({ from, to }) => {
+      if (!from && !to)
+        return true;
+      if (!from || !to)
+        return false;
+      const span = Date.parse(to) - Date.parse(from);
+      return span >= 0 && span < 366 * 864e5;
+    }, "Choose both dates in order, spanning at most 366 days");
+  }
+});
+
 // packages/schema/dist/plugin/version.js
 var require_version = __commonJS({
   "packages/schema/dist/plugin/version.js"(exports2) {
@@ -11458,8 +11921,9 @@ var require_app_installation = __commonJS({
   "packages/schema/dist/app-installation.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.appDevelopmentConsentSchema = exports2.appSettingsSchema = exports2.appInstallationSchema = exports2.appUninstallSchema = exports2.appInstallSchema = exports2.appGrantsSchema = exports2.appGrantSchema = exports2.appReviewSchema = exports2.appStatusSchema = exports2.appLifecycleSchema = exports2.appPublishSchema = void 0;
+    exports2.appInstallationsQuerySchema = exports2.appDevelopmentConsentSchema = exports2.appSettingsSchema = exports2.appInstallationSchema = exports2.appUninstallSchema = exports2.appInstallSchema = exports2.appGrantsSchema = exports2.appGrantSchema = exports2.appReviewSchema = exports2.appStatusSchema = exports2.appLifecycleSchema = exports2.appPublishSchema = void 0;
     var zod_1 = require("zod");
+    var app_analytics_1 = require_app_analytics();
     var app_1 = require_app();
     var collaboration_1 = require_collaboration();
     var version_1 = require_version();
@@ -11521,32 +11985,16 @@ var require_app_installation = __commonJS({
       expectedRevision: zod_1.z.number().int().positive(),
       grants: exports2.appGrantsSchema
     }).strict();
-  }
-});
-
-// packages/schema/dist/app-analytics.js
-var require_app_analytics = __commonJS({
-  "packages/schema/dist/app-analytics.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.appAnalyticsQuerySchema = void 0;
-    var zod_1 = require("zod");
-    var date = zod_1.z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine((value) => {
-      const timestamp = Date.parse(`${value}T00:00:00Z`);
-      return Number.isFinite(timestamp) && new Date(timestamp).toISOString().slice(0, 10) === value;
-    }, "Invalid calendar date");
-    exports2.appAnalyticsQuerySchema = zod_1.z.object({
-      days: zod_1.z.enum(["7", "30", "90"]).default("30"),
-      from: date.optional(),
-      to: date.optional()
-    }).refine(({ from, to }) => {
-      if (!from && !to)
-        return true;
-      if (!from || !to)
-        return false;
-      const span = Date.parse(to) - Date.parse(from);
-      return span >= 0 && span < 366 * 864e5;
-    }, "Choose both dates in order, spanning at most 366 days");
+    exports2.appInstallationsQuerySchema = zod_1.z.object({
+      offset: zod_1.z.coerce.number().int().min(0).max(1e6).default(0),
+      q: zod_1.z.string().max(200).optional(),
+      sort: zod_1.z.enum(["name", "installed", "updated"]).default("installed"),
+      direction: zod_1.z.enum(["asc", "desc"]).default("desc"),
+      status: zod_1.z.enum(["active", "uninstalled"]).optional(),
+      enabled: zod_1.z.enum(["true", "false"]).optional(),
+      installedAfter: app_analytics_1.calendarDateSchema.optional(),
+      installedBefore: app_analytics_1.calendarDateSchema.optional()
+    }).refine((query) => query.installedAfter === void 0 || query.installedBefore === void 0 || query.installedAfter <= query.installedBefore, "Invalid installation date range");
   }
 });
 
@@ -11740,12 +12188,14 @@ var require_publishing = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginCloudBuild = exports2.PluginPublisherBuildDetail = exports2.PluginPublisherBuilds = exports2.PluginPublisherBuildQuery = exports2.PluginPublisherListQuery = exports2.PluginPublisherApplied = exports2.PluginPublisherApply = exports2.PluginPublisherReview = exports2.PluginPublisherReviewItem = exports2.PluginPublisherOperation = exports2.PluginPublisherConnections = exports2.PluginPublisherConnection = exports2.PluginPublisherPreview = exports2.PluginPublisherConsent = exports2.PluginPublisherAutomatic = exports2.PluginPublisherRepository = exports2.PluginPublisherInput = exports2.pluginReleaseScope = exports2.PluginReleaseConfig = exports2.PluginConfigPath = void 0;
     var zod_1 = require("zod");
+    var icons_1 = require_icons();
     var version_1 = require_version();
     exports2.PluginConfigPath = zod_1.z.string().max(512).refine((path) => /^(?:[a-zA-Z0-9_.-]+\/)*(?:plugin\.octonode\.(?:json|ya?ml)|octonode\.plugin\.json)$/.test(path) && !path.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)), "Select a repository-relative octonode.plugin.json file (older plugin.octonode release files also work)");
     exports2.PluginReleaseConfig = zod_1.z.object({
       apiVersion: zod_1.z.literal("octonode.plugin/v1"),
       id: zod_1.z.string().max(128).regex(/^[a-z0-9][a-z0-9-]*$/),
       version: version_1.PluginVersion,
+      icon: icons_1.IconValue.optional(),
       scope: zod_1.z.enum(["user", "team", "organization", "public"]),
       teamId: zod_1.z.string().min(1).max(128).optional(),
       orgId: zod_1.z.string().min(1).max(128).optional(),
@@ -12071,6 +12521,118 @@ var require_app_runtime = __commonJS({
   }
 });
 
+// packages/schema/dist/data-table-validation.js
+var require_data_table_validation = __commonJS({
+  "packages/schema/dist/data-table-validation.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.validateTableColumns = validateTableColumns;
+    exports2.validateTableRow = validateTableRow;
+    var zod_1 = require("zod");
+    var data_table_constants_js_1 = require_data_table_constants();
+    var fail = (message) => {
+      throw Object.assign(new Error(message), { status: 400 });
+    };
+    function validateTableColumns(columns) {
+      const keys = columns.map((column) => column.key.toLowerCase());
+      if (new Set(keys).size !== keys.length || keys.some((key) => data_table_constants_js_1.DATA_TABLE_RESERVED_COLUMNS.includes(key)))
+        fail("Column names must be unique and cannot use reserved metadata names");
+      for (const column of columns) {
+        if (column.defaultValue !== void 0)
+          validateTableRow([column], { [column.key]: column.defaultValue });
+      }
+    }
+    function validateTableRow(columns, input) {
+      if (!input || typeof input !== "object" || Array.isArray(input))
+        fail("Row must be a JSON object");
+      if (columns.length && Object.keys(input).some((key) => !columns.some((column) => column.key === key)))
+        fail("Row contains an undeclared column");
+      const data = { ...input };
+      for (const column of columns) {
+        const value = !Object.hasOwn(input, column.key) || input[column.key] === void 0 ? column.defaultValue : input[column.key];
+        if (value === void 0 || value === null) {
+          if (column.required)
+            fail(`Column "${column.key}" is required`);
+          if (value !== void 0)
+            data[column.key] = value;
+          continue;
+        }
+        const valid = column.type === "json" || column.type === "text" && typeof value === "string" || column.type === "number" && typeof value === "number" && Number.isFinite(value) || column.type === "boolean" && typeof value === "boolean" || column.type === "date" && typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value || column.type === "datetime" && zod_1.z.string().datetime({ offset: true }).safeParse(value).success;
+        if (!valid)
+          fail(`Column "${column.key}" must be ${column.type}`);
+        data[column.key] = value;
+      }
+      try {
+        const serialized = JSON.stringify(data, (_key, value) => {
+          if (typeof value === "number" && !Number.isFinite(value))
+            fail("Row requires finite numbers");
+          if (["undefined", "function", "symbol", "bigint"].includes(typeof value))
+            fail("Row must contain JSON values");
+          return value;
+        });
+        if (new TextEncoder().encode(serialized).length > data_table_constants_js_1.DATA_TABLE_MAX_ROW_BYTES)
+          fail("Row exceeds size limit");
+      } catch (error) {
+        fail(error instanceof Error ? error.message : "Row must contain JSON values");
+      }
+      return data;
+    }
+  }
+});
+
+// packages/schema/dist/assistant-resources.js
+var require_assistant_resources = __commonJS({
+  "packages/schema/dist/assistant-resources.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.assistantResourcePath = exports2.assistantResourceListSchema = exports2.assistantResourceSchema = exports2.assistantResourceInputSchema = exports2.assistantResourceContentSchema = void 0;
+    var zod_1 = require("zod");
+    var agent_chat_js_1 = require_agent_chat();
+    var assistant_artifacts_js_1 = require_assistant_artifacts();
+    exports2.assistantResourceContentSchema = agent_chat_js_1.assistantSettingsSchema.pick({ connectors: true, skills: true }).extend({
+      files: zod_1.z.array(assistant_artifacts_js_1.assistantFileSchema).max(64).optional()
+    });
+    exports2.assistantResourceInputSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      name: zod_1.z.string().trim().min(1).max(80),
+      kind: zod_1.z.enum(["skill", "plugin", "mcp"]),
+      projectId: zod_1.z.string().min(1).max(128).nullable(),
+      autoLoad: zod_1.z.boolean(),
+      content: exports2.assistantResourceContentSchema
+    }).strict().superRefine((record, ctx) => {
+      try {
+        (0, assistant_artifacts_js_1.assistantResourceArtifact)(record);
+      } catch {
+        ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "Resource files conflict or exceed artifact limits" });
+      }
+      if (!record.content.skills.length && !record.content.connectors.length && !record.content.files?.length)
+        ctx.addIssue({
+          code: zod_1.z.ZodIssueCode.custom,
+          message: "A resource must include instructions or an MCP connector"
+        });
+      if (record.kind === "skill" && (record.content.skills.length !== 1 || record.content.connectors.length))
+        ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "A skill contains one instruction document" });
+      if (record.kind === "mcp" && (record.content.connectors.length !== 1 || record.content.skills.length))
+        ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "An MCP record contains one connector" });
+      if (record.content.files?.some((file) => file.path === ".mcp.json" || file.path === ".claude-plugin/plugin.json"))
+        ctx.addIssue({
+          code: zod_1.z.ZodIssueCode.custom,
+          message: "Configure MCP and plugin identity through the registration fields"
+        });
+      if (new TextEncoder().encode(JSON.stringify(record)).byteLength > 128e3)
+        ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "Resource exceeds 128 KB" });
+    });
+    exports2.assistantResourceSchema = zod_1.z.object({
+      registration: exports2.assistantResourceInputSchema,
+      version: zod_1.z.number().int().positive(),
+      createdAt: zod_1.z.number().int().nonnegative()
+    });
+    exports2.assistantResourceListSchema = zod_1.z.object({ items: zod_1.z.array(exports2.assistantResourceSchema).max(128) });
+    var assistantResourcePath = (id) => `.agents/otto/resources/${zod_1.z.string().uuid().parse(id)}.json`;
+    exports2.assistantResourcePath = assistantResourcePath;
+  }
+});
+
 // packages/schema/dist/index.js
 var require_dist = __commonJS({
   "packages/schema/dist/index.js"(exports2) {
@@ -12092,13 +12654,17 @@ var require_dist = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ToolkitAction = exports2.schemaVersion = exports2.octonodeJsonSchema = void 0;
+    exports2.ToolkitAction = exports2.schemaVersion = exports2.octonodeJsonSchema = exports2.testDataValidator = void 0;
     __exportStar(require_ipc_envelope(), exports2);
     __exportStar(require_octonode_config(), exports2);
     __exportStar(require_entry(), exports2);
     __exportStar(require_store(), exports2);
     __exportStar(require_data_tables(), exports2);
     __exportStar(require_data_table_schema(), exports2);
+    var test_data_1 = require_test_data();
+    Object.defineProperty(exports2, "testDataValidator", { enumerable: true, get: function() {
+      return test_data_1.testDataValidator;
+    } });
     __exportStar(require_layout(), exports2);
     __exportStar(require_source_index(), exports2);
     __exportStar(require_test_workflow_graph(), exports2);
@@ -12146,6 +12712,12 @@ var require_dist = __commonJS({
     Object.defineProperty(exports2, "ToolkitAction", { enumerable: true, get: function() {
       return toolkit_1.ToolkitAction;
     } });
+    __exportStar(require_clients(), exports2);
+    __exportStar(require_data_table_validation(), exports2);
+    __exportStar(require_data_table_constants(), exports2);
+    __exportStar(require_assistant_resources(), exports2);
+    __exportStar(require_assistant_artifacts(), exports2);
+    __exportStar(require_assistant_models(), exports2);
   }
 });
 
@@ -12163,6 +12735,10 @@ var require_json_schema2 = __commonJS({
       return errors;
     }
     function walk(schema, data, path, errors) {
+      if (Array.isArray(schema.anyOf) && !schema.anyOf.some((branch) => isPlainObject(branch) && validate(branch, data).length === 0)) {
+        errors.push({ path, message: "value does not match any allowed shape" });
+        return;
+      }
       const allowed = normalizeTypes(schema.type);
       if (allowed.length > 0 && !allowed.some((t) => matchesType(t, data))) {
         errors.push({ path, message: `expected type ${allowed.join("|")}, got ${jsonType(data)}` });
@@ -12184,6 +12760,14 @@ var require_json_schema2 = __commonJS({
               walk(sub, data[key], `${path}.${key}`, errors);
             }
           }
+        }
+        for (const [key, value] of Object.entries(data)) {
+          if (props && Object.hasOwn(props, key))
+            continue;
+          if (schema.additionalProperties === false)
+            errors.push({ path: `${path}.${key}`, message: "unexpected property" });
+          else if (isPlainObject(schema.additionalProperties))
+            walk(schema.additionalProperties, value, `${path}.${key}`, errors);
         }
       }
       if (Array.isArray(data) && isPlainObject(schema.items)) {
@@ -13216,6 +13800,7 @@ var LOCK_FILENAME = "octonode.lock";
 var LockEntry = import_zod.z.object({
   /** False only for pins introduced exclusively by a toolkit. Legacy pins are direct. */
   direct: import_zod.z.boolean().optional(),
+  installedAt: import_zod.z.number().int().nonnegative().max(864e13).optional(),
   version: import_zod.z.string(),
   /** `sha256:<hex>` dir-content hash (hashPluginDir) — the store address + integrity check. */
   sha256: import_zod.z.string(),
@@ -13274,7 +13859,17 @@ function readLockfile(cwd = process.cwd()) {
 }
 function writeLockfile(cwd, lock) {
   const parsed = Lockfile.parse(lock);
-  const plugins = Object.fromEntries(Object.entries(parsed.plugins).sort(([a], [b]) => a.localeCompare(b)));
+  const previous = readLockfile(cwd).plugins;
+  const now = Date.now();
+  const plugins = Object.fromEntries(
+    Object.entries(parsed.plugins).sort(([a], [b]) => a.localeCompare(b)).map(([id, entry]) => [
+      id,
+      {
+        ...entry,
+        installedAt: entry.installedAt ?? previous[id]?.installedAt ?? (previous[id] ? void 0 : now)
+      }
+    ])
+  );
   const staging = (0, import_node_fs3.mkdtempSync)((0, import_node_path3.join)(cwd, ".octonode-lock-"));
   try {
     (0, import_node_fs3.writeFileSync)((0, import_node_path3.join)(staging, "lock"), JSON.stringify({ ...parsed, plugins }, null, 2) + "\n", "utf8");
@@ -13282,6 +13877,7 @@ function writeLockfile(cwd, lock) {
   } finally {
     (0, import_node_fs3.rmSync)(staging, { recursive: true, force: true });
   }
+  return { ...parsed, plugins };
 }
 function upsertLockEntry(cwd, id, entry) {
   const lock = readLockfile(cwd);
@@ -13289,8 +13885,7 @@ function upsertLockEntry(cwd, id, entry) {
   if (previous && Object.values(lock.toolkits ?? {}).some((toolkit) => toolkit.plugins.includes(id)) && (previous.version !== entry.version || previous.sha256 !== entry.sha256 || previous.registry !== entry.registry || previous.remoteId !== entry.remoteId || previous.pluginId !== entry.pluginId))
     throw new Error(`Plugin ${id} is required by an installed toolkit; update the toolkit first`);
   const next = { ...lock, plugins: { ...lock.plugins, [id]: LockEntry.parse(entry) } };
-  writeLockfile(cwd, next);
-  return next;
+  return writeLockfile(cwd, next);
 }
 
 // packages/plugin/src/loader.ts
@@ -13371,7 +13966,7 @@ function discover(opts, metadataOnly) {
         if (manifest2.id !== (entry.pluginId ?? id) || manifest2.version !== entry.version || !metadataOnly && hashPluginDir(dir) !== entry.sha256)
           throw new Error(`Locked plugin ${id} failed identity or integrity validation; run octonode install`);
         seen.add(id);
-        plugins.push({ manifest: { ...manifest2, id }, dir, source: "store" });
+        plugins.push({ manifest: { ...manifest2, id }, dir, source: "store", installedAt: entry.installedAt });
       } catch (err) {
         errors.push({ dir, message: err.message });
       }
@@ -13738,6 +14333,8 @@ function installEnvironment(cacheRoot) {
   return (0, import_common.childProcessEnvironment)({
     ...(0, import_common.packageCacheEnvironment)(dependencyCacheRoot(cacheRoot)),
     YARN_ENABLE_SCRIPTS: "false",
+    // Frozen installs opt in with --immutable; CI must not freeze mutable operations.
+    YARN_ENABLE_IMMUTABLE_INSTALLS: "false",
     COREPACK_ENABLE_DOWNLOAD_PROMPT: "0",
     COREPACK_ENABLE_AUTO_PIN: "0"
   });
@@ -14750,7 +15347,7 @@ var RemoteRegistry = class {
     const headers = new Headers(init.headers);
     if (this.token) headers.set("authorization", `Bearer ${this.token}`);
     const url = new URL(`${this.baseUrl}${path}`);
-    if (this.workspace && (init.method === void 0 || init.method === "GET" || url.pathname.endsWith("/install")))
+    if (this.workspace && url.searchParams.get("catalog") !== "public" && (init.method === void 0 || init.method === "GET" || url.pathname.endsWith("/install")))
       url.searchParams.set("workspace", this.workspace);
     const res = await fetch(url.toString(), {
       ...init,
@@ -14778,15 +15375,24 @@ var RemoteRegistry = class {
       if (!page.entries.length || page.total === void 0 || entries.length >= page.total) return entries;
     }
   }
-  async detail(id, scope) {
-    const query = scope ? `?scope=${encodeURIComponent(scope)}` : "";
+  async detail(id, scope, version, page = {}) {
+    const params = new URLSearchParams({ ...scope ? { scope } : {}, ...version ? { version } : {} });
+    for (const [key, value] of Object.entries(page)) if (value !== void 0) params.set(key, String(value));
+    const query = params.size ? `?${params}` : "";
     const res = await this.request(`/marketplace/plugins/${encodeURIComponent(id)}${query}`);
     return await res.json();
+  }
+  /** Publisher authorization is checked live before returning an exact version. */
+  async publisherVersion(id, version) {
+    const response = await this.request(
+      `/marketplace/publisher/plugins/${encodeURIComponent(id)}/versions/${encodeURIComponent(version)}`
+    );
+    return await response.json();
   }
   /** Reauthorize an immutable pin, including older locks that only recorded the extracted tree hash. */
   async matchesLockedRelease(id, pin) {
     const remoteId = pin.remoteId ?? id;
-    const detail = await this.detail(remoteId, pin.scope);
+    const detail = await this.detail(remoteId, pin.scope, pin.version);
     const release2 = detail.versions.find((entry) => entry.version === pin.version);
     if (!release2 || pin.publisher && release2.publishedBy !== pin.publisher) return false;
     const checksum = release2.archiveSha256 ?? release2.sha256;
@@ -14802,7 +15408,7 @@ var RemoteRegistry = class {
   async registerInstall(id, version, scope, opts) {
     const response = await this.request(`/marketplace/plugins/${encodeURIComponent(id)}/install`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", "idempotency-key": opts.idempotencyKey ?? crypto.randomUUID() },
       body: JSON.stringify({
         version,
         scope,
@@ -14885,7 +15491,8 @@ var RemoteRegistry = class {
   }
   /** Download a version's bundle and extract it to a fresh temp folder. */
   async downloadBundle(id, version, scope, expectedId = id, expectedChecksum) {
-    const query = scope ? `?scope=${encodeURIComponent(scope)}` : "";
+    const params = new URLSearchParams(scope ? { scope } : {});
+    const query = params.size ? `?${params}` : "";
     const res = await this.request(
       `/marketplace/plugins/${encodeURIComponent(id)}/versions/${encodeURIComponent(version)}/bundle${query}`
     );
@@ -14935,7 +15542,7 @@ var RemoteRegistry = class {
    * install (with its granted permissions) in the marketplace DB.
    */
   async install(id, opts = {}) {
-    const detail = await this.detail(id, opts.scope);
+    const detail = await this.detail(id, opts.scope, opts.version);
     if (detail.manifestId && detail.manifestId !== id)
       throw new Error("Publisher-qualified plugins require installToStore so their registry identity is preserved");
     const version = opts.version ?? detail.version;
@@ -14950,7 +15557,7 @@ var RemoteRegistry = class {
     const plugin = await installPlugin(dir, opts);
     const res = await this.request(`/marketplace/plugins/${encodeURIComponent(id)}/install`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", "idempotency-key": opts.idempotencyKey ?? crypto.randomUUID() },
       body: JSON.stringify({
         version,
         scope: opts.scope,
@@ -14969,7 +15576,7 @@ var RemoteRegistry = class {
    * the lockfile — the code lives in the store.
    */
   async installToStore(id, opts = {}) {
-    const detail = await this.detail(id, opts.scope);
+    const detail = await this.detail(id, opts.scope, opts.version);
     const version = opts.version ?? detail.version;
     const versionMeta = detail.versions?.find((v) => v.version === version);
     const releaseChecksum = versionMeta?.archiveSha256 ?? versionMeta?.sha256;
@@ -15103,17 +15710,24 @@ var RemoteRegistry = class {
     return { plugin: { manifest: entry.manifest, dir: entry.dir, source: "store" }, entry, installId, ...deps };
   }
   /** Report a lifecycle event (invoke/error/uninstall) for an install — the analytics feed. */
-  async postEvent(installId, eventType, metadata) {
+  async postEvent(installId, eventType, metadata, idempotencyKey = crypto.randomUUID()) {
     await this.request(`/marketplace/installs/${encodeURIComponent(installId)}/events`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", "idempotency-key": idempotencyKey },
       body: JSON.stringify({ eventType, metadata })
     });
   }
   async analytics(ownerId) {
-    const query = ownerId ? `?owner_id=${encodeURIComponent(ownerId)}` : "";
-    const res = await this.request(`/marketplace/analytics${query}`);
-    return await res.json();
+    const params = new URLSearchParams({ limit: "100", ...ownerId ? { owner_id: ownerId } : {} });
+    const res = await this.request(`/marketplace/analytics?${params}`);
+    const result = await res.json();
+    while (result.plugins.length < result.summary.pluginCount) {
+      params.set("offset", String(result.plugins.length));
+      const page = await (await this.request(`/marketplace/analytics?${params}`)).json();
+      if (!page.plugins.length) break;
+      result.plugins.push(...page.plugins);
+    }
+    return result;
   }
 };
 function packPluginDir(pluginDir) {

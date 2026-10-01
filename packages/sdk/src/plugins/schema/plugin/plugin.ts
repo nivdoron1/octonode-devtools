@@ -1,7 +1,7 @@
 // Generated from packages/schema/src/plugin/plugin.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
 import { JsonSchema } from "../ipc-envelope";
-import { IconName } from "../icons";
+import { IconValue } from "../icons";
 import { PLUGIN_SCHEMA_VERSION } from "../constants";
 import { AppDefinition } from "../app";
 
@@ -92,6 +92,39 @@ export type PluginImplementationSource = z.infer<typeof PluginImplementationSour
 
 export const PluginNpmDependency = z.object({ package: z.string(), version: z.string(), spec: z.string() }).strict();
 
+/** Declaration-derived SDK contracts; configuration values live in project source. */
+export const NpmClientDefinition = z
+  .object({
+    module: NpmClientBinding.shape.module,
+    export: NpmClientBinding.shape.export,
+    construction: z.enum(["call", "new"]),
+    overload: z.number().int().nonnegative().optional(),
+    async: z.boolean(),
+    parameters: z.array(
+      z.object({
+        name: z.string().regex(/^[A-Za-z_$][\w$]*$/),
+        required: z.boolean(),
+        rest: z.boolean(),
+        schema: JsonSchema,
+      }),
+    ),
+    inputs: JsonSchema,
+    label: z.string().optional(),
+    fields: z.record(z.object({ label: z.string(), secret: z.boolean().optional() })).optional(),
+  })
+  .strict();
+export type NpmClientDefinition = z.infer<typeof NpmClientDefinition>;
+
+export const NpmSdkExport = z
+  .object({
+    name: z.string(),
+    kind: z.enum(["type", "constant", "function", "client"]),
+    type: z.string(),
+    schema: JsonSchema.optional(),
+  })
+  .strict();
+export type NpmSdkExport = z.infer<typeof NpmSdkExport>;
+
 /**
  * One node contributed by a plugin. Unlike a project node (whose signature is
  * discovered by `octonode scan`), a plugin node declares its contract directly
@@ -106,7 +139,7 @@ export const PluginNode = z.object({
   label: z.string().min(1).max(240).optional(),
   symbol: z.string().min(1).max(16).optional(),
   description: z.string().optional(),
-  icon: IconName.optional(),
+  icon: IconValue.optional(),
   trigger: z.boolean().optional(),
   inputs: JsonSchema.optional(),
   outputs: JsonSchema.optional(),
@@ -114,6 +147,7 @@ export const PluginNode = z.object({
   env: z.array(z.string()).optional(),
   connections: z.array(z.string().min(1)).optional(),
   defaults: z.record(z.unknown()).optional(),
+  client: z.string().optional(),
   bindings: z.record(z.string().regex(/^[A-Za-z_$][\w$]*$/), NpmClientBinding).optional(),
   ui: PluginNodeUi.optional(),
   source: PluginImplementationSource.optional(),
@@ -138,6 +172,11 @@ export const PluginNode = z.object({
         .max(8)
         .optional(),
       parameters: z.array(z.string()),
+      rest: z.string().optional(),
+      outputStreams: z
+        .array(z.array(z.string().refine((part) => !["__proto__", "prototype", "constructor"].includes(part))).max(8))
+        .max(16)
+        .optional(),
     })
     .strict()
     .optional(),
@@ -155,7 +194,25 @@ export const PluginPermission = z.object({
 export type PluginPermission = z.infer<typeof PluginPermission>;
 
 /** Discovery/marketplace metadata (used by the Studio Marketplace in Phase 14). */
+export const PluginCategory = z.enum([
+  "ai",
+  "api",
+  "communication",
+  "database",
+  "development",
+  "finance",
+  "npm",
+  "productivity",
+  "storage",
+  "utilities",
+  "other",
+]);
+export type PluginCategory = z.infer<typeof PluginCategory>;
+export const PluginLicense = z.enum(["MIT", "Apache-2.0"]);
+export type PluginLicense = z.infer<typeof PluginLicense>;
+
 export const PluginIntegration = z.object({
+  // Keep historical/custom categories readable; creation selectors use PluginCategory.
   category: z.string().optional(),
   tags: z.array(z.string()).default([]),
   /** Secrets/env the integration needs to authenticate (e.g. ["JIRA_TOKEN"]). */
@@ -206,7 +263,17 @@ export const PluginManifest = z
       })
       .strict()
       .optional(),
-    icon: IconName.optional(),
+    /** Source-level inventory shown alongside executable nodes in plugin overviews. */
+    contents: z
+      .object({
+        types: z.array(z.string().min(1).max(240)).max(1000),
+        services: z.array(z.string().min(1).max(240)).max(1000),
+        constants: z.array(z.string().min(1).max(240)).max(1000),
+        classes: z.array(z.string().min(1).max(240)).max(1000),
+      })
+      .strict()
+      .optional(),
+    icon: IconValue.optional(),
     author: z.string().optional(),
     contributors: z.array(z.string().trim().min(1).max(240)).max(100).optional(),
     repository: z
@@ -223,6 +290,8 @@ export const PluginManifest = z
     app: AppDefinition.optional(),
     integration: PluginIntegration.optional(),
     connections: z.record(z.string().regex(/^[a-z0-9][a-z0-9-]*$/), PluginConnection).optional(),
+    clients: z.record(NpmClientDefinition).optional(),
+    sdkExports: z.array(NpmSdkExport).optional(),
     nodes: z.array(PluginNode).default([]),
   })
   .superRefine((manifest, ctx) => {
@@ -232,6 +301,8 @@ export const PluginManifest = z
         manifest.library ||
         manifest.permissions.length ||
         Object.keys(manifest.connections ?? {}).length ||
+        Object.keys(manifest.clients ?? {}).length ||
+        manifest.sdkExports?.length ||
         manifest.integration?.npm ||
         manifest.integration?.npmDependencies?.length)
     )
@@ -282,6 +353,22 @@ export const PluginManifest = z
           path: ["nodes", index, "libraryExport"],
           message: "custom export must exist in the plugin library",
         });
+      if (node.client) {
+        const client = manifest.clients?.[node.client];
+        if (
+          !client ||
+          !node.implementation?.methodPath ||
+          client.module !== node.implementation.module ||
+          client.export !== node.implementation.export ||
+          !nodeNpm ||
+          (client.module !== nodeNpm.package && !client.module.startsWith(`${nodeNpm.package}/`))
+        )
+          ctx.addIssue({
+            code: "custom",
+            path: ["nodes", index, "client"],
+            message: "Client must match the verified npm method receiver",
+          });
+      }
       for (const binding of Object.values(node.bindings ?? {})) {
         if (!nodeNpm || (binding.module !== nodeNpm.package && !binding.module.startsWith(`${nodeNpm.package}/`)))
           ctx.addIssue({

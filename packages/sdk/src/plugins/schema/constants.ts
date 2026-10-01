@@ -1,5 +1,6 @@
 // Generated from packages/schema/src/constants.ts. Do not edit; run the Octonode SDK sync.
 export const PLUGIN_SCHEMA_VERSION = "1" as const;
+export const PLUGIN_DEFAULT_LICENSE = "MIT" as const;
 export const PROJECT_JOB_PROTOCOL = "octonode.project-job.v1";
 export const COMMUNITY_MEDIA_IMAGE_BYTES = 8 * 1024 * 1024;
 export const COMMUNITY_MEDIA_VIDEO_BYTES = 20 * 1024 * 1024;
@@ -81,6 +82,7 @@ export const AGENT_RUN_STATUSES = [
 ] as const;
 
 export const AGENT_ERROR_CODES = [
+  "engine_incompatible",
   "provider_not_configured",
   "service_unavailable",
   "provider_rate_limited",

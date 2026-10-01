@@ -127,6 +127,20 @@ export function generateNodeCatalog(root: string, files?: readonly string[], che
             "export const nodes = {\n",
             "export const nodes = {\n" + adapters.map((item) => item.getText(source) + ",").join("\n") + "\n",
           );
+    if (text !== npmInventory)
+      text +=
+        "\n" +
+        source.statements
+          .filter(ts.isVariableStatement)
+          .filter((statement) =>
+            statement.declarationList.declarations.some(
+              (declaration) =>
+                ts.isIdentifier(declaration.name) && ["clients", "sdkExports"].includes(declaration.name.text),
+            ),
+          )
+          .map((statement) => statement.getText(source))
+          .join("\n") +
+        "\n";
     text = `// Generated npm inventory: ${createHash("sha256").update(text).digest("hex")}\n${text}`;
   }
   const output = resolve(root, NODES_FILENAME);
