@@ -12246,6 +12246,66 @@ var require_github = __commonJS({
   }
 });
 
+// packages/schema/dist/gitlab.js
+var require_gitlab = __commonJS({
+  "packages/schema/dist/gitlab.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.GitLabRepositorySelection = exports2.GitLabRepositories = exports2.GitLabRepository = exports2.GitLabConnection = void 0;
+    exports2.gitlabRepositoryUrl = gitlabRepositoryUrl;
+    var zod_1 = require("zod");
+    function gitlabRepositoryUrl(value) {
+      const input = value.trim();
+      if (!input || /[\s\\?#%]/.test(input) || /(?:^|\/)\.{1,2}(?:\/|$)/.test(input))
+        return null;
+      const path = input.replace(/^git@gitlab\.com:/i, "https://gitlab.com/").replace(/^ssh:\/\/git@gitlab\.com\//i, "https://gitlab.com/");
+      let url;
+      try {
+        url = new URL(path);
+      } catch {
+        return null;
+      }
+      if (url.protocol !== "https:" || url.host !== "gitlab.com" || url.username || url.password)
+        return null;
+      const parts = url.pathname.replace(/\/$/, "").replace(/\.git$/, "").slice(1).split("/");
+      if (parts.length < 2 || parts.some((part) => !/^[A-Za-z0-9_][A-Za-z0-9_.-]*$/.test(part) || part === "." || part === ".." || part === "-"))
+        return null;
+      return `https://gitlab.com/${parts.join("/")}.git`;
+    }
+    exports2.GitLabConnection = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      accountId: zod_1.z.string(),
+      accountName: zod_1.z.string().nullable(),
+      installedBy: zod_1.z.string(),
+      status: zod_1.z.enum([
+        "active",
+        "scope_drift",
+        "refresh_failed",
+        "revocation_pending",
+        "revocation_failed",
+        "revoked",
+        "uninstalled"
+      ]),
+      tokenExpiresAt: zod_1.z.number().nullable(),
+      updatedAt: zod_1.z.number()
+    });
+    exports2.GitLabRepository = zod_1.z.object({
+      id: zod_1.z.number().int().positive(),
+      fullName: zod_1.z.string().min(1).max(512),
+      cloneUrl: zod_1.z.string().refine((value) => gitlabRepositoryUrl(value) !== null),
+      defaultBranch: zod_1.z.string().nullable(),
+      private: zod_1.z.boolean(),
+      archived: zod_1.z.boolean(),
+      selected: zod_1.z.boolean()
+    });
+    exports2.GitLabRepositories = zod_1.z.object({
+      items: zod_1.z.array(exports2.GitLabRepository).max(100),
+      nextPage: zod_1.z.number().int().positive().nullable()
+    });
+    exports2.GitLabRepositorySelection = zod_1.z.object({ repositoryId: zod_1.z.number().int().positive(), selected: zod_1.z.boolean() }).strict();
+  }
+});
+
 // packages/schema/dist/project/lifecycle.js
 var require_lifecycle = __commonJS({
   "packages/schema/dist/project/lifecycle.js"(exports2) {
@@ -12283,7 +12343,7 @@ var require_jobs = __commonJS({
       zod_1.z.object({
         ...identity,
         kind: zod_1.z.literal("import"),
-        provider: zod_1.z.enum(["git", "github"]),
+        provider: zod_1.z.enum(["git", "github", "gitlab"]),
         url: zod_1.z.string().trim().min(1).max(2048).refine((value) => {
           if (/[\r\n\0]/.test(value) || value.includes("::"))
             return false;
@@ -12903,6 +12963,7 @@ var require_dist = __commonJS({
     __exportStar(require_app_installation(), exports2);
     __exportStar(require_app_analytics(), exports2);
     __exportStar(require_github(), exports2);
+    __exportStar(require_gitlab(), exports2);
     __exportStar(require_triggers(), exports2);
     __exportStar(require_lifecycle(), exports2);
     __exportStar(require_jobs(), exports2);
@@ -13715,6 +13776,7 @@ var require_cloud_routing = __commonJS({
         /^\/api\/social\/(?:conversations(?:\/[^/]+(?:\/(?:members(?:\/[^/]+)?|messages|read))?)?|messages\/[^/]+(?:\/reactions\/[^/]+)?|notifications(?:\/read)?|realtime(?:-ticket)?|backups(?:\/content)?|restores|workspace|operations(?:\/[^/]+)?)$/,
         /^\/api\/github\/(?:install|installations\/complete|repositories|jobs\/[^/]+(?:\/retry)?)$/,
         /^\/api\/slack\/(?:install|installations\/complete|connections(?:\/[^/]+)?|bindings(?:\/[^/]+)?)$/,
+        /^\/api\/gitlab\/(?:install|installations\/complete|connections|repositories)$/,
         /^\/api\/design-documents(?:\/[^/]+(?:\/(?:share|review-threads))?)?$/,
         /^\/api\/architectures\/[^/]+\/github(?:\/pull-requests(?:\/\d+(?:\/reviews)?)?)?$/,
         /^\/api\/(?:review-threads\/[^/]+(?:\/(?:comments|resolve|github\/(?:resolve|unresolve)))?|review-comments\/[^/]+(?:\/github)?|review-suggestions\/[^/]+\/reject)$/
