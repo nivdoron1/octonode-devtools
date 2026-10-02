@@ -7,7 +7,12 @@ wraps `@octonodes/sdk`, so every generated SDK operation is available without wr
 
 Use Node 24 and a CLI release containing `octonodes app`. The default scaffold
 is a full Vite app with one hosted page and a backend. Contributions are optional.
-Use `--template extension` for an extension-only app.
+Use `--template extension` for a navbar launcher and panel inside Octonode.
+Run `octonodes app targets` to list supported view/action/launcher targets; add a
+contextual entry with `octonodes app extension add explain-node --target node.action`.
+The extension starter uses `octonode.app/v2` and builds an app manifest v3 release.
+These targets require the branch-built SDK/CLI and a matching host until publication;
+see the [native extension API guide](../ui-extensions/README.md#native-app-contributions-v3).
 
 ```sh
 octonodes app create workspace-notice
@@ -27,6 +32,9 @@ in Studio with `octonodes login` followed by
 `octonodes app dev --workspace user:<id>`.
 Octonode colors are enabled automatically in interactive terminals.
 Redirected output stays plain for scripts.
+For extension-only projects, edit `octonode.app.json` and `src/extensions/assistant.tsx`.
+Local preview supplies read-only context and starts actions from an explicit Run button;
+commands requiring native resources need Studio preview or an installed app.
 
 ```sh
 octonodes app extension add overview --target app.page
@@ -34,8 +42,8 @@ octonodes app publish --workspace user:<id>
 ```
 
 The default app opens its hosted page inside Studio. The command above adds an optional app-page contribution.
-Install through Studio → Apps; a block appears on
-workspace home, and a page-capable app opens from Apps. An administrator can
+Install through Studio → Apps; the extension starter adds a navbar button that opens
+its panel. A declared workspace block appears on workspace home; page-capable apps open from Apps. An administrator can
 configure or disable an installation. The first publication returns the app ID
 and revision. Increment the source version and publish an update with
 `--app-id <id> --revision <current-revision>`; existing installs remain pinned

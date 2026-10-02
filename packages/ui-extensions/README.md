@@ -51,8 +51,9 @@ accompanying branch; they are not published yet.
 
 Views use `defineExtension(target, Component)` and `useExtension(target)` from
 `@octonodes/ui-extensions/react`. Actions use `defineAction(target, handler)` from
-`@octonodes/ui-extensions`. The CLI supplies `startExtension` or `startAction`,
-verifies the definition's target/kind, and hashes each immutable browser bundle.
+`@octonodes/ui-extensions`. The CLI bundles and hashes each immutable browser entry.
+The generated runtime checks the definition's target and action/view kind at startup,
+then calls `startExtension` or `startAction`.
 
 ```tsx
 import { defineExtension, useExtension, Section, Button } from "@octonodes/ui-extensions/react";

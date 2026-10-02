@@ -13,13 +13,13 @@ npm install
 npm run dev
 ```
 
-Use `--template extension` for a static extension-only app. Both templates start with a
-workspace block. Add a page explicitly with
+Use `--template extension` for a navbar launcher and `shell.panel` without a backend.
+Use `octonodes app targets` to discover native view/action/launcher targets. Add a page explicitly with
 `octonodes app extension add overview --target app.page`.
 The default is a full Vite app, identical to `--platform vite`. Use
 `--platform next` for Next.js or `--platform plain` for an HTML welcome page and
 Fetch API backend without a frontend framework. Vite and Next.js provide a native
-React welcome page, an `app.page` contribution and a workspace block. The CLI builds the framework's static output into the
+React welcome page; full-app contributions start empty. The CLI builds the framework's static output into the
 verified web artifact while `src/server.ts` handles authenticated API requests.
 The Next.js variant uses static export; server-only Next.js features require a
 different deployment adapter.
@@ -56,7 +56,9 @@ For Studio rendering, run `octonodes login`, then
 `--base-url` and `--studio-url` select a development platform deployment. The publisher
 must have workspace publish permission. Private drafts rotate tokens, expire after ten
 minutes, and heartbeat every minute. Only their owner can access them. Preview tokens
-have no project data or workflow grants; the local-only preview uses mock context.
+start without project data or workflow grants; the local-only preview uses read-only context.
+Native-contribution previews supply protocol v2 and translations, start actions only
+from a Run button, and reject commands that need native resources.
 Studio preview requires the matching development API/UI. Branded tunnel registration is paused until the private preview gateway has wildcard TLS and passes its live smoke test. The lease client remains in `tunnel-lease.ts`; enable `BRANDED_APP_PREVIEWS_ENABLED` in `dev.ts` after the private rollout. Branded previews use signed-in user sessions (not API tokens), expire after ten minutes without renewal, and support bearer authentication. Cookie-based sessions, WebSockets and SSE are not supported by this preview relay.
 
 ## Project and release structure
@@ -64,21 +66,24 @@ Studio preview requires the matching development API/UI. Branded tunnel registra
 ```text
 my-app/
   octonode.app.json
-  src/extensions/notice.tsx
+  src/extensions/assistant.tsx # extension template only
   src/server.ts                 # full template only
   tests/app.test.cjs
   package.json
   tsconfig.json
-  dist/apps/my-app/             # immutable registration artifact
-  dist/web/my-app/              # full template only: deployable Node output
+  dist/apps/<app-id>/           # immutable registration artifact
+  dist/web/<app-id>/            # full template only: deployable Node output
     server.cjs
     start.cjs
     extensions/<content-hash>.js
-    extensions/notice.js
+    extensions/<extension-id>.js # when explicitly declared
     octonode-web.json
 ```
 
 The descriptor owns `apiVersion`, `id`, `name`, `version`, settings and extension entries.
+Native contributions use `octonode.app/v2`, with launchers, title translations and
+conditions, and compile to app manifest v3. Existing v1 descriptors remain supported.
+Use branch-built packages and a matching host until these changes are published.
 Full apps add `web.entry` and a permanent HTTPS `web.applicationUrl` for release builds.
 The backend default-exports a Fetch API handler. Only declared extension assets are
 served statically; source/configuration/secrets are never exposed. Builds generate hashes
@@ -90,11 +95,11 @@ Set `web.applicationUrl` before full-app release builds. Then:
 
 ```sh
 npm test
-octonodes app validate dist/apps/my-app
+octonodes app validate dist/apps/<app-id>
 octonodes app publish --workspace user:<id>
-# The first publish returns <app-id>. For full apps, deploy dist/web/my-app
+# The first publish returns <app-id>. For full apps, deploy dist/web/<app-id>
 # to a Node 24 host, then run there with the returned registered ID:
-cd dist/web/my-app
+cd dist/web/<app-id>
 PORT=3000 OCTONODE_APP_ID=<app-id> OCTONODE_API_URL=https://octonodes.com node start.cjs
 # Back in the source project, after incrementing the source version:
 octonodes app publish --workspace user:<id> --app-id <id> --revision <revision>
@@ -110,7 +115,7 @@ An administrator installs/updates the release through Studio consent.
 
 Implemented: scaffold, add contribution, tunnel/local dev, backend reload, isolated local
 preview, private Studio preview, verified release build/serve and revision-safe publication.
-OAuth integrations, platform webhooks, managed hosting, payments and new command/agent
+OAuth integrations, platform webhooks, managed hosting, payments and installed agent-provider
 contribution targets are separate work. Tunnel transport alone supplies none of them.
 
 Run `yarn gen`, `yarn build`, `yarn test`. App tests exercise scaffolds, bundle integrity,
