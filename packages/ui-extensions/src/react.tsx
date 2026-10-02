@@ -1,7 +1,12 @@
 // Generated from packages/ui-extensions/src/react.tsx. Do not edit; run the Octonode SDK sync.
-import { useId, useEffect, createElement, type ComponentType, type ReactNode } from "react";
+import { useId, useEffect, useMemo, createElement, type ComponentType, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
-import { UI_EXTENSION_API_VERSION, type UiExtensionTarget, type UiExtensionTree } from "./index";
+import { UI_EXTENSION_API_VERSION, getAppSession, type UiExtensionTarget, type UiExtensionTree } from "./index";
+import { extensionApi } from "./contributions.js";
+import type { AppExtensionTarget } from "./contributions.types.js";
+export function useExtension(target: AppExtensionTarget) {
+  return useMemo(() => extensionApi(target), [target]);
+}
 
 export interface UiExtensionDefinition {
   apiVersion: typeof UI_EXTENSION_API_VERSION;
@@ -105,10 +110,17 @@ function serialize(node: Node): UiExtensionTree | null {
 }
 
 export function startExtension(extension: UiExtensionDefinition): void {
+  let apiVersion: "1" | "2" = UI_EXTENSION_API_VERSION;
+  try {
+    apiVersion = getAppSession().protocolVersion ?? "1";
+  } catch {
+    /* Plugin renderers have no app session. */
+  }
   addEventListener("message", (event) => {
     if (
       event.source !== parent ||
       event.data?.octonode !== "ui-extension" ||
+      event.data?.apiVersion !== apiVersion ||
       event.data?.type !== "event" ||
       event.data?.target !== extension.target
     )
@@ -129,7 +141,7 @@ export function startExtension(extension: UiExtensionDefinition): void {
     parent.postMessage(
       {
         octonode: "ui-extension",
-        apiVersion: UI_EXTENSION_API_VERSION,
+        apiVersion,
         type: "render",
         target: extension.target,
         tree: { type: "node-form", children: tree },
@@ -147,7 +159,7 @@ export function startExtension(extension: UiExtensionDefinition): void {
     parent.postMessage(
       {
         octonode: "ui-extension",
-        apiVersion: UI_EXTENSION_API_VERSION,
+        apiVersion,
         type: "error",
         target: extension.target,
         message: event.message,

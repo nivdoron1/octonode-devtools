@@ -461,6 +461,46 @@ export type GetApiMarketplaceAppsResponses = {
                     path: string;
                     sha256: string;
                 }>;
+            } | {
+                apiVersion: '3';
+                hosting: 'extension-only';
+                icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
+                iconUrl?: string;
+                settings?: Array<{
+                    id: string;
+                    label: string;
+                    defaultValue?: string;
+                }>;
+                privacyUrl?: string;
+                supportUrl?: string;
+                requestedActions?: Array<'projects:read' | 'data:read' | 'data:write' | 'workflows:run'>;
+                extensions: Array<{
+                    id: string;
+                    target: 'app.page' | 'workspace.block' | 'shell.panel' | 'shell.dock' | 'project.tab' | 'project.overview.block' | 'workflow.tab' | 'workflow.inspector.block' | 'node.view' | 'node.inspector.tab' | 'node.inspector.block' | 'task.space.view' | 'task.details.tab' | 'task.details.block' | 'task.card.badge' | 'document.tab' | 'document.panel' | 'editor.panel' | 'git.diff.panel' | 'table.view' | 'execution.details.block' | 'app.settings.section' | 'project.settings.section' | 'project.action' | 'file.action' | 'editor.action' | 'editor.selection-action' | 'workflow.action' | 'workflow.canvas.action' | 'workflow.selection-action' | 'workflow.edge.action' | 'node.action' | 'task.space.action' | 'task.action' | 'document.action' | 'document.selection-action' | 'document.block.action' | 'document.slash-command' | 'document.review.action' | 'git.diff.action' | 'table.action' | 'execution.action';
+                    title: string;
+                    icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
+                    path: string;
+                    sha256: string;
+                    when?: {
+                        hasProject?: boolean;
+                        hasSelection?: boolean;
+                        readOnly?: boolean;
+                        nodeKind?: string;
+                        documentFormat?: 'markdown' | 'html' | 'latex';
+                    };
+                }>;
+                launchers?: Array<{
+                    id: string;
+                    target: 'shell.navbar.action' | 'shell.navigation.item' | 'shell.command';
+                    title: string;
+                    icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
+                    opens: string;
+                }>;
+                locales?: {
+                    [key: string]: {
+                        [key: string]: string;
+                    };
+                };
             };
         }>;
         total: number;

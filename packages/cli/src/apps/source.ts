@@ -30,6 +30,10 @@ export function appManifest(source: AppSource, hashes: string[] = []) {
       redirectUrls: [source.web.applicationUrl ?? "https://development.example"],
       requestedActions: source.web.requestedActions ?? [],
       extensions: source.extensions.map((extension, index) => ({ id: extension.id, target: extension.target, url: `${source.web!.applicationUrl ?? "https://development.example"}/extensions/${extension.id}.js`, sha256: hashes[index] ?? `sha256:${"0".repeat(64)}` })),
+    } : source.apiVersion === "octonode.app/v2" ? {
+      apiVersion:"3",hosting:"extension-only",settings:source.settings,locales:source.locales,
+      requestedActions:source.requestedActions ?? [],launchers:source.launchers ?? [],
+      extensions:source.extensions.map(({entry,...extension},index)=>({...extension,path:`extensions/${extension.id}.js`,sha256:hashes[index] ?? `sha256:${"0".repeat(64)}`})),
     } : {
       apiVersion: "2",
       hosting: "extension-only",
@@ -48,18 +52,18 @@ export function readAppSource(root: string): AppSource {
   const path = sourceFile(root, APP_SOURCE);
   if (lstatSync(path).size > 1_048_576) throw new Error("App source descriptor exceeds 1 MiB");
   const source = JSON.parse(readFileSync(path, "utf8")) as AppSource;
-  if (!source || source.apiVersion !== "octonode.app/v1" || !Array.isArray(source.extensions))
-    throw new Error("Expected an octonode.app/v1 source descriptor");
+  if (!source || !["octonode.app/v1","octonode.app/v2"].includes(source.apiVersion) || !Array.isArray(source.extensions))
+    throw new Error("Expected an octonode.app/v1 or octonode.app/v2 source descriptor");
   if (
     Object.keys(source).some(
-      (key) => !["apiVersion", "id", "name", "version", "description", "settings", "extensions", "web"].includes(key),
+      (key) => !["apiVersion", "id", "name", "version", "description", "settings", "extensions", "web",...(source.apiVersion === "octonode.app/v2" ? ["requestedActions","locales","launchers"] : [])].includes(key),
     )
   )
     throw new Error("Unknown app source field");
   for (const extension of source.extensions) {
     if (
       !extension ||
-      Object.keys(extension).some((key) => !["id", "target", "entry"].includes(key)) ||
+      Object.keys(extension).some((key) => !["id", "target", "entry",...(source.apiVersion === "octonode.app/v2" ? ["title","icon","when"] : [])].includes(key)) ||
       typeof extension.entry !== "string" ||
       !/^src\/.+\.[jt]sx?$/.test(extension.entry)
     )
@@ -68,6 +72,7 @@ export function readAppSource(root: string): AppSource {
   }
   if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(source.version)) throw new Error("App version must be semver");
   if (source.web) {
+    if(source.apiVersion === "octonode.app/v2") throw new Error("v2 contributions run inside Octonode and do not declare a web backend");
     if (
       typeof source.web !== "object" ||
       Object.keys(source.web).some((key) => !["entry", "platform", "applicationUrl", "requestedActions"].includes(key)) ||

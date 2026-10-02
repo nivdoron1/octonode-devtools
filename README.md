@@ -29,7 +29,11 @@ remain separate.
 ## Create an app
 
 `octonodes` creates a complete app project. The default is a full Vite app with a hosted page and backend. Use `--template extension`
-for a static workspace block without a backend. Contributions are optional for full apps.
+for a navbar launcher and panel inside Octonode without a backend. Contributions are optional for full apps.
+Run `octonodes app targets` to list supported views, actions, and launcher placements;
+add a contextual entry with `octonodes app extension add explain-node --target node.action`.
+The extension starter uses source descriptor `octonode.app/v2` and builds app manifest v3.
+Use the branch-built packages and a matching host until this support is published.
 
 ```sh
 npm install --global @octonodes/cli
@@ -49,17 +53,20 @@ workspace, run `octonodes login` and `octonodes app dev --workspace user:<id>`.
 ```sh
 # From the app directory, after signing in:
 octonodes app publish --workspace user:<id>
-# Install the release in Studio → Apps and view the block on workspace home.
+# Install the release in Studio → Apps; extension starters add a navbar button.
 ```
 
 For a hosted app, start with `octonodes app create inventory-labels --template
 full`, set `web.applicationUrl` to a permanent HTTPS origin, build and publish,
-then deploy the complete `dist/web/inventory-labels` directory to a Node 24
+then deploy the complete `dist/web/<app-id>` directory to a Node 24
 host. The first publish returns `OCTONODE_APP_ID`; set it and
 `OCTONODE_API_URL` on the host before inviting installations. Publication does
 not deploy the backend. Read the [end-to-end Playbook](https://playbook.octonodes.com/docs/apps),
-[CLI app commands](packages/cli/README.md#create-an-app), and
-[app SDK guide](packages/ui-extensions/README.md#hosted-pages-and-routing).
+[CLI app commands](packages/cli/README.md#create-an-app),
+[app SDK guide](packages/ui-extensions/README.md#hosted-pages-and-routing),
+[native extension API guide](packages/ui-extensions/README.md#native-app-contributions-v3),
+[CLI implementation notes](docs/app-cli-plan.md), and
+[Shopify CLI comparison](docs/app-cli-shopify-comparison.md).
 
 ## Packages
 
@@ -68,7 +75,7 @@ not deploy the backend. Read the [end-to-end Playbook](https://playbook.octonode
 | [`@octonodes/sdk`](packages/sdk/README.md)                     | A TypeScript or JavaScript application needs typed Octonode API calls.                |
 | [`@octonodes/cli`](packages/cli/README.md)                     | A developer, script, or CI job needs the same API from a terminal.                    |
 | [`@octonodes/mcp`](packages/mcp/README.md)                     | An MCP client needs remote Octonode tools hosted on Cloudflare Workers.               |
-| [`@octonodes/ui-extensions`](packages/ui-extensions/README.md) | Plugin inspector layouts and installed app pages, blocks, and scoped project actions. |
+| [`@octonodes/ui-extensions`](packages/ui-extensions/README.md) | Plugin inspector layouts and installed app launchers, panels, tabs, views, and actions. |
 
 Only compiled `dist` files, package metadata, and package README files are published. Source,
 tests, generation scripts, and repository configuration are not included in the npm packages.

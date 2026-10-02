@@ -1,13 +1,16 @@
-import type { ExtensionOnlyApp, AppAction } from "@octonodes/sdk/plugins";
+import type { ExtensionOnlyApp, ContributionApp, AppAction } from "@octonodes/sdk/plugins";
 export interface AppSource {
-  apiVersion: "octonode.app/v1";
+  apiVersion: "octonode.app/v1" | "octonode.app/v2";
   id: string;
   name: string;
   version: string;
   description?: string;
   web?: { entry: string; platform?: "plain" | "vite" | "next"; applicationUrl?: string; requestedActions?: AppAction[] };
   settings?: ExtensionOnlyApp["settings"];
-  extensions: Array<{ id: string; target: "workspace.block" | "app.page"; entry: string }>;
+  requestedActions?: AppAction[];
+  locales?: ContributionApp["locales"];
+  launchers?: ContributionApp["launchers"];
+  extensions: Array<{ id: string; target: ContributionApp["extensions"][number]["target"]; entry: string; title?:string; icon?:ContributionApp["extensions"][number]["icon"]; when?:ContributionApp["extensions"][number]["when"] }>;
 }
 
 export interface DevOptions {

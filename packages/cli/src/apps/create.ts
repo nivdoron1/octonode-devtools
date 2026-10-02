@@ -5,9 +5,14 @@ import { APP_SOURCE } from "./constants";
 import { appManifest, readAppSource } from "./source";
 import type { AppSource } from "./types";
 import { appCss, welcomeHtml, welcomeReact } from "./welcome";
+import {APP_ACTION_TARGETS,APP_VIEW_TARGETS,type ContributionApp} from "@octonodes/sdk/plugins";
 
 const json = (value: unknown) => JSON.stringify(value, null, 2) + "\n";
-function extensionCode(target: "app.page" | "workspace.block") {
+function extensionCode(target: ContributionApp["extensions"][number]["target"]) {
+  if((APP_ACTION_TARGETS as readonly string[]).includes(target)) return `import {defineAction} from "@octonodes/ui-extensions";\nexport default defineAction(${JSON.stringify(target)}, async api => { await api.ui.openAssistant("Explain this selection and suggest improvements."); });\n`;
+  if(target === "node.view") return `import {defineExtension,Section,useExtension} from "@octonodes/ui-extensions/react";\nexport default defineExtension("node.view",function Nodes(){const api=useExtension("node.view");return <>{api.context.nodes?.map(node=><Section key={node.id} title={node.id}>{node.label || node.id}</Section>)}</>;});\n`;
+  if(target === "task.card.badge") return `import {Fragment} from "react";\nimport {defineExtension,Section,useExtension} from "@octonodes/ui-extensions/react";\nexport default defineExtension("task.card.badge",function Badges(){const api=useExtension("task.card.badge");return <Fragment>{api.context.tasks?.map(task=><Section key={task.itemId} title={task.itemId}>Ready for review</Section>)}</Fragment>;});\n`;
+  if(target !== "workspace.block" && target !== "app.page") return `import {defineExtension,Section,Button,useExtension} from "@octonodes/ui-extensions/react";\nexport default defineExtension(${JSON.stringify(target)},function Tool(){const api=useExtension(${JSON.stringify(target)});return <Section title="Workspace assistant"><Button onPress={()=>void api.ui.openAssistant("Help me with this workspace.")}>Open assistant</Button></Section>;});\n`;
   return `import { defineExtension, Section } from "@octonodes/ui-extensions/react";
 import { getAppSession } from "@octonodes/ui-extensions";
 export default defineExtension(${JSON.stringify(target)}, function Notice() {
@@ -30,7 +35,7 @@ export function createApp(name: string, version: string, template = "full", plat
     writeFileSync(
       join(root, APP_SOURCE),
       json({
-        apiVersion: "octonode.app/v1",
+        apiVersion: template === "extension" ? "octonode.app/v2" : "octonode.app/v1",
         id: appId,
         name,
         version: "0.1.0",
@@ -38,10 +43,11 @@ export function createApp(name: string, version: string, template = "full", plat
         ...(template === "extension"
           ? { settings: [{ id: "message", label: "Message", defaultValue: "Welcome to the workspace" }] }
           : {}),
-        extensions: template === "extension" ? [{ id: "notice", target: "workspace.block", entry: "src/extensions/notice.tsx" }] : [],
+        extensions: template === "extension" ? [{ id: "assistant", target: "shell.panel", title:"Workspace assistant",entry: "src/extensions/assistant.tsx" }] : [],
+        ...(template === "extension" ? {launchers:[{id:"open-assistant",target:"shell.navbar.action",title:"Workspace assistant",icon:"terminal",opens:"assistant"}]} : {}),
       }),
     );
-    if (template === "extension") writeFileSync(join(root, "src/extensions/notice.tsx"), extensionCode("workspace.block"));
+    if (template === "extension") writeFileSync(join(root, "src/extensions/assistant.tsx"), extensionCode("shell.panel"));
     if (template === "full") {
       if (!framework) writeFileSync(join(root, "src/welcome.html"), welcomeHtml(name));
       if (!framework) writeFileSync(join(root, "src/hosted.ts"), `import { connectHostedApp } from "@octonodes/ui-extensions/app";
@@ -178,16 +184,18 @@ test("release bundles match the manifest", () => {
       join(root, "README.md"),
       `# ${name}
 
-An Octonode app created by \`octonodes app create\`. ${template === "full" ? "It includes a hosted page and backend. Contributions are optional." : "It includes a workspace block. Add an app page only if needed."}
+An Octonode app created by \`octonodes app create\`. ${template === "full" ? "It includes a hosted page and backend. Contributions are optional." : "It includes a panel launched from the Octonode navbar. Add contextual actions and tabs with `app extension add`."}
 
 ## Work locally
 
-Yarn workspaces use the generated \`installConfig.hoistingLimits: workspaces\`. Keep it
+${template === "full" ? `Yarn workspaces use the generated \`installConfig.hoistingLimits: workspaces\`. Keep it
 and run \`yarn install\` at the workspace root. Full React apps verify the
 workspace session before showing content and register Overview (\`/\`) and
 Projects (\`/projects\`) routes in Studio’s sidebar. The top navbar is optional: render
 \`<App showNavbar />\` in \`src/web/main.tsx\` to enable it for Vite, or render
-\`<App showNavbar />\` from \`app/page.tsx\` for Next.js. Sidebar registration is always enabled.
+\`<App showNavbar />\` from \`app/page.tsx\` for Next.js. Sidebar registration is always enabled.` : `The extension starter has no hosted page or backend. Its declared navbar launcher
+opens a sandboxed panel inside Octonode. Use \`octonodes app targets\` to discover
+supported contextual contributions.`}
 
 \`\`\`sh
 npm install
@@ -215,7 +223,7 @@ octonodes app publish --workspace user:<your-user-id>
 Use \`team:<id>\` or \`org:<id>\` if that is the publisher workspace. Studio
 preview is private and expiring. It starts without project grants; use Studio to explicitly consent to selected development projects for up to one hour. The first publication
 returns the registered app ID and revision. Install through **Studio → Apps**;
-a block appears on workspace home. An administrator can change shared settings
+the extension starter appears as a navbar button that opens its panel. An administrator can change shared settings
 or disable an extension-only installation. Shared settings are not secrets.
 
 For updates, change the source version, run \`npm test\`, then publish with
@@ -258,13 +266,14 @@ The development tunnel URL is temporary and must not be published.
 }
 export function addAppExtension(directory: string, id: string, target: string) {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(id)) throw new Error("Extension ID must be lowercase alphanumeric/dash");
-  if (target !== "workspace.block" && target !== "app.page")
-    throw new Error("Choose --target workspace.block or app.page");
   const root = resolve(directory);
   const source = readAppSource(root);
+  if(!(APP_VIEW_TARGETS as readonly string[]).includes(target) && !(APP_ACTION_TARGETS as readonly string[]).includes(target)) throw new Error("Unsupported extension target");
+  if(source.apiVersion === "octonode.app/v1" && target !== "workspace.block" && target !== "app.page") throw new Error("Upgrade the descriptor to octonode.app/v2 to add contextual targets");
+  const contributionTarget=target as ContributionApp["extensions"][number]["target"];
   if (source.extensions.some((extension) => extension.id === id)) throw new Error("Duplicate extension ID");
   const entry = `src/extensions/${id}.tsx`;
-  const next: AppSource = { ...source, extensions: [...source.extensions, { id, target, entry }] };
+  const next: AppSource = { ...source, extensions: [...source.extensions, { id, target:contributionTarget, entry,...(source.apiVersion === "octonode.app/v2" ? {title:id} : {}) }] };
   appManifest(next);
   for (const path of ["src", "src/extensions"]) {
     const directory = join(root, path);
@@ -276,7 +285,7 @@ export function addAppExtension(directory: string, id: string, target: string) {
   let created = false;
   try {
     writeFileSync(join(stage, APP_SOURCE), json(next));
-    writeFileSync(join(root, entry), extensionCode(target), { flag: "wx" });
+    writeFileSync(join(root, entry), extensionCode(contributionTarget), { flag: "wx" });
     created = true;
     renameSync(join(stage, APP_SOURCE), join(root, APP_SOURCE));
   } catch (error) {

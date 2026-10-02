@@ -20,7 +20,7 @@ test("app CLI creates, compiles, extends and validates an app without authentica
     symlinkSync(dependencies, join(root, "node_modules"), "dir");
     const descriptor = join(root, "octonode.app.json");
     const source = readFileSync(descriptor, "utf8");
-    assert.equal(JSON.parse(source).extensions[0].target, "workspace.block");
+    assert.equal(JSON.parse(source).extensions[0].target, "shell.panel");
     assert.doesNotMatch(source, /sha256|applicationUrl/);
     const typecheck = spawnSync(process.execPath, [join(dependencies, "typescript/bin/tsc"), "--noEmit"], {
       cwd: root,
@@ -28,6 +28,8 @@ test("app CLI creates, compiles, extends and validates an app without authentica
     });
     assert.equal(typecheck.status, 0, typecheck.stdout + typecheck.stderr);
     const result = JSON.parse(ok(run(root, "build")).stdout);
+    assert.equal(result.manifest.app.apiVersion,"3");
+    assert.equal(result.manifest.app.launchers[0].target,"shell.navbar.action");
     assert.equal(result.manifest.app.hosting, "extension-only");
     assert.equal(readFileSync(descriptor, "utf8"), source);
     ok(run(root, "validate", result.directory));
@@ -38,13 +40,17 @@ test("app CLI creates, compiles, extends and validates an app without authentica
     const extended = JSON.parse(ok(run(root, "build")).stdout);
     assert.deepEqual(
       extended.manifest.app.extensions.map((e) => e.target),
-      ["workspace.block", "app.page"],
+      ["shell.panel", "app.page"],
     );
+    ok(run(root,"extension","add","explain","--target","node.action"));
+    const actionBuild=JSON.parse(ok(run(root,"build")).stdout);
+    assert.equal(actionBuild.manifest.app.extensions.at(-1).target,"node.action");
+    assert.match(readFileSync(join(actionBuild.directory,"extensions/explain.js"),"utf8"),/action-complete/);
     const manifest = readFileSync(join(result.directory, "octonode.json"), "utf8");
-    writeFileSync(join(root, "src/extensions/notice.tsx"), "invalid {{{");
+    writeFileSync(join(root, "src/extensions/assistant.tsx"), "invalid {{{");
     assert.notEqual(run(root, "build").status, 0);
     assert.equal(readFileSync(join(result.directory, "octonode.json"), "utf8"), manifest);
-    writeFileSync(join(result.directory, "extensions/notice.js"), "tampered");
+    writeFileSync(join(result.directory, "extensions/assistant.js"), "tampered");
     assert.notEqual(run(root, "validate", result.directory).status, 0);
     assert.notEqual(run(parent, "create", "notice", "--template", "extension").status, 0);
     assert.notEqual(run(parent, "create", "../escape").status, 0);
@@ -64,7 +70,7 @@ test("app build rejects source escapes and symlinks", () => {
     source.extensions[0].entry = "src/../../outside.tsx";
     writeFileSync(descriptor, JSON.stringify(source));
     assert.notEqual(run(root, "build").status, 0);
-    source.extensions[0].entry = "src/extensions/notice.tsx";
+    source.extensions[0].entry = "src/extensions/assistant.tsx";
     writeFileSync(descriptor, JSON.stringify(source));
     rmSync(join(root, source.extensions[0].entry));
     writeFileSync(join(parent, "outside.tsx"), "export default {};");

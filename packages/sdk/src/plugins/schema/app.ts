@@ -1,6 +1,7 @@
 // Generated from packages/schema/src/app.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
 import { IconName } from "./icons.js";
+import { APP_VIEW_TARGETS, appContributionSchema, appLauncherSchema } from "./app-contributions.js";
 
 export const AppAction = z.enum(["projects:read", "data:read", "data:write", "workflows:run"]);
 export type AppAction = z.infer<typeof AppAction>;
@@ -92,7 +93,7 @@ export const SelfHostedApp = z
 export type SelfHostedApp = z.infer<typeof SelfHostedApp>;
 
 /** Static browser extensions use the existing artifact store, never backend compute. */
-export const ExtensionOnlyApp = z
+const extensionOnlyAppSchema = z
   .object({
     apiVersion: z.literal("2"),
     hosting: z.literal("extension-only"),
@@ -137,17 +138,66 @@ export const ExtensionOnlyApp = z
       .min(1)
       .max(32),
   })
+  .strict();
+export const ExtensionOnlyApp = extensionOnlyAppSchema.superRefine((app, ctx) => {
+  if (new Set(app.settings.map((setting) => setting.id)).size !== app.settings.length)
+    ctx.addIssue({ code: "custom", path: ["settings"], message: "App setting IDs must be unique" });
+  for (const field of ["id", "path"] as const) {
+    if (new Set(app.extensions.map((extension) => extension[field])).size !== app.extensions.length)
+      ctx.addIssue({ code: "custom", path: ["extensions"], message: `App extension ${field}s must be unique` });
+  }
+});
+export type ExtensionOnlyApp = z.infer<typeof ExtensionOnlyApp>;
+/** New placements are explicit v3 releases; old static v2 releases retain zero grants. */
+export const ContributionApp = extensionOnlyAppSchema
+  .extend({
+    apiVersion: z.literal("3"),
+    requestedActions: z
+      .array(AppAction)
+      .max(4)
+      .default([])
+      .refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
+    extensions: z.array(appContributionSchema).min(1).max(32),
+    launchers: z.array(appLauncherSchema).max(32).default([]),
+    locales: z
+      .record(z.string().regex(/^(en|de|es|fr|ja)$/), z.record(z.string().max(100), z.string().max(4000)))
+      .default({}),
+  })
   .strict()
   .superRefine((app, ctx) => {
-    if (new Set(app.settings.map((setting) => setting.id)).size !== app.settings.length)
+    const ids = [...app.extensions, ...app.launchers].map((item) => item.id);
+    if (new Set(ids).size !== ids.length)
+      ctx.addIssue({ code: "custom", path: ["extensions"], message: "Contribution IDs must be unique" });
+    if (new Set(app.extensions.map((item) => item.path)).size !== app.extensions.length)
+      ctx.addIssue({ code: "custom", path: ["extensions"], message: "Contribution paths must be unique" });
+    if (new Set(app.settings.map((item) => item.id)).size !== app.settings.length)
       ctx.addIssue({ code: "custom", path: ["settings"], message: "App setting IDs must be unique" });
-    for (const field of ["id", "path"] as const) {
-      if (new Set(app.extensions.map((extension) => extension[field])).size !== app.extensions.length)
-        ctx.addIssue({ code: "custom", path: ["extensions"], message: `App extension ${field}s must be unique` });
+    for (const [index, launcher] of app.launchers.entries()) {
+      const destination = app.extensions.find((item) => item.id === launcher.opens);
+      if (!destination || !(APP_VIEW_TARGETS as readonly string[]).includes(destination.target))
+        ctx.addIssue({
+          code: "custom",
+          path: ["launchers", index, "opens"],
+          message: "Launcher destination must be a declared view",
+        });
     }
+    for (const item of [...app.extensions, ...app.launchers]) {
+      if (!item.title.startsWith("t:")) continue;
+      for (const language of ["en", "de", "es", "fr", "ja"] as const) {
+        if (!app.locales[language]?.[item.title.slice(2)])
+          ctx.addIssue({
+            code: "custom",
+            path: ["locales", language],
+            message: `Missing translation for ${item.title}`,
+          });
+      }
+    }
+    for (const [language, dictionary] of Object.entries(app.locales))
+      if (Object.keys(dictionary ?? {}).length > 200)
+        ctx.addIssue({ code: "custom", path: ["locales", language], message: "At most 200 translations per language" });
   });
-export type ExtensionOnlyApp = z.infer<typeof ExtensionOnlyApp>;
-export const AppDefinition = z.union([SelfHostedApp, ExtensionOnlyApp]);
+export type ContributionApp = z.infer<typeof ContributionApp>;
+export const AppDefinition = z.union([SelfHostedApp, ExtensionOnlyApp, ContributionApp]);
 export type AppDefinition = z.infer<typeof AppDefinition>;
 
 export const appTunnelRegistrationSchema = z

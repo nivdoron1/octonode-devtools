@@ -14,6 +14,7 @@ import { join, relative, resolve } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { build } from "esbuild";
+import {APP_ACTION_TARGETS} from "@octonodes/sdk/plugins";
 import { PluginManifest } from "@octonodes/sdk/plugins";
 import { buildApp } from "../plugins/app";
 import { fileHash, safePath, pluginFiles } from "../plugins/artifact";
@@ -38,7 +39,7 @@ export async function buildAppProject(directory: string, applicationUrl?: string
       const result = await build({
         absWorkingDir: root,
         stdin: {
-          contents: `import extension from ${JSON.stringify(entry)}; import { startExtension } from "@octonodes/ui-extensions/react"; if (extension.target !== ${JSON.stringify(extension.target)}) throw new Error("Extension target mismatch"); startExtension(extension);`,
+          contents: `import extension from ${JSON.stringify(entry)}; import { startExtension } from "@octonodes/ui-extensions/react"; import { startAction } from "@octonodes/ui-extensions"; if (extension.target !== ${JSON.stringify(extension.target)}) throw new Error("Extension target mismatch"); if ((extension.kind === "action") !== ${JSON.stringify((APP_ACTION_TARGETS as readonly string[]).includes(extension.target))}) throw new Error("Extension kind mismatch"); ${source.apiVersion === "octonode.app/v2" ? 'extension.kind === "action" ? startAction(extension) : startExtension(extension);' : 'startExtension(extension);'}`,
           resolveDir: root,
           loader: "ts",
         },

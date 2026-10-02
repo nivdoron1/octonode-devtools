@@ -70,16 +70,16 @@ export type AppContext = {
 
 export type AppBridgeRequest = {
   octonode: "ui-extension";
-  apiVersion: "1";
+  apiVersion: "1" | "2";
   type: "app-request";
   requestId: string;
-  operation: "context" | "data" | "workflow.run";
+  operation: "context" | "data" | "workflow.run" | "host";
   body?: unknown;
 };
 
 export type AppBridgeResponse = {
   octonode: "ui-extension";
-  apiVersion: "1";
+  apiVersion: "1" | "2";
   type: "app-response";
   requestId: string;
   ok: boolean;

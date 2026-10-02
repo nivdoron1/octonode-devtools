@@ -7,6 +7,7 @@ import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import type { AppSource } from "./types";
 import { pluginFiles } from "../plugins/artifact";
+import { APP_ACTION_TARGETS } from "@octonodes/sdk/plugins";
 
 export async function bodyBytes(request: IncomingMessage) {
   const chunks: Buffer[] = [];
@@ -32,7 +33,7 @@ export function createAppServer(options: {
   let transportHost = "";
   let immutable = new Map<string, string>();
   let site = new Map<string, Buffer>();
-  let extensions: Array<{ id: string; target: string; code: string }> = [];
+  let extensions: Array<{ id: string; target: string; code: string; action: boolean }> = [];
   let handler: ((request: Request) => Response | Promise<Response>) | undefined;
   const allowed = (request: IncomingMessage) => {
     const value = request.headers.authorization?.replace(/^Bearer /, "") ?? "";
@@ -111,7 +112,9 @@ export function createAppServer(options: {
               error,
               origin: options.source.web ? origin : "'none'",
               extensions,
+              translations: options.source.locales?.en ?? {},
               session: {
+                ...(options.source.apiVersion === "octonode.app/v2" ? { protocolVersion: "2" } : {}),
                 token: "development-preview",
                 appId: options.source.id,
                 installationId: "development",
@@ -223,6 +226,7 @@ export function createAppServer(options: {
       extensions = source.extensions.map((item) => ({
         id: item.id,
         target: item.target,
+        action: (APP_ACTION_TARGETS as readonly string[]).includes(item.target),
         code: readFileSync(join(directory, `extensions/${item.id}.js`), "utf8"),
       }));
       immutable = new Map(
