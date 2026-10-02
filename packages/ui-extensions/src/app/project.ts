@@ -2,7 +2,7 @@
 import type { AppSession } from "../index.js";
 import type { AppBridgeRequest, AppContext, AppExecution, AppGrant, AppProject } from "./types.js";
 
-export type AppRequest = <T>(operation: AppBridgeRequest["operation"], body?: unknown) => Promise<T>;
+export type AppRequest = <T>(operation: Exclude<AppBridgeRequest["operation"], "host">, body?: unknown) => Promise<T>;
 
 function project(id: string, request: AppRequest): AppProject {
   return {

@@ -7,6 +7,7 @@ import { publishApp } from "./publish";
 import { startAppDev, serveApp } from "./dev";
 import { APP_HELP } from "./constants";
 import { terminal } from "../terminal";
+import {APP_VIEW_TARGETS,APP_ACTION_TARGETS,APP_LAUNCHER_TARGETS} from "@octonodes/sdk/plugins";
 export async function appCommand(args: string[], version: string): Promise<void> {
   const { values, positionals } = parseArgs({
     args,
@@ -30,6 +31,7 @@ export async function appCommand(args: string[], version: string): Promise<void>
     },
   });
   const [command, target, id] = positionals;
+  if(command === "targets") { process.stdout.write(JSON.stringify({views:APP_VIEW_TARGETS,actions:APP_ACTION_TARGETS,launchers:APP_LAUNCHER_TARGETS},null,2)+"\n"); return; }
   if (command === "publish" && positionals.length <= 2 && values.workspace) {
     process.stdout.write(
       JSON.stringify(

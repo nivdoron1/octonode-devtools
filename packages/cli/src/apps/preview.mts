@@ -1,4 +1,4 @@
-import { validateExtensionMessage, type UiExtensionTree } from "@octonodes/ui-extensions";
+import { validateExtensionMessage, type UiExtensionTarget, type UiExtensionTree } from "@octonodes/ui-extensions";
 
 export function previewClient() {
   const token = new URLSearchParams(location.hash.slice(1)).get("preview");
@@ -23,7 +23,7 @@ export function previewClient() {
     );
     const send = (id: string, value?: string) =>
       frame.contentWindow?.postMessage(
-        { octonode: "ui-extension", apiVersion: "1", type: "event", target: frame.dataset.target, id, value },
+        { octonode: "ui-extension", apiVersion: frame.dataset.version, type: "event", target: frame.dataset.target, id, value },
         "*",
       );
     if (tree.type === "button") {
@@ -49,9 +49,28 @@ export function previewClient() {
   addEventListener("message", (event) => {
     const frame = frames.find((item) => item.contentWindow === event.source);
     if (!frame) return;
-    const message = validateExtensionMessage(event.data, frame.dataset.target as "app.page" | "workspace.block");
-    if (!message) return;
     const output = document.getElementById(frame.dataset.output!)!;
+    const data = event.data;
+    if (data?.octonode !== "ui-extension" || data.apiVersion !== frame.dataset.version) return;
+    if (data.type === "app-request" && typeof data.requestId === "string" && data.requestId.length <= 100) {
+      // Local preview has no installation or native resources. Never forward its requests.
+      const allowed = data.operation === "host" && data.body?.command === "layout.list";
+      const problem = "This command needs an installed app or a Studio workspace preview; local preview has no resource permissions.";
+      if (!allowed) error.textContent = problem;
+      frame.contentWindow?.postMessage({
+        octonode: "ui-extension", apiVersion: frame.dataset.version, type: "app-response",
+        requestId: data.requestId, ok: allowed, ...(allowed ? { value: [] } : { error: problem }),
+      }, "*");
+      return;
+    }
+    if (data.type === "action-complete" && frame.dataset.invocation && data.target === frame.dataset.target && data.invocationId === frame.dataset.invocation) {
+      output.textContent = "Action completed in read-only preview.";
+      frame.remove();
+      frames = frames.filter((item) => item !== frame);
+      return;
+    }
+    const message = validateExtensionMessage(data, frame.dataset.target as UiExtensionTarget, frame.dataset.version as "1" | "2");
+    if (!message) return;
     if (message.message.type === "error") output.textContent = message.message.message;
     else output.replaceChildren(render(message.message.tree, frame));
   });
@@ -60,25 +79,43 @@ export function previewClient() {
       const response = await fetch("/_octonode/state", { headers });
       if (!response.ok) throw new Error("Open the preview URL printed by app dev to authorize this browser");
       const state = await response.json();
-      error.textContent = state.error ?? "";
+      if (state.error) error.textContent = state.error;
       if (state.revision === revision) return;
       revision = state.revision;
+      error.textContent = state.error ?? "";
       host.replaceChildren();
       frames = [];
       for (const extension of state.extensions) {
         const output = document.createElement("div");
         output.id = `extension-${extension.id}`;
         host.append(output);
-        const frame = document.createElement("iframe");
-        frame.hidden = true;
-        frame.sandbox.add("allow-scripts");
-        frame.dataset.output = output.id;
-        frame.dataset.target = extension.target;
-        const context = JSON.stringify(state.session).replaceAll("<", "\\u003c");
-        const code = extension.code.replace(/<\/script/gi, "<\\/script");
-        frame.srcdoc = `<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; connect-src ${state.origin};"><body><script>globalThis.__octonodeApp=${context}</script><script>${code}</script>`;
-        frames.push(frame);
-        host.append(frame);
+        const mount = () => {
+          for (const previous of frames.filter((item) => item.dataset.output === output.id)) previous.remove();
+          frames = frames.filter((item) => item.dataset.output !== output.id);
+          output.textContent = "Loading preview…";
+          const frame = document.createElement("iframe");
+          frame.hidden = true;
+          frame.sandbox.add("allow-scripts");
+          frame.dataset.output = output.id;
+          frame.dataset.target = extension.target;
+          frame.dataset.version = state.session.protocolVersion ?? "1";
+          if (extension.action) frame.dataset.invocation = crypto.randomUUID();
+          const context = JSON.stringify(state.session).replaceAll("<", "\\u003c");
+          const environment = JSON.stringify({
+            target: extension.target, context: { readOnly: true }, translations: state.translations ?? {},
+            ...(extension.action ? { invocationId: frame.dataset.invocation } : {}),
+          }).replaceAll("<", "\\u003c");
+          const code = extension.code.replace(/<\/script/gi, "<\\/script");
+          frame.srcdoc = `<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; connect-src ${state.origin};"><body><script>globalThis.__octonodeApp=${context};globalThis.__octonodeExtension=${environment}</script><script>${code}</script>`;
+          frames.push(frame);
+          host.append(frame);
+        };
+        if (extension.action) {
+          const run = document.createElement("button");
+          run.textContent = `Run ${extension.id} in read-only preview`;
+          run.onclick = mount;
+          host.append(run);
+        } else mount();
       }
     } catch (problem) {
       error.textContent = problem instanceof Error ? problem.message : "Preview unavailable";

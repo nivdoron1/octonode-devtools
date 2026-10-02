@@ -233,6 +233,17 @@ test("publisher dev sessions refresh and revoke; publication sends fresh verifie
     const root = join(parent, "draft");
     symlinkSync(resolve("node_modules"), join(root, "node_modules"));
     const built = await buildAppProject(root);
+    const local = await startAppDev(root, { localhost: true, open: false });
+    try {
+      const preview = await (await fetch(local.origin + "/_octonode/state", {
+        headers: { authorization: `Bearer ${local.secret}` },
+      })).json();
+      assert.equal(preview.session.protocolVersion, "2");
+      assert.equal(preview.extensions[0].target, "shell.panel");
+      assert.equal(preview.extensions[0].action, false);
+    } finally {
+      await local.close();
+    }
     session = await createDevelopmentSession("user:owner", baseUrl, baseUrl);
     await session.sync(readAppSource(root), built, built.directory);
     assert.equal(session.url, `${baseUrl}/studio/apps/development/${id}?workspace=user%3Aowner`);
@@ -247,7 +258,7 @@ test("publisher dev sessions refresh and revoke; publication sends fresh verifie
     await publishApp(root, { workspace: "user:owner", baseUrl });
     assert.equal(requests[4].url, "/api/marketplace/publisher/apps");
     assert.equal(requests[4].body.app.hosting, "extension-only");
-    assert.equal(requests[4].body.bundles[0].code, readFileSync(join(built.directory, "extensions/notice.js"), "utf8"));
+    assert.equal(requests[4].body.bundles[0].code, readFileSync(join(built.directory, "extensions/assistant.js"), "utf8"));
     await publishApp(root, { workspace: "user:owner", baseUrl, appId: id, revision: 7 });
     assert.equal(requests[5].body.expectedRevision, 7);
     assert.equal(requests[5].url, `/api/marketplace/publisher/apps/${id}/versions`);

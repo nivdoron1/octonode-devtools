@@ -41,6 +41,58 @@ ui: {
 
 The first public target is `node.inspector.inputs`. Undeclared or omitted inputs fall back to the standard inspector form.
 
+## Native app contributions (v3)
+
+Installed apps can add navbar/navigation/search launchers, panels, Octonode tabs,
+workflow node bodies and context-menu actions, task badges/details, document and
+editor operations, Git/table/execution views, and settings sections. A hosted app
+page or backend is optional. These changes require the SDK and CLI built from the
+accompanying branch; they are not published yet.
+
+Views use `defineExtension(target, Component)` and `useExtension(target)` from
+`@octonodes/ui-extensions/react`. Actions use `defineAction(target, handler)` from
+`@octonodes/ui-extensions`. The CLI supplies `startExtension` or `startAction`,
+verifies the definition's target/kind, and hashes each immutable browser bundle.
+
+```tsx
+import { defineExtension, useExtension, Section, Button } from "@octonodes/ui-extensions/react";
+export default defineExtension("shell.panel", function Assistant() {
+  const api = useExtension("shell.panel");
+  return (
+    <Section title="Claude Code">
+      <Button onPress={() => void api.ui.openAssistant("Help with this resource.")}>Open assistant</Button>
+    </Section>
+  );
+});
+```
+
+```ts
+import { defineAction } from "@octonodes/ui-extensions";
+export default defineAction("node.action", async (api) => {
+  if (!api.signal.aborted) await api.ui.openAssistant(`Explain node ${api.context.nodeId}`);
+});
+```
+
+The target context contains resource IDs, revisions, selection ranges, and bounded
+metadata batches, never automatic document/file/task bodies. `ui.openPanel`
+opens an own declared view; `ui.openAssistant` hands off to the existing native
+assistant and its authorized tools. `tabs.list/update/undo` operate on registered
+personal layout groups with revision checks. `edits.propose` opens native review
+for a captured file/document draft; native Save owns persistence. Mutating host
+commands require recent native user interaction. No raw filesystem/process or
+private Studio API access is granted.
+
+Node views and task badges return display-only sections named for captured IDs,
+using one sandbox per canvas/task view and at most 100 resources. Other views can
+use host-owned controls. An action has a captured invocation ID and abort signal;
+it completes automatically and has a sixty-second deadline. Legacy node input
+extensions still use protocol v1; native app contributions use protocol v2.
+
+The full target catalog, runnable example, permissions, limits, and actual native
+screenshots are in the engine's native extensions guide (`docs/app-extensions/README.md` in the engine checkout).
+When using a local engine checkout, open `docs/app-extensions/README.md` for the
+branch version. The older examples below describe the separate v1/v2 contracts.
+
 ## Extension-only apps
 
 Apps can contribute only a workspace block; a page and backend are optional. Use the same
@@ -59,7 +111,7 @@ See `examples/workspace-notice-app` and `docs/plugins.md` in the engine reposito
 
 This is also the SDK selected for Octonode's developer-authored app extensions. The engine owns its source in `packages/ui-extensions`; `scripts/sync-plugin-sdk.mjs` synchronizes the public package into `octonode-devtools`. Do not create a second app UI SDK.
 
-App targets are `app.page` and `workspace.block`. Register an app in Partner → Apps, publish its HTTPS application URL and extension bundle digests, then install it from Studio → App marketplace. Plugin marketplace remains dedicated to executable node plugins.
+Legacy self-hosted app targets are `app.page` and `workspace.block`. Register an app in Partner → Apps, publish its HTTPS application URL and extension bundle digests, then install it from Studio → App marketplace. Plugin marketplace remains dedicated to executable node plugins.
 
 App controls use the same host design system: `NodeForm`, `Section`, `Button`, and `TextField`. `InputField` is only for node inspectors. Bundle your entry as a browser IIFE, including React and this SDK, and call `startExtension`:
 
