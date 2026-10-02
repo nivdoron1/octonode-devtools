@@ -8,8 +8,8 @@ export type { HostedApp, HostedAppNavigationItem, HostedAppState } from "./types
 export { connectHostedApp, appRoute } from "./hosted.js";
 export { HOSTED_APP_PROTOCOL } from "./constants.js";
 
-function request<T>(operation: AppBridgeRequest["operation"], body?: unknown): Promise<T> {
-  getAppSession();
+export function request<T>(operation: AppBridgeRequest["operation"], body?: unknown): Promise<T> {
+  const apiVersion = getAppSession().protocolVersion ?? UI_EXTENSION_API_VERSION;
   if (parent === window) throw new Error("App actions require an installed extension");
   const requestId = crypto.randomUUID();
   return new Promise<T>((resolve, reject) => {
@@ -21,7 +21,7 @@ function request<T>(operation: AppBridgeRequest["operation"], body?: unknown): P
         event.source !== parent ||
         message?.octonode !== "ui-extension" ||
         message.type !== "app-response" ||
-        message.apiVersion !== UI_EXTENSION_API_VERSION ||
+        message.apiVersion !== apiVersion ||
         message.requestId !== requestId
       )
         return;
@@ -39,7 +39,7 @@ function request<T>(operation: AppBridgeRequest["operation"], body?: unknown): P
       parent.postMessage(
         {
           octonode: "ui-extension",
-          apiVersion: UI_EXTENSION_API_VERSION,
+          apiVersion,
           type: "app-request",
           requestId,
           operation,

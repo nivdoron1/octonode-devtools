@@ -8,6 +8,13 @@ export type { PluginDefinition, PluginOptions, PluginHandlers } from "../plugin.
 export type { PluginNodeOptions, SchemaValue } from "./types";
 export { PLUGIN_UI_BUNDLE_MAX_BYTES, PluginManifest, PluginNode, PluginConnection } from "../../schema/plugin-sdk";
 export { AppAction, AppDefinition, ExtensionOnlyApp, SelfHostedApp, SelfHostedAppExtension } from "../../schema/plugin-sdk";
+export {
+  ContributionApp,
+  AppContributionTarget,
+  APP_VIEW_TARGETS,
+  APP_ACTION_TARGETS,
+  APP_LAUNCHER_TARGETS,
+} from "../../schema/plugin-sdk";
 export { SETTINGS_API_VERSION } from "../../schema/plugin-sdk";
 export { PreparedPluginRuntime } from "../../schema/plugin-sdk";
 

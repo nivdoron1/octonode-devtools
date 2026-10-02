@@ -1232,14 +1232,174 @@ var require_source_index = __commonJS({
   }
 });
 
+// packages/schema/dist/personal-layout.js
+var require_personal_layout = __commonJS({
+  "packages/schema/dist/personal-layout.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.SettingsLayout = exports2.PersonalLayoutItems = void 0;
+    var zod_1 = require("zod");
+    exports2.PersonalLayoutItems = zod_1.z.array(zod_1.z.object({
+      id: zod_1.z.string().min(1).max(240).refine((id) => !["__proto__", "__all__"].includes(id)),
+      label: zod_1.z.string().trim().min(1).max(240).optional(),
+      pinned: zod_1.z.boolean().optional()
+    }).strict()).max(100).refine((items) => new Set(items.map((item) => item.id)).size === items.length, "Layout IDs must be unique");
+    exports2.SettingsLayout = zod_1.z.record(zod_1.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100), exports2.PersonalLayoutItems).refine((value) => Object.keys(value).length <= 64, "At most 64 layout groups");
+  }
+});
+
+// packages/schema/dist/app-contributions.js
+var require_app_contributions = __commonJS({
+  "packages/schema/dist/app-contributions.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.appHostRequestSchema = exports2.appContributionContextSchema = exports2.appContributionSchema = exports2.appLauncherSchema = exports2.appContributionWhen = exports2.appContributionTitle = exports2.appContributionId = exports2.AppContributionTarget = exports2.AppActionTarget = exports2.AppViewTarget = exports2.APP_LAUNCHER_TARGETS = exports2.APP_ACTION_TARGETS = exports2.APP_VIEW_TARGETS = void 0;
+    var zod_1 = require("zod");
+    var icons_js_1 = require_icons();
+    var personal_layout_js_1 = require_personal_layout();
+    exports2.APP_VIEW_TARGETS = [
+      "app.page",
+      "workspace.block",
+      "shell.panel",
+      "shell.dock",
+      "project.tab",
+      "project.overview.block",
+      "workflow.tab",
+      "workflow.inspector.block",
+      "node.view",
+      "node.inspector.tab",
+      "node.inspector.block",
+      "task.space.view",
+      "task.details.tab",
+      "task.details.block",
+      "task.card.badge",
+      "document.tab",
+      "document.panel",
+      "editor.panel",
+      "git.diff.panel",
+      "table.view",
+      "execution.details.block",
+      "app.settings.section",
+      "project.settings.section"
+    ];
+    exports2.APP_ACTION_TARGETS = [
+      "project.action",
+      "file.action",
+      "editor.action",
+      "editor.selection-action",
+      "workflow.action",
+      "workflow.canvas.action",
+      "workflow.selection-action",
+      "workflow.edge.action",
+      "node.action",
+      "task.space.action",
+      "task.action",
+      "document.action",
+      "document.selection-action",
+      "document.block.action",
+      "document.slash-command",
+      "document.review.action",
+      "git.diff.action",
+      "table.action",
+      "execution.action"
+    ];
+    exports2.APP_LAUNCHER_TARGETS = ["shell.navbar.action", "shell.navigation.item", "shell.command"];
+    exports2.AppViewTarget = zod_1.z.enum(exports2.APP_VIEW_TARGETS);
+    exports2.AppActionTarget = zod_1.z.enum(exports2.APP_ACTION_TARGETS);
+    exports2.AppContributionTarget = zod_1.z.enum([...exports2.APP_VIEW_TARGETS, ...exports2.APP_ACTION_TARGETS]);
+    exports2.appContributionId = zod_1.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100);
+    exports2.appContributionTitle = zod_1.z.string().trim().min(1).max(240);
+    exports2.appContributionWhen = zod_1.z.object({
+      hasProject: zod_1.z.boolean().optional(),
+      hasSelection: zod_1.z.boolean().optional(),
+      readOnly: zod_1.z.boolean().optional(),
+      nodeKind: zod_1.z.string().min(1).max(240).optional(),
+      documentFormat: zod_1.z.enum(["markdown", "html", "latex"]).optional()
+    }).strict();
+    exports2.appLauncherSchema = zod_1.z.object({
+      id: exports2.appContributionId,
+      target: zod_1.z.enum(exports2.APP_LAUNCHER_TARGETS),
+      title: exports2.appContributionTitle,
+      icon: icons_js_1.IconName.optional(),
+      opens: exports2.appContributionId
+    }).strict();
+    exports2.appContributionSchema = zod_1.z.object({
+      id: exports2.appContributionId,
+      target: exports2.AppContributionTarget,
+      title: exports2.appContributionTitle,
+      icon: icons_js_1.IconName.optional(),
+      path: zod_1.z.string().regex(/^extensions\/[a-z0-9][a-z0-9-]*\.js$/).max(150),
+      sha256: zod_1.z.string().regex(/^sha256:[a-f0-9]{64}$/),
+      when: exports2.appContributionWhen.optional()
+    }).strict();
+    exports2.appContributionContextSchema = zod_1.z.object({
+      projectId: zod_1.z.string().min(1).max(128).optional(),
+      worktreeId: zod_1.z.string().min(1).max(240).optional(),
+      workflowId: zod_1.z.string().min(1).max(240).optional(),
+      nodeId: zod_1.z.string().min(1).max(240).optional(),
+      nodeKind: zod_1.z.string().min(1).max(240).optional(),
+      edgeId: zod_1.z.string().min(1).max(500).optional(),
+      executionId: zod_1.z.string().min(1).max(128).optional(),
+      taskSpaceId: zod_1.z.string().min(1).max(128).optional(),
+      itemId: zod_1.z.string().min(1).max(128).optional(),
+      documentId: zod_1.z.string().min(1).max(128).optional(),
+      documentFormat: zod_1.z.enum(["markdown", "html", "latex"]).optional(),
+      tableId: zod_1.z.string().min(1).max(128).optional(),
+      rowId: zod_1.z.string().min(1).max(128).optional(),
+      filePath: zod_1.z.string().min(1).max(1024).optional(),
+      revision: zod_1.z.union([zod_1.z.string().max(240), zod_1.z.number().int().nonnegative()]).optional(),
+      draftRevision: zod_1.z.number().int().nonnegative().optional(),
+      selection: zod_1.z.object({ start: zod_1.z.number().int().nonnegative(), end: zod_1.z.number().int().nonnegative() }).strict().refine((value) => value.end >= value.start).optional(),
+      selectedIds: zod_1.z.array(zod_1.z.string().min(1).max(500)).max(100).optional(),
+      canvas: zod_1.z.object({ x: zod_1.z.number().finite(), y: zod_1.z.number().finite() }).strict().optional(),
+      readOnly: zod_1.z.boolean().default(true),
+      tasks: zod_1.z.array(zod_1.z.object({
+        itemId: zod_1.z.string().min(1).max(128),
+        taskSpaceId: zod_1.z.string().min(1).max(128),
+        revision: zod_1.z.number().int().nonnegative()
+      }).strict()).max(100).optional(),
+      nodes: zod_1.z.array(zod_1.z.object({
+        id: zod_1.z.string().min(1).max(240),
+        kind: zod_1.z.string().max(240).optional(),
+        label: zod_1.z.string().max(240).optional()
+      }).strict()).max(100).optional()
+    }).strict();
+    exports2.appHostRequestSchema = zod_1.z.discriminatedUnion("command", [
+      zod_1.z.object({ command: zod_1.z.literal("panel.open"), id: exports2.appContributionId }).strict(),
+      zod_1.z.object({ command: zod_1.z.literal("assistant.open"), suggestion: zod_1.z.string().max(8e3).optional() }).strict(),
+      zod_1.z.object({ command: zod_1.z.literal("layout.list") }).strict(),
+      zod_1.z.object({
+        command: zod_1.z.literal("layout.undo"),
+        scope: zod_1.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100),
+        revision: zod_1.z.string().min(1).max(240)
+      }).strict(),
+      zod_1.z.object({
+        command: zod_1.z.literal("layout.update"),
+        scope: zod_1.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100),
+        revision: zod_1.z.string().min(1).max(240),
+        items: personal_layout_js_1.PersonalLayoutItems
+      }).strict(),
+      zod_1.z.object({
+        command: zod_1.z.literal("edit.propose"),
+        resource: zod_1.z.enum(["file", "document"]),
+        baseRevision: zod_1.z.string().min(1).max(240),
+        draftRevision: zod_1.z.number().int().nonnegative(),
+        content: zod_1.z.string().max(12e3),
+        mode: zod_1.z.enum(["append", "replace", "replace-selection"])
+      }).strict()
+    ]);
+  }
+});
+
 // packages/schema/dist/app.js
 var require_app = __commonJS({
   "packages/schema/dist/app.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.appTunnelRegistrationSchema = exports2.AppDefinition = exports2.ExtensionOnlyApp = exports2.SelfHostedApp = exports2.SelfHostedAppExtension = exports2.AppIconUrl = exports2.AppAction = void 0;
+    exports2.appTunnelRegistrationSchema = exports2.AppDefinition = exports2.ContributionApp = exports2.ExtensionOnlyApp = exports2.SelfHostedApp = exports2.SelfHostedAppExtension = exports2.AppIconUrl = exports2.AppAction = void 0;
     var zod_1 = require("zod");
     var icons_js_1 = require_icons();
+    var app_contributions_js_1 = require_app_contributions();
     exports2.AppAction = zod_1.z.enum(["projects:read", "data:read", "data:write", "workflows:run"]);
     var appUrl = zod_1.z.string().max(2048).url().refine((value) => {
       try {
@@ -1290,7 +1450,7 @@ var require_app = __commonJS({
       if (new Set(app.extensions.map((extension) => extension.id)).size !== app.extensions.length)
         ctx.addIssue({ code: "custom", path: ["extensions"], message: "App extension IDs must be unique" });
     });
-    exports2.ExtensionOnlyApp = zod_1.z.object({
+    var extensionOnlyAppSchema = zod_1.z.object({
       apiVersion: zod_1.z.literal("2"),
       hosting: zod_1.z.literal("extension-only"),
       icon: icons_js_1.IconName.optional(),
@@ -1309,7 +1469,8 @@ var require_app = __commonJS({
         path: zod_1.z.string().regex(/^extensions\/[a-z0-9][a-z0-9-]*\.js$/).max(150),
         sha256: exports2.SelfHostedAppExtension.shape.sha256
       }).strict()).min(1).max(32)
-    }).strict().superRefine((app, ctx) => {
+    }).strict();
+    exports2.ExtensionOnlyApp = extensionOnlyAppSchema.superRefine((app, ctx) => {
       if (new Set(app.settings.map((setting) => setting.id)).size !== app.settings.length)
         ctx.addIssue({ code: "custom", path: ["settings"], message: "App setting IDs must be unique" });
       for (const field of ["id", "path"]) {
@@ -1317,7 +1478,46 @@ var require_app = __commonJS({
           ctx.addIssue({ code: "custom", path: ["extensions"], message: `App extension ${field}s must be unique` });
       }
     });
-    exports2.AppDefinition = zod_1.z.union([exports2.SelfHostedApp, exports2.ExtensionOnlyApp]);
+    exports2.ContributionApp = extensionOnlyAppSchema.extend({
+      apiVersion: zod_1.z.literal("3"),
+      requestedActions: zod_1.z.array(exports2.AppAction).max(4).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
+      extensions: zod_1.z.array(app_contributions_js_1.appContributionSchema).min(1).max(32),
+      launchers: zod_1.z.array(app_contributions_js_1.appLauncherSchema).max(32).default([]),
+      locales: zod_1.z.record(zod_1.z.string().regex(/^(en|de|es|fr|ja)$/), zod_1.z.record(zod_1.z.string().max(100), zod_1.z.string().max(4e3))).default({})
+    }).strict().superRefine((app, ctx) => {
+      const ids = [...app.extensions, ...app.launchers].map((item) => item.id);
+      if (new Set(ids).size !== ids.length)
+        ctx.addIssue({ code: "custom", path: ["extensions"], message: "Contribution IDs must be unique" });
+      if (new Set(app.extensions.map((item) => item.path)).size !== app.extensions.length)
+        ctx.addIssue({ code: "custom", path: ["extensions"], message: "Contribution paths must be unique" });
+      if (new Set(app.settings.map((item) => item.id)).size !== app.settings.length)
+        ctx.addIssue({ code: "custom", path: ["settings"], message: "App setting IDs must be unique" });
+      for (const [index, launcher] of app.launchers.entries()) {
+        const destination = app.extensions.find((item) => item.id === launcher.opens);
+        if (!destination || !app_contributions_js_1.APP_VIEW_TARGETS.includes(destination.target))
+          ctx.addIssue({
+            code: "custom",
+            path: ["launchers", index, "opens"],
+            message: "Launcher destination must be a declared view"
+          });
+      }
+      for (const item of [...app.extensions, ...app.launchers]) {
+        if (!item.title.startsWith("t:"))
+          continue;
+        for (const language of ["en", "de", "es", "fr", "ja"]) {
+          if (!app.locales[language]?.[item.title.slice(2)])
+            ctx.addIssue({
+              code: "custom",
+              path: ["locales", language],
+              message: `Missing translation for ${item.title}`
+            });
+        }
+      }
+      for (const [language, dictionary] of Object.entries(app.locales))
+        if (Object.keys(dictionary ?? {}).length > 200)
+          ctx.addIssue({ code: "custom", path: ["locales", language], message: "At most 200 translations per language" });
+    });
+    exports2.AppDefinition = zod_1.z.union([exports2.SelfHostedApp, exports2.ExtensionOnlyApp, exports2.ContributionApp]);
     exports2.appTunnelRegistrationSchema = zod_1.z.object({
       upstream: zod_1.z.string().url().max(2048),
       previewToken: zod_1.z.string().regex(/^[A-Za-z0-9_-]{43}$/),
@@ -11619,6 +11819,7 @@ var require_settings = __commonJS({
     var plugin_1 = require_plugin();
     var octonode_config_1 = require_octonode_config();
     var re2js_1 = require_build();
+    var personal_layout_js_1 = require_personal_layout();
     var identifier = zod_1.z.string().min(1).max(240).regex(/^(?!(?:__proto__|__all__)$)/, "reserved settings key");
     var label = zod_1.z.string().min(1).max(240);
     var strings = zod_1.z.array(zod_1.z.string().min(1).max(1024)).min(1).max(1e3);
@@ -11738,6 +11939,7 @@ var require_settings = __commonJS({
       apiVersion: zod_1.z.literal(constants_1.SETTINGS_API_VERSION),
       plugin: plugin_1.PluginManifest.optional(),
       defaultView: identifier.optional(),
+      layout: personal_layout_js_1.SettingsLayout.optional(),
       discovery: zod_1.z.union([exports2.SettingsFileReference, exports2.SettingsDiscovery]).optional(),
       appearance: zod_1.z.union([exports2.SettingsFileReference, exports2.SettingsAppearance]).optional(),
       overrides: zod_1.z.union([exports2.SettingsFileReference, exports2.SettingsOverrides]).optional(),
@@ -11749,6 +11951,7 @@ var require_settings = __commonJS({
       apiVersion: zod_1.z.literal(constants_1.SETTINGS_API_VERSION),
       plugin: plugin_1.PluginManifest.optional(),
       defaultView: identifier.optional(),
+      layout: personal_layout_js_1.SettingsLayout.optional(),
       discovery: exports2.SettingsDiscovery.optional(),
       appearance: exports2.SettingsAppearance.optional(),
       overrides: exports2.SettingsOverrides.optional(),
@@ -12695,6 +12898,8 @@ var require_dist = __commonJS({
     __exportStar(require_access_tokens(), exports2);
     __exportStar(require_plugin(), exports2);
     __exportStar(require_app(), exports2);
+    __exportStar(require_app_contributions(), exports2);
+    __exportStar(require_personal_layout(), exports2);
     __exportStar(require_app_installation(), exports2);
     __exportStar(require_app_analytics(), exports2);
     __exportStar(require_github(), exports2);
