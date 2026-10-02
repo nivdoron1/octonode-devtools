@@ -13663,6 +13663,84 @@ var require_plugin_nodes = __commonJS({
   }
 });
 
+// packages/common/dist/cloud-routing.js
+var require_cloud_routing = __commonJS({
+  "packages/common/dist/cloud-routing.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.controlPlanePath = controlPlanePath;
+    exports2.workspaceRef = workspaceRef;
+    function controlPlanePath(url, method = "GET") {
+      if (url.pathname === "/api/marketplace/toolkits" && method === "GET" && url.searchParams.get("project"))
+        return null;
+      if (!["/api/marketplace/toolkits/import", "/api/marketplace/toolkits/inspect"].includes(url.pathname) && /^\/api\/marketplace\/toolkits(?:\/[^/]+(?:\/(?:publish|resolve|members|versions))?)?$/.test(url.pathname))
+        return url.pathname.slice(4) + url.search;
+      if (/^\/api\/marketplace\/publisher\/(?:app-development(?:\/[a-f0-9-]{36})?|app-tunnels(?:\/[a-z]+(?:-[a-z]+){2})?)$/.test(url.pathname) || ["/api/apps/runtime/session", "/api/apps/runtime/data"].includes(url.pathname) || /^\/api\/marketplace\/apps(?:\/[^/]+(?:\/reviews)?)?$/.test(url.pathname) || /^\/api\/marketplace\/publisher\/apps(?:\/(?:analytics|drafts)|\/[^/]+(?:\/(?:versions|draft|status))?)?$/.test(url.pathname) || /^\/api\/workspaces\/(?:user|team|org)\/[^/]+\/apps(?:\/[^/]+(?:\/(?:session|settings))?)?$/.test(url.pathname))
+        return `${url.pathname.slice(4)}${url.search}`;
+      if (url.pathname === "/api/marketplace/publisher/analytics" || url.pathname === "/api/marketplace/publisher/reviews" || /^\/api\/marketplace\/plugins\/[^/]+\/ratings$/.test(url.pathname))
+        return url.pathname.slice(4) + url.search;
+      if (/^\/api\/marketplace\/publisher\/plugins(?:\/[^/]+(?:\/(?:releases|reviews|allowlist|versions\/[^/]+))?)?$/.test(url.pathname))
+        return `${url.pathname.slice(4)}${url.search}`;
+      if (method === "PUT" && /^\/api\/architectures\/[^/]+\/github$/.test(url.pathname))
+        return null;
+      if (url.pathname === "/api/workspaces")
+        return "/me/workspaces";
+      if (url.pathname === "/api/workspaces/permissions") {
+        const workspace = workspaceRef(url.searchParams.get("workspace"));
+        return `/workspaces/${encodeURIComponent(workspace.kind)}/${encodeURIComponent(workspace.id)}/permissions`;
+      }
+      const match = url.pathname.match(/^\/api\/workspaces\/orgs\/([^/]+)(\/(?:teams|invites|permissions))?$/);
+      if (match)
+        return `/orgs/${match[1]}${match[2] ?? ""}`;
+      if (url.pathname === "/api/workspaces/orgs")
+        return "/orgs";
+      if (/^\/api\/workspace-admin\/(?:overview|members(?:\/[^/]+)?|invites(?:\/[^/]+)?)$/.test(url.pathname)) {
+        return `${url.pathname.slice(4)}${url.search}`;
+      }
+      if (/^\/api\/super-admin\/(?:access|overview|users|plugins(?:\/[^/]+)?|organizations(?:\/[^/]+)?)$/.test(url.pathname)) {
+        return `${url.pathname.slice(4)}${url.search}`;
+      }
+      if (/^\/api\/billing\/(?:summary|checkout|portal|seats|usage-limits\/[^/]+)$/.test(url.pathname)) {
+        return `${url.pathname.slice(4)}${url.search}`;
+      }
+      if (/^\/api\/tokens(?:\/[^/]+)?$/.test(url.pathname))
+        return `${url.pathname.slice(4)}${url.search}`;
+      const collaboration = [
+        /^\/api\/github\/plugin-publishers(?:\/[^/]+)?$/,
+        /^\/api\/architectures\/[^/]+\/github\/auto-sync$/,
+        /^\/api\/(?:community|task-spaces|work-items)(?:\/|$)/,
+        /^\/api\/(?:profile(?:\/avatar)?|profiles\/(?:workspace-members|[^/]+\/avatar)|workspace-agents(?:\/[^/]+)?)$/,
+        /^\/api\/knowledge\/search$/,
+        /^\/api\/assistant\/(?:sessions(?:\/[^/]+\/(?:config|runs\/latest))?|runs\/[^/]+(?:\/cancel)?)$/,
+        /^\/api\/social\/(?:conversations(?:\/[^/]+(?:\/(?:members(?:\/[^/]+)?|messages|read))?)?|messages\/[^/]+(?:\/reactions\/[^/]+)?|notifications(?:\/read)?|realtime(?:-ticket)?|backups(?:\/content)?|restores|workspace|operations(?:\/[^/]+)?)$/,
+        /^\/api\/github\/(?:install|installations\/complete|repositories|jobs\/[^/]+(?:\/retry)?)$/,
+        /^\/api\/slack\/(?:install|installations\/complete|connections(?:\/[^/]+)?|bindings(?:\/[^/]+)?)$/,
+        /^\/api\/design-documents(?:\/[^/]+(?:\/(?:share|review-threads))?)?$/,
+        /^\/api\/architectures\/[^/]+\/github(?:\/pull-requests(?:\/\d+(?:\/reviews)?)?)?$/,
+        /^\/api\/(?:review-threads\/[^/]+(?:\/(?:comments|resolve|github\/(?:resolve|unresolve)))?|review-comments\/[^/]+(?:\/github)?|review-suggestions\/[^/]+\/reject)$/
+      ].some((pattern) => pattern.test(url.pathname));
+      if (collaboration)
+        return `${url.pathname.slice(4)}${url.search}`;
+      return null;
+    }
+    function workspaceRef(value, userId) {
+      if (!value) {
+        if (!userId)
+          throw Object.assign(new Error("workspace requires an authenticated user"), { status: 401 });
+        return { kind: "user", id: userId };
+      }
+      const [kind, id, extra] = value.split(":");
+      if (extra || !id || kind !== "user" && kind !== "org" && kind !== "team") {
+        throw Object.assign(new Error("invalid workspace; expected user:<id>, org:<id>, or team:<id>"), { status: 400 });
+      }
+      if (kind === "user" && userId && id !== userId) {
+        throw Object.assign(new Error("workspace not found"), { status: 404 });
+      }
+      return { kind, id };
+    }
+  }
+});
+
 // packages/common/dist/index.js
 var require_dist2 = __commonJS({
   "packages/common/dist/index.js"(exports2) {
@@ -13684,7 +13762,7 @@ var require_dist2 = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
+    exports2.workspaceRef = exports2.controlPlanePath = exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
     __exportStar(require_constants2(), exports2);
     __exportStar(require_legal_constants(), exports2);
     var package_cache_1 = require_package_cache();
@@ -13699,6 +13777,13 @@ var require_dist2 = __commonJS({
     var plugin_nodes_1 = require_plugin_nodes();
     Object.defineProperty(exports2, "installedPluginNodesPage", { enumerable: true, get: function() {
       return plugin_nodes_1.installedPluginNodesPage;
+    } });
+    var cloud_routing_1 = require_cloud_routing();
+    Object.defineProperty(exports2, "controlPlanePath", { enumerable: true, get: function() {
+      return cloud_routing_1.controlPlanePath;
+    } });
+    Object.defineProperty(exports2, "workspaceRef", { enumerable: true, get: function() {
+      return cloud_routing_1.workspaceRef;
     } });
   }
 });
