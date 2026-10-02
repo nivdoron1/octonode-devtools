@@ -75,7 +75,7 @@ var require_define_node = __commonJS({
             config: args.config
           }),
           kind: "service",
-          service: { create: args.create, lifecycle: args.lifecycle ?? "invocation", methods }
+          service: { create: args.create, dispose: args.dispose, lifecycle: args.lifecycle ?? "invocation", methods }
         };
       }
       return defineNode({ ...args, run: args.run ?? setupPassthrough, kind: "service" });
@@ -2013,6 +2013,8 @@ var require_octonode_config = __commonJS({
       checksum: zod_1.z.string().optional(),
       /** Set when scan no longer finds this node in code; not deleted automatically. */
       orphaned: zod_1.z.boolean().optional(),
+      /** CODE-OWNED. This node participates in a shared resumable source scope. */
+      sourceScope: zod_1.z.boolean().optional(),
       /** Routing metadata for an explicitly exposed service host or method node. */
       service: zod_1.z.object({
         host: zod_1.z.string(),
@@ -2147,7 +2149,11 @@ var require_octonode_config = __commonJS({
       path: zod_1.z.string(),
       symbol: zod_1.z.string(),
       kind: zod_1.z.enum(["module", "function"]),
-      checksum: zod_1.z.string()
+      checksum: zod_1.z.string(),
+      /** CODE-OWNED revisions of resolved project imports; relative to the project root. */
+      dependencies: zod_1.z.record(zod_1.z.string(), zod_1.z.string()).optional(),
+      /** CODE-OWNED effective tsconfig/jsconfig and configuration content revision. */
+      compilerChecksum: zod_1.z.string().optional()
     });
     exports2.Workflow = zod_1.z.object({
       /** CODE-OWNED optional defaults from octonode.config.ts. */
@@ -5092,6 +5098,7 @@ var require_json_schema_definitions = __commonJS({
             },
             checksum: { type: "string" },
             orphaned: { type: "boolean" },
+            sourceScope: { type: "boolean" },
             service: {
               type: "object",
               required: ["host", "lifecycle"],
@@ -5171,7 +5178,9 @@ var require_json_schema_definitions = __commonJS({
             path: { type: "string" },
             symbol: { type: "string" },
             kind: { enum: ["module", "function"] },
-            checksum: { type: "string" }
+            checksum: { type: "string" },
+            dependencies: { type: "object", additionalProperties: { type: "string" } },
+            compilerChecksum: { type: "string" }
           }
         },
         inputs: {
@@ -13089,6 +13098,7 @@ var require_runner = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.NodeError = void 0;
+    exports2.disposeServiceInstances = disposeServiceInstances;
     exports2.processRequest = processRequest;
     exports2.jsonSafetyError = jsonSafetyError;
     exports2.runNode = runNode;
@@ -13161,7 +13171,11 @@ var require_runner = __commonJS({
       if (node.service.lifecycle === "worker") {
         let instance2 = workerServiceInstances.get(node);
         if (!instance2) {
-          instance2 = Promise.resolve(node.service.create(context));
+          instance2 = Promise.resolve().then(() => node.service.create(context)).catch((error) => {
+            if (workerServiceInstances.get(node) === instance2)
+              workerServiceInstances.delete(node);
+            throw error;
+          });
           workerServiceInstances.set(node, instance2);
         }
         return instance2;
@@ -13174,21 +13188,53 @@ var require_runner = __commonJS({
       const key = context.runId ?? invocationId;
       let instance = runs.get(key);
       if (!instance) {
-        instance = Promise.resolve(node.service.create(context));
+        instance = Promise.resolve().then(() => node.service.create(context)).catch((error) => {
+          if (runs.get(key) === instance)
+            runs.delete(key);
+          throw error;
+        });
         runs.set(key, instance);
-        if (runs.size > 100)
-          runs.delete(runs.keys().next().value);
+        if (runs.size > 100) {
+          const key2 = runs.keys().next().value;
+          const previous = runs.get(key2);
+          runs.delete(key2);
+          await disposeInstances(node, [previous]);
+        }
       }
       return instance;
     }
     async function invokeServiceMethod(node, methodName, spec, inputs, context, invocationId) {
       const instance = await serviceInstance(node, context, invocationId);
-      const method = instance[methodName];
-      if (typeof method !== "function")
-        throw new Error(`service "${node.id}" does not implement exposed method "${methodName}"`);
-      const record = inputs && typeof inputs === "object" ? inputs : { value: inputs };
-      const args = spec.params?.length ? spec.params.map((name) => record[name]) : [inputs];
-      return method.apply(instance, args);
+      try {
+        const method = instance[methodName];
+        if (typeof method !== "function")
+          throw new Error(`service "${node.id}" does not implement exposed method "${methodName}"`);
+        const record = inputs && typeof inputs === "object" ? inputs : { value: inputs };
+        const args = spec.params?.length ? spec.params.map((name) => record[name]) : [inputs];
+        return await method.apply(instance, args);
+      } finally {
+        if (node.service.lifecycle === "invocation")
+          await node.service.dispose?.(instance);
+      }
+    }
+    async function disposeInstances(node, instances) {
+      const results = await Promise.allSettled(instances.map(async (pending) => {
+        const instance = await pending.catch(() => void 0);
+        if (instance)
+          await node.service.dispose?.(instance);
+      }));
+      const failure = results.find((result) => result.status === "rejected");
+      if (failure?.status === "rejected")
+        throw failure.reason;
+    }
+    async function disposeServiceInstances(node) {
+      if (!isExplicitService(node))
+        return;
+      const worker = workerServiceInstances.get(node);
+      const runs = runServiceInstances.get(node);
+      workerServiceInstances.delete(node);
+      runServiceInstances.delete(node);
+      await disposeInstances(node, [...worker ? [worker] : [], ...runs?.values() ?? []]);
     }
     async function processRequest(node, raw) {
       let request;
@@ -13355,7 +13401,8 @@ var require_runner = __commonJS({
         if (!draining && queue.length === 0)
           done();
       });
-      return finished;
+      await finished;
+      await disposeServiceInstances(node);
     }
     function describe(err) {
       return err instanceof Error ? err.message : String(err);
@@ -13803,6 +13850,89 @@ var require_cloud_routing = __commonJS({
   }
 });
 
+// packages/common/dist/graph-comparison/index.js
+var require_graph_comparison = __commonJS({
+  "packages/common/dist/graph-comparison/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.graphValues = void 0;
+    exports2.graphValue = graphValue;
+    exports2.edgeChanges = edgeChanges;
+    exports2.compareWorkflowGraphs = compareWorkflowGraphs;
+    function graphValue(value) {
+      return JSON.stringify(value, (_key, item) => item && typeof item === "object" && !Array.isArray(item) ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b))) : item) ?? "";
+    }
+    var graphValues = (record) => Object.fromEntries(Object.entries(record).filter(([, value]) => value !== void 0).map(([key, value]) => [key, graphValue(value)]));
+    exports2.graphValues = graphValues;
+    function edgeChanges(before, after) {
+      const left = new Map(before.map((edge) => [JSON.stringify(edge), edge]));
+      const right = new Map(after.map((edge) => [JSON.stringify(edge), edge]));
+      return [
+        ...[...left].filter(([key]) => !right.has(key)).map(([key, edge]) => ({ key, change: "removed", ...edge })),
+        ...[...right].filter(([key]) => !left.has(key)).map(([key, edge]) => ({ key, change: "added", ...edge }))
+      ];
+    }
+    function alignSourceNodes(before, after) {
+      const beforeIds = new Set(before.graph.nodes.map(({ id: id2 }) => id2));
+      const afterIds = new Set(after.graph.nodes.map(({ id: id2 }) => id2));
+      const unmatchedBefore = before.graph.nodes.filter(({ id: id2 }) => !afterIds.has(id2));
+      const unmatchedAfter = after.graph.nodes.filter(({ id: id2 }) => !beforeIds.has(id2));
+      const identity = (node) => graphValue([node.type, node.label]);
+      const replacements = new Map(unmatchedAfter.flatMap((node) => {
+        const candidates = unmatchedBefore.filter((item) => identity(item) === identity(node));
+        return candidates.length === 1 && unmatchedAfter.filter((item) => identity(item) === identity(node)).length === 1 ? [[node.id, candidates[0].id]] : [];
+      }));
+      const id = (value) => replacements.get(value) ?? value;
+      return {
+        ...after,
+        settings: JSON.stringify(JSON.parse(after.settings), (key, value) => key === "node" && typeof value === "string" ? id(value) : value),
+        graph: {
+          ...after.graph,
+          entry: after.graph.entry ? id(after.graph.entry) : null,
+          nodes: after.graph.nodes.map((node) => ({ ...node, id: id(node.id) })),
+          edges: after.graph.edges.map((edge) => ({
+            ...edge,
+            from: { ...edge.from, node: id(edge.from.node) },
+            to: { ...edge.to, node: id(edge.to.node) }
+          }))
+        }
+      };
+    }
+    function compareWorkflowGraphs(before, after) {
+      const left = new Map(before.map((workflow) => [workflow.id, workflow]));
+      const right = new Map(after.map((workflow) => [workflow.id, workflow]));
+      return [.../* @__PURE__ */ new Set([...left.keys(), ...right.keys()])].sort().flatMap((id) => {
+        const base = left.get(id);
+        const candidate = right.get(id);
+        const head = base && candidate && /\.[cm]?[jt]sx?$/.test(candidate.path) ? alignSourceNodes(base, candidate) : candidate;
+        if (base && head && graphValue([base.graph, base.settings]) === graphValue([head.graph, head.settings]))
+          return [];
+        const nodeIds = new Set([...base?.graph.nodes ?? [], ...head?.graph.nodes ?? []].map(({ id: id2 }) => id2));
+        return [
+          {
+            id,
+            label: (head ?? base).label,
+            path: (head ?? base).path,
+            change: !base ? "added" : !head ? "removed" : "changed",
+            baseGraph: base?.graph ?? null,
+            headGraph: head?.graph ?? null,
+            settings: { before: base?.settings ?? null, after: head?.settings ?? null },
+            nodes: [...nodeIds].map((id2) => {
+              const a = base?.graph.nodes.find((node) => node.id === id2);
+              const b = head?.graph.nodes.find((node) => node.id === id2);
+              return {
+                id: id2,
+                change: !a ? "added" : !b ? "removed" : graphValue(a) === graphValue(b) ? "unchanged" : "changed"
+              };
+            }),
+            edges: edgeChanges(base?.graph.edges ?? [], head?.graph.edges ?? [])
+          }
+        ];
+      });
+    }
+  }
+});
+
 // packages/common/dist/index.js
 var require_dist2 = __commonJS({
   "packages/common/dist/index.js"(exports2) {
@@ -13824,7 +13954,7 @@ var require_dist2 = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.workspaceRef = exports2.controlPlanePath = exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
+    exports2.compareWorkflowGraphs = exports2.edgeChanges = exports2.graphValues = exports2.graphValue = exports2.workspaceRef = exports2.controlPlanePath = exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
     __exportStar(require_constants2(), exports2);
     __exportStar(require_legal_constants(), exports2);
     var package_cache_1 = require_package_cache();
@@ -13846,6 +13976,19 @@ var require_dist2 = __commonJS({
     } });
     Object.defineProperty(exports2, "workspaceRef", { enumerable: true, get: function() {
       return cloud_routing_1.workspaceRef;
+    } });
+    var index_1 = require_graph_comparison();
+    Object.defineProperty(exports2, "graphValue", { enumerable: true, get: function() {
+      return index_1.graphValue;
+    } });
+    Object.defineProperty(exports2, "graphValues", { enumerable: true, get: function() {
+      return index_1.graphValues;
+    } });
+    Object.defineProperty(exports2, "edgeChanges", { enumerable: true, get: function() {
+      return index_1.edgeChanges;
+    } });
+    Object.defineProperty(exports2, "compareWorkflowGraphs", { enumerable: true, get: function() {
+      return index_1.compareWorkflowGraphs;
     } });
   }
 });
@@ -13973,7 +14116,7 @@ var require_dist3 = __commonJS({
   "packages/plugin-runtime/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;
+    exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.disposeServiceInstances = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;
     var define_node_1 = require_define_node();
     Object.defineProperty(exports2, "defineNode", { enumerable: true, get: function() {
       return define_node_1.defineNode;
@@ -13996,6 +14139,9 @@ var require_dist3 = __commonJS({
     } });
     Object.defineProperty(exports2, "NodeError", { enumerable: true, get: function() {
       return runner_1.NodeError;
+    } });
+    Object.defineProperty(exports2, "disposeServiceInstances", { enumerable: true, get: function() {
+      return runner_1.disposeServiceInstances;
     } });
     var json_schema_1 = require_json_schema2();
     Object.defineProperty(exports2, "validate", { enumerable: true, get: function() {

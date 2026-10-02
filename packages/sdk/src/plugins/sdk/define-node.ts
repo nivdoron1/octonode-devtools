@@ -103,7 +103,11 @@ export interface ServiceMethodSpec {
 
 export interface DefineExplicitServiceArgs<T extends object> {
   id: string;
+  /** Explicit class identity for container-resolved or indirect factories; never constructed by discovery. */
+  class?: abstract new (...args: never[]) => T;
   create: (context: InvocationContext) => T | Promise<T>;
+  /** Close owned resources when an invocation or service worker ends. */
+  dispose?: (instance: T) => void | Promise<void>;
   expose: readonly (keyof T & string)[] | Record<string, ServiceMethodSpec>;
   lifecycle?: "invocation" | "workflow-run" | "worker";
   icon?: any;
@@ -115,6 +119,7 @@ export interface ServiceDefinition<T extends object = object> extends NodeDefini
   kind: "service";
   service: {
     create: (context: InvocationContext) => T | Promise<T>;
+    dispose?: (instance: T) => void | Promise<void>;
     lifecycle: "invocation" | "workflow-run" | "worker";
     methods: Record<string, ServiceMethodSpec>;
   };
@@ -142,7 +147,7 @@ export function defineService<T extends object, I = any, O = any>(
         config: args.config,
       }),
       kind: "service",
-      service: { create: args.create, lifecycle: args.lifecycle ?? "invocation", methods },
+      service: { create: args.create, dispose: args.dispose, lifecycle: args.lifecycle ?? "invocation", methods },
     } as ServiceDefinition<T>;
   }
   return defineNode({ ...args, run: args.run ?? setupPassthrough, kind: "service" });

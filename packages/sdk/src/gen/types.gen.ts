@@ -1943,6 +1943,8 @@ export type GetApiProjectsSearchData = {
         summary?: 'true';
         workspace?: string;
         q?: string;
+        sort?: 'name' | 'name-desc' | 'workflows';
+        source?: 'repository' | 'managed';
         offset?: number;
         limit?: number;
         cloud?: 'true';
@@ -2121,6 +2123,10 @@ export type GetApiProjectsByProjectIdFilesContentResponses = {
         mtime: number;
         revision: string;
         conflict?: boolean;
+        compilerOptions?: {
+            [key: string]: boolean | number | Array<string>;
+        };
+        compilerError?: string;
     };
 };
 
@@ -2171,6 +2177,10 @@ export type PostApiProjectsByProjectIdFilesContentResponses = {
         mtime: number;
         revision: string;
         conflict?: boolean;
+        compilerOptions?: {
+            [key: string]: boolean | number | Array<string>;
+        };
+        compilerError?: string;
     };
 };
 
@@ -2222,6 +2232,10 @@ export type PutApiProjectsByProjectIdFilesContentResponses = {
         mtime: number;
         revision: string;
         conflict?: boolean;
+        compilerOptions?: {
+            [key: string]: boolean | number | Array<string>;
+        };
+        compilerError?: string;
     };
 };
 
@@ -3533,6 +3547,9 @@ export type GetApiNodesByNodeIdSourceResponses = {
             line: number;
             column: number;
         };
+        sourceRevision?: string;
+        currentSourceRevision?: string;
+        stale?: boolean;
     };
 };
 
@@ -4371,12 +4388,19 @@ export type GetApiWorkflowsByWorkflowIdGraphResponses = {
             sourceExpressions?: {
                 [key: string]: string;
             };
+            sourceScope?: boolean;
             hasSdkClient?: boolean;
             kind?: 'function' | 'class' | 'service' | 'const';
             setup?: {
                 [key: string]: unknown;
             };
             provides?: Array<string>;
+            sourceLocation?: {
+                path: string;
+                line: number;
+                column: number;
+            };
+            serviceLifecycle?: 'invocation' | 'workflow-run' | 'worker';
             runtime?: {
                 timeout_ms?: number;
                 retries?: number;
@@ -4666,12 +4690,19 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
                 sourceExpressions?: {
                     [key: string]: string;
                 };
+                sourceScope?: boolean;
                 hasSdkClient?: boolean;
                 kind?: 'function' | 'class' | 'service' | 'const';
                 setup?: {
                     [key: string]: unknown;
                 };
                 provides?: Array<string>;
+                sourceLocation?: {
+                    path: string;
+                    line: number;
+                    column: number;
+                };
+                serviceLifecycle?: 'invocation' | 'workflow-run' | 'worker';
                 runtime?: {
                     timeout_ms?: number;
                     retries?: number;
@@ -4851,12 +4882,19 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
                 sourceExpressions?: {
                     [key: string]: string;
                 };
+                sourceScope?: boolean;
                 hasSdkClient?: boolean;
                 kind?: 'function' | 'class' | 'service' | 'const';
                 setup?: {
                     [key: string]: unknown;
                 };
                 provides?: Array<string>;
+                sourceLocation?: {
+                    path: string;
+                    line: number;
+                    column: number;
+                };
+                serviceLifecycle?: 'invocation' | 'workflow-run' | 'worker';
                 runtime?: {
                     timeout_ms?: number;
                     retries?: number;
@@ -5733,12 +5771,19 @@ export type PostApiPluginsByPluginIdNodesByNodeIdAddResponses = {
             sourceExpressions?: {
                 [key: string]: string;
             };
+            sourceScope?: boolean;
             hasSdkClient?: boolean;
             kind?: 'function' | 'class' | 'service' | 'const';
             setup?: {
                 [key: string]: unknown;
             };
             provides?: Array<string>;
+            sourceLocation?: {
+                path: string;
+                line: number;
+                column: number;
+            };
+            serviceLifecycle?: 'invocation' | 'workflow-run' | 'worker';
             runtime?: {
                 timeout_ms?: number;
                 retries?: number;
