@@ -1,7 +1,7 @@
 // Generated from packages/schema/src/app.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
 import { IconName } from "./icons.js";
-import { APP_VIEW_TARGETS, appContributionSchema, appLauncherSchema } from "./app-contributions.js";
+import { APP_VIEW_TARGETS, appContributionSchema, appLauncherSchema } from "./app/contributions.js";
 
 export const AppAction = z.enum(["projects:read", "data:read", "data:write", "workflows:run"]);
 export type AppAction = z.infer<typeof AppAction>;

@@ -1,6 +1,6 @@
 // Generated from packages/plugin-runtime/src/plugins/types.ts. Do not edit; run the Octonode SDK sync.
 import type { InvocationContext, PluginNode } from "../../schema/plugin-sdk";
-import type { JsonSchema } from "../json-schema";
+import type { JsonSchema } from "../types";
 
 /** Infer the JSON Schema subset enforced by the SDK runner. Other schemas stay unknown. */
 export type SchemaValue<S> = S extends { enum: readonly (infer E)[] }

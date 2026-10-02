@@ -1,6 +1,6 @@
 // Generated from packages/plugin/src/npm/types.ts. Do not edit; run the Octonode SDK sync.
-// packages/plugin/src/npm/types.ts
 import type { NpmClientBinding, NpmClientDefinition, NpmSdkExport } from "../../../schema/plugin-sdk";
+import type ts from "typescript";
 
 export interface NpmPackageMeta {
   /** Real npm package name (e.g. "@scope/pkg"). */
@@ -86,4 +86,22 @@ export interface NpmGenerateOptions {
   exclude?: string[];
   dir?: string;
   force?: boolean;
+}
+
+/** An exported symbol paired with the name it should be exposed under. */
+export interface ModuleExport {
+  symbol: ts.Symbol;
+  name: string;
+}
+
+export interface NpmGenerateResult {
+  dir: string;
+  files: string[];
+  warnings: string[];
+  nodeCount: number;
+}
+
+export interface LoadedNpmPackage extends NpmPackageMeta {
+  /** Temp dir holding the installed package tree. Caller must rmSync it. */
+  tmpDir: string;
 }
