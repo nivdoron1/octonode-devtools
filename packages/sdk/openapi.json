@@ -7602,6 +7602,29 @@
           },
           {
             "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "name-desc",
+                "workflows"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "source",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "repository",
+                "managed"
+              ]
+            }
+          },
+          {
+            "in": "query",
             "name": "offset",
             "schema": {
               "type": "integer",
@@ -7855,6 +7878,28 @@
                     },
                     "conflict": {
                       "type": "boolean"
+                    },
+                    "compilerOptions": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "compilerError": {
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -7969,6 +8014,28 @@
                     },
                     "conflict": {
                       "type": "boolean"
+                    },
+                    "compilerOptions": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "compilerError": {
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -8097,6 +8164,28 @@
                     },
                     "conflict": {
                       "type": "boolean"
+                    },
+                    "compilerOptions": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "compilerError": {
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -12233,6 +12322,15 @@
                         "line",
                         "column"
                       ]
+                    },
+                    "sourceRevision": {
+                      "type": "string"
+                    },
+                    "currentSourceRevision": {
+                      "type": "string"
+                    },
+                    "stale": {
+                      "type": "boolean"
                     }
                   },
                   "required": [
@@ -14955,6 +15053,9 @@
                               "type": "string"
                             }
                           },
+                          "sourceScope": {
+                            "type": "boolean"
+                          },
                           "hasSdkClient": {
                             "type": "boolean"
                           },
@@ -14976,6 +15077,33 @@
                             "items": {
                               "type": "string"
                             }
+                          },
+                          "sourceLocation": {
+                            "type": "object",
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "line": {
+                                "type": "number"
+                              },
+                              "column": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "path",
+                              "line",
+                              "column"
+                            ]
+                          },
+                          "serviceLifecycle": {
+                            "type": "string",
+                            "enum": [
+                              "invocation",
+                              "workflow-run",
+                              "worker"
+                            ]
                           },
                           "runtime": {
                             "type": "object",
@@ -15768,6 +15896,9 @@
                                   "type": "string"
                                 }
                               },
+                              "sourceScope": {
+                                "type": "boolean"
+                              },
                               "hasSdkClient": {
                                 "type": "boolean"
                               },
@@ -15789,6 +15920,33 @@
                                 "items": {
                                   "type": "string"
                                 }
+                              },
+                              "sourceLocation": {
+                                "type": "object",
+                                "properties": {
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "line": {
+                                    "type": "number"
+                                  },
+                                  "column": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "path",
+                                  "line",
+                                  "column"
+                                ]
+                              },
+                              "serviceLifecycle": {
+                                "type": "string",
+                                "enum": [
+                                  "invocation",
+                                  "workflow-run",
+                                  "worker"
+                                ]
                               },
                               "runtime": {
                                 "type": "object",
@@ -16550,6 +16708,9 @@
                                   "type": "string"
                                 }
                               },
+                              "sourceScope": {
+                                "type": "boolean"
+                              },
                               "hasSdkClient": {
                                 "type": "boolean"
                               },
@@ -16571,6 +16732,33 @@
                                 "items": {
                                   "type": "string"
                                 }
+                              },
+                              "sourceLocation": {
+                                "type": "object",
+                                "properties": {
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "line": {
+                                    "type": "number"
+                                  },
+                                  "column": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "path",
+                                  "line",
+                                  "column"
+                                ]
+                              },
+                              "serviceLifecycle": {
+                                "type": "string",
+                                "enum": [
+                                  "invocation",
+                                  "workflow-run",
+                                  "worker"
+                                ]
                               },
                               "runtime": {
                                 "type": "object",
@@ -19977,6 +20165,9 @@
                             "type": "string"
                           }
                         },
+                        "sourceScope": {
+                          "type": "boolean"
+                        },
                         "hasSdkClient": {
                           "type": "boolean"
                         },
@@ -19998,6 +20189,33 @@
                           "items": {
                             "type": "string"
                           }
+                        },
+                        "sourceLocation": {
+                          "type": "object",
+                          "properties": {
+                            "path": {
+                              "type": "string"
+                            },
+                            "line": {
+                              "type": "number"
+                            },
+                            "column": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "line",
+                            "column"
+                          ]
+                        },
+                        "serviceLifecycle": {
+                          "type": "string",
+                          "enum": [
+                            "invocation",
+                            "workflow-run",
+                            "worker"
+                          ]
                         },
                         "runtime": {
                           "type": "object",

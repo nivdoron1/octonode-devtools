@@ -99,7 +99,12 @@ async function serviceInstance(
   if (node.service.lifecycle === "worker") {
     let instance = workerServiceInstances.get(node);
     if (!instance) {
-      instance = Promise.resolve(node.service.create(context));
+      instance = Promise.resolve()
+        .then(() => node.service.create(context))
+        .catch((error) => {
+          if (workerServiceInstances.get(node) === instance) workerServiceInstances.delete(node);
+          throw error;
+        });
       workerServiceInstances.set(node, instance);
     }
     return instance;
@@ -112,9 +117,19 @@ async function serviceInstance(
   const key = context.runId ?? invocationId;
   let instance = runs.get(key);
   if (!instance) {
-    instance = Promise.resolve(node.service.create(context));
+    instance = Promise.resolve()
+      .then(() => node.service.create(context))
+      .catch((error) => {
+        if (runs.get(key) === instance) runs.delete(key);
+        throw error;
+      });
     runs.set(key, instance);
-    if (runs.size > 100) runs.delete(runs.keys().next().value as string);
+    if (runs.size > 100) {
+      const key = runs.keys().next().value as string;
+      const previous = runs.get(key)!;
+      runs.delete(key);
+      await disposeInstances(node, [previous]);
+    }
   }
   return instance;
 }
@@ -128,12 +143,37 @@ async function invokeServiceMethod(
   invocationId: string,
 ): Promise<unknown> {
   const instance = (await serviceInstance(node, context, invocationId)) as Record<string, unknown>;
-  const method = instance[methodName];
-  if (typeof method !== "function")
-    throw new Error(`service "${node.id}" does not implement exposed method "${methodName}"`);
-  const record = inputs && typeof inputs === "object" ? (inputs as Record<string, unknown>) : { value: inputs };
-  const args = spec.params?.length ? spec.params.map((name) => record[name]) : [inputs];
-  return (method as (...args: unknown[]) => unknown).apply(instance, args);
+  try {
+    const method = instance[methodName];
+    if (typeof method !== "function")
+      throw new Error(`service "${node.id}" does not implement exposed method "${methodName}"`);
+    const record = inputs && typeof inputs === "object" ? (inputs as Record<string, unknown>) : { value: inputs };
+    const args = spec.params?.length ? spec.params.map((name) => record[name]) : [inputs];
+    return await (method as (...args: unknown[]) => unknown).apply(instance, args);
+  } finally {
+    if (node.service.lifecycle === "invocation") await node.service.dispose?.(instance);
+  }
+}
+
+async function disposeInstances(node: ServiceDefinition, instances: Promise<object>[]): Promise<void> {
+  const results = await Promise.allSettled(
+    instances.map(async (pending) => {
+      // Construction failures already produced their invocation error envelope.
+      const instance = await pending.catch(() => undefined);
+      if (instance) await node.service.dispose?.(instance);
+    }),
+  );
+  const failure = results.find((result) => result.status === "rejected");
+  if (failure?.status === "rejected") throw failure.reason;
+}
+
+export async function disposeServiceInstances(node: NodeDefinition): Promise<void> {
+  if (!isExplicitService(node)) return;
+  const worker = workerServiceInstances.get(node);
+  const runs = runServiceInstances.get(node);
+  workerServiceInstances.delete(node);
+  runServiceInstances.delete(node);
+  await disposeInstances(node, [...(worker ? [worker] : []), ...(runs?.values() ?? [])]);
 }
 
 /**
@@ -318,7 +358,8 @@ export async function runNode(node: NodeDefinition): Promise<void> {
     if (!draining && queue.length === 0) done();
   });
 
-  return finished;
+  await finished;
+  await disposeServiceInstances(node);
 }
 
 function describe(err: unknown): string {
