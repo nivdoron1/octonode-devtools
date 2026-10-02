@@ -1,6 +1,6 @@
 // Generated from packages/schema/src/plugin/plugin.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
-import { JsonSchema } from "../ipc-envelope";
+import { JsonSchema } from "../ipc/envelope";
 import { IconValue } from "../icons";
 import { PLUGIN_SCHEMA_VERSION } from "../constants";
 import { AppDefinition } from "../app";

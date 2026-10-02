@@ -110,7 +110,7 @@ See `examples/workspace-notice-app` and `docs/plugins.md` in the engine reposito
 
 ## Self-hosted apps
 
-This is also the SDK selected for Octonode's developer-authored app extensions. The engine owns its source in `packages/ui-extensions`; `scripts/sync-plugin-sdk.mjs` synchronizes the public package into `octonode-devtools`. Do not create a second app UI SDK.
+This is also the SDK selected for Octonode's developer-authored app extensions. The engine owns its source in `packages/ui-extensions`; `scripts/sync/plugin/sdk.mjs` synchronizes the public package into `octonode-devtools`. Do not create a second app UI SDK.
 
 Legacy self-hosted app targets are `app.page` and `workspace.block`. Register an app in Partner → Apps, publish its HTTPS application URL and extension bundle digests, then install it from Studio → App marketplace. Plugin marketplace remains dedicated to executable node plugins.
 
@@ -178,7 +178,7 @@ Customizing this UI does not replace backend session and installation checks.
 In the Octonode source checkout, preview the screen with
 `yarn workspace @octonode/ui-extensions dev` on port 5185, then open `/dev/` in your browser.
 Use `?state=expired`, `?state=connecting`, or `?state=error` to preview the other states.
-With that preview running, run `node --test packages/ui-extensions/tests/app-access.test.mjs`
+With that preview running, run `node --test packages/ui-extensions/tests/app/access.test.mjs`
 to check mobile reflow, private-content protection, and recovery after a refreshed token.
 
 ```ts

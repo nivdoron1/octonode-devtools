@@ -6,19 +6,11 @@ import {
   makeManifestError,
   makeManifestResult,
   makeOkResult,
-  type ErrorResult,
-  type ManifestError,
-  type ManifestResult,
   type NodeManifest,
-  type OkResult,
 } from "../schema/plugin-sdk";
-import type { NodeDefinition, ServiceDefinition, ServiceMethodSpec } from "./define-node";
-import { validate } from "./json-schema";
-
-/** The language tag reported in this SDK's manifests. */
-const LANGUAGE = "typescript";
-
-type Envelope = OkResult | ErrorResult | ManifestResult | ManifestError;
+import type { Envelope, NodeDefinition, ServiceDefinition, ServiceMethodSpec, NodeErrorOptions } from "./types.js";
+import { LANGUAGE } from "./constants.js";
+import { validate } from "./json/schema.js";
 
 /**
  * A deliberate, terminal failure a node author can raise. The runner converts
@@ -27,7 +19,7 @@ type Envelope = OkResult | ErrorResult | ManifestResult | ManifestError;
 export class NodeError extends Error {
   readonly retryable: boolean;
   readonly code: "RUNTIME_ERROR" | "NON_RETRYABLE";
-  constructor(message: string, opts?: { retryable?: boolean }) {
+  constructor(message: string, opts?: NodeErrorOptions) {
     super(message);
     this.name = "NodeError";
     this.retryable = opts?.retryable ?? false;
@@ -45,7 +37,7 @@ function manifestOf(node: NodeDefinition, requestedNode?: string): NodeManifest 
         language: LANGUAGE,
         inputs: method.inputs,
         outputs: method.outputs,
-        icon: node.icon as any,
+        icon: node.icon,
       };
     }
   }
@@ -61,7 +53,7 @@ function manifestOf(node: NodeDefinition, requestedNode?: string): NodeManifest 
     outputs: node.outputs,
     kind: node.kind,
     setup: node.setup,
-    icon: node.icon as any,
+    icon: node.icon,
     config: node.config,
     service: isExplicitService(node)
       ? {

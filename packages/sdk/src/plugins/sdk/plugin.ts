@@ -1,9 +1,9 @@
 // Generated from packages/plugin-runtime/src/plugin.ts. Do not edit; run the Octonode SDK sync.
 import { env as PROCESS_ENV } from "node:process";
 import { PluginManifest } from "../schema/plugin-sdk";
-import { defineNode } from "./define-node";
+import { defineNode } from "./define/node";
 import { jsonSafetyError, NodeError, start } from "./runner";
-import type { PluginDefinition, PluginHandlers, PluginOptions } from "./plugin.types";
+import type { PluginDefinition, PluginHandlers, PluginOptions } from "./types";
 
 /** One definition owns discovery, presentation, ports, and the SDK runtime contract. */
 export function definePlugin(definition: PluginOptions): PluginDefinition;

@@ -35,9 +35,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// packages/plugin-runtime/dist/define-node.js
-var require_define_node = __commonJS({
-  "packages/plugin-runtime/dist/define-node.js"(exports2) {
+// packages/plugin-runtime/dist/define/node.js
+var require_node = __commonJS({
+  "packages/plugin-runtime/dist/define/node.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defineNode = defineNode;
@@ -61,7 +61,7 @@ var require_define_node = __commonJS({
         config: args.config
       };
     }
-    var setupPassthrough = (_inputs, context) => context?.config ?? {};
+    var setupPassthrough = (_inputs, context) => context.config ?? {};
     function defineService(args) {
       if ("create" in args && "expose" in args) {
         const methods = Array.isArray(args.expose) ? Object.fromEntries(args.expose.map((name) => [String(name), {}])) : args.expose;
@@ -164,9 +164,9 @@ var require_icons = __commonJS({
   }
 });
 
-// packages/schema/dist/ipc-envelope.js
-var require_ipc_envelope = __commonJS({
-  "packages/schema/dist/ipc-envelope.js"(exports2) {
+// packages/schema/dist/ipc/envelope.js
+var require_envelope = __commonJS({
+  "packages/schema/dist/ipc/envelope.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ManifestEnvelope = exports2.NodeManifest = exports2.ResultEnvelope = exports2.NodeError = exports2.RequestEnvelope = exports2.DescribeRequest = exports2.InvokeRequest = exports2.InvocationContext = exports2.ErrorCode = exports2.JsonSchema = exports2.PROTOCOL_VERSION = void 0;
@@ -1057,9 +1057,9 @@ var require_constants = __commonJS({
   }
 });
 
-// packages/schema/dist/source-index.js
-var require_source_index = __commonJS({
-  "packages/schema/dist/source-index.js"(exports2) {
+// packages/schema/dist/source/index.js
+var require_source = __commonJS({
+  "packages/schema/dist/source/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProjectPackageExports = exports2.ProjectSourceIndex = exports2.SourceFileIndex = exports2.SourceImport = exports2.SourceRecursion = exports2.SourceReference = exports2.SourceSymbol = exports2.SourceControlRegion = exports2.SourceDiagnostic = exports2.SourceClassMember = exports2.SourceParameter = exports2.SourceDecorator = exports2.SourceSymbolKind = exports2.SourceLocation = void 0;
@@ -1232,9 +1232,9 @@ var require_source_index = __commonJS({
   }
 });
 
-// packages/schema/dist/personal-layout.js
-var require_personal_layout = __commonJS({
-  "packages/schema/dist/personal-layout.js"(exports2) {
+// packages/schema/dist/personal/layout.js
+var require_layout = __commonJS({
+  "packages/schema/dist/personal/layout.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SettingsLayout = exports2.PersonalLayoutItems = void 0;
@@ -1248,15 +1248,15 @@ var require_personal_layout = __commonJS({
   }
 });
 
-// packages/schema/dist/app-contributions.js
-var require_app_contributions = __commonJS({
-  "packages/schema/dist/app-contributions.js"(exports2) {
+// packages/schema/dist/app/contributions.js
+var require_contributions = __commonJS({
+  "packages/schema/dist/app/contributions.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.appHostRequestSchema = exports2.appContributionContextSchema = exports2.appContributionSchema = exports2.appLauncherSchema = exports2.appContributionWhen = exports2.appContributionTitle = exports2.appContributionId = exports2.AppContributionTarget = exports2.AppActionTarget = exports2.AppViewTarget = exports2.APP_LAUNCHER_TARGETS = exports2.APP_ACTION_TARGETS = exports2.APP_VIEW_TARGETS = void 0;
     var zod_1 = require("zod");
     var icons_js_1 = require_icons();
-    var personal_layout_js_1 = require_personal_layout();
+    var layout_js_1 = require_layout();
     exports2.APP_VIEW_TARGETS = [
       "app.page",
       "workspace.block",
@@ -1377,7 +1377,7 @@ var require_app_contributions = __commonJS({
         command: zod_1.z.literal("layout.update"),
         scope: zod_1.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100),
         revision: zod_1.z.string().min(1).max(240),
-        items: personal_layout_js_1.PersonalLayoutItems
+        items: layout_js_1.PersonalLayoutItems
       }).strict(),
       zod_1.z.object({
         command: zod_1.z.literal("edit.propose"),
@@ -1399,7 +1399,7 @@ var require_app = __commonJS({
     exports2.appTunnelRegistrationSchema = exports2.AppDefinition = exports2.ContributionApp = exports2.ExtensionOnlyApp = exports2.SelfHostedApp = exports2.SelfHostedAppExtension = exports2.AppIconUrl = exports2.AppAction = void 0;
     var zod_1 = require("zod");
     var icons_js_1 = require_icons();
-    var app_contributions_js_1 = require_app_contributions();
+    var contributions_js_1 = require_contributions();
     exports2.AppAction = zod_1.z.enum(["projects:read", "data:read", "data:write", "workflows:run"]);
     var appUrl = zod_1.z.string().max(2048).url().refine((value) => {
       try {
@@ -1481,8 +1481,8 @@ var require_app = __commonJS({
     exports2.ContributionApp = extensionOnlyAppSchema.extend({
       apiVersion: zod_1.z.literal("3"),
       requestedActions: zod_1.z.array(exports2.AppAction).max(4).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
-      extensions: zod_1.z.array(app_contributions_js_1.appContributionSchema).min(1).max(32),
-      launchers: zod_1.z.array(app_contributions_js_1.appLauncherSchema).max(32).default([]),
+      extensions: zod_1.z.array(contributions_js_1.appContributionSchema).min(1).max(32),
+      launchers: zod_1.z.array(contributions_js_1.appLauncherSchema).max(32).default([]),
       locales: zod_1.z.record(zod_1.z.string().regex(/^(en|de|es|fr|ja)$/), zod_1.z.record(zod_1.z.string().max(100), zod_1.z.string().max(4e3))).default({})
     }).strict().superRefine((app, ctx) => {
       const ids = [...app.extensions, ...app.launchers].map((item) => item.id);
@@ -1494,7 +1494,7 @@ var require_app = __commonJS({
         ctx.addIssue({ code: "custom", path: ["settings"], message: "App setting IDs must be unique" });
       for (const [index, launcher] of app.launchers.entries()) {
         const destination = app.extensions.find((item) => item.id === launcher.opens);
-        if (!destination || !app_contributions_js_1.APP_VIEW_TARGETS.includes(destination.target))
+        if (!destination || !contributions_js_1.APP_VIEW_TARGETS.includes(destination.target))
           ctx.addIssue({
             code: "custom",
             path: ["launchers", index, "opens"],
@@ -1533,7 +1533,7 @@ var require_plugin = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginManifest = exports2.PluginConnection = exports2.PluginIntegration = exports2.PluginLicense = exports2.PluginCategory = exports2.PluginPermission = exports2.PluginNode = exports2.NpmSdkExport = exports2.NpmClientDefinition = exports2.PluginNpmDependency = exports2.PluginImplementationSource = exports2.NpmClientBinding = exports2.PluginNodeUi = exports2.PLUGIN_UI_BUNDLE_MAX_BYTES = exports2.PluginUiTarget = exports2.PluginScope = void 0;
     var zod_1 = require("zod");
-    var ipc_envelope_1 = require_ipc_envelope();
+    var envelope_1 = require_envelope();
     var icons_1 = require_icons();
     var constants_1 = require_constants();
     var app_1 = require_app();
@@ -1573,9 +1573,9 @@ var require_plugin = __commonJS({
         name: zod_1.z.string().regex(/^[A-Za-z_$][\w$]*$/),
         required: zod_1.z.boolean(),
         rest: zod_1.z.boolean(),
-        schema: ipc_envelope_1.JsonSchema
+        schema: envelope_1.JsonSchema
       })),
-      inputs: ipc_envelope_1.JsonSchema,
+      inputs: envelope_1.JsonSchema,
       label: zod_1.z.string().optional(),
       fields: zod_1.z.record(zod_1.z.object({ label: zod_1.z.string(), secret: zod_1.z.boolean().optional() })).optional()
     }).strict();
@@ -1583,7 +1583,7 @@ var require_plugin = __commonJS({
       name: zod_1.z.string(),
       kind: zod_1.z.enum(["type", "constant", "function", "client"]),
       type: zod_1.z.string(),
-      schema: ipc_envelope_1.JsonSchema.optional()
+      schema: envelope_1.JsonSchema.optional()
     }).strict();
     exports2.PluginNode = zod_1.z.object({
       id: zod_1.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i, "node id must be alphanumeric/dash/underscore"),
@@ -1595,8 +1595,8 @@ var require_plugin = __commonJS({
       description: zod_1.z.string().optional(),
       icon: icons_1.IconValue.optional(),
       trigger: zod_1.z.boolean().optional(),
-      inputs: ipc_envelope_1.JsonSchema.optional(),
-      outputs: ipc_envelope_1.JsonSchema.optional(),
+      inputs: envelope_1.JsonSchema.optional(),
+      outputs: envelope_1.JsonSchema.optional(),
       /** Names of environment variables / secrets this node expects to be injected. */
       env: zod_1.z.array(zod_1.z.string()).optional(),
       connections: zod_1.z.array(zod_1.z.string().min(1)).optional(),
@@ -1815,14 +1815,14 @@ var require_clients = __commonJS({
   }
 });
 
-// packages/schema/dist/test-workflow-graph.js
-var require_test_workflow_graph = __commonJS({
-  "packages/schema/dist/test-workflow-graph.js"(exports2) {
+// packages/schema/dist/test/workflow/graph.js
+var require_graph = __commonJS({
+  "packages/schema/dist/test/workflow/graph.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TestWorkflowGraph = exports2.TestWorkflowGraphAction = exports2.TestWorkflowGraphDiagnostic = exports2.TestWorkflowGraphEdge = exports2.TestWorkflowGraphNode = exports2.TestWorkflowGraphEdgeKind = exports2.TestWorkflowGraphNodeKind = void 0;
     var zod_1 = require("zod");
-    var source_index_1 = require_source_index();
+    var index_1 = require_source();
     exports2.TestWorkflowGraphNodeKind = zod_1.z.enum([
       "file",
       "suite",
@@ -1871,7 +1871,7 @@ var require_test_workflow_graph = __commonJS({
       id: zod_1.z.string(),
       kind: exports2.TestWorkflowGraphNodeKind,
       label: zod_1.z.string(),
-      location: source_index_1.SourceLocation,
+      location: index_1.SourceLocation,
       detail: zod_1.z.string().optional(),
       framework: zod_1.z.enum(["vitest", "jest", "playwright"]).optional(),
       sourceSymbolId: zod_1.z.string().optional(),
@@ -1900,7 +1900,7 @@ var require_test_workflow_graph = __commonJS({
       severity: zod_1.z.enum(["warning", "error"]),
       code: zod_1.z.string(),
       message: zod_1.z.string(),
-      location: source_index_1.SourceLocation.optional()
+      location: index_1.SourceLocation.optional()
     });
     exports2.TestWorkflowGraphAction = zod_1.z.discriminatedUnion("kind", [
       zod_1.z.object({
@@ -1948,22 +1948,22 @@ var require_test_workflow_graph = __commonJS({
   }
 });
 
-// packages/schema/dist/octonode-config.js
-var require_octonode_config = __commonJS({
-  "packages/schema/dist/octonode-config.js"(exports2) {
+// packages/schema/dist/octonode/config.js
+var require_config = __commonJS({
+  "packages/schema/dist/octonode/config.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.OctonodeConfig = exports2.WorkflowExecutionPlan = exports2.Workflow = exports2.WorkflowSource = exports2.WorkflowInputBinding = exports2.WorkflowTestWorkflow = exports2.WorkflowEvaluation = exports2.WorkflowPromise = exports2.WorkflowPromiseMode = exports2.WorkflowEdge = exports2.ProjectAttachments = exports2.ProjectDefaults = exports2.Environment = exports2.NodeConfig = exports2.NodePresentation = exports2.NodeRuntime = exports2.NodeSignature = exports2.NodeKind = exports2.CONFIG_API_VERSION = void 0;
     exports2.resolveEnvVars = resolveEnvVars;
     var triggers_js_1 = require_triggers();
     var zod_1 = require("zod");
-    var ipc_envelope_1 = require_ipc_envelope();
-    var icons_1 = require_icons();
-    var entry_1 = require_entry();
-    var source_index_1 = require_source_index();
-    var clients_1 = require_clients();
-    var plugin_1 = require_plugin();
-    var test_workflow_graph_1 = require_test_workflow_graph();
+    var envelope_js_1 = require_envelope();
+    var icons_js_1 = require_icons();
+    var entry_js_1 = require_entry();
+    var index_js_1 = require_source();
+    var clients_js_1 = require_clients();
+    var plugin_js_1 = require_plugin();
+    var graph_js_1 = require_graph();
     exports2.CONFIG_API_VERSION = "octonode.dev/v1";
     exports2.NodeKind = zod_1.z.enum(["function", "class", "service", "const"]);
     exports2.NodeSignature = zod_1.z.object({
@@ -1986,12 +1986,12 @@ var require_octonode_config = __commonJS({
        * Absent → the engine's working directory.
        */
       cwd: zod_1.z.string().optional(),
-      inputs: ipc_envelope_1.JsonSchema.optional(),
-      outputs: ipc_envelope_1.JsonSchema.optional(),
+      inputs: envelope_js_1.JsonSchema.optional(),
+      outputs: envelope_js_1.JsonSchema.optional(),
       /** CODE-OWNED expressions evaluated inside this node's original source scope. */
       sourceExpressions: zod_1.z.record(zod_1.z.string()).optional(),
       /** Exact authored text for this compiled node. Empty for synthetic workflow plumbing. */
-      sourceExcerpt: source_index_1.SourceLocation.extend({ content: zod_1.z.string() }).optional(),
+      sourceExcerpt: index_js_1.SourceLocation.extend({ content: zod_1.z.string() }).optional(),
       /** Resolved marketplace calls retained in their original source scope, never IPC substitutions. */
       sourcePlugins: zod_1.z.array(zod_1.z.object({
         alias: zod_1.z.string(),
@@ -2002,13 +2002,13 @@ var require_octonode_config = __commonJS({
         execution: zod_1.z.literal("source")
       })).optional(),
       /** CODE-OWNED recursive call sites; visualization only, not execution edges. */
-      recursion: zod_1.z.array(source_index_1.SourceRecursion).optional(),
+      recursion: zod_1.z.array(index_js_1.SourceRecursion).optional(),
       /**
        * Setup params for non-`function` kinds (class constructor / service config /
        * const shape). Rendered as a form in the editor. Unused by `function` nodes,
        * which carry their shape in `inputs`/`outputs` instead.
        */
-      setup: ipc_envelope_1.JsonSchema.optional(),
+      setup: envelope_js_1.JsonSchema.optional(),
       /** sha256 of the normalized signature, for drift/staleness detection. */
       checksum: zod_1.z.string().optional(),
       /** Set when scan no longer finds this node in code; not deleted automatically. */
@@ -2031,7 +2031,7 @@ var require_octonode_config = __commonJS({
       async: zod_1.z.boolean().optional()
     });
     exports2.NodePresentation = zod_1.z.object({
-      icon: icons_1.IconValue.optional(),
+      icon: icons_js_1.IconValue.optional(),
       /** Optional human-facing label used when the node id is implementation detail. */
       label: zod_1.z.string().optional(),
       symbol: zod_1.z.string().max(16).optional(),
@@ -2045,7 +2045,7 @@ var require_octonode_config = __commonJS({
       /** Catalog ancestry, independent of editable presentation. */
       native: zod_1.z.string().optional(),
       /** Stable execution boundary; legacy entries fall back to their icon. */
-      role: entry_1.WorkflowNodeRole.optional(),
+      role: entry_js_1.WorkflowNodeRole.optional(),
       /** Stable identity key; edges reference this, never the source path. */
       id: zod_1.z.string(),
       /**
@@ -2065,9 +2065,9 @@ var require_octonode_config = __commonJS({
       plugin: zod_1.z.string().optional(),
       /** Resolved from the installed immutable plugin; never edited by project configuration. */
       pluginVersion: zod_1.z.string().optional(),
-      pluginClient: clients_1.ProjectClientReference.optional(),
+      pluginClient: clients_js_1.ProjectClientReference.optional(),
       pluginClientChecksum: zod_1.z.string().optional(),
-      pluginUi: plugin_1.PluginNodeUi.optional(),
+      pluginUi: plugin_js_1.PluginNodeUi.optional(),
       /** Generated by `octonode scan`. Optional so runtime/presentation can be pre-declared. */
       signature: exports2.NodeSignature.optional(),
       runtime: exports2.NodeRuntime.optional(),
@@ -2171,7 +2171,7 @@ var require_octonode_config = __commonJS({
        * Workflow invocation contract. Source workflows project this from their
        * function parameters; canvas workflows derive it from their root node(s).
        */
-      inputs: ipc_envelope_1.JsonSchema.optional(),
+      inputs: envelope_js_1.JsonSchema.optional(),
       description: zod_1.z.string().optional(),
       entry: zod_1.z.string().optional(),
       /** Explicit member nodes (canvas membership for not-yet-wired nodes). */
@@ -2236,12 +2236,12 @@ var require_octonode_config = __commonJS({
       environments: zod_1.z.record(exports2.Environment).default({}),
       nodes: zod_1.z.array(exports2.NodeConfig).default([]),
       /** Shared type registry referenced by node signatures (Phase 3+). */
-      types: zod_1.z.record(ipc_envelope_1.JsonSchema).default({}),
+      types: zod_1.z.record(envelope_js_1.JsonSchema).default({}),
       /** CONFIG-OWNED stable IDs of projects required by this project. Resolution is capability-gated. */
       projectDependencies: zod_1.z.array(zod_1.z.string().min(1).max(240)).max(1e3).optional(),
       workflows: zod_1.z.array(exports2.Workflow).default([]),
       /** CODE-OWNED test projections, including the exact source used to compile cases and data. */
-      test_workflows: zod_1.z.array(test_workflow_graph_1.TestWorkflowGraph.extend({ source: zod_1.z.string() })).optional()
+      test_workflows: zod_1.z.array(graph_js_1.TestWorkflowGraph.extend({ source: zod_1.z.string() })).optional()
     }).superRefine((config, ctx) => {
       config.workflows.forEach((workflow, index) => {
         const members = /* @__PURE__ */ new Set([
@@ -2249,7 +2249,7 @@ var require_octonode_config = __commonJS({
           ...workflow.entry ? [workflow.entry] : [],
           ...workflow.edges.flatMap((edge) => [edge.from.node, edge.to.node])
         ]);
-        const result = entry_1.WorkflowEntryNodes.safeParse(config.nodes.filter((node) => members.has(node.id)).map((node) => ({ id: node.id, icon: node.presentation?.icon, role: node.role })));
+        const result = entry_js_1.WorkflowEntryNodes.safeParse(config.nodes.filter((node) => members.has(node.id)).map((node) => ({ id: node.id, icon: node.presentation?.icon, role: node.role })));
         if (!result.success)
           ctx.addIssue({ code: "custom", path: ["workflows", index, "nodes"], message: result.error.issues[0].message });
       });
@@ -2293,7 +2293,7 @@ var require_store = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.StoredRun = exports2.InstalledPlugin = exports2.WorkflowRecord = exports2.NodeRecord = exports2.Identity = exports2.Visibility = exports2.Origin = exports2.Scope = void 0;
     var zod_1 = require("zod");
-    var octonode_config_1 = require_octonode_config();
+    var config_1 = require_config();
     exports2.Scope = zod_1.z.enum(["user", "group", "org", "public"]);
     exports2.Origin = zod_1.z.enum(["local", "native", "plugin", "marketplace"]);
     exports2.Visibility = zod_1.z.object({
@@ -2309,13 +2309,13 @@ var require_store = __commonJS({
       groups: zod_1.z.array(zod_1.z.string()).default([]),
       orgId: zod_1.z.string()
     });
-    exports2.NodeRecord = octonode_config_1.NodeConfig.extend({
+    exports2.NodeRecord = config_1.NodeConfig.extend({
       origin: exports2.Origin,
       visibility: exports2.Visibility,
       createdAt: zod_1.z.number(),
       updatedAt: zod_1.z.number()
     });
-    exports2.WorkflowRecord = octonode_config_1.Workflow.extend({
+    exports2.WorkflowRecord = config_1.Workflow.extend({
       origin: exports2.Origin,
       visibility: exports2.Visibility,
       createdAt: zod_1.z.number(),
@@ -2343,9 +2343,9 @@ var require_store = __commonJS({
   }
 });
 
-// packages/schema/dist/data-table.constants.js
-var require_data_table_constants = __commonJS({
-  "packages/schema/dist/data-table.constants.js"(exports2) {
+// packages/schema/dist/data/table.constants.js
+var require_table_constants = __commonJS({
+  "packages/schema/dist/data/table.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DATA_TABLE_MAX_COLUMNS = exports2.DATA_TABLE_MAX_SQL_LENGTH = exports2.DATA_TABLE_MAX_ROW_BYTES = exports2.DATA_TABLE_RESERVED_COLUMNS = void 0;
@@ -2362,20 +2362,20 @@ var require_data_table_constants = __commonJS({
   }
 });
 
-// packages/schema/dist/data-tables.js
-var require_data_tables = __commonJS({
-  "packages/schema/dist/data-tables.js"(exports2) {
+// packages/schema/dist/data/tables.js
+var require_tables = __commonJS({
+  "packages/schema/dist/data/tables.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.UpdateProjectInput = exports2.CreateProjectInput = exports2.ProjectMetadata = exports2.ProjectRepoMetadata = exports2.SqlQueryResult = exports2.SqlQueryInput = exports2.ImportRowsResult = exports2.ImportRowsInput = exports2.BulkRowsResult = exports2.BulkRowsInput = exports2.BulkRowMutation = exports2.UpdateRowInput = exports2.InsertRowInput = exports2.ListRowsInput = exports2.UpdateDataTableInput = exports2.CreateDataTableInput = exports2.DataTableRowsPage = exports2.DataTableRow = exports2.DataTable = exports2.DataTableColumn = exports2.DataTableColumnType = exports2.StorageMode = void 0;
-    var data_table_constants_js_1 = require_data_table_constants();
+    var table_constants_js_1 = require_table_constants();
     var zod_1 = require("zod");
     var store_1 = require_store();
     exports2.StorageMode = zod_1.z.enum(["sqlite", "kv_blob"]);
     exports2.DataTableColumnType = zod_1.z.enum(["text", "number", "boolean", "date", "datetime", "json"]);
     exports2.DataTableColumn = zod_1.z.object({
       id: zod_1.z.string(),
-      key: zod_1.z.string().min(1).regex(/^[A-Za-z_][A-Za-z0-9_]*$/, "column key must start with a letter or '_' and contain only letters, digits, or '_'").refine((key) => !data_table_constants_js_1.DATA_TABLE_RESERVED_COLUMNS.includes(key.toLowerCase()), "reserved column name"),
+      key: zod_1.z.string().min(1).regex(/^[A-Za-z_][A-Za-z0-9_]*$/, "column key must start with a letter or '_' and contain only letters, digits, or '_'").refine((key) => !table_constants_js_1.DATA_TABLE_RESERVED_COLUMNS.includes(key.toLowerCase()), "reserved column name"),
       name: zod_1.z.string().min(1),
       type: exports2.DataTableColumnType,
       required: zod_1.z.boolean().default(false),
@@ -2407,7 +2407,7 @@ var require_data_tables = __commonJS({
       rows: zod_1.z.array(exports2.DataTableRow),
       nextCursor: zod_1.z.string().optional()
     });
-    var inputColumns = zod_1.z.array(exports2.DataTableColumn.omit({ id: true }).extend({ id: zod_1.z.string().optional() })).max(data_table_constants_js_1.DATA_TABLE_MAX_COLUMNS).refine((columns) => new Set(columns.map(({ key }) => key.toLowerCase())).size === columns.length, "duplicate column name");
+    var inputColumns = zod_1.z.array(exports2.DataTableColumn.omit({ id: true }).extend({ id: zod_1.z.string().optional() })).max(table_constants_js_1.DATA_TABLE_MAX_COLUMNS).refine((columns) => new Set(columns.map(({ key }) => key.toLowerCase())).size === columns.length, "duplicate column name");
     exports2.CreateDataTableInput = zod_1.z.object({
       name: zod_1.z.string().min(1),
       slug: zod_1.z.string().min(1).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/, "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'").optional(),
@@ -2456,7 +2456,7 @@ var require_data_tables = __commonJS({
       inserted: zod_1.z.number().int().nonnegative()
     });
     exports2.SqlQueryInput = zod_1.z.object({
-      sql: zod_1.z.string().min(1).max(data_table_constants_js_1.DATA_TABLE_MAX_SQL_LENGTH),
+      sql: zod_1.z.string().min(1).max(table_constants_js_1.DATA_TABLE_MAX_SQL_LENGTH),
       params: zod_1.z.array(zod_1.z.unknown()).max(100).default([])
     });
     exports2.SqlQueryResult = zod_1.z.object({
@@ -2506,9 +2506,9 @@ var require_data_tables = __commonJS({
   }
 });
 
-// packages/schema/dist/data-table-schema.js
-var require_data_table_schema = __commonJS({
-  "packages/schema/dist/data-table-schema.js"(exports2) {
+// packages/schema/dist/data/table/schema.js
+var require_schema = __commonJS({
+  "packages/schema/dist/data/table/schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DataTableViewPage = exports2.DataTableViewPageInput = exports2.DataTableViewUpdate = exports2.DataTableView = exports2.DataTableViewInput = exports2.DataTableViewFilter = exports2.DataTableRelationship = exports2.DataTableRelationshipInput = void 0;
@@ -2551,9 +2551,9 @@ var require_data_table_schema = __commonJS({
   }
 });
 
-// packages/schema/dist/test-data.js
-var require_test_data = __commonJS({
-  "packages/schema/dist/test-data.js"(exports2) {
+// packages/schema/dist/test/data.js
+var require_data = __commonJS({
+  "packages/schema/dist/test/data.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.testDataValidator = testDataValidator;
@@ -2617,7 +2617,7 @@ var require_test_data = __commonJS({
 });
 
 // packages/schema/dist/workflow/layout.js
-var require_layout = __commonJS({
+var require_layout2 = __commonJS({
   "packages/schema/dist/workflow/layout.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -3259,9 +3259,9 @@ var require_planning = __commonJS({
   }
 });
 
-// packages/schema/dist/task-management/work-items.js
-var require_work_items = __commonJS({
-  "packages/schema/dist/task-management/work-items.js"(exports2) {
+// packages/schema/dist/task-management/work/items.js
+var require_items = __commonJS({
+  "packages/schema/dist/task-management/work/items.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.workItemLinkMutationSchema = exports2.workItemMoveSchema = exports2.workItemUpdateSchema = exports2.workItemCreateSchema = exports2.workItemSchema = exports2.workItemPullRequestLinkSchema = exports2.workItemWorkflowLinkSchema = exports2.workItemLinkSchema = exports2.taskLinkTypeSchema = void 0;
@@ -3518,7 +3518,7 @@ var require_activity = __commonJS({
     var collaboration_1 = require_collaboration();
     var common_1 = require_common();
     var planning_1 = require_planning();
-    var work_items_1 = require_work_items();
+    var items_1 = require_items();
     exports2.workItemCommentSchema = zod_1.z.object({
       id: collaboration_1.entityIdSchema,
       itemId: collaboration_1.entityIdSchema,
@@ -3574,7 +3574,7 @@ var require_activity = __commonJS({
       currentVersion: collaboration_1.revisionSchema.optional()
     }).strict();
     exports2.taskSpacePageSchema = (0, collaboration_1.pageSchema)(common_1.taskSpaceSchema);
-    exports2.workItemPageSchema = (0, collaboration_1.pageSchema)(work_items_1.workItemSchema);
+    exports2.workItemPageSchema = (0, collaboration_1.pageSchema)(items_1.workItemSchema);
     exports2.taskSprintPageSchema = (0, collaboration_1.pageSchema)(planning_1.taskSprintSchema);
     exports2.taskReleasePageSchema = (0, collaboration_1.pageSchema)(planning_1.taskReleaseSchema);
     exports2.workItemCommentPageSchema = (0, collaboration_1.pageSchema)(exports2.workItemCommentSchema);
@@ -3605,7 +3605,7 @@ var require_task_management = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     __exportStar(require_common(), exports2);
     __exportStar(require_planning(), exports2);
-    __exportStar(require_work_items(), exports2);
+    __exportStar(require_items(), exports2);
     __exportStar(require_views(), exports2);
     __exportStar(require_activity(), exports2);
   }
@@ -3794,9 +3794,9 @@ var require_documents = __commonJS({
   }
 });
 
-// packages/schema/dist/analytics-dashboard.js
-var require_analytics_dashboard = __commonJS({
-  "packages/schema/dist/analytics-dashboard.js"(exports2) {
+// packages/schema/dist/analytics/dashboard.js
+var require_dashboard = __commonJS({
+  "packages/schema/dist/analytics/dashboard.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.UpdateAnalyticsDashboardInput = exports2.CreateAnalyticsDashboardInput = exports2.AnalyticsDashboard = exports2.AnalyticsDays = exports2.AnalyticsWidget = void 0;
@@ -3945,9 +3945,9 @@ var require_capabilities = __commonJS({
   }
 });
 
-// packages/schema/dist/assistant-models.js
-var require_assistant_models = __commonJS({
-  "packages/schema/dist/assistant-models.js"(exports2) {
+// packages/schema/dist/assistant/models.js
+var require_models = __commonJS({
+  "packages/schema/dist/assistant/models.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.assistantModelSchema = exports2.assistantVariableSchema = exports2.assistantEndpointSchema = void 0;
@@ -3996,9 +3996,9 @@ var require_assistant_models = __commonJS({
   }
 });
 
-// packages/schema/dist/assistant-artifacts.js
-var require_assistant_artifacts = __commonJS({
-  "packages/schema/dist/assistant-artifacts.js"(exports2) {
+// packages/schema/dist/assistant/artifacts.js
+var require_artifacts = __commonJS({
+  "packages/schema/dist/assistant/artifacts.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.assistantArtifactSchema = exports2.assistantFileSchema = void 0;
@@ -4063,15 +4063,15 @@ ${skill.instructions}`));
   }
 });
 
-// packages/schema/dist/agent-chat.js
-var require_agent_chat = __commonJS({
-  "packages/schema/dist/agent-chat.js"(exports2) {
+// packages/schema/dist/agent/chat.js
+var require_chat = __commonJS({
+  "packages/schema/dist/agent/chat.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.canTransitionAgentRun = exports2.claudeSandboxRequestSchema = exports2.agentServiceRunRequestSchema = exports2.agentToolAuditSchema = exports2.agentStreamEventSchema = exports2.agentRunSchema = exports2.agentUsageSchema = exports2.assistantConversationUpdateSchema = exports2.assistantConversationConfigSchema = exports2.assistantSettingsSchema = exports2.agentToolRiskSchema = exports2.agentErrorCodeSchema = exports2.agentRunStatusSchema = void 0;
     var zod_1 = require("zod");
-    var assistant_models_js_1 = require_assistant_models();
-    var assistant_artifacts_js_1 = require_assistant_artifacts();
+    var models_js_1 = require_models();
+    var artifacts_js_1 = require_artifacts();
     var constants_1 = require_constants();
     var collaboration_1 = require_collaboration();
     var projectIdSchema = zod_1.z.string().min(1).max(128);
@@ -4084,20 +4084,20 @@ var require_agent_chat = __commonJS({
     exports2.agentErrorCodeSchema = zod_1.z.enum(constants_1.AGENT_ERROR_CODES);
     exports2.agentToolRiskSchema = zod_1.z.enum(constants_1.AGENT_TOOL_RISKS);
     exports2.assistantSettingsSchema = zod_1.z.object({
-      model: assistant_models_js_1.assistantModelSchema.optional(),
-      artifacts: zod_1.z.array(assistant_artifacts_js_1.assistantArtifactSchema).max(128).refine((artifacts) => new TextEncoder().encode(JSON.stringify(artifacts)).byteLength <= 256e3, "Attached resource files exceed 256 KB").optional(),
+      model: models_js_1.assistantModelSchema.optional(),
+      artifacts: zod_1.z.array(artifacts_js_1.assistantArtifactSchema).max(128).refine((artifacts) => new TextEncoder().encode(JSON.stringify(artifacts)).byteLength <= 256e3, "Attached resource files exceed 256 KB").optional(),
       resourceIds: zod_1.z.array(zod_1.z.string().uuid()).max(128).optional(),
       excludedResourceIds: zod_1.z.array(zod_1.z.string().uuid()).max(128).optional(),
       gateway: zod_1.z.object({
-        url: assistant_models_js_1.assistantEndpointSchema,
+        url: models_js_1.assistantEndpointSchema,
         model: zod_1.z.string().trim().min(1).max(128),
-        variable: assistant_models_js_1.assistantVariableSchema
+        variable: models_js_1.assistantVariableSchema
       }).strict().nullable(),
       connectors: zod_1.z.array(zod_1.z.object({
         id: zod_1.z.string().regex(/^[a-z][a-z0-9_-]{0,31}$/),
         name: zod_1.z.string().trim().min(1).max(80),
-        url: assistant_models_js_1.assistantEndpointSchema,
-        variable: assistant_models_js_1.assistantVariableSchema.nullable()
+        url: models_js_1.assistantEndpointSchema,
+        variable: models_js_1.assistantVariableSchema.nullable()
       }).strict()).max(8).refine((items) => new Set(items.map(({ id }) => id)).size === items.length, "Duplicate connectors"),
       skills: zod_1.z.array(zod_1.z.object({
         name: zod_1.z.string().trim().min(1).max(128),
@@ -4434,9 +4434,9 @@ var require_architecture = __commonJS({
   }
 });
 
-// packages/schema/dist/repository-registry.js
-var require_repository_registry = __commonJS({
-  "packages/schema/dist/repository-registry.js"(exports2) {
+// packages/schema/dist/repository/registry.js
+var require_registry = __commonJS({
+  "packages/schema/dist/repository/registry.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RegistryPublicSummary = exports2.RegisteredProjectSummary = exports2.SourceRepositorySummary = exports2.RegistryMigrationReport = exports2.RepositoryDiscovery = exports2.RepositoryDiscoveryCandidate = exports2.WorkspaceRegistryV2 = exports2.LegacyProjectAlias = exports2.RegisteredProjectRecord = exports2.SourceRepositoryRecord = exports2.RegistryDiagnostic = exports2.RegistryGeneration = exports2.SourceRepositoryId = exports2.ProjectId = void 0;
@@ -5035,9 +5035,9 @@ var require_templates = __commonJS({
   }
 });
 
-// packages/schema/dist/json-schema-definitions.js
-var require_json_schema_definitions = __commonJS({
-  "packages/schema/dist/json-schema-definitions.js"(exports2) {
+// packages/schema/dist/json/schema/definitions.js
+var require_definitions = __commonJS({
+  "packages/schema/dist/json/schema/definitions.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WORKFLOW_SCHEMA = exports2.NODE_SCHEMA = void 0;
@@ -5310,16 +5310,16 @@ var require_json_schema_definitions = __commonJS({
   }
 });
 
-// packages/schema/dist/json-schema.js
-var require_json_schema = __commonJS({
-  "packages/schema/dist/json-schema.js"(exports2) {
+// packages/schema/dist/json/schema.js
+var require_schema2 = __commonJS({
+  "packages/schema/dist/json/schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.schemaVersion = schemaVersion;
     exports2.octonodeJsonSchema = octonodeJsonSchema;
-    var json_schema_definitions_1 = require_json_schema_definitions();
-    var octonode_config_1 = require_octonode_config();
-    var test_workflow_graph_1 = require_test_workflow_graph();
+    var definitions_1 = require_definitions();
+    var config_1 = require_config();
+    var graph_1 = require_graph();
     var location = {
       type: "object",
       required: ["path", "start", "end", "line", "column"],
@@ -5431,7 +5431,7 @@ var require_json_schema = __commonJS({
                   required: ["id", "kind", "label", "location"],
                   properties: {
                     id: { type: "string" },
-                    kind: { enum: test_workflow_graph_1.TestWorkflowGraphNodeKind.options },
+                    kind: { enum: graph_1.TestWorkflowGraphNodeKind.options },
                     label: { type: "string" },
                     location,
                     detail: { type: "string" },
@@ -5452,7 +5452,7 @@ var require_json_schema = __commonJS({
                     id: { type: "string" },
                     from: { type: "string" },
                     to: { type: "string" },
-                    kind: { enum: test_workflow_graph_1.TestWorkflowGraphEdgeKind.options }
+                    kind: { enum: graph_1.TestWorkflowGraphEdgeKind.options }
                   }
                 }
               },
@@ -5474,12 +5474,12 @@ var require_json_schema = __commonJS({
         }
       },
       definitions: {
-        node: json_schema_definitions_1.NODE_SCHEMA,
-        workflow: json_schema_definitions_1.WORKFLOW_SCHEMA
+        node: definitions_1.NODE_SCHEMA,
+        workflow: definitions_1.WORKFLOW_SCHEMA
       }
     };
     function schemaVersion() {
-      const parts = octonode_config_1.CONFIG_API_VERSION.split("/");
+      const parts = config_1.CONFIG_API_VERSION.split("/");
       return parts[parts.length - 1] || "v1";
     }
     function octonodeJsonSchema() {
@@ -11826,9 +11826,9 @@ var require_settings = __commonJS({
     var constants_1 = require_constants();
     var icons_1 = require_icons();
     var plugin_1 = require_plugin();
-    var octonode_config_1 = require_octonode_config();
+    var config_1 = require_config();
     var re2js_1 = require_build();
-    var personal_layout_js_1 = require_personal_layout();
+    var layout_js_1 = require_layout();
     var identifier = zod_1.z.string().min(1).max(240).regex(/^(?!(?:__proto__|__all__)$)/, "reserved settings key");
     var label = zod_1.z.string().min(1).max(240);
     var strings = zod_1.z.array(zod_1.z.string().min(1).max(1024)).min(1).max(1e3);
@@ -11878,7 +11878,7 @@ var require_settings = __commonJS({
     }).strict();
     var nodeMatch = zod_1.z.object({
       ids: strings.optional(),
-      kinds: zod_1.z.array(octonode_config_1.NodeKind).min(1).optional(),
+      kinds: zod_1.z.array(config_1.NodeKind).min(1).optional(),
       native: strings.optional(),
       plugins: strings.optional()
     }).strict();
@@ -11948,7 +11948,7 @@ var require_settings = __commonJS({
       apiVersion: zod_1.z.literal(constants_1.SETTINGS_API_VERSION),
       plugin: plugin_1.PluginManifest.optional(),
       defaultView: identifier.optional(),
-      layout: personal_layout_js_1.SettingsLayout.optional(),
+      layout: layout_js_1.SettingsLayout.optional(),
       discovery: zod_1.z.union([exports2.SettingsFileReference, exports2.SettingsDiscovery]).optional(),
       appearance: zod_1.z.union([exports2.SettingsFileReference, exports2.SettingsAppearance]).optional(),
       overrides: zod_1.z.union([exports2.SettingsFileReference, exports2.SettingsOverrides]).optional(),
@@ -11960,7 +11960,7 @@ var require_settings = __commonJS({
       apiVersion: zod_1.z.literal(constants_1.SETTINGS_API_VERSION),
       plugin: plugin_1.PluginManifest.optional(),
       defaultView: identifier.optional(),
-      layout: personal_layout_js_1.SettingsLayout.optional(),
+      layout: layout_js_1.SettingsLayout.optional(),
       discovery: exports2.SettingsDiscovery.optional(),
       appearance: exports2.SettingsAppearance.optional(),
       overrides: exports2.SettingsOverrides.optional(),
@@ -12009,9 +12009,9 @@ var require_settings = __commonJS({
   }
 });
 
-// packages/schema/dist/access-tokens.js
-var require_access_tokens = __commonJS({
-  "packages/schema/dist/access-tokens.js"(exports2) {
+// packages/schema/dist/access/tokens.js
+var require_tokens = __commonJS({
+  "packages/schema/dist/access/tokens.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.accessTokenUpdateSchema = exports2.accessTokenCreateSchema = exports2.accessTokenOriginSchema = exports2.accessTokenListQuerySchema = void 0;
@@ -12045,9 +12045,9 @@ var require_access_tokens = __commonJS({
   }
 });
 
-// packages/schema/dist/app-analytics.js
-var require_app_analytics = __commonJS({
-  "packages/schema/dist/app-analytics.js"(exports2) {
+// packages/schema/dist/app/analytics.js
+var require_analytics = __commonJS({
+  "packages/schema/dist/app/analytics.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.appAnalyticsQuerySchema = exports2.calendarDateSchema = void 0;
@@ -12128,14 +12128,14 @@ var require_version = __commonJS({
   }
 });
 
-// packages/schema/dist/app-installation.js
-var require_app_installation = __commonJS({
-  "packages/schema/dist/app-installation.js"(exports2) {
+// packages/schema/dist/app/installation.js
+var require_installation = __commonJS({
+  "packages/schema/dist/app/installation.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.appInstallationsQuerySchema = exports2.appDevelopmentConsentSchema = exports2.appSettingsSchema = exports2.appInstallationSchema = exports2.appUninstallSchema = exports2.appInstallSchema = exports2.appGrantsSchema = exports2.appGrantSchema = exports2.appReviewSchema = exports2.appStatusSchema = exports2.appLifecycleSchema = exports2.appPublishSchema = void 0;
     var zod_1 = require("zod");
-    var app_analytics_1 = require_app_analytics();
+    var analytics_1 = require_analytics();
     var app_1 = require_app();
     var collaboration_1 = require_collaboration();
     var version_1 = require_version();
@@ -12204,8 +12204,8 @@ var require_app_installation = __commonJS({
       direction: zod_1.z.enum(["asc", "desc"]).default("desc"),
       status: zod_1.z.enum(["active", "uninstalled"]).optional(),
       enabled: zod_1.z.enum(["true", "false"]).optional(),
-      installedAfter: app_analytics_1.calendarDateSchema.optional(),
-      installedBefore: app_analytics_1.calendarDateSchema.optional()
+      installedAfter: analytics_1.calendarDateSchema.optional(),
+      installedBefore: analytics_1.calendarDateSchema.optional()
     }).refine((query) => query.installedAfter === void 0 || query.installedBefore === void 0 || query.installedAfter <= query.installedBefore, "Invalid installation date range");
   }
 });
@@ -12424,7 +12424,7 @@ var require_execution = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.AuthorizedPluginRelease = exports2.PluginExecutionRequest = exports2.PluginExecutionReference = exports2.PreparedPluginRuntime = void 0;
     var zod_1 = require("zod");
-    var ipc_envelope_1 = require_ipc_envelope();
+    var envelope_1 = require_envelope();
     var plugin_1 = require_plugin();
     var execution_constants_1 = require_execution_constants();
     exports2.PreparedPluginRuntime = zod_1.z.object({
@@ -12442,7 +12442,7 @@ var require_execution = __commonJS({
     }).strict();
     exports2.PluginExecutionRequest = zod_1.z.object({
       plugin: exports2.PluginExecutionReference,
-      request: ipc_envelope_1.InvokeRequest,
+      request: envelope_1.InvokeRequest,
       environment: zod_1.z.record(zod_1.z.string().regex(/^[a-z_][a-z0-9_]*$/i), zod_1.z.string().max(65536).refine((value) => !value.includes("\0"))).default({}),
       timeoutMs: zod_1.z.number().int().positive().max(execution_constants_1.PLUGIN_EXECUTION_TIMEOUT_MS).default(execution_constants_1.PLUGIN_EXECUTION_TIMEOUT_MS)
     }).strict();
@@ -12758,28 +12758,28 @@ var require_allowlist = __commonJS({
   }
 });
 
-// packages/schema/dist/app-runtime.js
-var require_app_runtime = __commonJS({
-  "packages/schema/dist/app-runtime.js"(exports2) {
+// packages/schema/dist/app/runtime.js
+var require_runtime = __commonJS({
+  "packages/schema/dist/app/runtime.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.appExecutionRequestSchema = exports2.appDataRequestSchema = void 0;
     var zod_1 = require("zod");
-    var data_tables_js_1 = require_data_tables();
+    var tables_js_1 = require_tables();
     var projectId = zod_1.z.string().min(1).max(128);
     var tableId = zod_1.z.string().min(1).max(128);
     var rowId = zod_1.z.string().min(1).max(128);
     exports2.appDataRequestSchema = zod_1.z.discriminatedUnion("operation", [
       zod_1.z.object({ operation: zod_1.z.literal("project.get"), projectId }).strict(),
       zod_1.z.object({ operation: zod_1.z.literal("tables.list"), projectId }).strict(),
-      zod_1.z.object({ operation: zod_1.z.literal("rows.list"), projectId, tableId, input: data_tables_js_1.ListRowsInput }).strict(),
-      zod_1.z.object({ operation: zod_1.z.literal("rows.insert"), projectId, tableId, input: data_tables_js_1.InsertRowInput }).strict(),
+      zod_1.z.object({ operation: zod_1.z.literal("rows.list"), projectId, tableId, input: tables_js_1.ListRowsInput }).strict(),
+      zod_1.z.object({ operation: zod_1.z.literal("rows.insert"), projectId, tableId, input: tables_js_1.InsertRowInput }).strict(),
       zod_1.z.object({
         operation: zod_1.z.literal("rows.update"),
         projectId,
         tableId,
         rowId,
-        input: data_tables_js_1.UpdateRowInput.extend({ expectedVersion: zod_1.z.number().int().positive() })
+        input: tables_js_1.UpdateRowInput.extend({ expectedVersion: zod_1.z.number().int().positive() })
       }).strict(),
       zod_1.z.object({ operation: zod_1.z.literal("rows.delete"), projectId, tableId, rowId }).strict()
     ]);
@@ -12793,21 +12793,21 @@ var require_app_runtime = __commonJS({
   }
 });
 
-// packages/schema/dist/data-table-validation.js
-var require_data_table_validation = __commonJS({
-  "packages/schema/dist/data-table-validation.js"(exports2) {
+// packages/schema/dist/data/table/validation.js
+var require_validation = __commonJS({
+  "packages/schema/dist/data/table/validation.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.validateTableColumns = validateTableColumns;
     exports2.validateTableRow = validateTableRow;
     var zod_1 = require("zod");
-    var data_table_constants_js_1 = require_data_table_constants();
+    var table_constants_js_1 = require_table_constants();
     var fail = (message) => {
       throw Object.assign(new Error(message), { status: 400 });
     };
     function validateTableColumns(columns) {
       const keys = columns.map((column) => column.key.toLowerCase());
-      if (new Set(keys).size !== keys.length || keys.some((key) => data_table_constants_js_1.DATA_TABLE_RESERVED_COLUMNS.includes(key)))
+      if (new Set(keys).size !== keys.length || keys.some((key) => table_constants_js_1.DATA_TABLE_RESERVED_COLUMNS.includes(key)))
         fail("Column names must be unique and cannot use reserved metadata names");
       for (const column of columns) {
         if (column.defaultValue !== void 0)
@@ -12842,7 +12842,7 @@ var require_data_table_validation = __commonJS({
             fail("Row must contain JSON values");
           return value;
         });
-        if (new TextEncoder().encode(serialized).length > data_table_constants_js_1.DATA_TABLE_MAX_ROW_BYTES)
+        if (new TextEncoder().encode(serialized).length > table_constants_js_1.DATA_TABLE_MAX_ROW_BYTES)
           fail("Row exceeds size limit");
       } catch (error) {
         fail(error instanceof Error ? error.message : "Row must contain JSON values");
@@ -12852,17 +12852,17 @@ var require_data_table_validation = __commonJS({
   }
 });
 
-// packages/schema/dist/assistant-resources.js
-var require_assistant_resources = __commonJS({
-  "packages/schema/dist/assistant-resources.js"(exports2) {
+// packages/schema/dist/assistant/resources.js
+var require_resources = __commonJS({
+  "packages/schema/dist/assistant/resources.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.assistantResourcePath = exports2.assistantResourceListSchema = exports2.assistantResourceSchema = exports2.assistantResourceInputSchema = exports2.assistantResourceContentSchema = void 0;
     var zod_1 = require("zod");
-    var agent_chat_js_1 = require_agent_chat();
-    var assistant_artifacts_js_1 = require_assistant_artifacts();
-    exports2.assistantResourceContentSchema = agent_chat_js_1.assistantSettingsSchema.pick({ connectors: true, skills: true }).extend({
-      files: zod_1.z.array(assistant_artifacts_js_1.assistantFileSchema).max(64).optional()
+    var chat_js_1 = require_chat();
+    var artifacts_js_1 = require_artifacts();
+    exports2.assistantResourceContentSchema = chat_js_1.assistantSettingsSchema.pick({ connectors: true, skills: true }).extend({
+      files: zod_1.z.array(artifacts_js_1.assistantFileSchema).max(64).optional()
     });
     exports2.assistantResourceInputSchema = zod_1.z.object({
       id: zod_1.z.string().uuid(),
@@ -12873,7 +12873,7 @@ var require_assistant_resources = __commonJS({
       content: exports2.assistantResourceContentSchema
     }).strict().superRefine((record, ctx) => {
       try {
-        (0, assistant_artifacts_js_1.assistantResourceArtifact)(record);
+        (0, artifacts_js_1.assistantResourceArtifact)(record);
       } catch {
         ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "Resource files conflict or exceed artifact limits" });
       }
@@ -12927,50 +12927,50 @@ var require_dist = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ToolkitAction = exports2.schemaVersion = exports2.octonodeJsonSchema = exports2.testDataValidator = void 0;
-    __exportStar(require_ipc_envelope(), exports2);
-    __exportStar(require_octonode_config(), exports2);
+    __exportStar(require_envelope(), exports2);
+    __exportStar(require_config(), exports2);
     __exportStar(require_entry(), exports2);
     __exportStar(require_store(), exports2);
-    __exportStar(require_data_tables(), exports2);
-    __exportStar(require_data_table_schema(), exports2);
-    var test_data_1 = require_test_data();
+    __exportStar(require_tables(), exports2);
+    __exportStar(require_schema(), exports2);
+    var data_1 = require_data();
     Object.defineProperty(exports2, "testDataValidator", { enumerable: true, get: function() {
-      return test_data_1.testDataValidator;
+      return data_1.testDataValidator;
     } });
-    __exportStar(require_layout(), exports2);
-    __exportStar(require_source_index(), exports2);
-    __exportStar(require_test_workflow_graph(), exports2);
+    __exportStar(require_layout2(), exports2);
+    __exportStar(require_source(), exports2);
+    __exportStar(require_graph(), exports2);
     __exportStar(require_collaboration(), exports2);
     __exportStar(require_task_management(), exports2);
     __exportStar(require_collaboration2(), exports2);
     __exportStar(require_documents(), exports2);
-    __exportStar(require_analytics_dashboard(), exports2);
+    __exportStar(require_dashboard(), exports2);
     __exportStar(require_capabilities(), exports2);
-    __exportStar(require_agent_chat(), exports2);
+    __exportStar(require_chat(), exports2);
     __exportStar(require_knowledge(), exports2);
     __exportStar(require_architecture(), exports2);
-    __exportStar(require_repository_registry(), exports2);
+    __exportStar(require_registry(), exports2);
     __exportStar(require_publications(), exports2);
     __exportStar(require_media(), exports2);
     __exportStar(require_media_types(), exports2);
     __exportStar(require_templates(), exports2);
     __exportStar(require_constants(), exports2);
-    var json_schema_1 = require_json_schema();
+    var schema_1 = require_schema2();
     Object.defineProperty(exports2, "octonodeJsonSchema", { enumerable: true, get: function() {
-      return json_schema_1.octonodeJsonSchema;
+      return schema_1.octonodeJsonSchema;
     } });
     Object.defineProperty(exports2, "schemaVersion", { enumerable: true, get: function() {
-      return json_schema_1.schemaVersion;
+      return schema_1.schemaVersion;
     } });
     __exportStar(require_icons(), exports2);
     __exportStar(require_settings(), exports2);
-    __exportStar(require_access_tokens(), exports2);
+    __exportStar(require_tokens(), exports2);
     __exportStar(require_plugin(), exports2);
     __exportStar(require_app(), exports2);
-    __exportStar(require_app_contributions(), exports2);
-    __exportStar(require_personal_layout(), exports2);
-    __exportStar(require_app_installation(), exports2);
-    __exportStar(require_app_analytics(), exports2);
+    __exportStar(require_contributions(), exports2);
+    __exportStar(require_layout(), exports2);
+    __exportStar(require_installation(), exports2);
+    __exportStar(require_analytics(), exports2);
     __exportStar(require_github(), exports2);
     __exportStar(require_gitlab(), exports2);
     __exportStar(require_triggers(), exports2);
@@ -12982,23 +12982,33 @@ var require_dist = __commonJS({
     __exportStar(require_publishing(), exports2);
     __exportStar(require_toolkit(), exports2);
     __exportStar(require_allowlist(), exports2);
-    __exportStar(require_app_runtime(), exports2);
+    __exportStar(require_runtime(), exports2);
     var toolkit_1 = require_toolkit();
     Object.defineProperty(exports2, "ToolkitAction", { enumerable: true, get: function() {
       return toolkit_1.ToolkitAction;
     } });
     __exportStar(require_clients(), exports2);
-    __exportStar(require_data_table_validation(), exports2);
-    __exportStar(require_data_table_constants(), exports2);
-    __exportStar(require_assistant_resources(), exports2);
-    __exportStar(require_assistant_artifacts(), exports2);
-    __exportStar(require_assistant_models(), exports2);
+    __exportStar(require_validation(), exports2);
+    __exportStar(require_table_constants(), exports2);
+    __exportStar(require_resources(), exports2);
+    __exportStar(require_artifacts(), exports2);
+    __exportStar(require_models(), exports2);
   }
 });
 
-// packages/plugin-runtime/dist/json-schema.js
-var require_json_schema2 = __commonJS({
-  "packages/plugin-runtime/dist/json-schema.js"(exports2) {
+// packages/plugin-runtime/dist/constants.js
+var require_constants2 = __commonJS({
+  "packages/plugin-runtime/dist/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.LANGUAGE = void 0;
+    exports2.LANGUAGE = "typescript";
+  }
+});
+
+// packages/plugin-runtime/dist/json/schema.js
+var require_schema3 = __commonJS({
+  "packages/plugin-runtime/dist/json/schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.validate = validate;
@@ -13105,8 +13115,8 @@ var require_runner = __commonJS({
     exports2.start = start;
     var node_console_1 = require("node:console");
     var schema_1 = require_dist();
-    var json_schema_1 = require_json_schema2();
-    var LANGUAGE = "typescript";
+    var constants_js_1 = require_constants2();
+    var schema_js_1 = require_schema3();
     var NodeError = class extends Error {
       constructor(message, opts) {
         super(message);
@@ -13123,7 +13133,7 @@ var require_runner = __commonJS({
           const method = node.service.methods[methodName];
           return {
             id: `${node.id}.${methodName}`,
-            language: LANGUAGE,
+            language: constants_js_1.LANGUAGE,
             inputs: method.inputs,
             outputs: method.outputs,
             icon: node.icon
@@ -13133,7 +13143,7 @@ var require_runner = __commonJS({
       return {
         id: node.id,
         ...node.workflowId ? { workflowId: node.workflowId } : {},
-        language: LANGUAGE,
+        language: constants_js_1.LANGUAGE,
         label: node.label,
         description: node.description,
         symbol: node.symbol,
@@ -13270,7 +13280,7 @@ var require_runner = __commonJS({
       }
       const methodSpec = serviceMethod && isExplicitService(node) ? node.service.methods[serviceMethod] : void 0;
       const inputs = node.defaults && request.inputs && typeof request.inputs === "object" && !Array.isArray(request.inputs) ? { ...node.defaults, ...request.inputs } : request.inputs;
-      const inputErrors = (0, json_schema_1.validate)(methodSpec?.inputs ?? node.inputs, inputs);
+      const inputErrors = (0, schema_js_1.validate)(methodSpec?.inputs ?? node.inputs, inputs);
       if (inputErrors.length > 0) {
         return (0, schema_1.makeErrorResult)(invocationId, {
           code: "VALIDATION_ERROR",
@@ -13298,7 +13308,7 @@ var require_runner = __commonJS({
           stack: err instanceof Error ? err.stack : void 0
         });
       }
-      const outputErrors = (0, json_schema_1.validate)(methodSpec?.outputs ?? node.outputs, outputs);
+      const outputErrors = (0, schema_js_1.validate)(methodSpec?.outputs ?? node.outputs, outputs);
       if (outputErrors.length > 0) {
         return (0, schema_1.makeErrorResult)(invocationId, {
           code: "VALIDATION_ERROR",
@@ -13421,7 +13431,7 @@ var require_runner = __commonJS({
 });
 
 // packages/common/dist/constants.js
-var require_constants2 = __commonJS({
+var require_constants3 = __commonJS({
   "packages/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13571,9 +13581,9 @@ var require_legal_constants = __commonJS({
   }
 });
 
-// packages/common/dist/package-cache.js
-var require_package_cache = __commonJS({
-  "packages/common/dist/package-cache.js"(exports2) {
+// packages/common/dist/package/cache.js
+var require_cache = __commonJS({
+  "packages/common/dist/package/cache.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.packageCacheEnvironment = packageCacheEnvironment3;
@@ -13595,9 +13605,9 @@ var require_package_cache = __commonJS({
   }
 });
 
-// packages/common/dist/api-exposure.js
-var require_api_exposure = __commonJS({
-  "packages/common/dist/api-exposure.js"(exports2) {
+// packages/common/dist/api/exposure.js
+var require_exposure = __commonJS({
+  "packages/common/dist/api/exposure.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PRIVATE_API_DOC_EMAIL = void 0;
@@ -13678,9 +13688,9 @@ var require_api_exposure = __commonJS({
   }
 });
 
-// packages/common/dist/graph-layout.js
-var require_graph_layout = __commonJS({
-  "packages/common/dist/graph-layout.js"(exports2) {
+// packages/common/dist/graph/layout.js
+var require_layout3 = __commonJS({
+  "packages/common/dist/graph/layout.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.layeredLayout = layeredLayout;
@@ -13743,9 +13753,9 @@ var require_graph_layout = __commonJS({
   }
 });
 
-// packages/common/dist/plugin-nodes.js
-var require_plugin_nodes = __commonJS({
-  "packages/common/dist/plugin-nodes.js"(exports2) {
+// packages/common/dist/plugin/nodes.js
+var require_nodes = __commonJS({
+  "packages/common/dist/plugin/nodes.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.installedPluginNodesPage = installedPluginNodesPage;
@@ -13771,9 +13781,9 @@ var require_plugin_nodes = __commonJS({
   }
 });
 
-// packages/common/dist/cloud-routing.js
-var require_cloud_routing = __commonJS({
-  "packages/common/dist/cloud-routing.js"(exports2) {
+// packages/common/dist/cloud/routing.js
+var require_routing = __commonJS({
+  "packages/common/dist/cloud/routing.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.controlPlanePath = controlPlanePath;
@@ -13955,40 +13965,40 @@ var require_dist2 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.compareWorkflowGraphs = exports2.edgeChanges = exports2.graphValues = exports2.graphValue = exports2.workspaceRef = exports2.controlPlanePath = exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
-    __exportStar(require_constants2(), exports2);
+    __exportStar(require_constants3(), exports2);
     __exportStar(require_legal_constants(), exports2);
-    var package_cache_1 = require_package_cache();
+    var cache_js_1 = require_cache();
     Object.defineProperty(exports2, "packageCacheEnvironment", { enumerable: true, get: function() {
-      return package_cache_1.packageCacheEnvironment;
+      return cache_js_1.packageCacheEnvironment;
     } });
-    __exportStar(require_api_exposure(), exports2);
-    var graph_layout_1 = require_graph_layout();
+    __exportStar(require_exposure(), exports2);
+    var layout_js_1 = require_layout3();
     Object.defineProperty(exports2, "layeredLayout", { enumerable: true, get: function() {
-      return graph_layout_1.layeredLayout;
+      return layout_js_1.layeredLayout;
     } });
-    var plugin_nodes_1 = require_plugin_nodes();
+    var nodes_js_1 = require_nodes();
     Object.defineProperty(exports2, "installedPluginNodesPage", { enumerable: true, get: function() {
-      return plugin_nodes_1.installedPluginNodesPage;
+      return nodes_js_1.installedPluginNodesPage;
     } });
-    var cloud_routing_1 = require_cloud_routing();
+    var routing_js_1 = require_routing();
     Object.defineProperty(exports2, "controlPlanePath", { enumerable: true, get: function() {
-      return cloud_routing_1.controlPlanePath;
+      return routing_js_1.controlPlanePath;
     } });
     Object.defineProperty(exports2, "workspaceRef", { enumerable: true, get: function() {
-      return cloud_routing_1.workspaceRef;
+      return routing_js_1.workspaceRef;
     } });
-    var index_1 = require_graph_comparison();
+    var index_js_1 = require_graph_comparison();
     Object.defineProperty(exports2, "graphValue", { enumerable: true, get: function() {
-      return index_1.graphValue;
+      return index_js_1.graphValue;
     } });
     Object.defineProperty(exports2, "graphValues", { enumerable: true, get: function() {
-      return index_1.graphValues;
+      return index_js_1.graphValues;
     } });
     Object.defineProperty(exports2, "edgeChanges", { enumerable: true, get: function() {
-      return index_1.edgeChanges;
+      return index_js_1.edgeChanges;
     } });
     Object.defineProperty(exports2, "compareWorkflowGraphs", { enumerable: true, get: function() {
-      return index_1.compareWorkflowGraphs;
+      return index_js_1.compareWorkflowGraphs;
     } });
   }
 });
@@ -14002,7 +14012,7 @@ var require_plugin2 = __commonJS({
     exports2.startPlugin = startPlugin;
     var common_1 = require_dist2();
     var schema_1 = require_dist();
-    var define_node_1 = require_define_node();
+    var node_1 = require_node();
     var runner_1 = require_runner();
     function definePlugin(definition, handlers) {
       const options = definition;
@@ -14045,7 +14055,7 @@ var require_plugin2 = __commonJS({
           const fields = (node.connections ?? []).flatMap((id) => Object.entries(manifest2.connections?.[id]?.fields ?? {}));
           return [
             node.id,
-            (0, define_node_1.defineNode)({
+            (0, node_1.defineNode)({
               ...node,
               run: (inputs, context) => {
                 const missing = fields.filter(([name, field]) => field.required && !common_1.PROCESS_ENV[name]).map(([name]) => name);
@@ -14067,9 +14077,9 @@ var require_plugin2 = __commonJS({
   }
 });
 
-// packages/plugin-runtime/dist/plugin-file.js
-var require_plugin_file = __commonJS({
-  "packages/plugin-runtime/dist/plugin-file.js"(exports2) {
+// packages/plugin-runtime/dist/plugin/file.js
+var require_file = __commonJS({
+  "packages/plugin-runtime/dist/plugin/file.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.pluginDefinitionPath = pluginDefinitionPath2;
@@ -14117,49 +14127,49 @@ var require_dist3 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.disposeServiceInstances = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;
-    var define_node_1 = require_define_node();
+    var node_js_1 = require_node();
     Object.defineProperty(exports2, "defineNode", { enumerable: true, get: function() {
-      return define_node_1.defineNode;
+      return node_js_1.defineNode;
     } });
     Object.defineProperty(exports2, "defineService", { enumerable: true, get: function() {
-      return define_node_1.defineService;
+      return node_js_1.defineService;
     } });
     Object.defineProperty(exports2, "defineClass", { enumerable: true, get: function() {
-      return define_node_1.defineClass;
+      return node_js_1.defineClass;
     } });
     Object.defineProperty(exports2, "defineConst", { enumerable: true, get: function() {
-      return define_node_1.defineConst;
+      return node_js_1.defineConst;
     } });
-    var runner_1 = require_runner();
+    var runner_js_1 = require_runner();
     Object.defineProperty(exports2, "runNode", { enumerable: true, get: function() {
-      return runner_1.runNode;
+      return runner_js_1.runNode;
     } });
     Object.defineProperty(exports2, "start", { enumerable: true, get: function() {
-      return runner_1.start;
+      return runner_js_1.start;
     } });
     Object.defineProperty(exports2, "NodeError", { enumerable: true, get: function() {
-      return runner_1.NodeError;
+      return runner_js_1.NodeError;
     } });
     Object.defineProperty(exports2, "disposeServiceInstances", { enumerable: true, get: function() {
-      return runner_1.disposeServiceInstances;
+      return runner_js_1.disposeServiceInstances;
     } });
-    var json_schema_1 = require_json_schema2();
+    var schema_js_1 = require_schema3();
     Object.defineProperty(exports2, "validate", { enumerable: true, get: function() {
-      return json_schema_1.validate;
+      return schema_js_1.validate;
     } });
-    var plugin_1 = require_plugin2();
+    var plugin_js_1 = require_plugin2();
     Object.defineProperty(exports2, "definePlugin", { enumerable: true, get: function() {
-      return plugin_1.definePlugin;
+      return plugin_js_1.definePlugin;
     } });
     Object.defineProperty(exports2, "startPlugin", { enumerable: true, get: function() {
-      return plugin_1.startPlugin;
+      return plugin_js_1.startPlugin;
     } });
-    var plugin_file_1 = require_plugin_file();
+    var file_js_1 = require_file();
     Object.defineProperty(exports2, "loadPluginDefinition", { enumerable: true, get: function() {
-      return plugin_file_1.loadPluginDefinition;
+      return file_js_1.loadPluginDefinition;
     } });
     Object.defineProperty(exports2, "pluginDefinitionPath", { enumerable: true, get: function() {
-      return plugin_file_1.pluginDefinitionPath;
+      return file_js_1.pluginDefinitionPath;
     } });
     var schema_1 = require_dist();
     Object.defineProperty(exports2, "PluginManifest", { enumerable: true, get: function() {
@@ -14213,6 +14223,7 @@ var PLUGIN_BUNDLE_EXCLUDES = [
   "*.key"
 ];
 var MAX_CATALOG_MANIFESTS = 512;
+var LOCK_FILENAME = "octonode.lock";
 
 // packages/plugin/src/integrity.ts
 function collectFiles(dir, base, files) {
@@ -14294,7 +14305,6 @@ var import_node_fs3 = require("node:fs");
 var import_node_path3 = require("node:path");
 var import_zod = require("zod");
 var import_schema = __toESM(require_dist());
-var LOCK_FILENAME = "octonode.lock";
 var LockEntry = import_zod.z.object({
   /** False only for pins introduced exclusively by a toolkit. Legacy pins are direct. */
   direct: import_zod.z.boolean().optional(),
@@ -14352,7 +14362,7 @@ function readLockfile(cwd = process.cwd()) {
   try {
     return Lockfile.parse(JSON.parse((0, import_node_fs3.readFileSync)(file, "utf8")));
   } catch (err) {
-    throw new Error(`${file} is not a valid lockfile: ${err.message}`);
+    throw new Error(`${file} is not a valid lockfile: ${err instanceof Error ? err.message : String(err)}`);
   }
 }
 function writeLockfile(cwd, lock) {
@@ -15205,7 +15215,7 @@ function installProjectDependencies(cwd, dependencies = [], options = {}) {
   return withDependencyInstall(cwd, () => reconcileDependencies(cwd, dependencies, options));
 }
 
-// packages/plugin/src/generated-package.ts
+// packages/plugin/src/generated/package.ts
 var import_tar = require("tar");
 var import_node_zlib = require("node:zlib");
 var import_node_crypto4 = require("node:crypto");
@@ -15344,12 +15354,12 @@ function verifyBuild(directory) {
   return { manifest: manifest2, files };
 }
 
-// packages/plugin/src/generated-package.constants.ts
+// packages/plugin/src/generated/package.constants.ts
 var GENERATED_PLUGIN_PACKAGE = "@octonodes/plugin";
 var GENERATED_PLUGIN_DIRECTORY = ".octonode-generated";
 var GENERATED_PLUGIN_FORMAT = 1;
 
-// packages/plugin/src/generated-package.ts
+// packages/plugin/src/generated/package.ts
 async function generatePluginPackage(cwd, selections, expectedPacker) {
   const selected = [...selections].sort((a, b) => a.alias < b.alias ? -1 : a.alias > b.alias ? 1 : 0);
   if (!selected.length || new Set(selected.map(({ alias }) => alias)).size !== selected.length)
@@ -15457,7 +15467,7 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
   }
 }
 
-// packages/plugin/src/plugin-dependencies.ts
+// packages/plugin/src/plugin/dependencies.ts
 function pluginNpmDependencies(manifest2) {
   return manifest2.integration?.npmDependencies ?? (manifest2.integration?.npm ? [manifest2.integration.npm] : []);
 }
