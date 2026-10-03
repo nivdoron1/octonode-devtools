@@ -191,6 +191,25 @@ test("CLI calls generated operations with tree and dotted paths", async () => {
   }
 });
 
+test("CLI login loads configuration from Studio and respects URL overrides", () => {
+  const preload = `globalThis.fetch = async (input) => { throw new Error("config requested: " + input); };`;
+  for (const [args, override, expected] of [
+    [[], undefined, "https://octonodes.com"],
+    [[], "https://studio.example.test", "https://studio.example.test"],
+    [["--base-url", "https://explicit.example.test"], "https://studio.example.test", "https://explicit.example.test"],
+  ]) {
+    const env = { ...process.env };
+    delete env.OCTONODE_URL;
+    if (override) env.OCTONODE_URL = override;
+    const result = spawnSync(process.execPath, [
+      "--import", `data:text/javascript,${encodeURIComponent(preload)}`,
+      "packages/cli/dist/index.js", "login", "--email", "user@example.test", ...args,
+    ], { encoding: "utf8", env });
+    assert.equal(result.status, 1);
+    assert.equal(result.stderr, `octonodes: config requested: ${expected}/api/auth/config\n`);
+  }
+});
+
 test("CLI login stores a reusable token with user-only permissions", async () => {
   const configDir = mkdtempSync(join(tmpdir(), "octonodes-cli-"));
   const env = { ...process.env, OCTONODE_CONFIG_DIR: configDir };

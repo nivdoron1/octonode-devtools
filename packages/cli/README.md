@@ -367,6 +367,8 @@ rebuild first. Artifact publication accepts `--org` and `--team`; the optional
 
 ## Sign in
 
+Login uses `https://octonodes.com` by default; `--base-url` or `OCTONODE_URL` can select another Studio deployment.
+
 The default login opens GitHub authentication in your browser and signs in as the same user as
 Octonode Studio:
 
