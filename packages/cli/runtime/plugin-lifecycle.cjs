@@ -2649,6 +2649,229 @@ var require_layout2 = __commonJS({
   }
 });
 
+// packages/schema/dist/attachments/constants.js
+var require_constants2 = __commonJS({
+  "packages/schema/dist/attachments/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ATTACHMENT_ERRORS = exports2.ATTACHMENT_MIME_TYPES = exports2.ATTACHMENT_STATES = exports2.ATTACHMENT_LIMITS = void 0;
+    exports2.ATTACHMENT_LIMITS = {
+      workspaceFiles: 1e5,
+      dailyReservations: 1e3,
+      scanAttempts: 8,
+      scanMs: 12e4,
+      recoveryMs: 3e5,
+      cleanupMs: 864e5,
+      imageBytes: 10 * 1024 * 1024,
+      fileBytes: 25 * 1024 * 1024,
+      messageBytes: 50 * 1024 * 1024,
+      messageFiles: 10,
+      workspaceBytes: 1024 * 1024 * 1024,
+      userUploads: 4,
+      draftMs: 60 * 60 * 1e3,
+      uploadMs: 5 * 60 * 1e3,
+      processingBytes: 16 * 1024 * 1024,
+      mediaBytes: 4 * 1024 * 1024,
+      modelFiles: 10,
+      modelImages: 10,
+      modelPdfPages: 20,
+      modelTextBytes: 64 * 1024,
+      modelFileTextBytes: 32 * 1024,
+      metadataBytes: 16 * 1024,
+      textBytes: 128 * 1024,
+      pdfPages: 100,
+      imagePixels: 4e7
+    };
+    exports2.ATTACHMENT_STATES = [
+      "reserved",
+      "uploading",
+      "scanning",
+      "ready",
+      "attached",
+      "rejected",
+      "expired",
+      "deleted"
+    ];
+    exports2.ATTACHMENT_MIME_TYPES = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/gif",
+      "application/pdf",
+      "text/plain",
+      "text/markdown",
+      "text/csv",
+      "application/json",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ];
+    exports2.ATTACHMENT_ERRORS = [
+      "unsupported_type",
+      "too_large",
+      "quota_exceeded",
+      "upload_expired",
+      "scan_unavailable",
+      "unsafe_file",
+      "invalid_file",
+      "processing_failed",
+      "model_incompatible"
+    ];
+  }
+});
+
+// packages/schema/dist/attachments/models.js
+var require_models = __commonJS({
+  "packages/schema/dist/attachments/models.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.attachmentModelCapabilities = attachmentModelCapabilities;
+    function attachmentModelCapabilities(model) {
+      const images = model.provider === "anthropic" && /^(sonnet|opus|haiku|claude-(?:3|haiku-4|sonnet-4|opus-4))/.test(model.model) || model.provider === "openai" && /^gpt-(?:4o|4\.1|5(?:\.\d+)?)(?:-|$)/.test(model.model) || model.provider === "google" && /^gemini-(?:2\.5|3)(?:-|\.)/.test(model.model);
+      return { images, pdf: images, text: true };
+    }
+  }
+});
+
+// packages/schema/dist/attachments/index.js
+var require_attachments = __commonJS({
+  "packages/schema/dist/attachments/index.js"(exports2) {
+    "use strict";
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    }) : (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      o[k2] = m[k];
+    }));
+    var __exportStar = exports2 && exports2.__exportStar || function(m, exports3) {
+      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.attachmentPolicySchema = exports2.attachmentModelMessagesSchema = exports2.attachmentModelBlockSchema = exports2.attachmentPdfPreviewSchema = exports2.attachmentProcessingSchema = exports2.attachmentPageSchema = exports2.attachmentStoredSchema = exports2.attachmentDerivativeSchema = exports2.attachmentManifestSchema = exports2.attachmentSummarySchema = exports2.attachmentUploadSchema = exports2.attachmentIdListSchema = exports2.attachmentMimeSchema = exports2.attachmentDomainSchema = void 0;
+    var zod_1 = require("zod");
+    var constants_js_1 = require_constants2();
+    __exportStar(require_constants2(), exports2);
+    __exportStar(require_models(), exports2);
+    exports2.attachmentDomainSchema = zod_1.z.enum(["chat", "assistant"]);
+    exports2.attachmentMimeSchema = zod_1.z.enum(constants_js_1.ATTACHMENT_MIME_TYPES);
+    exports2.attachmentIdListSchema = zod_1.z.array(zod_1.z.string().uuid()).max(constants_js_1.ATTACHMENT_LIMITS.messageFiles).refine((ids) => new Set(ids).size === ids.length, "Attachment IDs must be unique");
+    exports2.attachmentUploadSchema = zod_1.z.object({
+      name: zod_1.z.string().trim().min(1).max(240).refine((name) => !Array.from(name).some((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127 || char === "/" || char === "\\"), "Invalid filename"),
+      mime: exports2.attachmentMimeSchema,
+      size: zod_1.z.number().int().positive().max(constants_js_1.ATTACHMENT_LIMITS.fileBytes)
+    }).strict().refine(({ name }) => !/\.(?:html?|svg|exe|dll|bat|cmd|scr|com|msi|zip|rar|7z|xlsm|docm|pptm)$/i.test(name), "Unsupported filename extension").refine(({ mime, size }) => !mime.startsWith("image/") || size <= constants_js_1.ATTACHMENT_LIMITS.imageBytes, "Image exceeds size limit");
+    exports2.attachmentSummarySchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      conversationId: zod_1.z.string().uuid(),
+      domain: exports2.attachmentDomainSchema,
+      name: zod_1.z.string().min(1).max(240),
+      mime: exports2.attachmentMimeSchema,
+      size: zod_1.z.number().int().nonnegative(),
+      state: zod_1.z.enum(constants_js_1.ATTACHMENT_STATES),
+      version: zod_1.z.number().int().positive(),
+      createdAt: zod_1.z.number().int().nonnegative(),
+      expiresAt: zod_1.z.number().int().nonnegative(),
+      errorCode: zod_1.z.enum(constants_js_1.ATTACHMENT_ERRORS).nullable(),
+      width: zod_1.z.number().int().positive().nullable(),
+      height: zod_1.z.number().int().positive().nullable(),
+      pages: zod_1.z.number().int().positive().nullable(),
+      previews: zod_1.z.array(zod_1.z.enum(["thumbnail", "image", "text", "pdf"])),
+      messageId: zod_1.z.string().uuid().nullable()
+    }).strict();
+    exports2.attachmentManifestSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      name: zod_1.z.string().max(240),
+      mime: exports2.attachmentMimeSchema,
+      size: zod_1.z.number().int().positive().max(constants_js_1.ATTACHMENT_LIMITS.fileBytes),
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      pages: zod_1.z.array(zod_1.z.number().int().positive()).max(constants_js_1.ATTACHMENT_LIMITS.pdfPages).optional()
+    }).strict();
+    exports2.attachmentDerivativeSchema = zod_1.z.object({
+      kind: zod_1.z.enum(["thumbnail", "image", "text", "pdf"]),
+      key: zod_1.z.string().min(1).max(1024),
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      size: zod_1.z.number().int().nonnegative().max(constants_js_1.ATTACHMENT_LIMITS.fileBytes),
+      mime: zod_1.z.string().max(128)
+    }).strict();
+    exports2.attachmentStoredSchema = zod_1.z.object({
+      summary: exports2.attachmentSummarySchema,
+      uploaderId: zod_1.z.string().min(1).max(128),
+      attemptId: zod_1.z.string().uuid().nullable(),
+      objectKey: zod_1.z.string().max(1024).nullable(),
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/).nullable(),
+      derivatives: zod_1.z.array(exports2.attachmentDerivativeSchema).max(4)
+    }).strict();
+    exports2.attachmentPageSchema = zod_1.z.object({
+      items: zod_1.z.array(exports2.attachmentSummarySchema),
+      nextCursor: zod_1.z.string().nullable()
+    });
+    exports2.attachmentProcessingSchema = zod_1.z.object({
+      mime: exports2.attachmentMimeSchema,
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      width: zod_1.z.number().int().positive().max(4e4).nullable(),
+      height: zod_1.z.number().int().positive().max(4e4).nullable(),
+      pages: zod_1.z.number().int().positive().max(constants_js_1.ATTACHMENT_LIMITS.pdfPages).nullable(),
+      scannerVersion: zod_1.z.string().min(1).max(128),
+      derivatives: zod_1.z.array(zod_1.z.object({
+        kind: zod_1.z.enum(["thumbnail", "image", "text", "pdf"]),
+        mime: zod_1.z.string().max(128),
+        data: zod_1.z.string().max(24 * 1024 * 1024)
+      }).strict()).max(4)
+    }).strict();
+    exports2.attachmentPdfPreviewSchema = zod_1.z.object({
+      totalPages: zod_1.z.number().int().positive().max(1e4),
+      pages: zod_1.z.array(zod_1.z.object({
+        page: zod_1.z.number().int().positive(),
+        data: zod_1.z.string().regex(/^[A-Za-z0-9+/]*={0,2}$/).max(2 * 1024 * 1024)
+      }).strict()).min(1).max(100)
+    }).strict();
+    exports2.attachmentModelBlockSchema = zod_1.z.discriminatedUnion("type", [
+      zod_1.z.object({ type: zod_1.z.literal("text"), text: zod_1.z.string().max(constants_js_1.ATTACHMENT_LIMITS.textBytes + 1024) }).strict(),
+      zod_1.z.object({
+        type: zod_1.z.literal("image"),
+        mime: zod_1.z.enum(["image/jpeg", "image/png", "image/webp"]),
+        data: zod_1.z.string().max(24 * 1024 * 1024)
+      }).strict(),
+      zod_1.z.object({
+        type: zod_1.z.literal("document"),
+        mime: zod_1.z.literal("application/pdf"),
+        data: zod_1.z.string().max(24 * 1024 * 1024),
+        name: zod_1.z.string().max(240),
+        textBytes: zod_1.z.number().int().nonnegative().max(constants_js_1.ATTACHMENT_LIMITS.modelFileTextBytes).optional()
+      }).strict()
+    ]);
+    exports2.attachmentModelMessagesSchema = zod_1.z.array(zod_1.z.object({
+      messageId: zod_1.z.string().uuid(),
+      blocks: zod_1.z.array(exports2.attachmentModelBlockSchema).max(constants_js_1.ATTACHMENT_LIMITS.messageFiles * (constants_js_1.ATTACHMENT_LIMITS.pdfPages * 2 + 2))
+    }).strict()).max(100);
+    exports2.attachmentPolicySchema = zod_1.z.object({
+      uploadsEnabled: zod_1.z.boolean(),
+      modelInputEnabled: zod_1.z.boolean(),
+      types: zod_1.z.array(exports2.attachmentMimeSchema),
+      limits: zod_1.z.object({
+        imageBytes: zod_1.z.number().int().positive(),
+        fileBytes: zod_1.z.number().int().positive(),
+        messageBytes: zod_1.z.number().int().positive(),
+        messageFiles: zod_1.z.number().int().positive(),
+        pdfPages: zod_1.z.number().int().positive(),
+        modelFiles: zod_1.z.number().int().positive(),
+        modelImages: zod_1.z.number().int().positive(),
+        modelPdfPages: zod_1.z.number().int().positive(),
+        modelEncodedBytes: zod_1.z.number().int().positive(),
+        modelTextBytes: zod_1.z.number().int().positive(),
+        modelFileTextBytes: zod_1.z.number().int().positive()
+      }).strict()
+    }).strict();
+  }
+});
+
 // packages/schema/dist/collaboration.js
 var require_collaboration = __commonJS({
   "packages/schema/dist/collaboration.js"(exports2) {
@@ -2656,6 +2879,7 @@ var require_collaboration = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.collaborationErrorSchema = exports2.realtimeInvalidationSchema = exports2.githubPublicationStateSchema = exports2.notificationSchema = exports2.reviewSuggestionSchema = exports2.suggestionCreateSchema = exports2.reviewCommentSchema = exports2.reviewThreadCreateSchema = exports2.reviewThreadSchema = exports2.reviewAnchorSchema = exports2.reviewFragmentSchema = exports2.reviewContextSchema = exports2.pullRequestStateSchema = exports2.messageUpdateSchema = exports2.messageCreateSchema = exports2.messageSchema = exports2.assistantSessionListQuerySchema = exports2.assistantSessionOrderSchema = exports2.assistantSessionSortSchema = exports2.assistantSessionCreateSchema = exports2.conversationCreateSchema = exports2.conversationSchema = exports2.conversationKindSchema = exports2.workspaceAgentCreateSchema = exports2.workspaceAgentSchema = exports2.profileUpdateSchema = exports2.profileSchema = exports2.pageSchema = exports2.revisionSchema = exports2.sha256Schema = exports2.gitShaSchema = exports2.entityIdSchema = exports2.idempotencyKeySchema = exports2.opaqueCursorSchema = exports2.principalSchema = exports2.agentScopeSchema = exports2.collaborationActionSchema = exports2.workspaceRefSchema = exports2.workspaceKindSchema = void 0;
     var zod_1 = require("zod");
+    var index_js_1 = require_attachments();
     var constants_1 = require_constants();
     exports2.workspaceKindSchema = zod_1.z.enum(["user", "org", "team"]);
     exports2.workspaceRefSchema = zod_1.z.object({
@@ -2770,6 +2994,7 @@ var require_collaboration = __commonJS({
       origin: zod_1.z.enum(["octonode", "slack"]),
       replyToId: exports2.entityIdSchema.nullable(),
       body: zod_1.z.string().max(16384),
+      attachments: zod_1.z.array(index_js_1.attachmentSummarySchema).max(10).optional(),
       version: exports2.revisionSchema,
       createdAt: zod_1.z.number().int().nonnegative(),
       editedAt: zod_1.z.number().int().positive().nullable(),
@@ -2778,12 +3003,14 @@ var require_collaboration = __commonJS({
       viewerReactions: zod_1.z.array(zod_1.z.string().max(32)).max(100)
     }).strict();
     exports2.messageCreateSchema = zod_1.z.object({
-      body: zod_1.z.string().min(1).max(16384),
+      body: zod_1.z.string().max(16384),
+      attachmentIds: index_js_1.attachmentIdListSchema.optional(),
       replyToId: exports2.entityIdSchema.nullable().optional(),
       clientMutationId: exports2.idempotencyKeySchema
-    }).strict();
+    }).strict().refine(({ body, attachmentIds }) => !!body.trim() || !!attachmentIds?.length, "Message requires text or attachments");
     exports2.messageUpdateSchema = zod_1.z.object({
-      body: zod_1.z.string().min(1).max(16384),
+      body: zod_1.z.string().max(16384),
+      attachmentIds: index_js_1.attachmentIdListSchema.optional(),
       expectedVersion: exports2.revisionSchema
     }).strict();
     exports2.pullRequestStateSchema = zod_1.z.enum(["open", "closed", "merged"]);
@@ -3946,7 +4173,7 @@ var require_capabilities = __commonJS({
 });
 
 // packages/schema/dist/assistant/models.js
-var require_models = __commonJS({
+var require_models2 = __commonJS({
   "packages/schema/dist/assistant/models.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -4070,7 +4297,8 @@ var require_chat = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.canTransitionAgentRun = exports2.claudeSandboxRequestSchema = exports2.agentServiceRunRequestSchema = exports2.agentToolAuditSchema = exports2.agentStreamEventSchema = exports2.agentRunSchema = exports2.agentUsageSchema = exports2.assistantConversationUpdateSchema = exports2.assistantConversationConfigSchema = exports2.assistantSettingsSchema = exports2.agentToolRiskSchema = exports2.agentErrorCodeSchema = exports2.agentRunStatusSchema = void 0;
     var zod_1 = require("zod");
-    var models_js_1 = require_models();
+    var index_js_1 = require_attachments();
+    var models_js_1 = require_models2();
     var artifacts_js_1 = require_artifacts();
     var constants_1 = require_constants();
     var collaboration_1 = require_collaboration();
@@ -4284,8 +4512,9 @@ var require_chat = __commonJS({
       messages: zod_1.z.array(zod_1.z.object({
         id: collaboration_1.entityIdSchema,
         role: zod_1.z.enum(["user", "assistant"]),
-        content: zod_1.z.string().min(1).max(16384)
-      }).strict()).min(1).max(100),
+        content: zod_1.z.string().max(16384),
+        attachments: zod_1.z.array(index_js_1.attachmentManifestSchema).max(10).optional()
+      }).strict().refine(({ content, attachments }) => !!content.trim() || !!attachments?.length, "Message requires text or attachments")).min(1).max(100),
       limits: zod_1.z.object({
         maxOutputTokens: zod_1.z.number().int().min(1).max(32768),
         maxToolSteps: zod_1.z.number().int().min(1).max(32),
@@ -4315,6 +4544,21 @@ var require_chat = __commonJS({
     };
     var canTransitionAgentRun = (from, to) => from === to || AGENT_RUN_TRANSITIONS[from].includes(to);
     exports2.canTransitionAgentRun = canTransitionAgentRun;
+  }
+});
+
+// packages/schema/dist/agent/constants.js
+var require_constants3 = __commonJS({
+  "packages/schema/dist/agent/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ASSISTANT_MODEL_LIMITS = void 0;
+    exports2.ASSISTANT_MODEL_LIMITS = {
+      inputTextBytes: 64 * 1024,
+      inputTokens: 128e3,
+      modelCalls: 8,
+      claudeBudgetUsd: 1
+    };
   }
 });
 
@@ -13019,7 +13263,7 @@ var require_billing = __commonJS({
 });
 
 // packages/schema/dist/remote/constants.js
-var require_constants2 = __commonJS({
+var require_constants4 = __commonJS({
   "packages/schema/dist/remote/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13053,7 +13297,7 @@ var require_schema3 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.remoteFrameSchema = exports2.remoteTerminalQuerySchema = exports2.remoteTerminalSchema = exports2.remoteConnectionSchema = exports2.remoteDeviceSchema = exports2.remoteHostEnrollmentSchema = exports2.remoteHostSchema = exports2.remoteHostCreateSchema = exports2.remoteHostIdSchema = void 0;
     var zod_1 = require("zod");
-    var constants_js_1 = require_constants2();
+    var constants_js_1 = require_constants4();
     exports2.remoteHostIdSchema = zod_1.z.string().uuid();
     exports2.remoteHostCreateSchema = zod_1.z.object({ name: zod_1.z.string().trim().min(1).max(80) }).strict();
     exports2.remoteHostSchema = zod_1.z.object({
@@ -13171,7 +13415,7 @@ var require_channel = __commonJS({
     exports2.remoteBytes = remoteBytes;
     exports2.remoteBody = remoteBody;
     exports2.remoteSocketMessage = remoteSocketMessage;
-    var constants_js_1 = require_constants2();
+    var constants_js_1 = require_constants4();
     var schema_js_1 = require_schema3();
     var RemoteChannel = class {
       constructor(write) {
@@ -13342,7 +13586,7 @@ var require_remote = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    __exportStar(require_constants2(), exports2);
+    __exportStar(require_constants4(), exports2);
     __exportStar(require_schema3(), exports2);
     __exportStar(require_types(), exports2);
     __exportStar(require_policy(), exports2);
@@ -13350,8 +13594,56 @@ var require_remote = __commonJS({
   }
 });
 
+// packages/schema/dist/hosting.js
+var require_hosting = __commonJS({
+  "packages/schema/dist/hosting.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.archiveUploadResultSchema = exports2.archiveCaptureResultSchema = exports2.objectArchiveSchema = exports2.storageConnectionInputSchema = exports2.storageCredentialSchema = exports2.storageLocationSchema = void 0;
+    var zod_1 = require("zod");
+    exports2.storageLocationSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      generation: zod_1.z.number().int().positive(),
+      provider: zod_1.z.enum(["r2", "aws_s3", "s3_compatible"]),
+      endpoint: zod_1.z.string().url(),
+      region: zod_1.z.string().min(1).max(80),
+      bucket: zod_1.z.string().regex(/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/),
+      prefix: zod_1.z.string().regex(/^(?:[a-zA-Z0-9_-]+\/)+$/).max(400),
+      forcePathStyle: zod_1.z.boolean().default(false)
+    }).strict();
+    exports2.storageCredentialSchema = zod_1.z.object({
+      accessKeyId: zod_1.z.string().min(1).max(256),
+      secretAccessKey: zod_1.z.string().min(1).max(256),
+      sessionToken: zod_1.z.string().min(1).max(8192).optional(),
+      expiresAt: zod_1.z.number().int().positive().optional()
+    }).strict().refine((value) => !value.sessionToken || Boolean(value.expiresAt), "Session credentials require expiresAt");
+    exports2.storageConnectionInputSchema = zod_1.z.object({
+      location: exports2.storageLocationSchema,
+      credentials: exports2.storageCredentialSchema
+    }).strict();
+    exports2.objectArchiveSchema = zod_1.z.object({
+      format: zod_1.z.literal("octonode-squashfs-v1"),
+      id: zod_1.z.string().uuid(),
+      connectionId: zod_1.z.string().uuid(),
+      generation: zod_1.z.number().int().positive(),
+      workspace: zod_1.z.string().regex(/^(org|team):[A-Za-z0-9_-]+$/),
+      key: zod_1.z.string().min(1).max(1024),
+      dir: zod_1.z.string().startsWith("/workspace"),
+      bytes: zod_1.z.number().int().positive().max(64 * 1024 ** 3),
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      createdAt: zod_1.z.number().int().positive(),
+      expiresAt: zod_1.z.number().int().positive()
+    }).strict();
+    exports2.archiveCaptureResultSchema = zod_1.z.object({
+      bytes: zod_1.z.number().int().positive().max(64 * 1024 ** 3),
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/)
+    }).strict();
+    exports2.archiveUploadResultSchema = zod_1.z.object({ etag: zod_1.z.string().min(1).nullable() }).strict();
+  }
+});
+
 // packages/schema/dist/assistant/instructions/constants.js
-var require_constants3 = __commonJS({
+var require_constants5 = __commonJS({
   "packages/schema/dist/assistant/instructions/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13370,7 +13662,7 @@ var require_instructions = __commonJS({
     exports2.assistantProjectInstructionsSchema = void 0;
     exports2.isProjectInstructionPath = isProjectInstructionPath;
     var zod_1 = require("zod");
-    var constants_js_1 = require_constants3();
+    var constants_js_1 = require_constants5();
     exports2.assistantProjectInstructionsSchema = zod_1.z.object({
       files: zod_1.z.array(zod_1.z.object({
         path: zod_1.z.string().max(1024),
@@ -13458,6 +13750,8 @@ var require_dist = __commonJS({
     __exportStar(require_dashboard(), exports2);
     __exportStar(require_capabilities(), exports2);
     __exportStar(require_chat(), exports2);
+    __exportStar(require_constants3(), exports2);
+    __exportStar(require_attachments(), exports2);
     __exportStar(require_knowledge(), exports2);
     __exportStar(require_architecture(), exports2);
     __exportStar(require_registry(), exports2);
@@ -13503,7 +13797,7 @@ var require_dist = __commonJS({
     __exportStar(require_table_constants(), exports2);
     __exportStar(require_resources(), exports2);
     __exportStar(require_artifacts(), exports2);
-    __exportStar(require_models(), exports2);
+    __exportStar(require_models2(), exports2);
     __exportStar(require_billing(), exports2);
     var billing_js_1 = require_billing();
     Object.defineProperty(exports2, "billingHierarchyInputSchema", { enumerable: true, get: function() {
@@ -13513,14 +13807,15 @@ var require_dist = __commonJS({
       return billing_js_1.billingHierarchySchema;
     } });
     __exportStar(require_remote(), exports2);
+    __exportStar(require_hosting(), exports2);
     __exportStar(require_instructions(), exports2);
-    __exportStar(require_constants3(), exports2);
+    __exportStar(require_constants5(), exports2);
     __exportStar(require_catalog(), exports2);
   }
 });
 
 // packages/plugin-runtime/dist/constants.js
-var require_constants4 = __commonJS({
+var require_constants6 = __commonJS({
   "packages/plugin-runtime/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13638,7 +13933,7 @@ var require_runner = __commonJS({
     exports2.start = start;
     var node_console_1 = require("node:console");
     var schema_1 = require_dist();
-    var constants_js_1 = require_constants4();
+    var constants_js_1 = require_constants6();
     var schema_js_1 = require_schema4();
     var NodeError = class extends Error {
       constructor(message, opts) {
@@ -13954,7 +14249,7 @@ var require_runner = __commonJS({
 });
 
 // packages/common/dist/constants.js
-var require_constants5 = __commonJS({
+var require_constants7 = __commonJS({
   "packages/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -14312,6 +14607,9 @@ var require_routing = __commonJS({
     exports2.controlPlanePath = controlPlanePath;
     exports2.workspaceRef = workspaceRef;
     function controlPlanePath(url, method = "GET") {
+      const hosting = url.pathname.match(/^\/api\/organizations\/([^/]+)\/(hosting|storage-connections)(?:\/[^/]+(?:\/(?:validate|rotate|[a-f0-9]{64}))?)?$/);
+      if (hosting)
+        return url.pathname.replace(/^\/api\/organizations\//, "/orgs/") + url.search;
       if (url.pathname === "/api/marketplace/toolkits" && method === "GET" && url.searchParams.get("project"))
         return null;
       if (!["/api/marketplace/toolkits/import", "/api/marketplace/toolkits/inspect"].includes(url.pathname) && /^\/api\/marketplace\/toolkits(?:\/[^/]+(?:\/(?:publish|resolve|members|versions))?)?$/.test(url.pathname))
@@ -14490,7 +14788,7 @@ var require_dist2 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.compareWorkflowGraphs = exports2.edgeChanges = exports2.graphValues = exports2.graphValue = exports2.workspaceRef = exports2.controlPlanePath = exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
-    __exportStar(require_constants5(), exports2);
+    __exportStar(require_constants7(), exports2);
     __exportStar(require_legal_constants(), exports2);
     var cache_js_1 = require_cache();
     Object.defineProperty(exports2, "packageCacheEnvironment", { enumerable: true, get: function() {

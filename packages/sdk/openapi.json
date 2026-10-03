@@ -4073,6 +4073,158 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "attachments": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "conversationId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "domain": {
+                                  "type": "string",
+                                  "enum": [
+                                    "chat",
+                                    "assistant"
+                                  ]
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 240
+                                },
+                                "mime": {
+                                  "type": "string",
+                                  "enum": [
+                                    "image/jpeg",
+                                    "image/png",
+                                    "image/webp",
+                                    "image/gif",
+                                    "application/pdf",
+                                    "text/plain",
+                                    "text/markdown",
+                                    "text/csv",
+                                    "application/json",
+                                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                  ]
+                                },
+                                "size": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "state": {
+                                  "type": "string",
+                                  "enum": [
+                                    "reserved",
+                                    "uploading",
+                                    "scanning",
+                                    "ready",
+                                    "attached",
+                                    "rejected",
+                                    "expired",
+                                    "deleted"
+                                  ]
+                                },
+                                "version": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0
+                                },
+                                "createdAt": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "expiresAt": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "errorCode": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "enum": [
+                                    "unsupported_type",
+                                    "too_large",
+                                    "quota_exceeded",
+                                    "upload_expired",
+                                    "scan_unavailable",
+                                    "unsafe_file",
+                                    "invalid_file",
+                                    "processing_failed",
+                                    "model_incompatible",
+                                    null
+                                  ]
+                                },
+                                "width": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ],
+                                  "exclusiveMinimum": 0
+                                },
+                                "height": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ],
+                                  "exclusiveMinimum": 0
+                                },
+                                "pages": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ],
+                                  "exclusiveMinimum": 0
+                                },
+                                "previews": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "enum": [
+                                      "thumbnail",
+                                      "image",
+                                      "text",
+                                      "pdf"
+                                    ]
+                                  }
+                                },
+                                "messageId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "format": "uuid"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "conversationId",
+                                "domain",
+                                "name",
+                                "mime",
+                                "size",
+                                "state",
+                                "version",
+                                "createdAt",
+                                "expiresAt",
+                                "errorCode",
+                                "width",
+                                "height",
+                                "pages",
+                                "previews",
+                                "messageId"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "maxItems": 10
+                          },
                           "seq": {
                             "type": "integer",
                             "exclusiveMinimum": 0
@@ -21412,7 +21564,10 @@
                   "type": "object",
                   "properties": {
                     "personal": {
-                      "type": "object",
+                      "type": [
+                        "object",
+                        "null"
+                      ],
                       "properties": {
                         "kind": {
                           "type": "string",
@@ -21436,6 +21591,10 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "url": {
+                            "type": "string",
+                            "format": "uri"
+                          },
                           "kind": {
                             "type": "string",
                             "const": "org"
