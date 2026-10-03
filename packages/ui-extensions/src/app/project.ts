@@ -1,8 +1,6 @@
 // Generated from packages/ui-extensions/src/app/project.ts. Do not edit; run the Octonode SDK sync.
-import type { AppSession } from "../index.js";
-import type { AppBridgeRequest, AppContext, AppExecution, AppGrant, AppProject } from "./types.js";
-
-export type AppRequest = <T>(operation: Exclude<AppBridgeRequest["operation"], "host">, body?: unknown) => Promise<T>;
+import type { AppSession } from "../types.js";
+import type { AppContext, AppExecution, AppGrant, AppProject, AppRequest } from "./types.js";
 
 function project(id: string, request: AppRequest): AppProject {
   return {

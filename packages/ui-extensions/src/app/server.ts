@@ -1,6 +1,6 @@
 // Generated from packages/ui-extensions/src/app/server.ts. Do not edit; run the Octonode SDK sync.
-import { appContext, type AppRequest } from "./project.js";
-import type { AppContext, AppGrant } from "./types.js";
+import { appContext } from "./project.js";
+import type { AppContext, AppGrant, AppRequest } from "./types.js";
 
 export type { AppContext, AppExecution, AppGrant, AppProject } from "./types.js";
 

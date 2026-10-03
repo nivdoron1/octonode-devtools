@@ -6189,6 +6189,7 @@ export type GetApiWorkspacesResponses = {
             }>;
         }>;
         remote: boolean;
+        remoteComputers?: boolean;
     };
 };
 
@@ -6223,6 +6224,10 @@ export type GetApiWorkspacesPermissionsResponses = {
             [key: string]: boolean;
         };
         projectId?: string | null;
+        remoteTarget?: {
+            computerId: string;
+            checkoutId: string;
+        };
         capabilities: {
             collaboration: boolean;
         };
