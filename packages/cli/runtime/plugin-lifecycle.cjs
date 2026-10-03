@@ -12921,6 +12921,103 @@ var require_resources = __commonJS({
   }
 });
 
+// packages/schema/dist/billing.js
+var require_billing = __commonJS({
+  "packages/schema/dist/billing.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.billingHierarchySchema = exports2.billingHierarchyInputSchema = exports2.billingChangeSchema = exports2.billingSelectionSchema = exports2.billingCatalogSchema = exports2.billingCreditPackSchema = exports2.billingOfferSchema = void 0;
+    var zod_1 = require("zod");
+    var capacityAddonSchema = zod_1.z.object({
+      addonId: zod_1.z.string().min(1).max(100),
+      units: zod_1.z.number().int().positive().max(1e8),
+      priceCents: zod_1.z.number().int().nonnegative().max(1e8)
+    }).strict();
+    exports2.billingOfferSchema = zod_1.z.object({
+      id: zod_1.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
+      plan: zod_1.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
+      name: zod_1.z.string().trim().min(1).max(80),
+      rank: zod_1.z.number().int().nonnegative().max(1e3),
+      workspaceKind: zod_1.z.enum(["user", "org", "team"]),
+      interval: zod_1.z.enum(["month", "year"]),
+      productId: zod_1.z.string().regex(/^pdt_[A-Za-z0-9_]+$/),
+      currency: zod_1.z.string().regex(/^[A-Z]{3}$/),
+      monthlyPriceCents: zod_1.z.number().int().positive().max(1e8),
+      basePriceCents: zod_1.z.number().int().nonnegative().max(1e8).optional(),
+      organizationId: zod_1.z.string().regex(/^[A-Za-z0-9_-]{1,128}$/).optional(),
+      hostingMode: zod_1.z.enum(["shared", "dedicated", "dedicated_customer_storage"]).optional(),
+      annualDiscountPercent: zod_1.z.number().min(0).max(99),
+      includedExecutions: zod_1.z.number().int().positive().max(1e8),
+      includedAiCredits: zod_1.z.number().int().positive().max(1e8),
+      seatAddonId: zod_1.z.string().min(1).max(100).nullable(),
+      executionAddon: capacityAddonSchema.nullable(),
+      aiAddon: capacityAddonSchema.nullable(),
+      enabled: zod_1.z.boolean()
+    }).strict().superRefine((offer, ctx) => {
+      if (offer.workspaceKind !== "org" && (offer.organizationId || offer.basePriceCents || offer.hostingMode && offer.hostingMode !== "shared"))
+        ctx.addIssue({ code: "custom", message: "Enterprise agreements and hosting fees require an organization" });
+      if ((offer.basePriceCents || offer.hostingMode && offer.hostingMode !== "shared") && !offer.organizationId)
+        ctx.addIssue({ code: "custom", message: "Hosting agreements must be restricted to an organization" });
+      if (offer.workspaceKind === "user" !== (offer.seatAddonId === null))
+        ctx.addIssue({
+          code: "custom",
+          path: ["seatAddonId"],
+          message: "Organizations and teams require a seat add-on; personal plans cannot have seats"
+        });
+      const ids = [offer.seatAddonId, offer.executionAddon?.addonId, offer.aiAddon?.addonId].filter(Boolean);
+      if (new Set(ids).size !== ids.length)
+        ctx.addIssue({ code: "custom", message: "Add-on IDs must be distinct" });
+    });
+    exports2.billingCreditPackSchema = zod_1.z.object({
+      id: zod_1.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
+      name: zod_1.z.string().trim().min(1).max(80),
+      productId: zod_1.z.string().regex(/^pdt_[A-Za-z0-9_]+$/),
+      meter: zod_1.z.enum(["executions", "ai_credits"]),
+      units: zod_1.z.number().int().positive().max(1e8),
+      priceCents: zod_1.z.number().int().positive().max(1e8),
+      currency: zod_1.z.string().regex(/^[A-Z]{3}$/),
+      enabled: zod_1.z.boolean()
+    }).strict();
+    exports2.billingCatalogSchema = zod_1.z.object({
+      revision: zod_1.z.number().int().nonnegative(),
+      freeExecutions: zod_1.z.number().int().positive().max(1e8),
+      freeAiCredits: zod_1.z.number().int().positive().max(1e8),
+      offers: zod_1.z.array(exports2.billingOfferSchema).max(100),
+      creditPacks: zod_1.z.array(exports2.billingCreditPackSchema).max(100).default([])
+    }).strict().superRefine((catalog, ctx) => {
+      const products = [...catalog.offers, ...catalog.creditPacks].map((item) => item.productId);
+      if (new Set(products).size !== products.length)
+        ctx.addIssue({ code: "custom", message: "Product IDs must be unique" });
+      if (new Set(catalog.creditPacks.map((pack) => pack.id)).size !== catalog.creditPacks.length)
+        ctx.addIssue({ code: "custom", message: "Duplicate pack ID" });
+      for (const field of ["id", "productId"])
+        if (new Set(catalog.offers.map((offer) => offer[field])).size !== catalog.offers.length)
+          ctx.addIssue({ code: "custom", path: ["offers"], message: `Duplicate ${field}` });
+    });
+    exports2.billingSelectionSchema = zod_1.z.object({
+      offerId: zod_1.z.string().min(1).max(64),
+      seats: zod_1.z.number().int().min(1).max(1e4).default(1),
+      executionPacks: zod_1.z.number().int().min(0).max(1e4).default(0),
+      aiPacks: zod_1.z.number().int().min(0).max(1e4).default(0),
+      discountCodes: zod_1.z.array(zod_1.z.string().trim().min(3).max(16)).max(20).optional()
+    }).strict();
+    exports2.billingChangeSchema = exports2.billingSelectionSchema.extend({
+      quoteId: zod_1.z.string().uuid()
+    });
+    exports2.billingHierarchyInputSchema = zod_1.z.object({
+      mode: zod_1.z.enum(["separate", "consolidated"]),
+      revision: zod_1.z.number().int().nonnegative()
+    }).strict();
+    exports2.billingHierarchySchema = zod_1.z.object({
+      mode: zod_1.z.enum(["separate", "consolidated"]),
+      revision: zod_1.z.number().int().nonnegative(),
+      organizationId: zod_1.z.string().nullable(),
+      inherited: zod_1.z.boolean(),
+      canManage: zod_1.z.boolean()
+    });
+  }
+});
+
 // packages/schema/dist/remote/constants.js
 var require_constants2 = __commonJS({
   "packages/schema/dist/remote/constants.js"(exports2) {
@@ -13340,7 +13437,7 @@ var require_dist = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ToolkitAction = exports2.schemaVersion = exports2.octonodeJsonSchema = exports2.testDataValidator = void 0;
+    exports2.billingHierarchySchema = exports2.billingHierarchyInputSchema = exports2.ToolkitAction = exports2.schemaVersion = exports2.octonodeJsonSchema = exports2.testDataValidator = void 0;
     __exportStar(require_envelope(), exports2);
     __exportStar(require_config(), exports2);
     __exportStar(require_entry(), exports2);
@@ -13407,6 +13504,14 @@ var require_dist = __commonJS({
     __exportStar(require_resources(), exports2);
     __exportStar(require_artifacts(), exports2);
     __exportStar(require_models(), exports2);
+    __exportStar(require_billing(), exports2);
+    var billing_js_1 = require_billing();
+    Object.defineProperty(exports2, "billingHierarchyInputSchema", { enumerable: true, get: function() {
+      return billing_js_1.billingHierarchyInputSchema;
+    } });
+    Object.defineProperty(exports2, "billingHierarchySchema", { enumerable: true, get: function() {
+      return billing_js_1.billingHierarchySchema;
+    } });
     __exportStar(require_remote(), exports2);
     __exportStar(require_instructions(), exports2);
     __exportStar(require_constants3(), exports2);
@@ -14233,10 +14338,10 @@ var require_routing = __commonJS({
       if (/^\/api\/workspace-admin\/(?:overview|members(?:\/[^/]+)?|invites(?:\/[^/]+)?)$/.test(url.pathname)) {
         return `${url.pathname.slice(4)}${url.search}`;
       }
-      if (/^\/api\/super-admin\/(?:access|overview|users|plugins(?:\/[^/]+)?|organizations(?:\/[^/]+)?)$/.test(url.pathname)) {
+      if (/^\/api\/super-admin\/(?:access|overview|users|billing\/catalog|billing\/health|plugins(?:\/[^/]+)?|organizations(?:\/[^/]+)?)$/.test(url.pathname)) {
         return `${url.pathname.slice(4)}${url.search}`;
       }
-      if (/^\/api\/billing\/(?:summary|checkout|portal|seats|usage-limits\/[^/]+)$/.test(url.pathname)) {
+      if (/^\/api\/billing\/(?:summary|catalog|change|change-preview|credits|cancel-change|checkout|portal|seats|usage-limits\/[^/]+)$/.test(url.pathname)) {
         return `${url.pathname.slice(4)}${url.search}`;
       }
       if (/^\/api\/remote-hosts(?:\/[^/]+)?$/.test(url.pathname))
