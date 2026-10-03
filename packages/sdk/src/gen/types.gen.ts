@@ -6150,8 +6150,9 @@ export type GetApiWorkspacesResponses = {
             kind: 'user';
             id: string;
             name: string;
-        };
+        } | null;
         orgs: Array<{
+            url?: string;
             kind: 'org';
             id: string;
             name: string;
