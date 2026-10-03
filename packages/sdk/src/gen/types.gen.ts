@@ -1092,6 +1092,24 @@ export type GetApiSocialConversationsByIdMessagesResponses = {
      */
     200: {
         items: Array<{
+            attachments?: Array<{
+                id: string;
+                conversationId: string;
+                domain: 'chat' | 'assistant';
+                name: string;
+                mime: 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif' | 'application/pdf' | 'text/plain' | 'text/markdown' | 'text/csv' | 'application/json' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.presentationml.presentation' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                size: number;
+                state: 'reserved' | 'uploading' | 'scanning' | 'ready' | 'attached' | 'rejected' | 'expired' | 'deleted';
+                version: number;
+                createdAt: number;
+                expiresAt: number;
+                errorCode: 'unsupported_type' | 'too_large' | 'quota_exceeded' | 'upload_expired' | 'scan_unavailable' | 'unsafe_file' | 'invalid_file' | 'processing_failed' | 'model_incompatible' | null;
+                width: number | null;
+                height: number | null;
+                pages: number | null;
+                previews: Array<'thumbnail' | 'image' | 'text' | 'pdf'>;
+                messageId: string | null;
+            }>;
             seq: number;
             id: string;
             conversationId: string;
