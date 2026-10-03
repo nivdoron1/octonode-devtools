@@ -3,6 +3,249 @@
 Command-line access to the public [Octonode cloud API](https://octonodes.com/api/docs). The CLI
 wraps `@octonodes/sdk`, so every generated SDK operation is available without writing TypeScript.
 
+## Installation
+
+The npm package is `@octonodes/cli`; the installed command is `octonodes`.
+It creates apps and plugins and calls the Octonode API. The separate `octonode`
+workflow engine uses a different executable.
+
+**Available now:** npm, npx, pnpm, Yarn and Bun use the published npm package.
+**Pending publication:** Homebrew, WinGet, Scoop, Chocolatey, DEB/APT, RPM/DNF,
+Arch/AUR, Snap, Docker and direct installers have prepared distribution recipes.
+Their commands below become usable when the corresponding channel is published.
+An npm release does not automatically make those channels available.
+
+### Prerequisites
+
+For npm-based installation, install [Node.js 24](https://nodejs.org/en/download)
+and your chosen package manager. Check the runtime before installing:
+
+```sh
+node --version
+npm --version
+```
+
+Node should report `v24.x.x`. Homebrew will install `node@24` as a dependency;
+the planned portable, MSI, DEB, RPM, Scoop, Chocolatey, Arch and Snap packages
+include their own Node 24 runtime. App and plugin projects still need a separate
+Node 24 development toolchain and a package manager to install project dependencies.
+
+### npm, pnpm, Yarn and Bun
+
+Choose one global installation method:
+
+| Package manager | Install globally | Run once without a global install |
+| --- | --- | --- |
+| npm | `npm install --global @octonodes/cli` | `npx --yes @octonodes/cli@latest --help` |
+| pnpm | `pnpm add --global @octonodes/cli` | `pnpm dlx @octonodes/cli --help` |
+| Yarn Classic (1.x) | `yarn global add @octonodes/cli` | Use npm's `npx` command above |
+| Yarn 2+ / 4 | Use npm or pnpm for global installation | `yarn dlx @octonodes/cli --help` |
+| Bun | `bun add --global @octonodes/cli` | `bunx @octonodes/cli --help` |
+
+One-off commands do not add `octonodes` permanently to your PATH. To run another
+command once, replace `--help`, for example `npx --yes @octonodes/cli@latest login`.
+To pin a release, replace `@latest` with an exact published version, such as
+`npx --yes @octonodes/cli@0.2.16 --help`.
+
+If pnpm reports no global bin directory, run [pnpm setup](https://pnpm.io/cli/setup)
+and open a new terminal. For [Yarn Classic](https://classic.yarnpkg.com/en/docs/cli/global),
+ensure the directory from `yarn global bin` is on PATH. Bun's global binaries
+normally live in `~/.bun/bin`; see [Bun installation](https://bun.com/docs/installation).
+Keep Node 24 on PATH even when using Bun as the package manager.
+
+### Homebrew — macOS and Linux
+
+**Pending tap publication.** Install [Homebrew](https://brew.sh/) first.
+The planned tap is `nivdoron1/homebrew-tap`:
+
+```sh
+brew install nivdoron1/tap/octonodes
+octonodes --version
+```
+
+The equivalent two-step setup is `brew tap nivdoron1/tap`, then
+`brew install octonodes`. The formula selects its Node 24 dependency automatically.
+
+### Windows — WinGet, Scoop, Chocolatey or MSI
+
+**Pending channel publication; Windows x64.** Install your chosen package manager
+first: [WinGet](https://learn.microsoft.com/en-us/windows/package-manager/winget/),
+[Scoop](https://scoop.sh/) or [Chocolatey](https://chocolatey.org/install).
+
+```powershell
+# WinGet, after the manifest is published to its community source
+winget install --id Octonode.CLI --exact --source winget
+
+# Chocolatey, in an administrator terminal after community publication
+choco install octonodes --yes
+```
+
+For Scoop, add the published bucket before installing. The bucket URL has not
+been assigned yet; replace `PUBLISHED_BUCKET_URL` with the announced Git URL:
+
+```powershell
+scoop bucket add octonode PUBLISHED_BUCKET_URL
+scoop install octonode/octonodes
+```
+
+Alternatively, download `octonodes-X.Y.Z-win32-x64.msi` and `SHA256SUMS` from the
+published release. Compare `Get-FileHash .\octonodes-X.Y.Z-win32-x64.msi -Algorithm SHA256`
+with the matching checksum, then run the MSI. It installs for all users, requires
+administrator permission and registers the command on the system PATH.
+Open a new terminal after any Windows installation.
+
+### Linux — DEB/APT, RPM/DNF, Arch/AUR and Snap
+
+**Pending package or repository publication.** DEB/RPM/Arch/Snap target Linux x64
+and arm64. Portable Linux packages need glibc 2.28+ and libstdc++; Alpine/musl
+is outside the prepared portable build matrix.
+
+Download a matching package and `SHA256SUMS` from the published release and
+verify it with `sha256sum --check --ignore-missing SHA256SUMS` before installing:
+
+```sh
+# Debian / Ubuntu: use amd64 for x64, or arm64 for ARM64
+sudo apt install ./octonodes_X.Y.Z_amd64.deb
+
+# Fedora / RHEL: use x86_64 for x64, or aarch64 for ARM64
+sudo dnf install ./octonodes-X.Y.Z-1.x86_64.rpm
+```
+
+After configuring the publisher's signed APT or DNF repository, installation
+and updates use the package manager directly:
+
+```sh
+# Debian / Ubuntu, after adding the published APT URL and signing key
+sudo apt update
+sudo apt install octonodes
+
+# Fedora / RHEL, after adding the published DNF URL and signing key
+sudo dnf install octonodes
+```
+
+Repository URLs and signing-key fingerprints will be announced when those
+repositories are published. Do not disable signature verification.
+
+For Arch, review the published AUR recipe before building. With Git and
+`base-devel` installed:
+
+```sh
+git clone https://aur.archlinux.org/octonodes-bin.git
+cd octonodes-bin
+less PKGBUILD
+makepkg -si
+```
+
+If you already use an AUR helper, `yay -S octonodes-bin` is an alternative.
+For Snap, install [snapd](https://snapcraft.io/docs/installing-snapd) first;
+the listing also requires publisher approval for classic confinement:
+
+```sh
+sudo snap install octonodes --classic
+```
+
+### Direct installation — macOS, Linux and Windows
+
+**Pending release-asset hosting.** Choose an installer release from
+[GitHub Releases](https://github.com/nivdoron1/octonode-devtools/releases).
+Replace `X.Y.Z` with its exact published installer version; the commands assume
+the planned GitHub release asset location.
+
+On macOS or Linux, download and inspect the installer before running it:
+
+```sh
+CLI_VERSION=X.Y.Z
+RELEASE_URL="https://github.com/nivdoron1/octonode-devtools/releases/download/cli-v${CLI_VERSION}"
+curl --fail --location --proto '=https' "$RELEASE_URL/install.sh" -o install-octonodes.sh
+less install-octonodes.sh
+sh install-octonodes.sh
+export PATH="$HOME/.local/bin:$PATH"
+octonodes --version
+```
+
+Add the PATH line to your shell profile for future terminals. The installer
+detects macOS/Linux x64 or arm64, verifies the archive checksum, and installs
+under `~/.local/share/octonodes`, with a command link in `~/.local/bin`.
+Set `OCTONODES_INSTALL_DIR` and `OCTONODES_BIN_DIR` before running it to choose
+different locations. The macOS portable runtime requires macOS 13.5 or later.
+
+On Windows x64, download and inspect the PowerShell installer:
+
+```powershell
+$CliVersion = 'X.Y.Z'
+$ReleaseUrl = "https://github.com/nivdoron1/octonode-devtools/releases/download/cli-v$CliVersion"
+Invoke-WebRequest "$ReleaseUrl/install.ps1" -OutFile install-octonodes.ps1
+Get-Content .\install-octonodes.ps1
+& .\install-octonodes.ps1
+```
+
+Use your organization's PowerShell execution policy for downloaded scripts.
+The installer verifies the ZIP checksum, installs under `%LOCALAPPDATA%\Octonodes`
+and updates your user PATH. Open a new terminal afterwards. Set
+`OCTONODES_INSTALL_DIR` beforehand to choose a different installation directory.
+Installing the same version again refuses to overwrite its directory.
+
+### Docker
+
+**Pending image publication.** Install [Docker](https://docs.docker.com/get-started/get-docker/)
+and replace `PUBLISHED_IMAGE:VERSION` with the announced image and immutable tag:
+
+```sh
+docker run --rm PUBLISHED_IMAGE:VERSION --help
+docker run --rm PUBLISHED_IMAGE:VERSION --version
+```
+
+The image uses `octonodes` as its entrypoint and includes Node 24. Pass CLI
+arguments after the image name. Bind-mount your project to a working directory
+for file-based commands; interactive login state is not retained by `--rm`.
+
+### Verify and sign in
+
+After a global, native or direct installation:
+
+```sh
+octonodes --version
+octonodes --help
+octonodes login
+```
+
+Login opens browser authentication. For a terminal-only session, use
+`octonodes login --email you@example.com`. If the command is not found, open a
+new terminal and check your package manager's global bin directory or the direct
+installer PATH. Use `command -v octonodes` on macOS/Linux or
+`Get-Command octonodes` in PowerShell to see which installation is selected.
+
+### Update or uninstall
+
+Use the same channel that installed the CLI:
+
+| Channel | Update | Uninstall |
+| --- | --- | --- |
+| npm | `npm install --global @octonodes/cli@latest` | `npm uninstall --global @octonodes/cli` |
+| pnpm | `pnpm add --global @octonodes/cli@latest` | `pnpm remove --global @octonodes/cli` |
+| Yarn Classic | `yarn global add @octonodes/cli@latest` | `yarn global remove @octonodes/cli` |
+| Bun | `bun add --global @octonodes/cli@latest` | `bun remove --global @octonodes/cli` |
+| Homebrew | `brew update` then `brew upgrade octonodes` | `brew uninstall octonodes` |
+| WinGet | `winget upgrade --id Octonode.CLI --exact` | `winget uninstall --id Octonode.CLI --exact` |
+| Scoop | `scoop update octonodes` | `scoop uninstall octonodes` |
+| Chocolatey | `choco upgrade octonodes --yes` | `choco uninstall octonodes --yes` |
+| APT repository | `sudo apt update` then `sudo apt install --only-upgrade octonodes` | `sudo apt remove octonodes` |
+| DNF repository | `sudo dnf upgrade octonodes` | `sudo dnf remove octonodes` |
+| Arch / AUR helper | `yay -S octonodes-bin` | `sudo pacman -R octonodes-bin` |
+| Snap | `sudo snap refresh octonodes` | `sudo snap remove octonodes` |
+
+For a downloaded DEB/RPM/MSI, download and verify the newer package and install
+it with the same tool. Remove an MSI through Windows Installed apps. For direct
+installations, run the newer version's installer; to uninstall, remove its managed
+command link or PATH entry and its version directory. For Docker, pull the newer
+tag and recreate the container, or remove the image with `docker image rm`.
+Login data under `~/.octonode` is separate from installed binaries; use
+`octonodes logout` before uninstalling to remove the saved login and revoke a
+saved Studio session. Static API tokens must be revoked separately in Studio.
+
+See the [full installation guide](https://playbook.octonodes.com/docs/installation)
+for signed APT/DNF repository setup.
+
 ## Create an app
 
 Use Node 24 and a CLI release containing `octonodes app`. The default scaffold
@@ -121,21 +364,6 @@ Existing built artifacts can still use `plugin publish dist/plugins/my-integrati
 For definitions without a release file, set `scope: ["public"]` in TypeScript and
 rebuild first. Artifact publication accepts `--org` and `--team`; the optional
 `OCTONODE_MARKETPLACE_TOKEN` overrides normal CLI authentication.
-
-## Run
-
-Use it directly with `npx`:
-
-```sh
-npx @octonodes/cli --help
-```
-
-Or install it globally. The installed command is `octonodes`:
-
-```sh
-npm install --global @octonodes/cli
-octonodes --version
-```
 
 ## Sign in
 
