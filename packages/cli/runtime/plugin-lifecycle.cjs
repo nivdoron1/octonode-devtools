@@ -12905,6 +12905,338 @@ var require_resources = __commonJS({
   }
 });
 
+// packages/schema/dist/remote/constants.js
+var require_constants2 = __commonJS({
+  "packages/schema/dist/remote/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.REMOTE_RESPONSE_HEADERS = exports2.REMOTE_REQUEST_HEADERS = exports2.REMOTE_MAX_HOSTS = exports2.REMOTE_PAIRING_MS = exports2.REMOTE_RESPONSE_BYTES = exports2.REMOTE_MAX_STREAMS = exports2.REMOTE_FRAME_BYTES = exports2.REMOTE_BODY_BYTES = exports2.REMOTE_CHUNK_BYTES = exports2.REMOTE_LEASE_MS = exports2.REMOTE_PROTOCOL = void 0;
+    exports2.REMOTE_PROTOCOL = "octonode.remote.v1";
+    exports2.REMOTE_LEASE_MS = 3e4;
+    exports2.REMOTE_CHUNK_BYTES = 48 * 1024;
+    exports2.REMOTE_BODY_BYTES = 4 * 1024 * 1024;
+    exports2.REMOTE_FRAME_BYTES = 128 * 1024;
+    exports2.REMOTE_MAX_STREAMS = 32;
+    exports2.REMOTE_RESPONSE_BYTES = 50 * 1024 * 1024;
+    exports2.REMOTE_PAIRING_MS = 10 * 6e4;
+    exports2.REMOTE_MAX_HOSTS = 10;
+    exports2.REMOTE_REQUEST_HEADERS = [
+      "content-type",
+      "accept",
+      "if-match",
+      "if-none-match",
+      "idempotency-key",
+      "x-octonode-worktree",
+      "x-octonode-autocommit"
+    ];
+    exports2.REMOTE_RESPONSE_HEADERS = ["content-type", "etag", "retry-after", "x-octonode-git-commit"];
+  }
+});
+
+// packages/schema/dist/remote/schema.js
+var require_schema3 = __commonJS({
+  "packages/schema/dist/remote/schema.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.remoteFrameSchema = exports2.remoteTerminalQuerySchema = exports2.remoteTerminalSchema = exports2.remoteConnectionSchema = exports2.remoteDeviceSchema = exports2.remoteHostEnrollmentSchema = exports2.remoteHostSchema = exports2.remoteHostCreateSchema = exports2.remoteHostIdSchema = void 0;
+    var zod_1 = require("zod");
+    var constants_js_1 = require_constants2();
+    exports2.remoteHostIdSchema = zod_1.z.string().uuid();
+    exports2.remoteHostCreateSchema = zod_1.z.object({ name: zod_1.z.string().trim().min(1).max(80) }).strict();
+    exports2.remoteHostSchema = zod_1.z.object({
+      id: exports2.remoteHostIdSchema,
+      name: zod_1.z.string(),
+      workspace: zod_1.z.string(),
+      createdAt: zod_1.z.number(),
+      connectedAt: zod_1.z.number().nullable(),
+      online: zod_1.z.boolean()
+    });
+    exports2.remoteHostEnrollmentSchema = zod_1.z.object({
+      host: exports2.remoteHostSchema,
+      token: zod_1.z.string(),
+      expiresAt: zod_1.z.number()
+    });
+    exports2.remoteDeviceSchema = zod_1.z.object({
+      id: exports2.remoteHostIdSchema,
+      workspace: zod_1.z.string(),
+      ownerId: zod_1.z.string()
+    });
+    exports2.remoteConnectionSchema = zod_1.z.object({
+      id: exports2.remoteHostIdSchema,
+      gateway: zod_1.z.string().url(),
+      token: zod_1.z.string().regex(/^octo_host_[a-f0-9]{64}$/),
+      paired: zod_1.z.boolean().default(false)
+    }).strict();
+    exports2.remoteTerminalSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      project: zod_1.z.string(),
+      worktree: zod_1.z.string().nullable(),
+      createdAt: zod_1.z.number()
+    });
+    exports2.remoteTerminalQuerySchema = zod_1.z.object({
+      project: zod_1.z.string().min(1).max(240),
+      worktree: zod_1.z.string().uuid().optional()
+    });
+    exports2.remoteFrameSchema = zod_1.z.discriminatedUnion("type", [
+      zod_1.z.object({ type: zod_1.z.literal("dial"), ticket: zod_1.z.string().uuid() }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("ping") }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("pong") }).strict(),
+      zod_1.z.object({
+        type: zod_1.z.literal("request"),
+        method: zod_1.z.string().max(10),
+        path: zod_1.z.string().max(4096),
+        headers: zod_1.z.record(zod_1.z.string().max(8192)),
+        websocket: zod_1.z.boolean()
+      }).strict(),
+      zod_1.z.object({
+        type: zod_1.z.literal("response"),
+        status: zod_1.z.number().int().min(100).max(599),
+        headers: zod_1.z.record(zod_1.z.string().max(8192))
+      }).strict(),
+      zod_1.z.object({
+        type: zod_1.z.literal("data"),
+        data: zod_1.z.string().max(constants_js_1.REMOTE_FRAME_BYTES),
+        binary: zod_1.z.boolean().optional(),
+        final: zod_1.z.boolean().optional()
+      }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("end") }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("ack") }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("cancel") }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("error"), message: zod_1.z.string().max(200) }).strict()
+    ]);
+  }
+});
+
+// packages/schema/dist/remote/types.js
+var require_types = __commonJS({
+  "packages/schema/dist/remote/types.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+  }
+});
+
+// packages/schema/dist/remote/policy.js
+var require_policy = __commonJS({
+  "packages/schema/dist/remote/policy.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.remoteOperation = remoteOperation;
+    function remoteOperation(method, path) {
+      if (!path.startsWith("/api/") || /\\|%2f|%5c/i.test(path.split("?")[0]))
+        return null;
+      const url = new URL(path, "https://host.invalid");
+      if (url.origin !== "https://host.invalid" || /%2f|%5c|\\/i.test(url.pathname))
+        return null;
+      const p = url.pathname;
+      if (url.searchParams.get("global") === "true")
+        return null;
+      if (/\/(?:internal|desktop|claude|frontend|preview|github|gitlab|data-tables|data-table-schema|sql|analytics|triggers|webhooks)(?:\/|$)/.test(p))
+        return null;
+      if (!["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "QUERY"].includes(method))
+        return null;
+      if (!/^\/api\/(?:projects|source-repositories|architectures|workflows|nodes|source|folders|git|config|parser|executions|runs|terminal|capabilities|health|plugins|variables|native|store|search|orchestration)(?:\/|$)/.test(p))
+        return null;
+      if ((p === "/api/source-repositories" || p === "/api/projects") && method !== "GET")
+        return null;
+      if (p.startsWith("/api/source-repositories/") && method !== "GET")
+        return null;
+      if (/\/(?:import|export|restore|purge|persist|sync)(?:\/|$)/.test(p))
+        return null;
+      if (p === "/api/terminal" || /\/(?:run|run-all|invoke|executions|cancel|compile|runtime)(?:\/|$)/.test(p))
+        return method === "GET" && p !== "/api/terminal" ? "read" : "execute";
+      return ["GET", "HEAD", "QUERY"].includes(method) ? "read" : "write";
+    }
+  }
+});
+
+// packages/schema/dist/remote/channel.js
+var require_channel = __commonJS({
+  "packages/schema/dist/remote/channel.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.RemoteChannel = void 0;
+    exports2.remoteBytes = remoteBytes;
+    exports2.remoteBody = remoteBody;
+    exports2.remoteSocketMessage = remoteSocketMessage;
+    var constants_js_1 = require_constants2();
+    var schema_js_1 = require_schema3();
+    var RemoteChannel = class {
+      constructor(write) {
+        this.queue = [];
+        this.write = write;
+      }
+      send(frame) {
+        if (this.failure)
+          throw this.failure;
+        this.write(JSON.stringify(frame));
+      }
+      push(data) {
+        try {
+          if (typeof data !== "string" || new TextEncoder().encode(data).length > constants_js_1.REMOTE_FRAME_BYTES)
+            throw new Error("Invalid remote frame");
+          const frame = schema_js_1.remoteFrameSchema.parse(JSON.parse(data));
+          if (frame.type === "ack") {
+            if (!this.acknowledgment)
+              throw new Error("Unexpected remote acknowledgment");
+            this.acknowledgment.resolve();
+            this.acknowledgment = void 0;
+          } else if (this.waiter) {
+            this.waiter.resolve(frame);
+            this.waiter = void 0;
+          } else {
+            if (this.queue.length >= 4)
+              throw new Error("Remote peer exceeded flow control");
+            this.queue.push(frame);
+          }
+        } catch {
+          this.fail(new Error("Invalid remote protocol"));
+        }
+      }
+      fail(error = new Error("Computer disconnected; a submitted operation may have completed"), drain = false) {
+        this.failure = error;
+        this.waiter?.reject(error);
+        this.acknowledgment?.reject(error);
+        this.waiter = void 0;
+        this.acknowledgment = void 0;
+        if (!drain)
+          this.queue = [];
+      }
+      async receive(timeout = constants_js_1.REMOTE_LEASE_MS) {
+        if (this.failure && !this.queue.length)
+          throw this.failure;
+        if (this.waiter)
+          throw new Error("Concurrent remote receive");
+        let timer;
+        try {
+          const frame = this.queue.shift() ?? await new Promise((resolve7, reject) => {
+            this.waiter = { resolve: resolve7, reject };
+            if (timeout)
+              timer = setTimeout(() => this.fail(new Error("Computer response timed out")), timeout);
+          });
+          if (frame.type === "data" && !this.failure)
+            this.send({ type: "ack" });
+          if (frame.type === "error")
+            throw new Error(frame.message);
+          return frame;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+      async message(bytes, binary = true) {
+        if (bytes.length > constants_js_1.REMOTE_BODY_BYTES)
+          throw new Error("Remote message exceeds limit");
+        for (let offset = 0; offset < Math.max(1, bytes.length); offset += constants_js_1.REMOTE_CHUNK_BYTES)
+          await this.chunk(bytes.subarray(offset, offset + constants_js_1.REMOTE_CHUNK_BYTES), binary, offset + constants_js_1.REMOTE_CHUNK_BYTES >= bytes.length);
+      }
+      async chunk(bytes, binary, final) {
+        if (this.failure)
+          throw this.failure;
+        if (this.acknowledgment)
+          throw new Error("Concurrent remote send");
+        if (bytes.length > constants_js_1.REMOTE_CHUNK_BYTES)
+          throw new Error("Remote message exceeds limit");
+        let timer;
+        try {
+          await new Promise((resolve7, reject) => {
+            this.acknowledgment = { resolve: resolve7, reject };
+            timer = setTimeout(() => this.fail(new Error("Computer stream stalled")), constants_js_1.REMOTE_LEASE_MS);
+            this.send({ type: "data", data: btoa(String.fromCharCode(...bytes)), binary, final });
+          });
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+      async data(bytes) {
+        for (let offset = 0; offset < bytes.length; offset += constants_js_1.REMOTE_CHUNK_BYTES)
+          await this.message(bytes.subarray(offset, offset + constants_js_1.REMOTE_CHUNK_BYTES));
+      }
+    };
+    exports2.RemoteChannel = RemoteChannel;
+    function remoteBytes(data) {
+      return Uint8Array.from(atob(data), (value) => value.charCodeAt(0));
+    }
+    async function remoteBody(channel, limit) {
+      const chunks = [];
+      let total = 0;
+      for (; ; ) {
+        const frame = await channel.receive();
+        if (frame.type === "end")
+          break;
+        if (frame.type !== "data")
+          throw new Error("Invalid remote body");
+        const chunk = remoteBytes(frame.data);
+        total += chunk.length;
+        if (total > limit)
+          throw new Error("Remote body exceeds limit");
+        chunks.push(chunk);
+      }
+      const result = new Uint8Array(total);
+      let offset = 0;
+      for (const chunk of chunks) {
+        result.set(chunk, offset);
+        offset += chunk.length;
+      }
+      return result;
+    }
+    async function remoteSocketMessage(channel) {
+      const chunks = [];
+      let total = 0;
+      let binary;
+      for (; ; ) {
+        const frame = await channel.receive(0);
+        if (frame.type === "end" && !chunks.length)
+          return null;
+        if (frame.type !== "data" || binary !== void 0 && binary !== frame.binary)
+          throw new Error("Invalid remote socket frame");
+        binary = frame.binary ?? true;
+        const chunk = remoteBytes(frame.data);
+        total += chunk.length;
+        if (total > constants_js_1.REMOTE_BODY_BYTES)
+          throw new Error("Remote message exceeds limit");
+        chunks.push(chunk);
+        if (frame.final !== false)
+          break;
+      }
+      const bytes = new Uint8Array(total);
+      let offset = 0;
+      for (const chunk of chunks) {
+        bytes.set(chunk, offset);
+        offset += chunk.length;
+      }
+      return { bytes, binary: binary ?? true };
+    }
+  }
+});
+
+// packages/schema/dist/remote/index.js
+var require_remote = __commonJS({
+  "packages/schema/dist/remote/index.js"(exports2) {
+    "use strict";
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    }) : (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      o[k2] = m[k];
+    }));
+    var __exportStar = exports2 && exports2.__exportStar || function(m, exports3) {
+      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    __exportStar(require_constants2(), exports2);
+    __exportStar(require_schema3(), exports2);
+    __exportStar(require_types(), exports2);
+    __exportStar(require_policy(), exports2);
+    __exportStar(require_channel(), exports2);
+  }
+});
+
 // packages/schema/dist/index.js
 var require_dist = __commonJS({
   "packages/schema/dist/index.js"(exports2) {
@@ -12993,11 +13325,12 @@ var require_dist = __commonJS({
     __exportStar(require_resources(), exports2);
     __exportStar(require_artifacts(), exports2);
     __exportStar(require_models(), exports2);
+    __exportStar(require_remote(), exports2);
   }
 });
 
 // packages/plugin-runtime/dist/constants.js
-var require_constants2 = __commonJS({
+var require_constants3 = __commonJS({
   "packages/plugin-runtime/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13007,7 +13340,7 @@ var require_constants2 = __commonJS({
 });
 
 // packages/plugin-runtime/dist/json/schema.js
-var require_schema3 = __commonJS({
+var require_schema4 = __commonJS({
   "packages/plugin-runtime/dist/json/schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13115,8 +13448,8 @@ var require_runner = __commonJS({
     exports2.start = start;
     var node_console_1 = require("node:console");
     var schema_1 = require_dist();
-    var constants_js_1 = require_constants2();
-    var schema_js_1 = require_schema3();
+    var constants_js_1 = require_constants3();
+    var schema_js_1 = require_schema4();
     var NodeError = class extends Error {
       constructor(message, opts) {
         super(message);
@@ -13431,7 +13764,7 @@ var require_runner = __commonJS({
 });
 
 // packages/common/dist/constants.js
-var require_constants3 = __commonJS({
+var require_constants4 = __commonJS({
   "packages/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13821,6 +14154,8 @@ var require_routing = __commonJS({
       if (/^\/api\/billing\/(?:summary|checkout|portal|seats|usage-limits\/[^/]+)$/.test(url.pathname)) {
         return `${url.pathname.slice(4)}${url.search}`;
       }
+      if (/^\/api\/remote-hosts(?:\/[^/]+)?$/.test(url.pathname))
+        return `${url.pathname.slice(4)}${url.search}`;
       if (/^\/api\/tokens(?:\/[^/]+)?$/.test(url.pathname))
         return `${url.pathname.slice(4)}${url.search}`;
       const collaboration = [
@@ -13965,7 +14300,7 @@ var require_dist2 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.compareWorkflowGraphs = exports2.edgeChanges = exports2.graphValues = exports2.graphValue = exports2.workspaceRef = exports2.controlPlanePath = exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
-    __exportStar(require_constants3(), exports2);
+    __exportStar(require_constants4(), exports2);
     __exportStar(require_legal_constants(), exports2);
     var cache_js_1 = require_cache();
     Object.defineProperty(exports2, "packageCacheEnvironment", { enumerable: true, get: function() {
@@ -14153,7 +14488,7 @@ var require_dist3 = __commonJS({
     Object.defineProperty(exports2, "disposeServiceInstances", { enumerable: true, get: function() {
       return runner_js_1.disposeServiceInstances;
     } });
-    var schema_js_1 = require_schema3();
+    var schema_js_1 = require_schema4();
     Object.defineProperty(exports2, "validate", { enumerable: true, get: function() {
       return schema_js_1.validate;
     } });
