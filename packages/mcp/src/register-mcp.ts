@@ -1,5 +1,6 @@
 import { McpServer, fromJsonSchema } from "@modelcontextprotocol/server";
 import { OctonodeClient } from "@octonodes/sdk";
+import { z } from "zod";
 import {
   DEFAULT_RESPONSE_LIMIT_BYTES,
   MCP_SERVER_INFO,
@@ -81,8 +82,8 @@ function base64(buffer: ArrayBuffer): string {
   return btoa(binary);
 }
 
-async function boundedFetch(input: RequestInfo | URL, init: RequestInit | undefined, limit: number) {
-  const response = await fetch(input, init);
+async function boundedFetch(input: RequestInfo | URL, init: RequestInit | undefined, limit: number, service?: Fetcher) {
+  const response = await (service ? service.fetch(input, init) : fetch(input, init));
   const declared = Number(response.headers.get("content-length"));
   if (Number.isFinite(declared) && declared > limit) {
     throw new Error("Octonode API response exceeds the MCP limit");
@@ -138,6 +139,7 @@ async function callTool(
   definition: ToolDefinition,
   args: ToolArguments,
   request: Request,
+  service?: Fetcher,
 ) {
   const workspace = request.headers.get("x-octonode-workspace");
   if (!workspace) throw new Error("x-octonode-workspace header is required");
@@ -148,6 +150,17 @@ async function callTool(
 
   const url = new URL(resolvePath(definition, args, project), "https://octonode.invalid");
   url.searchParams.set("workspace", workspace);
+  const computer = request.headers.get("x-octonode-computer");
+  const checkout = request.headers.get("x-octonode-checkout");
+  if (computer !== null || checkout !== null) {
+    const scope = z.object({ computer: z.uuid(), checkout: z.uuid() }).parse({ computer, checkout });
+    // Captured transport scope cannot be overridden by model-generated tool arguments.
+    if ((definition.projectScoped && definition.path !== "/api/knowledge/search") || definition.name === "platform_capabilities") {
+      url.searchParams.set("computer", scope.computer);
+      url.searchParams.set("checkout", scope.checkout);
+      if (project) url.searchParams.set("project", project);
+    }
+  }
   if (definition.projectScoped) url.searchParams.set("project", project!);
   for (const key of definition.query ?? []) {
     if (args[key] !== undefined) url.searchParams.set(key, String(args[key]));
@@ -176,6 +189,7 @@ async function callTool(
         input,
         init,
         definition.projectScoped ? PROJECT_RESPONSE_LIMIT_BYTES : DEFAULT_RESPONSE_LIMIT_BYTES,
+        service,
       ),
   });
   if ("error" in response && response.error !== undefined) {
@@ -213,7 +227,7 @@ export function registerMcp(request: Request, env: McpEnv): McpServer {
       },
       async (args) => {
         try {
-          return await callTool(api, definition, args as ToolArguments, request);
+          return await callTool(api, definition, args as ToolArguments, request, env.OCTONODE_API);
         } catch (error) {
           return result(
             {

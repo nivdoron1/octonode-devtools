@@ -67,6 +67,9 @@ test("lists the curated Octonode tools", async () => {
       "project_pull_request",
       "project_knowledge_search",
       "project_context",
+      "project_shell_start",
+      "project_shell_status",
+      "project_shell_stop",
       "project_source_index",
       "project_file_read",
       "project_file_create",
@@ -145,6 +148,8 @@ test("forwards scope and the caller token through the Octonode SDK", async () =>
           "x-octonode-workspace": "org:test",
           "x-octonode-project": "project-1",
           "x-octonode-worktree": "feature/test",
+          "x-octonode-computer": "73a4b755-2152-4aec-bbf9-49de50e9d1cf",
+          "x-octonode-checkout": "af80ac55-d859-4b39-8ca1-498e737419d6",
         },
       ),
       { OCTONODE_API_URL: "https://api.example.test" },
@@ -158,11 +163,32 @@ test("forwards scope and the caller token through the Octonode SDK", async () =>
     assert.equal(url.pathname, "/api/projects/project-1/files");
     assert.equal(url.searchParams.get("workspace"), "org:test");
     assert.equal(url.searchParams.get("project"), "project-1");
+    assert.equal(url.searchParams.get("computer"), "73a4b755-2152-4aec-bbf9-49de50e9d1cf");
+    assert.equal(url.searchParams.get("checkout"), "af80ac55-d859-4b39-8ca1-498e737419d6");
     assert.equal(apiRequest.headers.get("authorization"), "Bearer octo_test");
     assert.equal(apiRequest.headers.get("x-octonode-worktree"), "feature/test");
   } finally {
     globalThis.fetch = originalFetch;
   }
+});
+
+test("invalid or incomplete remote scope never calls the API", async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; throw new Error("Unexpected API call"); };
+  try {
+    for (const headers of [
+      { "x-octonode-computer": "73a4b755-2152-4aec-bbf9-49de50e9d1cf" },
+      { "x-octonode-checkout": "af80ac55-d859-4b39-8ca1-498e737419d6" },
+      { "x-octonode-computer": "invalid", "x-octonode-checkout": "invalid" },
+    ]) {
+      const result = await payload(await worker.fetch(request("tools/call", { name: "project_context", arguments: {} }, {
+        "x-octonode-workspace": "user:owner", "x-octonode-project": "project-1", ...headers,
+      }), { OCTONODE_API_URL: "https://api.example.test" }, context));
+      assert.equal(result.result.isError, true);
+    }
+    assert.equal(calls, 0);
+  } finally { globalThis.fetch = originalFetch; }
 });
 
 test("plugin inspection forwards import identity metadata without changing scope", async () => {
