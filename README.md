@@ -442,6 +442,8 @@ For an interactive user, browser login is the default:
 octonodes login
 ```
 
+Login uses `https://octonodes.com` by default; `--base-url` or `OCTONODE_URL` can select another Studio deployment.
+
 The command loads the public Supabase configuration from Octonode, opens the existing Studio
 GitHub provider, completes a PKCE exchange through a temporary `127.0.0.1` callback, and stores
 the refreshable session in `~/.octonode/session.json`. The browser never receives the saved CLI

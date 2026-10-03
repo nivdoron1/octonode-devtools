@@ -3,6 +3,7 @@ import { createClient, OCTONODE_API_URL, OctonodeClient } from "@octonodes/sdk";
 import { accessToken, login, logout } from "./auth";
 import { terminal } from "./terminal";
 import { CONNECT_HELP, connectCommand } from "./connect.js";
+import { APP_STUDIO_URL } from "./apps/constants";
 
 const VERSION = (require("../package.json") as { version: string }).version;
 const argv = process.argv.slice(2);
@@ -116,7 +117,7 @@ async function main(): Promise<void> {
   }
   if (command === "login") {
     terminal.brand();
-    const baseUrl = flag("--base-url") ?? process.env.OCTONODE_URL ?? OCTONODE_API_URL;
+    const baseUrl = flag("--base-url") ?? process.env.OCTONODE_URL ?? APP_STUDIO_URL;
     const message = await login(baseUrl, { token: flag("--token"), email: flag("--email") });
     if (!terminal.login(message)) process.stdout.write(`${message}\n`);
     return;

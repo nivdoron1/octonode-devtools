@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.28] - 2026-10-03
+
+### Fixed
+
+- Sign in with `octonodes login --email` without a base URL override by loading login configuration from Studio.
+
 ## [Unreleased]
 
 ### Added
