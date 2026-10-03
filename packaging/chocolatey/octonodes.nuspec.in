@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>octonodes</id>
+    <version>@VERSION@</version>
+    <title>Octonodes CLI</title>
+    <authors>Octonode</authors>
+    <projectUrl>@HOMEPAGE@</projectUrl>
+    <licenseUrl>@HOMEPAGE@/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Octonode API and plugin development CLI, including Node 24.</description>
+    <tags>octonode cli developer nodejs</tags>
+  </metadata>
+  <files><file src="tools\**" target="tools" /></files>
+</package>

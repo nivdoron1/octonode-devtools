@@ -1,0 +1,25 @@
+name: octonodes
+version: '@VERSION@'
+summary: Octonode API and plugin development CLI
+description: |
+  Develop Octonode apps and plugins and call the Octonode API from your terminal.
+base: core24
+grade: stable
+confinement: classic
+license: MIT
+platforms:
+  amd64:
+  arm64:
+apps:
+  octonodes:
+    command: bin/octonodes
+parts:
+  cli:
+    plugin: dump
+    source:
+      - on amd64: '@LINUX_X64_URL@'
+      - on arm64: '@LINUX_ARM64_URL@'
+    source-checksum:
+      - on amd64: 'sha256/@LINUX_X64_SHA256@'
+      - on arm64: 'sha256/@LINUX_ARM64_SHA256@'
+    source-type: tar

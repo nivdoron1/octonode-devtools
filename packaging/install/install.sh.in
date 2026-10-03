@@ -1,0 +1,36 @@
+#!/bin/sh
+set -eu
+case "$(uname -s)-$(uname -m)" in
+  Darwin-arm64) target=darwin-arm64; checksum=@DARWIN_ARM64_SHA256@ ;;
+  Darwin-x86_64) target=darwin-x64; checksum=@DARWIN_X64_SHA256@ ;;
+  Linux-aarch64|Linux-arm64) target=linux-arm64; checksum=@LINUX_ARM64_SHA256@ ;;
+  Linux-x86_64) target=linux-x64; checksum=@LINUX_X64_SHA256@ ;;
+  *) echo 'Unsupported OS or architecture' >&2; exit 1 ;;
+esac
+base="${OCTONODES_INSTALL_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/octonodes}"
+bin="${OCTONODES_BIN_DIR:-$HOME/.local/bin}"
+destination="$base/@VERSION@-$target"
+if [ -e "$destination" ]; then echo "Already exists: $destination" >&2; exit 1; fi
+if [ -e "$bin/octonodes" ] || [ -L "$bin/octonodes" ]; then
+  if [ ! -L "$bin/octonodes" ]; then echo 'An octonodes command already exists; remove it before installing.' >&2; exit 1; fi
+  case "$(readlink "$bin/octonodes")" in
+    "$base"/*/bin/octonodes) ;;
+    *) echo 'An unmanaged octonodes link already exists.' >&2; exit 1 ;;
+  esac
+fi
+temporary=$(mktemp -d)
+trap 'rm -rf "$temporary"' EXIT HUP INT TERM
+curl --fail --location --proto '=https' --tlsv1.2 '@BASE_URL@/octonodes-@VERSION@-'"$target"'.tar.gz' -o "$temporary/bundle.tar.gz"
+if command -v sha256sum >/dev/null 2>&1; then
+  actual=$(sha256sum "$temporary/bundle.tar.gz" | cut -d ' ' -f 1)
+else
+  actual=$(shasum -a 256 "$temporary/bundle.tar.gz" | cut -d ' ' -f 1)
+fi
+if [ "$actual" != "$checksum" ]; then echo 'Download checksum mismatch' >&2; exit 1; fi
+mkdir "$temporary/stage"
+tar -xzf "$temporary/bundle.tar.gz" -C "$temporary/stage"
+test "$("$temporary/stage/bin/octonodes" --version)" = '@VERSION@'
+mkdir -p "$base" "$bin"
+mv "$temporary/stage" "$destination"
+ln -sf "$destination/bin/octonodes" "$bin/octonodes"
+echo "Installed octonodes @VERSION@. Add $bin to PATH if needed."

@@ -1,0 +1,6 @@
+$ErrorActionPreference = 'Stop'
+$toolsDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+if (![Environment]::Is64BitOperatingSystem) { throw 'Octonodes requires 64-bit Windows.' }
+Install-ChocolateyZipPackage -PackageName 'octonodes' -Url '@WINDOWS_ZIP_URL@' `
+  -Checksum '@WINDOWS_ZIP_SHA256@' -ChecksumType 'sha256' -UnzipLocation $toolsDir
+Install-BinFile -Name 'octonodes' -Path (Join-Path $toolsDir 'bin\octonodes.cmd')

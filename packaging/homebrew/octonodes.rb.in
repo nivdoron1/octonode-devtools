@@ -1,0 +1,24 @@
+class Octonodes < Formula
+  desc "Octonode API and plugin development CLI"
+  homepage "@HOMEPAGE@"
+  url "@NPM_URL@"
+  version "@VERSION@"
+  sha256 "@NPM_SHA256@"
+  license "MIT"
+
+  depends_on "node@24"
+
+  def install
+    system "npm", "install", *std_npm_args
+    (bin/"octonodes").write_env_script libexec/"bin/octonodes", PATH: "#{Formula["node@24"].opt_bin}:$PATH"
+  end
+
+  test do
+    assert_equal version.to_s, shell_output("#{bin}/octonodes --version").strip
+    assert_match "Usage:", shell_output("#{bin}/octonodes --help")
+    system Formula["node@24"].opt_bin/"node", "-e", <<~JS
+      const path = "#{libexec}/lib/node_modules/@octonodes/cli";
+      require(require.resolve("esbuild", { paths: [path] })).transformSync("const x: number = 1", { loader: "ts" });
+    JS
+  end
+end

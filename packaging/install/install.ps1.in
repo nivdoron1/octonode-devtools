@@ -1,0 +1,25 @@
+$ErrorActionPreference = 'Stop'
+if (![Environment]::Is64BitOperatingSystem) { throw 'Octonodes requires 64-bit Windows.' }
+$base = if ($env:OCTONODES_INSTALL_DIR) { $env:OCTONODES_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA 'Octonodes' }
+$destination = Join-Path $base '@VERSION@-win32-x64'
+if (Test-Path $destination) { throw "Already exists: $destination" }
+$temporary = Join-Path ([IO.Path]::GetTempPath()) ([Guid]::NewGuid().ToString())
+New-Item -ItemType Directory $temporary | Out-Null
+try {
+  $archive = Join-Path $temporary 'bundle.zip'
+  Invoke-WebRequest -Uri '@WINDOWS_ZIP_URL@' -OutFile $archive
+  if ((Get-FileHash $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne '@WINDOWS_ZIP_SHA256@') { throw 'Download checksum mismatch.' }
+  $stage = Join-Path $temporary 'stage'
+  Expand-Archive $archive $stage
+  $version = & (Join-Path $stage 'bin\octonodes.cmd') --version
+  if ($LASTEXITCODE -ne 0 -or $version -ne '@VERSION@') { throw 'CLI version check failed.' }
+  New-Item -ItemType Directory -Force $base | Out-Null
+  Move-Item $stage $destination
+  $bin = Join-Path $destination 'bin'
+  $path = [Environment]::GetEnvironmentVariable('Path', 'User')
+  $entries = @($path -split ';' | Where-Object { $_ -and !( $_.StartsWith($base + '\') -and $_.EndsWith('\bin') ) })
+  [Environment]::SetEnvironmentVariable('Path', (($entries + $bin) -join ';'), 'User')
+  Write-Host 'Installed octonodes @VERSION@. Open a new terminal to use it.'
+} finally {
+  Remove-Item -Recurse -Force $temporary
+}

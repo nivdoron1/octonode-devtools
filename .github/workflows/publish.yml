@@ -1,36 +1,74 @@
 name: Publish npm packages
 
+run-name: 'npm / PR #${{ github.event.issue.number || 0 }} / ${{ inputs.sha || github.sha }}'
+
 on:
-  push:
-    branches: [main]
-    paths:
-      - "packages/sdk/**"
-      - "packages/cli/**"
-      - "packages/ui-extensions/**"
-      - "package.json"
-      - "yarn.lock"
-      - ".github/workflows/publish.yml"
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Exact current main commit SHA to publish (40 characters)
+        required: true
+        type: string
+  issue_comment:
+    types: [edited]
 
 permissions:
   contents: read
-  id-token: write
+  pull-requests: read
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-    environment: npm-publish
+  request:
+    if: >-
+      github.repository == 'nivdoron1/octonode-devtools' &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+      github.event.sender.id == 102235711 &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.issue.pull_request && contains(github.event.comment.body, '- [x] Publish npm packages')))
+    runs-on: ubuntu-24.04
+    outputs:
+      requested: ${{ steps.request.outputs.requested }}
+      sha: ${{ steps.request.outputs.sha }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - id: request
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await require('./scripts/releases/control.cjs').authorize({ github, context, core }, 'npm');
+  publish:
+    needs: request
+    if: needs.request.outputs.requested == 'true' && github.triggering_actor == 'nivdoron1'
+    runs-on: ubuntu-24.04
+    environment: npm-publish
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Verify the requester of this job, including failed-job re-runs
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        env:
+          REQUESTER: ${{ github.triggering_actor }}
+        with:
+          script: |
+            const { data } = await github.rest.users.getByUsername({ username: process.env.REQUESTER });
+            if (data.id !== 102235711) throw new Error('Only nivdoron1 can run release jobs.');
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.request.outputs.sha }}
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
       - run: corepack enable
       - run: yarn install --immutable
       - run: yarn check
-      - run: yarn workspace @octonodes/sdk pack --out /tmp/octonodes-sdk.tgz
-      - run: npm view "@octonodes/sdk@$(node -p "require('./packages/sdk/package.json').version")" version >/dev/null 2>&1 || npm publish /tmp/octonodes-sdk.tgz --access public
-      - run: yarn workspace @octonodes/ui-extensions pack --out /tmp/octonodes-ui-extensions.tgz
-      - run: npm view "@octonodes/ui-extensions@$(node -p "require('./packages/ui-extensions/package.json').version")" version >/dev/null 2>&1 || npm publish /tmp/octonodes-ui-extensions.tgz --access public
-      - run: yarn workspace @octonodes/cli pack --out /tmp/octonodes-cli.tgz
-      - run: npm view "@octonodes/cli@$(node -p "require('./packages/cli/package.json').version")" version >/dev/null 2>&1 || npm publish /tmp/octonodes-cli.tgz --access public
+      - run: git diff --exit-code -- packages/sdk/src/gen
+      - name: Publish only missing stable versions, in dependency order
+        run: node scripts/releases/publish.mjs
