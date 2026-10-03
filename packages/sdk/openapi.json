@@ -21412,7 +21412,10 @@
                   "type": "object",
                   "properties": {
                     "personal": {
-                      "type": "object",
+                      "type": [
+                        "object",
+                        "null"
+                      ],
                       "properties": {
                         "kind": {
                           "type": "string",
@@ -21436,6 +21439,10 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "url": {
+                            "type": "string",
+                            "format": "uri"
+                          },
                           "kind": {
                             "type": "string",
                             "const": "org"

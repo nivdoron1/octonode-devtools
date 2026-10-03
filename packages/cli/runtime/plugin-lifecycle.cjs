@@ -13350,6 +13350,54 @@ var require_remote = __commonJS({
   }
 });
 
+// packages/schema/dist/hosting.js
+var require_hosting = __commonJS({
+  "packages/schema/dist/hosting.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.archiveUploadResultSchema = exports2.archiveCaptureResultSchema = exports2.objectArchiveSchema = exports2.storageConnectionInputSchema = exports2.storageCredentialSchema = exports2.storageLocationSchema = void 0;
+    var zod_1 = require("zod");
+    exports2.storageLocationSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      generation: zod_1.z.number().int().positive(),
+      provider: zod_1.z.enum(["r2", "aws_s3", "s3_compatible"]),
+      endpoint: zod_1.z.string().url(),
+      region: zod_1.z.string().min(1).max(80),
+      bucket: zod_1.z.string().regex(/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/),
+      prefix: zod_1.z.string().regex(/^(?:[a-zA-Z0-9_-]+\/)+$/).max(400),
+      forcePathStyle: zod_1.z.boolean().default(false)
+    }).strict();
+    exports2.storageCredentialSchema = zod_1.z.object({
+      accessKeyId: zod_1.z.string().min(1).max(256),
+      secretAccessKey: zod_1.z.string().min(1).max(256),
+      sessionToken: zod_1.z.string().min(1).max(8192).optional(),
+      expiresAt: zod_1.z.number().int().positive().optional()
+    }).strict().refine((value) => !value.sessionToken || Boolean(value.expiresAt), "Session credentials require expiresAt");
+    exports2.storageConnectionInputSchema = zod_1.z.object({
+      location: exports2.storageLocationSchema,
+      credentials: exports2.storageCredentialSchema
+    }).strict();
+    exports2.objectArchiveSchema = zod_1.z.object({
+      format: zod_1.z.literal("octonode-squashfs-v1"),
+      id: zod_1.z.string().uuid(),
+      connectionId: zod_1.z.string().uuid(),
+      generation: zod_1.z.number().int().positive(),
+      workspace: zod_1.z.string().regex(/^(org|team):[A-Za-z0-9_-]+$/),
+      key: zod_1.z.string().min(1).max(1024),
+      dir: zod_1.z.string().startsWith("/workspace"),
+      bytes: zod_1.z.number().int().positive().max(64 * 1024 ** 3),
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/),
+      createdAt: zod_1.z.number().int().positive(),
+      expiresAt: zod_1.z.number().int().positive()
+    }).strict();
+    exports2.archiveCaptureResultSchema = zod_1.z.object({
+      bytes: zod_1.z.number().int().positive().max(64 * 1024 ** 3),
+      sha256: zod_1.z.string().regex(/^[a-f0-9]{64}$/)
+    }).strict();
+    exports2.archiveUploadResultSchema = zod_1.z.object({ etag: zod_1.z.string().min(1).nullable() }).strict();
+  }
+});
+
 // packages/schema/dist/assistant/instructions/constants.js
 var require_constants3 = __commonJS({
   "packages/schema/dist/assistant/instructions/constants.js"(exports2) {
@@ -13513,6 +13561,7 @@ var require_dist = __commonJS({
       return billing_js_1.billingHierarchySchema;
     } });
     __exportStar(require_remote(), exports2);
+    __exportStar(require_hosting(), exports2);
     __exportStar(require_instructions(), exports2);
     __exportStar(require_constants3(), exports2);
     __exportStar(require_catalog(), exports2);
@@ -14312,6 +14361,9 @@ var require_routing = __commonJS({
     exports2.controlPlanePath = controlPlanePath;
     exports2.workspaceRef = workspaceRef;
     function controlPlanePath(url, method = "GET") {
+      const hosting = url.pathname.match(/^\/api\/organizations\/([^/]+)\/(hosting|storage-connections)(?:\/[^/]+(?:\/(?:validate|rotate|[a-f0-9]{64}))?)?$/);
+      if (hosting)
+        return url.pathname.replace(/^\/api\/organizations\//, "/orgs/") + url.search;
       if (url.pathname === "/api/marketplace/toolkits" && method === "GET" && url.searchParams.get("project"))
         return null;
       if (!["/api/marketplace/toolkits/import", "/api/marketplace/toolkits/inspect"].includes(url.pathname) && /^\/api\/marketplace\/toolkits(?:\/[^/]+(?:\/(?:publish|resolve|members|versions))?)?$/.test(url.pathname))
