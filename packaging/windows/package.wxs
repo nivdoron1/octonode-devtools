@@ -1,0 +1,21 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="Octonodes CLI" Manufacturer="Octonode" Version="@VERSION@"
+           UpgradeCode="@UPGRADE_CODE@" Scope="perMachine">
+    <MajorUpgrade DowngradeErrorMessage="A newer Octonodes CLI is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Octonodes CLI">
+        <Component Id="CommandPath" Guid="*">
+          <RegistryValue Root="HKLM" Key="Software\Octonode\CLI" Name="Installed"
+                         Type="integer" Value="1" KeyPath="yes" />
+          <Environment Id="CliPath" Name="PATH" Value="[INSTALLFOLDER]bin"
+                       Action="set" Part="last" System="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+    <Feature Id="Main" Title="Octonodes CLI">
+      <ComponentRef Id="CommandPath" />
+      <Files Directory="INSTALLFOLDER" Include="!(bindpath.Payload)\**" />
+    </Feature>
+  </Package>
+</Wix>

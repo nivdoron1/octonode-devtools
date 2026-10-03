@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Prepare verified CLI installation artifacts for Homebrew, WinGet, Scoop, Chocolatey,
+  DEB/APT, RPM/DNF, Arch/AUR, Snap, Docker and direct macOS/Linux/Windows installation.
+- Add PR release controls restricted to the repository owner's account and exact merged main commit.
+
+### Changed
+
+- Publish npm packages only on an explicit owner request; pushes and merges no longer publish.
+
 ## [0.2.18] - 2026-09-30
 
 ### Fixed

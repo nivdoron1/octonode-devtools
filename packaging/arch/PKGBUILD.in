@@ -1,0 +1,24 @@
+pkgname=octonodes-bin
+pkgver=@VERSION@
+pkgrel=1
+pkgdesc='Octonode API and plugin development CLI with Node 24'
+arch=('x86_64' 'aarch64')
+url='@HOMEPAGE@'
+license=('MIT' 'BSD-3-Clause')
+depends=('glibc' 'gcc-libs')
+provides=('octonodes')
+conflicts=('octonodes')
+options=('!strip')
+source_x86_64=('@LINUX_X64_URL@')
+sha256sums_x86_64=('@LINUX_X64_SHA256@')
+source_aarch64=('@LINUX_ARM64_URL@')
+sha256sums_aarch64=('@LINUX_ARM64_SHA256@')
+
+package() {
+  install -d "$pkgdir/usr/lib/octonodes" "$pkgdir/usr/bin" "$pkgdir/usr/share/licenses/$pkgname"
+  cp -a "$srcdir/bin" "$srcdir/runtime" "$srcdir/node_modules" "$srcdir/package.json" "$srcdir/package-lock.json" "$pkgdir/usr/lib/octonodes/"
+  printf '#!/bin/sh\nexec /usr/lib/octonodes/bin/octonodes "$@"\n' > "$pkgdir/usr/bin/octonodes"
+  chmod 755 "$pkgdir/usr/bin/octonodes"
+  install -m644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -m644 "$srcdir/runtime/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/Node-LICENSE"
+}

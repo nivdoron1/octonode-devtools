@@ -1,0 +1,2 @@
+$ErrorActionPreference = 'Stop'
+Remove-BinFile -Name 'octonodes' -Path (Join-Path $PSScriptRoot 'bin\octonodes.cmd')

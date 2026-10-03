@@ -208,6 +208,10 @@ octonodes --help
 The npm package is `@octonodes/cli`; the installed command is `octonodes` because the unscoped
 `octonode` command name is already in use.
 
+[CLI installation infrastructure](docs/cli-installation.md) prepares Homebrew, WinGet,
+Scoop, Chocolatey, Linux packages, Snap, Docker, and direct installers for a maintainer
+to publish. The preparation workflow creates downloadable review artifacts only.
+
 ### Login
 
 For an interactive user, browser login is the default:
@@ -324,10 +328,15 @@ and bumps both public packages together.
 
 ## Publishing
 
-Merges to `main` that change either package run the npm publish workflow. It verifies the repo,
-publishes `@octonodes/sdk` first, then publishes `@octonodes/cli` with npm provenance. Both packages
-must trust the GitHub Actions publisher `nivdoron1/octonode-devtools` with workflow `publish.yml`.
-Publishing uses short-lived OIDC credentials, so no npm token is stored in GitHub or this repository.
+Publishing is manual and restricted to `nivdoron1`. After merging, use the PR's CLI release
+control comment, or **Actions → Publish npm packages → Run workflow** on `main` with its exact
+40-character commit SHA. New pushes and merges never publish automatically. The workflow verifies
+the repo and publishes missing stable versions of `@octonodes/sdk`, `@octonodes/ui-extensions`,
+then `@octonodes/cli`, using short-lived OIDC credentials and npm provenance. Each package must trust
+`nivdoron1/octonode-devtools`, workflow `publish.yml`, environment `npm-publish`.
+The currently disabled npm workflow must be enabled manually after this change lands.
+See [CLI installation and release controls](docs/cli-installation.md) for preparing Homebrew and
+other installation channels; those submissions remain manual.
 
 The Octonode repository also needs `DEVTOOLS_REPO_TOKEN` so its OpenAPI sync workflow can open and
 auto-merge generated PRs here.

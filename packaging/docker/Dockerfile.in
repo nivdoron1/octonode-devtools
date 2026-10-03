@@ -1,0 +1,10 @@
+FROM node:24-bookworm-slim
+COPY cli.tgz /tmp/cli.tgz
+RUN npm install --global /tmp/cli.tgz --omit=dev --no-audit --no-fund \
+    && rm /tmp/cli.tgz \
+    && test "$(octonodes --version)" = "@VERSION@" \
+    && npm cache clean --force
+USER node
+WORKDIR /home/node
+ENTRYPOINT ["octonodes"]
+CMD ["--help"]

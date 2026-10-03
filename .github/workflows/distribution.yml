@@ -1,0 +1,226 @@
+name: Prepare CLI installation packages
+run-name: 'installers / PR #${{ github.event.issue.number || 0 }} / ${{ inputs.sha || github.sha }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Exact current main commit SHA for the packaging infrastructure
+        required: true
+        type: string
+      version:
+        description: Exact already-published @octonodes/cli npm version
+        required: true
+        type: string
+
+      asset_base_url:
+        description: Planned HTTPS directory for immutable release assets (no upload)
+        required: true
+        type: string
+  issue_comment:
+    types: [edited]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  request:
+    if: >-
+      github.repository == 'nivdoron1/octonode-devtools' &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+      github.event.sender.id == 102235711 &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.issue.pull_request && contains(github.event.comment.body, '- [x] Prepare installer artifacts')))
+    runs-on: ubuntu-24.04
+    outputs:
+      requested: ${{ steps.request.outputs.requested }}
+      sha: ${{ steps.request.outputs.sha }}
+      version: ${{ steps.request.outputs.version }}
+      asset_base_url: ${{ steps.request.outputs.asset_base_url }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - id: request
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await require('./scripts/releases/control.cjs').authorize({ github, context, core }, 'installers');
+  source:
+    needs: request
+    if: needs.request.outputs.requested == 'true' && github.triggering_actor == 'nivdoron1'
+    runs-on: ubuntu-24.04
+    outputs:
+      node_version: ${{ steps.node.outputs.version }}
+      version: ${{ needs.request.outputs.version }}
+      asset_base_url: ${{ needs.request.outputs.asset_base_url }}
+      sha: ${{ needs.request.outputs.sha }}
+    steps:
+      - name: Verify the requester, including failed-job re-runs
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        env:
+          REQUESTER: ${{ github.triggering_actor }}
+        with:
+          script: |
+            const { data } = await github.rest.users.getByUsername({ username: process.env.REQUESTER });
+            if (data.id !== 102235711) throw new Error('Only nivdoron1 can run release jobs.');
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.request.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Validate the asset host and download the exact npm release
+        env:
+          RELEASE_VERSION: ${{ needs.request.outputs.version }}
+          ASSET_BASE_URL: ${{ needs.request.outputs.asset_base_url }}
+        run: |
+          node --input-type=module -e 'import { validateBaseUrl } from "./scripts/distribution/manifests.mjs"; validateBaseUrl(process.env.ASSET_BASE_URL)'
+          mkdir -p artifacts
+          node scripts/distribution/source.mjs "$RELEASE_VERSION" artifacts/source
+      - id: node
+        run: node -p '"version=" + process.versions.node' >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: distribution-source
+          path: artifacts/source
+          if-no-files-found: error
+
+  bundle:
+    needs: source
+    if: github.triggering_actor == 'nivdoron1'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            target: linux-x64
+          - os: ubuntu-24.04-arm
+            target: linux-arm64
+          - os: macos-15-intel
+            target: darwin-x64
+          - os: macos-15
+            target: darwin-arm64
+          - os: windows-2025
+            target: win32-x64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - name: Verify the requester, including failed-job re-runs
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        env:
+          REQUESTER: ${{ github.triggering_actor }}
+        with:
+          script: |
+            const { data } = await github.rest.users.getByUsername({ username: process.env.REQUESTER });
+            if (data.id !== 102235711) throw new Error('Only nivdoron1 can run release jobs.');
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.source.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ needs.source.outputs.node_version }}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: distribution-source
+          path: artifacts/source
+      - name: Install native Linux packaging tools
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y rpm
+      - name: Install the Windows MSI builder
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $wixVersion = node --input-type=module -e 'import { WIX_VERSION } from "./scripts/distribution/constants.mjs"; console.log(WIX_VERSION)'
+          dotnet tool install --global wix --version $wixVersion
+          if ($LASTEXITCODE -ne 0) { throw 'WiX installation failed.' }
+      - name: Build the portable bundle and verify CLI and native esbuild
+        run: node scripts/distribution/bundle.mjs artifacts/source artifacts/bundle
+      - name: Package and smoke-test the Linux installers
+        if: runner.os == 'Linux'
+        env:
+          RELEASE_VERSION: ${{ needs.source.outputs.version }}
+        run: |
+          node scripts/distribution/linux.mjs artifacts/bundle
+          sudo dpkg -i artifacts/bundle/*.deb
+          test "$(octonodes --version)" = "$RELEASE_VERSION"
+          sudo dpkg -r octonodes
+          docker run --rm -e RELEASE_VERSION -v "$PWD/artifacts/bundle:/artifacts:ro" fedora:43 sh -ec 'dnf install -y /artifacts/*.rpm; test "$(octonodes --version)" = "$RELEASE_VERSION"; dnf remove -y octonodes'
+      - name: Verify Windows MSI installation and removal
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ needs.source.outputs.version }}
+        run: |
+          $msi = (Get-ChildItem artifacts/bundle/*.msi).FullName
+          $install = Start-Process msiexec -ArgumentList @('/i', "`"$msi`"", '/qn', '/norestart') -Wait -PassThru
+          if ($install.ExitCode -notin @(0, 3010)) { throw "MSI installation failed: $($install.ExitCode)" }
+          try {
+            $version = & 'C:\Program Files\Octonodes CLI\bin\octonodes.cmd' --version
+            if ($LASTEXITCODE -ne 0 -or $version -ne $env:RELEASE_VERSION) { throw 'Installed CLI check failed.' }
+            $path = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+            if (!($path -split ';' | Where-Object { $_.TrimEnd('\') -eq 'C:\Program Files\Octonodes CLI\bin' })) { throw 'MSI did not add the CLI to PATH.' }
+          } finally {
+            $remove = Start-Process msiexec -ArgumentList @('/x', "`"$msi`"", '/qn', '/norestart') -Wait -PassThru
+            if ($remove.ExitCode -notin @(0, 3010)) { throw 'MSI removal failed.' }
+          }
+          $path = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+          if ($path -split ';' | Where-Object { $_.TrimEnd('\') -eq 'C:\Program Files\Octonodes CLI\bin' }) { throw 'MSI did not remove its PATH entry.' }
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: distribution-${{ matrix.target }}
+          path: |
+            artifacts/bundle/bundle.json
+            artifacts/bundle/*.tar.gz
+            artifacts/bundle/*.zip
+            artifacts/bundle/*.msi
+            artifacts/bundle/*.deb
+            artifacts/bundle/*.rpm
+          if-no-files-found: error
+
+  manifests:
+    needs: [source, bundle]
+    if: github.triggering_actor == 'nivdoron1'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Verify the requester, including failed-job re-runs
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        env:
+          REQUESTER: ${{ github.triggering_actor }}
+        with:
+          script: |
+            const { data } = await github.rest.users.getByUsername({ username: process.env.REQUESTER });
+            if (data.id !== 102235711) throw new Error('Only nivdoron1 can run release jobs.');
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.source.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ needs.source.outputs.node_version }}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: distribution-*
+          path: artifacts/incoming
+      - name: Verify every checksum and generate package-manager submissions
+        env:
+          ASSET_BASE_URL: ${{ needs.source.outputs.asset_base_url }}
+        run: |
+          node scripts/distribution/manifests.mjs all artifacts/incoming/distribution-source artifacts/review "$ASSET_BASE_URL" artifacts/incoming/distribution-darwin-arm64 artifacts/incoming/distribution-darwin-x64 artifacts/incoming/distribution-linux-arm64 artifacts/incoming/distribution-linux-x64 artifacts/incoming/distribution-win32-x64
+          cd artifacts/review/assets
+          sha256sum --check SHA256SUMS
+      - name: Prepare APT and DNF repository metadata for operator signing
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apt-utils dpkg-dev createrepo-c
+          node scripts/distribution/repository.mjs artifacts/review artifacts/review/repositories
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: installation-review-bundle
+          path: artifacts/review
+          if-no-files-found: error
+          retention-days: 30
