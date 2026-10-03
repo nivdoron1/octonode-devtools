@@ -21661,6 +21661,9 @@
                     },
                     "remote": {
                       "type": "boolean"
+                    },
+                    "remoteComputers": {
+                      "type": "boolean"
                     }
                   },
                   "required": [
@@ -21728,6 +21731,24 @@
                         "string",
                         "null"
                       ]
+                    },
+                    "remoteTarget": {
+                      "type": "object",
+                      "properties": {
+                        "computerId": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "checkoutId": {
+                          "type": "string",
+                          "format": "uuid"
+                        }
+                      },
+                      "required": [
+                        "computerId",
+                        "checkoutId"
+                      ],
+                      "additionalProperties": false
                     },
                     "capabilities": {
                       "type": "object",

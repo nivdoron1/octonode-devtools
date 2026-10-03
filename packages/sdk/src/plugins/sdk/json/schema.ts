@@ -3,8 +3,8 @@ import type { JsonSchema, ValidationError } from "../types";
 
 /**
  * A deliberately tiny JSON Schema validator covering the common subset Octonode
- * nodes use to describe their I/O: `type`, `required`, `properties`, `items`,
- * and `enum`. It is intentionally NOT a full JSON Schema implementation — the
+ * nodes use to describe their I/O, including positional tuple items and bounds.
+ * It is intentionally NOT a full JSON Schema implementation — the
  * point is that every language SDK can carry an equivalent ~80-line validator
  * with zero dependencies, so the contract is enforced identically everywhere.
  *
@@ -58,8 +58,17 @@ function walk(schema: JsonSchema, data: unknown, path: string, errors: Validatio
     }
   }
 
-  if (Array.isArray(data) && isPlainObject(schema.items)) {
-    data.forEach((item, i) => walk(schema.items as JsonSchema, item, `${path}[${i}]`, errors));
+  if (Array.isArray(data)) {
+    if (typeof schema.minItems === "number" && data.length < schema.minItems)
+      errors.push({ path, message: `expected at least ${schema.minItems} items` });
+    if (typeof schema.maxItems === "number" && data.length > schema.maxItems)
+      errors.push({ path, message: `expected at most ${schema.maxItems} items` });
+    const prefix = Array.isArray(schema.prefixItems) ? schema.prefixItems : [];
+    data.forEach((item, i) => {
+      const itemSchema = i < prefix.length ? prefix[i] : schema.items;
+      if (itemSchema === false) errors.push({ path: `${path}[${i}]`, message: "unexpected item" });
+      else if (isPlainObject(itemSchema)) walk(itemSchema, item, `${path}[${i}]`, errors);
+    });
   }
 }
 

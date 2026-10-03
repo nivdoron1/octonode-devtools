@@ -1,12 +1,22 @@
 // Generated from packages/ui-extensions/src/app/index.ts. Do not edit; run the Octonode SDK sync.
-import { getAppSession, UI_EXTENSION_API_VERSION } from "../index.js";
+import { UI_EXTENSION_API_VERSION } from "../constants.js";
+import { getAppSession } from "../index.js";
 import { appContext } from "./project.js";
 import type { AppBridgeRequest, AppBridgeResponse, AppContext, AppGrant } from "./types.js";
 
-export type { AppBridgeRequest, AppBridgeResponse, AppContext, AppExecution, AppGrant, AppProject } from "./types.js";
-export type { HostedApp, HostedAppNavigationItem, HostedAppState } from "./types.js";
-export { connectHostedApp, appRoute } from "./hosted.js";
 export { HOSTED_APP_PROTOCOL } from "./constants.js";
+export { appRoute, connectHostedApp } from "./hosted.js";
+export type {
+  AppBridgeRequest,
+  AppBridgeResponse,
+  AppContext,
+  AppExecution,
+  AppGrant,
+  AppProject,
+  HostedApp,
+  HostedAppNavigationItem,
+  HostedAppState,
+} from "./types.js";
 
 export function request<T>(operation: AppBridgeRequest["operation"], body?: unknown): Promise<T> {
   const apiVersion = getAppSession().protocolVersion ?? UI_EXTENSION_API_VERSION;

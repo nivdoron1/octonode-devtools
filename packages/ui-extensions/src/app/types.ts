@@ -1,5 +1,5 @@
 // Generated from packages/ui-extensions/src/app/types.ts. Do not edit; run the Octonode SDK sync.
-import type { AppSession } from "../index.js";
+import type { AppSession } from "../types.js";
 
 export type HostedAppState = {
   embedded: boolean;
@@ -86,3 +86,5 @@ export type AppBridgeResponse = {
   value?: unknown;
   error?: string;
 };
+
+export type AppRequest = <T>(operation: Exclude<AppBridgeRequest["operation"], "host">, body?: unknown) => Promise<T>;

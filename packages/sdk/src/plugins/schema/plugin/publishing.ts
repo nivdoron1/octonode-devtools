@@ -67,6 +67,26 @@ export const PluginPublisherConnection = PluginPublisherPreview.extend({
 });
 export const PluginPublisherConnections = z.object({ items: z.array(PluginPublisherConnection) });
 
+export const PluginPublisherRepositoryQuery = z.object({
+  search: z.string().trim().max(200).default(""),
+  scope: z.enum(["all", "user", "team", "organization", "public"]).default("all"),
+  sort: z.enum(["name", "-name"]).default("name"),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  offset: z.coerce.number().int().min(0).max(1_000_000).default(0),
+});
+export const PluginPublisherRepositoryPage = z.object({
+  items: z.array(
+    z.object({
+      repositoryId: z.number().int(),
+      repository: z.string(),
+      branch: z.string(),
+      plugins: z.array(z.string()),
+      scopes: z.array(z.enum(["user", "team", "organization", "public"])),
+    }),
+  ),
+  total: z.number().int().nonnegative(),
+});
+
 export const PluginPublisherOperation = z.enum(["create", "update", "delete"]);
 export const PluginPublisherReviewItem = z.object({
   configPath: PluginConfigPath,

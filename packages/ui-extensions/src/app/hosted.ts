@@ -59,8 +59,10 @@ export function connectHostedApp(): HostedApp {
     path: location.pathname + location.search + location.hash,
   };
   let disposed = false;
+  let rejectedToken: string | undefined;
   let navigation: HostedAppNavigationItem[] = [];
   const publish = (patch: Partial<HostedAppState>) => {
+    if (Object.entries(patch).every(([key, value]) => state[key as keyof HostedAppState] === value)) return;
     state = { ...state, ...patch };
     listeners.forEach((listener) => listener());
   };
@@ -99,6 +101,7 @@ export function connectHostedApp(): HostedApp {
     if (
       message.type === "session" &&
       typeof message.token === "string" &&
+      message.token !== rejectedToken &&
       /^octo_app_[A-Za-z0-9_-]{43}$/.test(message.token) &&
       Number.isFinite(message.expiresAt) &&
       message.expiresAt > Date.now()
@@ -154,9 +157,11 @@ export function connectHostedApp(): HostedApp {
       if (!state.token || (state.expiresAt && state.expiresAt <= Date.now()))
         throw new Error("App session expired. Reopen the app from Studio.");
       const headers = new Headers(init?.headers);
-      headers.set("authorization", `Bearer ${state.token}`);
+      const token = state.token;
+      headers.set("authorization", `Bearer ${token}`);
       const response = await fetch(url, { ...init, headers, redirect: "error" });
-      if (response.status === 401) {
+      if (response.status === 401 && !disposed && state.token === token) {
+        rejectedToken = token;
         publish({ status: "expired", token: undefined });
         send({ type: "ready" });
       }
