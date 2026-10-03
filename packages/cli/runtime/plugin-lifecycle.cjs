@@ -4172,6 +4172,194 @@ var require_capabilities = __commonJS({
   }
 });
 
+// packages/schema/dist/remote/constants.js
+var require_constants3 = __commonJS({
+  "packages/schema/dist/remote/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.REMOTE_RESPONSE_HEADERS = exports2.REMOTE_REQUEST_HEADERS = exports2.REMOTE_FILE_CHUNK_BYTES = exports2.REMOTE_FILE_BYTES = exports2.REMOTE_RECOVERY_KEY = exports2.REMOTE_MAX_HOSTS = exports2.REMOTE_PAIRING_MS = exports2.REMOTE_RESPONSE_BYTES = exports2.REMOTE_MAX_STREAMS = exports2.REMOTE_FRAME_BYTES = exports2.REMOTE_BODY_BYTES = exports2.REMOTE_CHUNK_BYTES = exports2.REMOTE_LEASE_MS = exports2.REMOTE_PROTOCOL = void 0;
+    exports2.REMOTE_PROTOCOL = "octonode.remote.v1";
+    exports2.REMOTE_LEASE_MS = 3e4;
+    exports2.REMOTE_CHUNK_BYTES = 48 * 1024;
+    exports2.REMOTE_BODY_BYTES = 4 * 1024 * 1024;
+    exports2.REMOTE_FRAME_BYTES = 128 * 1024;
+    exports2.REMOTE_MAX_STREAMS = 32;
+    exports2.REMOTE_RESPONSE_BYTES = 50 * 1024 * 1024;
+    exports2.REMOTE_PAIRING_MS = 10 * 6e4;
+    exports2.REMOTE_MAX_HOSTS = 10;
+    exports2.REMOTE_RECOVERY_KEY = "remote-credentials/v1/recovery";
+    exports2.REMOTE_FILE_BYTES = 128 * 1024 * 1024;
+    exports2.REMOTE_FILE_CHUNK_BYTES = 512 * 1024;
+    exports2.REMOTE_REQUEST_HEADERS = [
+      "content-type",
+      "accept",
+      "if-match",
+      "if-none-match",
+      "idempotency-key",
+      "x-octonode-worktree",
+      "x-octonode-autocommit"
+    ];
+    exports2.REMOTE_RESPONSE_HEADERS = ["content-type", "etag", "retry-after", "x-octonode-git-commit"];
+  }
+});
+
+// packages/schema/dist/remote/schema.js
+var require_schema2 = __commonJS({
+  "packages/schema/dist/remote/schema.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.remoteFrameSchema = exports2.remoteGrantSchema = exports2.remoteGrantInputSchema = exports2.remoteCommandSchema = exports2.remoteCommandInputSchema = exports2.remoteTerminalQuerySchema = exports2.remoteTerminalSchema = exports2.remoteConnectionSchema = exports2.remoteDeviceSchema = exports2.remoteHostEnrollmentSchema = exports2.remoteHostSchema = exports2.remoteCredentialFenceSchema = exports2.remoteRecoveryCommandSchema = exports2.remoteRecoverySchema = exports2.remotePairSchema = exports2.remoteFileTransferSchema = exports2.remoteFileTransferInputSchema = exports2.remoteFileDownloadSchema = exports2.remoteFileChunkSchema = exports2.remoteFileMetadataSchema = exports2.remoteFileRevisionSchema = exports2.remotePreviewSchema = exports2.remotePreviewInputSchema = exports2.remotePreviewPortsSchema = exports2.remoteHostCreateSchema = exports2.remoteTargetSchema = exports2.remoteHostIdSchema = void 0;
+    var zod_1 = require("zod");
+    var constants_js_1 = require_constants3();
+    exports2.remoteHostIdSchema = zod_1.z.string().uuid();
+    exports2.remoteTargetSchema = zod_1.z.object({ computerId: exports2.remoteHostIdSchema, checkoutId: zod_1.z.string().uuid() }).strict();
+    exports2.remoteHostCreateSchema = zod_1.z.object({ name: zod_1.z.string().trim().min(1).max(80) }).strict();
+    exports2.remotePreviewPortsSchema = zod_1.z.array(zod_1.z.number().int().min(1024).max(65535)).max(8);
+    exports2.remotePreviewInputSchema = zod_1.z.object({
+      checkoutId: zod_1.z.string().uuid(),
+      projectId: zod_1.z.string().min(1).max(128).regex(/^[a-zA-Z0-9._-]+$/),
+      port: zod_1.z.number().int().min(1024).max(65535),
+      worktree: zod_1.z.string().uuid().optional()
+    }).strict();
+    exports2.remotePreviewSchema = zod_1.z.object({ url: zod_1.z.string().url(), expiresAt: zod_1.z.number() });
+    exports2.remoteFileRevisionSchema = zod_1.z.string().regex(/^[a-f0-9]{64}$/);
+    exports2.remoteFileMetadataSchema = zod_1.z.object({
+      path: zod_1.z.string(),
+      size: zod_1.z.number(),
+      revision: exports2.remoteFileRevisionSchema,
+      maxBytes: zod_1.z.number(),
+      chunkBytes: zod_1.z.number()
+    });
+    exports2.remoteFileChunkSchema = zod_1.z.object({ offset: zod_1.z.number().int().nonnegative(), data: zod_1.z.string().max(4 * Math.ceil(constants_js_1.REMOTE_FILE_CHUNK_BYTES / 3)) }).strict();
+    exports2.remoteFileDownloadSchema = exports2.remoteFileChunkSchema.extend({
+      revision: exports2.remoteFileRevisionSchema,
+      size: zod_1.z.number(),
+      nextOffset: zod_1.z.number()
+    });
+    exports2.remoteFileTransferInputSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      path: zod_1.z.string().min(1).max(2048),
+      size: zod_1.z.number().int().min(0).max(constants_js_1.REMOTE_FILE_BYTES),
+      revision: exports2.remoteFileRevisionSchema.nullable(),
+      sha256: exports2.remoteFileRevisionSchema
+    }).strict();
+    exports2.remoteFileTransferSchema = exports2.remoteFileTransferInputSchema.extend({
+      nextOffset: zod_1.z.number(),
+      state: zod_1.z.enum(["uploading", "committing", "completed", "expired"]),
+      createdAt: zod_1.z.number(),
+      project: zod_1.z.string(),
+      worktree: zod_1.z.string().nullable()
+    });
+    exports2.remotePairSchema = zod_1.z.object({ checkoutId: zod_1.z.string().uuid(), isolation: zod_1.z.enum(["native", "container"]).default("native") }).strict();
+    exports2.remoteRecoverySchema = zod_1.z.object({ epoch: zod_1.z.string().uuid(), state: zod_1.z.enum(["paused", "ready"]), cursor: zod_1.z.string().uuid().optional() }).strict();
+    exports2.remoteRecoveryCommandSchema = zod_1.z.discriminatedUnion("action", [
+      zod_1.z.object({ action: zod_1.z.literal("begin"), epoch: zod_1.z.string().uuid(), previousEpoch: zod_1.z.string().uuid().nullable() }).strict(),
+      zod_1.z.object({ action: zod_1.z.literal("finish"), epoch: zod_1.z.string().uuid() }).strict()
+    ]);
+    exports2.remoteCredentialFenceSchema = zod_1.z.object({ ownerHash: zod_1.z.string().regex(/^[a-f0-9]{64}$/), epoch: zod_1.z.string().uuid() }).strict();
+    exports2.remoteHostSchema = zod_1.z.object({
+      id: exports2.remoteHostIdSchema,
+      name: zod_1.z.string(),
+      workspace: zod_1.z.string(),
+      createdAt: zod_1.z.number(),
+      connectedAt: zod_1.z.number().nullable(),
+      checkoutId: zod_1.z.string().uuid().nullable(),
+      online: zod_1.z.boolean(),
+      isolation: zod_1.z.enum(["native", "container"]).default("native"),
+      canManage: zod_1.z.boolean().default(false)
+    });
+    exports2.remoteHostEnrollmentSchema = zod_1.z.object({
+      host: exports2.remoteHostSchema,
+      token: zod_1.z.string(),
+      expiresAt: zod_1.z.number()
+    });
+    exports2.remoteDeviceSchema = zod_1.z.object({
+      id: exports2.remoteHostIdSchema,
+      workspace: zod_1.z.string(),
+      ownerId: zod_1.z.string(),
+      checkoutId: zod_1.z.string().uuid().nullable(),
+      executionPolicy: zod_1.z.string().regex(/^[a-f0-9]{64}$/).optional()
+    });
+    exports2.remoteConnectionSchema = zod_1.z.object({
+      id: exports2.remoteHostIdSchema,
+      gateway: zod_1.z.string().url(),
+      token: zod_1.z.string().regex(/^octo_host_[a-f0-9]{64}$/),
+      paired: zod_1.z.boolean().default(false),
+      checkoutId: zod_1.z.string().uuid().optional(),
+      rootIdentity: zod_1.z.string().regex(/^[a-f0-9]{64}$/).optional(),
+      containerImage: zod_1.z.string().regex(/^(?:sha256:[a-f0-9]{64}|[a-zA-Z0-9./:_-]+@sha256:[a-f0-9]{64})$/).optional(),
+      previewPorts: exports2.remotePreviewPortsSchema.default([])
+    }).strict();
+    exports2.remoteTerminalSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      project: zod_1.z.string(),
+      worktree: zod_1.z.string().nullable(),
+      createdAt: zod_1.z.number()
+    });
+    exports2.remoteTerminalQuerySchema = zod_1.z.object({
+      project: zod_1.z.string().min(1).max(240),
+      worktree: zod_1.z.string().uuid().optional()
+    });
+    exports2.remoteCommandInputSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      command: zod_1.z.string().min(1).max(8192),
+      timeoutMs: zod_1.z.number().int().min(100).max(3e5).default(6e4)
+    }).strict();
+    exports2.remoteCommandSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      project: zod_1.z.string(),
+      worktree: zod_1.z.string().nullable(),
+      state: zod_1.z.enum(["running", "completed", "cancelled", "interrupted", "failed"]),
+      output: zod_1.z.string(),
+      truncated: zod_1.z.boolean(),
+      exitCode: zod_1.z.number().int().nullable(),
+      createdAt: zod_1.z.number(),
+      finishedAt: zod_1.z.number().nullable()
+    });
+    exports2.remoteGrantInputSchema = zod_1.z.object({
+      checkoutId: zod_1.z.string().uuid(),
+      read: zod_1.z.boolean(),
+      write: zod_1.z.boolean(),
+      execute: zod_1.z.boolean(),
+      terminal: zod_1.z.boolean(),
+      revision: zod_1.z.number().int().positive().nullable()
+    }).strict();
+    exports2.remoteGrantSchema = exports2.remoteGrantInputSchema.extend({
+      userId: zod_1.z.string(),
+      id: zod_1.z.string().uuid(),
+      revision: zod_1.z.number().int().positive()
+    });
+    exports2.remoteFrameSchema = zod_1.z.discriminatedUnion("type", [
+      zod_1.z.object({ type: zod_1.z.literal("policy"), value: zod_1.z.string().regex(/^[a-f0-9]{64}$/) }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("dial"), ticket: zod_1.z.string().uuid() }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("ping") }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("pong") }).strict(),
+      zod_1.z.object({
+        type: zod_1.z.literal("request"),
+        method: zod_1.z.string().max(10),
+        path: zod_1.z.string().max(4096),
+        headers: zod_1.z.record(zod_1.z.string().max(8192)),
+        websocket: zod_1.z.boolean()
+      }).strict(),
+      zod_1.z.object({
+        type: zod_1.z.literal("response"),
+        status: zod_1.z.number().int().min(100).max(599),
+        headers: zod_1.z.record(zod_1.z.string().max(8192))
+      }).strict(),
+      zod_1.z.object({
+        type: zod_1.z.literal("data"),
+        data: zod_1.z.string().max(constants_js_1.REMOTE_FRAME_BYTES),
+        binary: zod_1.z.boolean().optional(),
+        final: zod_1.z.boolean().optional()
+      }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("end") }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("ack") }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("cancel") }).strict(),
+      zod_1.z.object({ type: zod_1.z.literal("error"), message: zod_1.z.string().max(200) }).strict()
+    ]);
+  }
+});
+
 // packages/schema/dist/assistant/models.js
 var require_models2 = __commonJS({
   "packages/schema/dist/assistant/models.js"(exports2) {
@@ -4297,6 +4485,7 @@ var require_chat = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.canTransitionAgentRun = exports2.claudeSandboxRequestSchema = exports2.agentServiceRunRequestSchema = exports2.agentToolAuditSchema = exports2.agentStreamEventSchema = exports2.agentRunSchema = exports2.agentUsageSchema = exports2.assistantConversationUpdateSchema = exports2.assistantConversationConfigSchema = exports2.assistantSettingsSchema = exports2.agentToolRiskSchema = exports2.agentErrorCodeSchema = exports2.agentRunStatusSchema = void 0;
     var zod_1 = require("zod");
+    var schema_js_1 = require_schema2();
     var index_js_1 = require_attachments();
     var models_js_1 = require_models2();
     var artifacts_js_1 = require_artifacts();
@@ -4333,6 +4522,7 @@ var require_chat = __commonJS({
       }).strict()).max(16).refine((skills) => new Set(skills.map(({ name }) => name)).size === skills.length && skills.reduce((size, skill) => size + new TextEncoder().encode(skill.instructions).length, 0) <= 128e3, "Skills exceed the session limit or repeat names")
     }).strict();
     exports2.assistantConversationConfigSchema = zod_1.z.object({
+      remoteTarget: schema_js_1.remoteTargetSchema.nullable().optional(),
       conversationId: collaboration_1.entityIdSchema,
       projectId: projectIdSchema,
       projectIds: projectIdsSchema,
@@ -4363,6 +4553,7 @@ var require_chat = __commonJS({
       modelCalls: zod_1.z.number().int().positive().max(100)
     }).strict().refine(({ inputTokens, outputTokens, totalTokens }) => inputTokens + outputTokens === totalTokens, "totalTokens must equal inputTokens plus outputTokens");
     var agentRunBaseSchema = zod_1.z.object({
+      remoteTarget: schema_js_1.remoteTargetSchema.nullable().optional(),
       id: collaboration_1.entityIdSchema,
       conversationId: collaboration_1.entityIdSchema,
       userMessageId: collaboration_1.entityIdSchema,
@@ -4495,6 +4686,7 @@ var require_chat = __commonJS({
       }
     });
     exports2.agentServiceRunRequestSchema = zod_1.z.object({
+      remoteTarget: schema_js_1.remoteTargetSchema.nullable().optional(),
       projectInstructions: zod_1.z.string().max(17e3).optional(),
       version: zod_1.z.literal(1),
       requestId: collaboration_1.entityIdSchema,
@@ -4548,7 +4740,7 @@ var require_chat = __commonJS({
 });
 
 // packages/schema/dist/agent/constants.js
-var require_constants3 = __commonJS({
+var require_constants4 = __commonJS({
   "packages/schema/dist/agent/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -5556,7 +5748,7 @@ var require_definitions = __commonJS({
 });
 
 // packages/schema/dist/json/schema.js
-var require_schema2 = __commonJS({
+var require_schema3 = __commonJS({
   "packages/schema/dist/json/schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13262,108 +13454,6 @@ var require_billing = __commonJS({
   }
 });
 
-// packages/schema/dist/remote/constants.js
-var require_constants4 = __commonJS({
-  "packages/schema/dist/remote/constants.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.REMOTE_RESPONSE_HEADERS = exports2.REMOTE_REQUEST_HEADERS = exports2.REMOTE_MAX_HOSTS = exports2.REMOTE_PAIRING_MS = exports2.REMOTE_RESPONSE_BYTES = exports2.REMOTE_MAX_STREAMS = exports2.REMOTE_FRAME_BYTES = exports2.REMOTE_BODY_BYTES = exports2.REMOTE_CHUNK_BYTES = exports2.REMOTE_LEASE_MS = exports2.REMOTE_PROTOCOL = void 0;
-    exports2.REMOTE_PROTOCOL = "octonode.remote.v1";
-    exports2.REMOTE_LEASE_MS = 3e4;
-    exports2.REMOTE_CHUNK_BYTES = 48 * 1024;
-    exports2.REMOTE_BODY_BYTES = 4 * 1024 * 1024;
-    exports2.REMOTE_FRAME_BYTES = 128 * 1024;
-    exports2.REMOTE_MAX_STREAMS = 32;
-    exports2.REMOTE_RESPONSE_BYTES = 50 * 1024 * 1024;
-    exports2.REMOTE_PAIRING_MS = 10 * 6e4;
-    exports2.REMOTE_MAX_HOSTS = 10;
-    exports2.REMOTE_REQUEST_HEADERS = [
-      "content-type",
-      "accept",
-      "if-match",
-      "if-none-match",
-      "idempotency-key",
-      "x-octonode-worktree",
-      "x-octonode-autocommit"
-    ];
-    exports2.REMOTE_RESPONSE_HEADERS = ["content-type", "etag", "retry-after", "x-octonode-git-commit"];
-  }
-});
-
-// packages/schema/dist/remote/schema.js
-var require_schema3 = __commonJS({
-  "packages/schema/dist/remote/schema.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.remoteFrameSchema = exports2.remoteTerminalQuerySchema = exports2.remoteTerminalSchema = exports2.remoteConnectionSchema = exports2.remoteDeviceSchema = exports2.remoteHostEnrollmentSchema = exports2.remoteHostSchema = exports2.remoteHostCreateSchema = exports2.remoteHostIdSchema = void 0;
-    var zod_1 = require("zod");
-    var constants_js_1 = require_constants4();
-    exports2.remoteHostIdSchema = zod_1.z.string().uuid();
-    exports2.remoteHostCreateSchema = zod_1.z.object({ name: zod_1.z.string().trim().min(1).max(80) }).strict();
-    exports2.remoteHostSchema = zod_1.z.object({
-      id: exports2.remoteHostIdSchema,
-      name: zod_1.z.string(),
-      workspace: zod_1.z.string(),
-      createdAt: zod_1.z.number(),
-      connectedAt: zod_1.z.number().nullable(),
-      online: zod_1.z.boolean()
-    });
-    exports2.remoteHostEnrollmentSchema = zod_1.z.object({
-      host: exports2.remoteHostSchema,
-      token: zod_1.z.string(),
-      expiresAt: zod_1.z.number()
-    });
-    exports2.remoteDeviceSchema = zod_1.z.object({
-      id: exports2.remoteHostIdSchema,
-      workspace: zod_1.z.string(),
-      ownerId: zod_1.z.string()
-    });
-    exports2.remoteConnectionSchema = zod_1.z.object({
-      id: exports2.remoteHostIdSchema,
-      gateway: zod_1.z.string().url(),
-      token: zod_1.z.string().regex(/^octo_host_[a-f0-9]{64}$/),
-      paired: zod_1.z.boolean().default(false)
-    }).strict();
-    exports2.remoteTerminalSchema = zod_1.z.object({
-      id: zod_1.z.string().uuid(),
-      project: zod_1.z.string(),
-      worktree: zod_1.z.string().nullable(),
-      createdAt: zod_1.z.number()
-    });
-    exports2.remoteTerminalQuerySchema = zod_1.z.object({
-      project: zod_1.z.string().min(1).max(240),
-      worktree: zod_1.z.string().uuid().optional()
-    });
-    exports2.remoteFrameSchema = zod_1.z.discriminatedUnion("type", [
-      zod_1.z.object({ type: zod_1.z.literal("dial"), ticket: zod_1.z.string().uuid() }).strict(),
-      zod_1.z.object({ type: zod_1.z.literal("ping") }).strict(),
-      zod_1.z.object({ type: zod_1.z.literal("pong") }).strict(),
-      zod_1.z.object({
-        type: zod_1.z.literal("request"),
-        method: zod_1.z.string().max(10),
-        path: zod_1.z.string().max(4096),
-        headers: zod_1.z.record(zod_1.z.string().max(8192)),
-        websocket: zod_1.z.boolean()
-      }).strict(),
-      zod_1.z.object({
-        type: zod_1.z.literal("response"),
-        status: zod_1.z.number().int().min(100).max(599),
-        headers: zod_1.z.record(zod_1.z.string().max(8192))
-      }).strict(),
-      zod_1.z.object({
-        type: zod_1.z.literal("data"),
-        data: zod_1.z.string().max(constants_js_1.REMOTE_FRAME_BYTES),
-        binary: zod_1.z.boolean().optional(),
-        final: zod_1.z.boolean().optional()
-      }).strict(),
-      zod_1.z.object({ type: zod_1.z.literal("end") }).strict(),
-      zod_1.z.object({ type: zod_1.z.literal("ack") }).strict(),
-      zod_1.z.object({ type: zod_1.z.literal("cancel") }).strict(),
-      zod_1.z.object({ type: zod_1.z.literal("error"), message: zod_1.z.string().max(200) }).strict()
-    ]);
-  }
-});
-
 // packages/schema/dist/remote/types.js
 var require_types = __commonJS({
   "packages/schema/dist/remote/types.js"(exports2) {
@@ -13387,11 +13477,13 @@ var require_policy = __commonJS({
       const p = url.pathname;
       if (url.searchParams.get("global") === "true")
         return null;
+      if (/^\/api\/projects\/[a-zA-Z0-9._-]+\/preview\/\d{2,5}(?:\/|$)/.test(p))
+        return ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"].includes(method) ? "execute" : null;
       if (/\/(?:internal|desktop|claude|frontend|preview|github|gitlab|data-tables|data-table-schema|sql|analytics|triggers|webhooks)(?:\/|$)/.test(p))
         return null;
       if (!["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "QUERY"].includes(method))
         return null;
-      if (!/^\/api\/(?:projects|source-repositories|architectures|workflows|nodes|source|folders|git|config|parser|executions|runs|terminal|capabilities|health|plugins|variables|native|store|search|orchestration)(?:\/|$)/.test(p))
+      if (!/^\/api\/(?:projects|source-repositories|architectures|workflows|nodes|source|folders|git|config|parser|executions|runs|terminal|capabilities|health|plugins|variables|native|native-nodes|store|search|orchestration)(?:\/|$)/.test(p))
         return null;
       if ((p === "/api/source-repositories" || p === "/api/projects") && method !== "GET")
         return null;
@@ -13399,7 +13491,11 @@ var require_policy = __commonJS({
         return null;
       if (/\/(?:import|export|restore|purge|persist|sync)(?:\/|$)/.test(p))
         return null;
-      if (p === "/api/terminal" || /\/(?:run|run-all|invoke|executions|cancel|compile|runtime)(?:\/|$)/.test(p))
+      if (/^\/api\/projects\/[^/]+\/files\/transfers(?:\/|$)/.test(p))
+        return ["GET", "HEAD"].includes(method) ? "read" : "write";
+      if (/^\/api\/workflows\/[^/]+\/run$/.test(p))
+        return "execute";
+      if (p === "/api/terminal" || /\/(?:commands|run|run-all|invoke|executions|cancel|compile|runtime)(?:\/|$)/.test(p))
         return method === "GET" && p !== "/api/terminal" ? "read" : "execute";
       return ["GET", "HEAD", "QUERY"].includes(method) ? "read" : "write";
     }
@@ -13415,8 +13511,8 @@ var require_channel = __commonJS({
     exports2.remoteBytes = remoteBytes;
     exports2.remoteBody = remoteBody;
     exports2.remoteSocketMessage = remoteSocketMessage;
-    var constants_js_1 = require_constants4();
-    var schema_js_1 = require_schema3();
+    var constants_js_1 = require_constants3();
+    var schema_js_1 = require_schema2();
     var RemoteChannel = class {
       constructor(write) {
         this.queue = [];
@@ -13586,8 +13682,8 @@ var require_remote = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    __exportStar(require_constants4(), exports2);
-    __exportStar(require_schema3(), exports2);
+    __exportStar(require_constants3(), exports2);
+    __exportStar(require_schema2(), exports2);
     __exportStar(require_types(), exports2);
     __exportStar(require_policy(), exports2);
     __exportStar(require_channel(), exports2);
@@ -13750,7 +13846,7 @@ var require_dist = __commonJS({
     __exportStar(require_dashboard(), exports2);
     __exportStar(require_capabilities(), exports2);
     __exportStar(require_chat(), exports2);
-    __exportStar(require_constants3(), exports2);
+    __exportStar(require_constants4(), exports2);
     __exportStar(require_attachments(), exports2);
     __exportStar(require_knowledge(), exports2);
     __exportStar(require_architecture(), exports2);
@@ -13760,7 +13856,7 @@ var require_dist = __commonJS({
     __exportStar(require_media_types(), exports2);
     __exportStar(require_templates(), exports2);
     __exportStar(require_constants(), exports2);
-    var schema_1 = require_schema2();
+    var schema_1 = require_schema3();
     Object.defineProperty(exports2, "octonodeJsonSchema", { enumerable: true, get: function() {
       return schema_1.octonodeJsonSchema;
     } });
