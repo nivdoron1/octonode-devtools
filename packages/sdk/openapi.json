@@ -18318,6 +18318,18 @@
                               "renderers"
                             ],
                             "additionalProperties": false
+                          },
+                          "language": {
+                            "type": "string"
+                          },
+                          "trigger": {
+                            "type": "boolean"
+                          },
+                          "env": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
                           }
                         },
                         "required": [
@@ -18595,8 +18607,24 @@
                     },
                     "attachedProjects": {
                       "type": "array",
-                      "maxItems": 0,
-                      "minItems": 0
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id"
+                        ]
+                      },
+                      "maxItems": 0
                     }
                   },
                   "required": [
@@ -18640,6 +18668,50 @@
           }
         },
         "parameters": [
+          {
+            "in": "query",
+            "name": "nodes",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "none",
+                "page"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "kind",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "action",
+                "trigger"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "id"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
           {
             "in": "query",
             "name": "q",
@@ -20078,6 +20150,50 @@
           }
         },
         "parameters": [
+          {
+            "in": "query",
+            "name": "nodes",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "none",
+                "page"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "kind",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "action",
+                "trigger"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "id"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
           {
             "in": "query",
             "name": "global",

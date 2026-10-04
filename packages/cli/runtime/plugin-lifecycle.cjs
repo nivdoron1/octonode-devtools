@@ -13487,6 +13487,7 @@ var require_installation = __commonJS({
       grants: exports2.appGrantsSchema
     }).strict();
     exports2.appInstallationsQuerySchema = zod_1.z.object({
+      appId: zod_1.z.string().uuid().optional(),
       offset: zod_1.z.coerce.number().int().min(0).max(1e6).default(0),
       q: zod_1.z.string().max(200).optional(),
       sort: zod_1.z.enum(["name", "installed", "updated"]).default("installed"),
