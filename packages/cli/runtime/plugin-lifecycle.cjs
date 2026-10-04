@@ -906,7 +906,22 @@ var require_constants = __commonJS({
       "content:read",
       "content:write",
       "content:publish",
-      "content:moderate"
+      "content:moderate",
+      "apps:read",
+      "apps:use",
+      "apps:manage",
+      "tokens:create",
+      "tokens:use",
+      "tokens:delegate",
+      "tokens:manage",
+      "policy:read",
+      "policy:manage",
+      "usage:read",
+      "usage:manage",
+      "remote:enroll",
+      "remote:connect",
+      "remote:execute",
+      "remote:manage"
     ];
     exports2.AGENT_RUN_STATUSES = [
       "queued",
@@ -929,6 +944,7 @@ var require_constants = __commonJS({
       "tool_failed",
       "step_limit",
       "token_limit",
+      "usage_limit",
       "permission_denied",
       "approval_denied",
       "conflict",
@@ -12499,6 +12515,736 @@ var require_tokens = __commonJS({
   }
 });
 
+// packages/schema/dist/access/constants.js
+var require_constants5 = __commonJS({
+  "packages/schema/dist/access/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ACCESS_INSPECTION_RESOURCES = exports2.ACCESS_RUN_ACTIONS = exports2.ACCESS_RUN_FEATURES = exports2.OWNER_RECOVERY_ACTIONS = exports2.ACTION_FEATURE = exports2.ACCESS_FEATURE_METERS = exports2.ACCESS_METER_UNITS = exports2.ACCESS_PROFILE_TEMPLATES = exports2.ACCESS_ENFORCED_METERS = exports2.LEGACY_WILDCARD_ACTIONS = exports2.NON_DELEGABLE_ACTIONS = exports2.MAX_CREDENTIAL_LIFETIME_SECONDS = exports2.ACCESS_CAPACITY_METERS = exports2.ACCESS_TOKEN_TYPES = exports2.ACCESS_METERS = exports2.ACCESS_FEATURES = exports2.ACCESS_TIERS = void 0;
+    exports2.ACCESS_TIERS = ["free", "pro", "max", "legacy"];
+    exports2.ACCESS_FEATURES = [
+      "projects",
+      "workflows",
+      "otto",
+      "apps",
+      "tasks",
+      "data",
+      "api_tokens",
+      "remote",
+      "members",
+      "teams",
+      "plugins",
+      "social",
+      "reviews",
+      "github",
+      "agents",
+      "billing",
+      "integrations",
+      "design",
+      "previews",
+      "terminal",
+      "content",
+      "administration"
+    ];
+    exports2.ACCESS_METERS = [
+      "executions",
+      "ai_credits",
+      "apps",
+      "api_tokens",
+      "tasks",
+      "data_rows",
+      "storage_bytes",
+      "remote_hosts",
+      "concurrent_runs"
+    ];
+    exports2.ACCESS_TOKEN_TYPES = ["personal", "service", "public", "agent", "assistant"];
+    exports2.ACCESS_CAPACITY_METERS = ["tasks", "data_rows", "storage_bytes", "concurrent_runs"];
+    exports2.MAX_CREDENTIAL_LIFETIME_SECONDS = 31536e4;
+    exports2.NON_DELEGABLE_ACTIONS = [
+      "tokens:create",
+      "tokens:delegate",
+      "tokens:manage",
+      "agents:manage",
+      "policy:read",
+      "policy:manage",
+      "usage:manage",
+      "org:settings",
+      "members:invite",
+      "members:manage",
+      "teams:manage",
+      "billing:read",
+      "billing:manage",
+      "workspace:delete"
+    ];
+    exports2.LEGACY_WILDCARD_ACTIONS = [
+      "projects:read",
+      "projects:write",
+      "workflows:run",
+      "data:read",
+      "data:write",
+      "tables:manage",
+      "members:invite",
+      "members:manage",
+      "teams:manage",
+      "plugins:publish",
+      "plugins:install",
+      "org:settings",
+      "social:read",
+      "social:write",
+      "social:moderate",
+      "tasks:read",
+      "tasks:write",
+      "tasks:manage",
+      "reviews:write",
+      "github:connect",
+      "github:publish",
+      "agents:manage",
+      "billing:read",
+      "billing:manage",
+      "integrations:read",
+      "integrations:manage",
+      "design:read",
+      "design:review",
+      "previews:read",
+      "previews:manage",
+      "terminal:use",
+      "workflow-agents:run",
+      "workflow-agents:manage",
+      "agent-operations:read",
+      "agent-operations:manage",
+      "data:export",
+      "data:restore",
+      "workspace:delete",
+      "content:read",
+      "content:write",
+      "content:publish",
+      "content:moderate",
+      "apps:read",
+      "apps:use"
+    ];
+    exports2.ACCESS_ENFORCED_METERS = [
+      "executions",
+      "ai_credits",
+      "apps",
+      "api_tokens",
+      "remote_hosts",
+      "tasks",
+      "data_rows",
+      "storage_bytes",
+      "concurrent_runs"
+    ];
+    exports2.ACCESS_PROFILE_TEMPLATES = [
+      {
+        version: 1,
+        tier: "free",
+        policy: {
+          deniedFeatures: ["remote"],
+          deniedActions: [],
+          limits: { apps: 1, api_tokens: 2, remote_hosts: 0 },
+          credentials: { deniedTypes: ["service", "public"], deniedScopes: [], maxLifetimeSeconds: 2592e3 }
+        }
+      },
+      {
+        version: 1,
+        tier: "pro",
+        policy: {
+          deniedFeatures: ["remote"],
+          deniedActions: [],
+          limits: { apps: 10, api_tokens: 20, remote_hosts: 0 },
+          credentials: { deniedTypes: ["public"], deniedScopes: [], maxLifetimeSeconds: 7776e3 }
+        }
+      },
+      {
+        version: 1,
+        tier: "max",
+        policy: {
+          deniedFeatures: [],
+          deniedActions: [],
+          limits: { apps: 50, api_tokens: 100, remote_hosts: 3 },
+          credentials: { deniedTypes: ["public"], deniedScopes: [], maxLifetimeSeconds: 7776e3 }
+        }
+      }
+    ];
+    exports2.ACCESS_METER_UNITS = {
+      executions: "per_month",
+      ai_credits: "per_month",
+      apps: "resident",
+      api_tokens: "resident",
+      tasks: "resident",
+      data_rows: "resident",
+      storage_bytes: "bytes",
+      remote_hosts: "resident",
+      concurrent_runs: "concurrent"
+    };
+    exports2.ACCESS_FEATURE_METERS = {
+      projects: [],
+      workflows: ["executions", "concurrent_runs"],
+      otto: ["ai_credits", "concurrent_runs"],
+      apps: ["apps"],
+      tasks: ["tasks"],
+      data: ["data_rows", "storage_bytes"],
+      api_tokens: ["api_tokens"],
+      remote: ["remote_hosts", "concurrent_runs"],
+      members: [],
+      teams: [],
+      plugins: [],
+      social: ["storage_bytes"],
+      reviews: [],
+      github: [],
+      agents: ["api_tokens"],
+      billing: [],
+      integrations: [],
+      design: [],
+      previews: [],
+      terminal: ["concurrent_runs"],
+      content: [],
+      administration: []
+    };
+    exports2.ACTION_FEATURE = {
+      "projects:read": "projects",
+      "projects:write": "projects",
+      "workflows:run": "workflows",
+      "data:read": "data",
+      "data:write": "data",
+      "tables:manage": "data",
+      "members:invite": "members",
+      "members:manage": "members",
+      "teams:manage": "teams",
+      "plugins:publish": "plugins",
+      "plugins:install": "plugins",
+      "org:settings": "administration",
+      "social:read": "social",
+      "social:write": "social",
+      "social:moderate": "social",
+      "tasks:read": "tasks",
+      "tasks:write": "tasks",
+      "tasks:manage": "tasks",
+      "reviews:write": "reviews",
+      "github:connect": "github",
+      "github:publish": "github",
+      "agents:manage": "agents",
+      "billing:read": "billing",
+      "billing:manage": "billing",
+      "integrations:read": "integrations",
+      "integrations:manage": "integrations",
+      "design:read": "design",
+      "design:review": "design",
+      "previews:read": "previews",
+      "previews:manage": "previews",
+      "terminal:use": "terminal",
+      "workflow-agents:run": "otto",
+      "workflow-agents:manage": "otto",
+      "agent-operations:read": "otto",
+      "agent-operations:manage": "otto",
+      "data:export": "data",
+      "data:restore": "data",
+      "workspace:delete": null,
+      "content:read": "content",
+      "content:write": "content",
+      "content:publish": "content",
+      "content:moderate": "content",
+      "apps:read": "apps",
+      "apps:use": "apps",
+      "apps:manage": "apps",
+      "tokens:create": "api_tokens",
+      "tokens:use": "api_tokens",
+      "tokens:delegate": "api_tokens",
+      "tokens:manage": null,
+      "policy:read": "administration",
+      "policy:manage": "administration",
+      "usage:read": "administration",
+      "usage:manage": "administration",
+      "remote:enroll": "remote",
+      "remote:connect": "remote",
+      "remote:execute": "remote",
+      "remote:manage": null
+    };
+    exports2.OWNER_RECOVERY_ACTIONS = [
+      "policy:read",
+      "policy:manage",
+      "usage:read",
+      "usage:manage",
+      "tokens:manage",
+      "agents:manage",
+      "members:manage",
+      "billing:read",
+      "billing:manage",
+      "org:settings",
+      "workspace:delete",
+      "remote:manage"
+    ];
+    exports2.ACCESS_RUN_FEATURES = ["workflows", "otto", "remote", "terminal"];
+    exports2.ACCESS_RUN_ACTIONS = {
+      workflows: "workflows:run",
+      otto: "workflow-agents:run",
+      remote: "remote:execute",
+      terminal: "terminal:use"
+    };
+    exports2.ACCESS_INSPECTION_RESOURCES = ["project", "table", "app", "task", "remote_host"];
+  }
+});
+
+// packages/schema/dist/access/policy.js
+var require_policy = __commonJS({
+  "packages/schema/dist/access/policy.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.accessCredentialRevokeSchema = exports2.accessCredentialsSchema = exports2.accessCredentialSchema = exports2.accessCredentialsQuerySchema = exports2.accessUsageSchema = exports2.accessScopesSchema = exports2.accessScopesQuerySchema = exports2.accessCatalogSchema = exports2.accessPolicyHistorySchema = exports2.accessImpactResultSchema = exports2.accessImpactSchema = exports2.accessInspectionResultSchema = exports2.accessInspectionSchema = exports2.accessCredentialRefSchema = exports2.accessEffectiveQuerySchema = exports2.accessPolicyQuerySchema = exports2.effectiveAccessSchema = exports2.accessDecisionSchema = exports2.accessReasonSchema = exports2.accessPolicyHeadSchema = exports2.accessPolicyRecordSchema = exports2.accessPolicyWriteSchema = exports2.accessPolicyTargetSchema = exports2.accessProfileSchema = exports2.accessPolicySchema = exports2.credentialPolicySchema = exports2.accessLimitsSchema = exports2.accessLimitSchema = exports2.accessMeterSchema = exports2.accessFeatureSchema = void 0;
+    var constants_js_1 = require_constants5();
+    var zod_1 = require("zod");
+    var constants_js_2 = require_constants();
+    var constants_js_3 = require_constants5();
+    exports2.accessFeatureSchema = zod_1.z.enum(constants_js_3.ACCESS_FEATURES);
+    exports2.accessMeterSchema = zod_1.z.enum(constants_js_3.ACCESS_METERS);
+    exports2.accessLimitSchema = zod_1.z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+    exports2.accessLimitsSchema = zod_1.z.object({
+      executions: exports2.accessLimitSchema.optional(),
+      ai_credits: exports2.accessLimitSchema.optional(),
+      apps: exports2.accessLimitSchema.optional(),
+      api_tokens: exports2.accessLimitSchema.optional(),
+      tasks: exports2.accessLimitSchema.optional(),
+      data_rows: exports2.accessLimitSchema.optional(),
+      storage_bytes: exports2.accessLimitSchema.optional(),
+      remote_hosts: exports2.accessLimitSchema.optional(),
+      concurrent_runs: exports2.accessLimitSchema.optional()
+    }).strict().superRefine((limits, ctx) => {
+      for (const meter of constants_js_3.ACCESS_METERS)
+        if (typeof limits[meter] === "number" && !constants_js_3.ACCESS_ENFORCED_METERS.includes(meter))
+          ctx.addIssue({ code: "custom", path: [meter], message: "This meter is not available for hard limits yet" });
+    });
+    exports2.credentialPolicySchema = zod_1.z.object({
+      deniedTypes: zod_1.z.array(zod_1.z.enum(constants_js_3.ACCESS_TOKEN_TYPES)).max(constants_js_3.ACCESS_TOKEN_TYPES.length).default([]),
+      deniedScopes: zod_1.z.array(zod_1.z.enum(constants_js_2.WORKSPACE_ACTIONS)).max(constants_js_2.WORKSPACE_ACTIONS.length).default([]),
+      maxLifetimeSeconds: zod_1.z.number().int().positive().max(constants_js_3.MAX_CREDENTIAL_LIFETIME_SECONDS).nullable().default(null)
+    }).strict();
+    exports2.accessPolicySchema = zod_1.z.object({
+      deniedFeatures: zod_1.z.array(exports2.accessFeatureSchema).max(constants_js_3.ACCESS_FEATURES.length).default([]),
+      deniedActions: zod_1.z.array(zod_1.z.enum(constants_js_2.WORKSPACE_ACTIONS)).max(constants_js_2.WORKSPACE_ACTIONS.length).default([]),
+      limits: exports2.accessLimitsSchema.default({}),
+      credentials: exports2.credentialPolicySchema.default({})
+    }).strict();
+    exports2.accessProfileSchema = zod_1.z.object({
+      version: zod_1.z.literal(1),
+      tier: zod_1.z.enum(constants_js_3.ACCESS_TIERS),
+      policy: exports2.accessPolicySchema
+    }).strict();
+    exports2.accessPolicyTargetSchema = zod_1.z.object({
+      kind: zod_1.z.enum(["platform", "tier", "user", "org", "team"]),
+      id: zod_1.z.string().min(1).max(128),
+      memberId: zod_1.z.string().min(1).max(128).nullable().default(null)
+    }).strict().superRefine((target, ctx) => {
+      if (target.kind === "platform" && (target.id !== "platform" || target.memberId))
+        ctx.addIssue({ code: "custom", message: "Platform policies have a single platform target" });
+      if (target.kind === "tier" && (!constants_js_3.ACCESS_TIERS.some((tier) => tier === target.id) || target.memberId))
+        ctx.addIssue({ code: "custom", message: "Tier policies require a known tier and no member" });
+      if (target.kind === "user" && target.memberId)
+        ctx.addIssue({ code: "custom", message: "Personal policies cannot target another member" });
+    });
+    exports2.accessPolicyWriteSchema = zod_1.z.object({
+      target: exports2.accessPolicyTargetSchema,
+      revision: zod_1.z.number().int().nonnegative(),
+      policy: exports2.accessPolicySchema,
+      reason: zod_1.z.string().trim().min(3).max(1e3)
+    }).strict();
+    exports2.accessPolicyRecordSchema = exports2.accessPolicyWriteSchema.extend({
+      updatedBy: zod_1.z.string(),
+      updatedAt: zod_1.z.number().int().nonnegative()
+    });
+    exports2.accessPolicyHeadSchema = exports2.accessPolicyRecordSchema.extend({
+      canManage: zod_1.z.boolean(),
+      canManageCredentials: zod_1.z.boolean(),
+      canReadUsage: zod_1.z.boolean(),
+      canManageUsage: zod_1.z.boolean()
+    });
+    exports2.accessReasonSchema = zod_1.z.enum([
+      "allowed",
+      "role_denied",
+      "plan_denied",
+      "policy_denied",
+      "credential_denied",
+      "resource_denied",
+      "not_released"
+    ]);
+    exports2.accessDecisionSchema = zod_1.z.object({
+      action: zod_1.z.enum(constants_js_2.WORKSPACE_ACTIONS),
+      allowed: zod_1.z.boolean(),
+      reason: exports2.accessReasonSchema,
+      source: zod_1.z.string().nullable()
+    });
+    exports2.effectiveAccessSchema = zod_1.z.object({
+      workspace: zod_1.z.object({ kind: zod_1.z.enum(["user", "org", "team"]), id: zod_1.z.string() }),
+      tier: zod_1.z.enum(constants_js_3.ACCESS_TIERS),
+      fundingWorkspace: zod_1.z.object({ kind: zod_1.z.enum(["user", "org", "team"]), id: zod_1.z.string() }),
+      decisions: zod_1.z.array(exports2.accessDecisionSchema),
+      deniedFeatures: zod_1.z.array(exports2.accessFeatureSchema).default([]),
+      limits: exports2.accessLimitsSchema,
+      credentials: exports2.credentialPolicySchema,
+      revisions: zod_1.z.array(zod_1.z.object({ source: zod_1.z.string(), revision: zod_1.z.number().int().nonnegative() }))
+    });
+    exports2.accessPolicyQuerySchema = zod_1.z.object({
+      kind: zod_1.z.enum(["platform", "tier", "user", "org", "team"]),
+      id: zod_1.z.string().min(1).max(128),
+      memberId: zod_1.z.string().min(1).max(128).optional(),
+      before: zod_1.z.coerce.number().int().positive().default(Number.MAX_SAFE_INTEGER),
+      limit: zod_1.z.coerce.number().int().min(1).max(100).default(25)
+    });
+    exports2.accessEffectiveQuerySchema = zod_1.z.object({
+      workspace: zod_1.z.string().regex(/^(user|org|team):[^:]+$/).max(256)
+    });
+    exports2.accessCredentialRefSchema = zod_1.z.object({ store: zod_1.z.enum(["api", "agent"]), id: zod_1.z.string().min(1).max(128) }).strict();
+    exports2.accessInspectionSchema = zod_1.z.object({
+      workspace: zod_1.z.object({ kind: zod_1.z.enum(["user", "org", "team"]), id: zod_1.z.string().min(1).max(128) }),
+      userId: zod_1.z.string().min(1).max(128),
+      draft: exports2.accessPolicyWriteSchema.optional(),
+      credential: exports2.accessCredentialRefSchema.optional(),
+      projectId: zod_1.z.string().min(1).max(128).optional(),
+      resource: zod_1.z.object({ kind: zod_1.z.enum(constants_js_1.ACCESS_INSPECTION_RESOURCES), id: zod_1.z.string().min(1).max(128) }).strict().optional()
+    }).strict();
+    exports2.accessInspectionResultSchema = zod_1.z.object({
+      current: exports2.effectiveAccessSchema,
+      proposed: exports2.effectiveAccessSchema,
+      changedActions: zod_1.z.array(zod_1.z.enum(constants_js_2.WORKSPACE_ACTIONS)),
+      changedFeatures: zod_1.z.array(exports2.accessFeatureSchema).default([]),
+      changedLimits: zod_1.z.array(exports2.accessMeterSchema).default([]),
+      credentialsChanged: zod_1.z.boolean().default(false),
+      resource: zod_1.z.object({
+        kind: zod_1.z.enum(constants_js_1.ACCESS_INSPECTION_RESOURCES),
+        id: zod_1.z.string(),
+        projectId: zod_1.z.string().nullable(),
+        deniedActions: zod_1.z.array(zod_1.z.enum(constants_js_2.WORKSPACE_ACTIONS)).default([])
+      }).nullable().default(null)
+    });
+    exports2.accessImpactSchema = exports2.accessInspectionSchema.omit({ userId: true, credential: true }).extend({
+      draft: exports2.accessPolicyWriteSchema,
+      cursor: zod_1.z.string().max(500).optional(),
+      limit: zod_1.z.number().int().min(1).max(25).default(10)
+    });
+    exports2.accessImpactResultSchema = zod_1.z.object({
+      items: zod_1.z.array(zod_1.z.object({
+        workspace: exports2.accessInspectionSchema.shape.workspace,
+        userId: zod_1.z.string(),
+        changedActions: zod_1.z.array(zod_1.z.enum(constants_js_2.WORKSPACE_ACTIONS)),
+        changedFeatures: zod_1.z.array(exports2.accessFeatureSchema),
+        changedLimits: zod_1.z.array(exports2.accessMeterSchema),
+        credentialsChanged: zod_1.z.boolean()
+      })),
+      scanned: zod_1.z.number().int().nonnegative(),
+      nextCursor: zod_1.z.string().nullable()
+    });
+    exports2.accessPolicyHistorySchema = zod_1.z.object({
+      items: zod_1.z.array(exports2.accessPolicyRecordSchema),
+      nextCursor: zod_1.z.number().nullable()
+    });
+    exports2.accessCatalogSchema = zod_1.z.object({
+      features: zod_1.z.array(exports2.accessFeatureSchema),
+      actions: zod_1.z.array(zod_1.z.enum(constants_js_2.WORKSPACE_ACTIONS)),
+      meters: zod_1.z.array(zod_1.z.object({
+        key: exports2.accessMeterSchema,
+        unit: zod_1.z.enum(["per_month", "resident", "bytes", "concurrent"]),
+        enforced: zod_1.z.boolean()
+      })),
+      tokenTypes: zod_1.z.array(zod_1.z.enum(constants_js_3.ACCESS_TOKEN_TYPES)),
+      templates: zod_1.z.array(exports2.accessProfileSchema)
+    });
+    exports2.accessScopesQuerySchema = zod_1.z.object({
+      kind: zod_1.z.enum(["platform", "user", "org", "team"]),
+      id: zod_1.z.string().min(1).max(128),
+      search: zod_1.z.string().max(100).default(""),
+      cursor: zod_1.z.string().max(400).optional(),
+      limit: zod_1.z.coerce.number().int().min(1).max(100).default(25)
+    });
+    exports2.accessScopesSchema = zod_1.z.object({
+      items: zod_1.z.array(zod_1.z.object({ target: exports2.accessPolicyTargetSchema, name: zod_1.z.string(), role: zod_1.z.string().nullable() })),
+      nextCursor: zod_1.z.string().nullable()
+    });
+    exports2.accessUsageSchema = zod_1.z.object({
+      target: exports2.accessPolicyTargetSchema,
+      periodStart: zod_1.z.number(),
+      periodEnd: zod_1.z.number(),
+      meters: zod_1.z.array(zod_1.z.object({
+        key: exports2.accessMeterSchema,
+        used: zod_1.z.number().nonnegative().nullable(),
+        limit: exports2.accessLimitSchema,
+        source: zod_1.z.string(),
+        unit: zod_1.z.enum(["per_month", "resident", "bytes", "concurrent"])
+      }))
+    });
+    exports2.accessCredentialsQuerySchema = exports2.accessScopesQuerySchema.extend({
+      memberId: zod_1.z.string().min(1).max(128).optional(),
+      type: zod_1.z.enum(constants_js_3.ACCESS_TOKEN_TYPES).optional(),
+      status: zod_1.z.enum(["active", "expired", "revoked", "all"]).default("active")
+    });
+    exports2.accessCredentialSchema = exports2.accessCredentialRefSchema.extend({
+      ownerId: zod_1.z.string(),
+      name: zod_1.z.string(),
+      type: zod_1.z.enum(constants_js_3.ACCESS_TOKEN_TYPES),
+      prefix: zod_1.z.string(),
+      workspace: zod_1.z.string(),
+      projectId: zod_1.z.string().nullable(),
+      scopes: zod_1.z.array(zod_1.z.string()),
+      createdAt: zod_1.z.number(),
+      expiresAt: zod_1.z.number().nullable(),
+      lastUsedAt: zod_1.z.number().nullable(),
+      revokedAt: zod_1.z.number().nullable()
+    });
+    exports2.accessCredentialsSchema = zod_1.z.object({
+      items: zod_1.z.array(exports2.accessCredentialSchema),
+      nextCursor: zod_1.z.string().nullable()
+    });
+    exports2.accessCredentialRevokeSchema = exports2.accessCredentialRefSchema.extend({ reason: zod_1.z.string().trim().min(3).max(1e3) }).strict();
+  }
+});
+
+// packages/schema/dist/access/types.js
+var require_types = __commonJS({
+  "packages/schema/dist/access/types.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+  }
+});
+
+// packages/schema/dist/access/resolve.js
+var require_resolve = __commonJS({
+  "packages/schema/dist/access/resolve.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.resolveAccess = resolveAccess;
+    var constants_js_1 = require_constants();
+    var constants_js_2 = require_constants5();
+    function resolveAccess(input) {
+      const limits = {};
+      let credentials = { deniedTypes: [], deniedScopes: [], maxLifetimeSeconds: null };
+      for (const source of input.sources) {
+        for (const meter of constants_js_2.ACCESS_METERS) {
+          const next2 = source.policy.limits[meter];
+          if (next2 === void 0)
+            continue;
+          const previous = limits[meter];
+          limits[meter] = next2 === null ? previous ?? null : previous == null ? next2 : Math.min(previous, next2);
+        }
+        const next = source.policy.credentials;
+        credentials = {
+          deniedTypes: [.../* @__PURE__ */ new Set([...credentials.deniedTypes, ...next.deniedTypes])],
+          deniedScopes: [.../* @__PURE__ */ new Set([...credentials.deniedScopes, ...next.deniedScopes])],
+          maxLifetimeSeconds: next.maxLifetimeSeconds === null ? credentials.maxLifetimeSeconds : credentials.maxLifetimeSeconds === null ? next.maxLifetimeSeconds : Math.min(credentials.maxLifetimeSeconds, next.maxLifetimeSeconds)
+        };
+      }
+      const decisions = constants_js_1.WORKSPACE_ACTIONS.map((action) => {
+        if (!input.permissions[action])
+          return { action, allowed: false, reason: "role_denied", source: "role" };
+        const feature = constants_js_2.ACTION_FEATURE[action];
+        if (feature === "remote" && !input.remoteReady)
+          return { action, allowed: false, reason: "not_released", source: "deployment" };
+        for (const source of input.sources) {
+          if (input.owner && source.source !== "platform" && constants_js_2.OWNER_RECOVERY_ACTIONS.includes(action))
+            continue;
+          if (source.policy.deniedActions.includes(action) || feature && source.policy.deniedFeatures.includes(feature))
+            return {
+              action,
+              allowed: false,
+              reason: source.source === "plan" ? "plan_denied" : "policy_denied",
+              source: source.source
+            };
+        }
+        return { action, allowed: true, reason: "allowed", source: null };
+      });
+      return {
+        decisions,
+        limits,
+        credentials,
+        deniedFeatures: [...new Set(input.sources.flatMap((source) => source.policy.deniedFeatures))]
+      };
+    }
+  }
+});
+
+// packages/schema/dist/access/capacity.js
+var require_capacity = __commonJS({
+  "packages/schema/dist/access/capacity.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.accessRunReservationSchema = exports2.capacityResponseSchema = exports2.capacityRequestSchema = exports2.capacityPrincipalSchema = exports2.capacityClaimSchema = exports2.capacityOwnerSchema = exports2.capacityUsageSchema = exports2.capacityQuantitiesSchema = void 0;
+    var constants_js_1 = require_constants5();
+    var zod_1 = require("zod");
+    var collaboration_js_1 = require_collaboration();
+    var constants_js_2 = require_constants();
+    exports2.capacityQuantitiesSchema = zod_1.z.object({
+      tasks: zod_1.z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).default(0),
+      data_rows: zod_1.z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).default(0),
+      storage_bytes: zod_1.z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).default(0),
+      concurrent_runs: zod_1.z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).default(0)
+    }).strict();
+    exports2.capacityUsageSchema = zod_1.z.record(zod_1.z.string().max(128), exports2.capacityQuantitiesSchema);
+    exports2.capacityOwnerSchema = zod_1.z.object({
+      id: zod_1.z.string().min(1).max(256),
+      workspace: zod_1.z.object({ kind: zod_1.z.enum(["user", "org", "team"]), id: zod_1.z.string().min(1).max(128) }),
+      category: zod_1.z.enum(["tasks", "tables", "attachments", "runs"]),
+      revision: zod_1.z.number().int().nonnegative(),
+      usage: exports2.capacityUsageSchema
+    }).strict();
+    exports2.capacityClaimSchema = zod_1.z.object({
+      owner: exports2.capacityOwnerSchema,
+      projectId: zod_1.z.string().min(1).max(128).optional(),
+      operationId: zod_1.z.string().uuid(),
+      proposed: exports2.capacityUsageSchema
+    }).strict();
+    exports2.capacityPrincipalSchema = zod_1.z.discriminatedUnion("kind", [
+      zod_1.z.object({ kind: zod_1.z.literal("user"), userId: zod_1.z.string().min(1).max(128), apiTokenId: zod_1.z.string().max(128).optional() }),
+      zod_1.z.object({
+        kind: zod_1.z.literal("agent"),
+        agentId: zod_1.z.string().min(1).max(128),
+        apiTokenOwnerId: zod_1.z.string().max(128).optional(),
+        workspace: collaboration_js_1.workspaceRefSchema,
+        projectId: zod_1.z.string().max(128).nullable(),
+        scopes: zod_1.z.array(collaboration_js_1.agentScopeSchema).max(constants_js_2.WORKSPACE_ACTIONS.length)
+      })
+    ]);
+    exports2.capacityRequestSchema = zod_1.z.discriminatedUnion("operation", [
+      zod_1.z.object({ operation: zod_1.z.literal("recover"), owner: exports2.capacityOwnerSchema }).strict(),
+      zod_1.z.object({
+        operation: zod_1.z.literal("replace"),
+        operationId: zod_1.z.string().uuid(),
+        owners: zod_1.z.array(exports2.capacityOwnerSchema).min(1).max(4),
+        principal: exports2.capacityPrincipalSchema.optional(),
+        projectId: zod_1.z.string().max(128).optional()
+      }).strict(),
+      zod_1.z.object({ operation: zod_1.z.literal("register"), owner: exports2.capacityOwnerSchema }).strict(),
+      zod_1.z.object({
+        operation: zod_1.z.literal("reserve"),
+        principal: exports2.capacityPrincipalSchema,
+        action: zod_1.z.enum(constants_js_2.WORKSPACE_ACTIONS),
+        claim: exports2.capacityClaimSchema
+      }).strict(),
+      zod_1.z.object({ operation: zod_1.z.literal("reduce"), claim: exports2.capacityClaimSchema }).strict(),
+      zod_1.z.object({
+        operation: zod_1.z.literal("settle"),
+        owner: exports2.capacityOwnerSchema,
+        operationId: zod_1.z.string().uuid(),
+        committed: zod_1.z.boolean()
+      }).strict(),
+      zod_1.z.object({
+        operation: zod_1.z.literal("check"),
+        principal: exports2.capacityPrincipalSchema,
+        workspace: collaboration_js_1.workspaceRefSchema,
+        projectId: zod_1.z.string().min(1).max(128).optional(),
+        action: zod_1.z.enum(constants_js_2.WORKSPACE_ACTIONS),
+        epoch: zod_1.z.number().int().nonnegative()
+      }).strict()
+    ]);
+    exports2.capacityResponseSchema = zod_1.z.object({
+      owner: exports2.capacityOwnerSchema.optional(),
+      epoch: zod_1.z.number().int().nonnegative().optional(),
+      status: zod_1.z.enum(["reserved", "settled"]).optional(),
+      revisions: zod_1.z.record(zod_1.z.string(), zod_1.z.number().int().nonnegative()).optional()
+    });
+    exports2.accessRunReservationSchema = zod_1.z.object({
+      workspace: collaboration_js_1.workspaceRefSchema,
+      feature: zod_1.z.enum(constants_js_1.ACCESS_RUN_FEATURES),
+      id: zod_1.z.string().min(1).max(100).regex(/^[a-zA-Z0-9_-]+$/),
+      projectId: zod_1.z.string().min(1).max(128).optional()
+    }).strict();
+  }
+});
+
+// packages/schema/dist/access/routes/constants.js
+var require_constants6 = __commonJS({
+  "packages/schema/dist/access/routes/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ACCESS_ROUTE_FEATURES = void 0;
+    exports2.ACCESS_ROUTE_FEATURES = {
+      access: null,
+      auth: null,
+      billing: null,
+      capabilities: null,
+      config: "projects",
+      desktop: "remote",
+      health: null,
+      identity: null,
+      organizations: null,
+      profile: null,
+      profiles: null,
+      registry: "plugins",
+      "super-admin": null,
+      "workspace-admin": null,
+      workspaces: null,
+      ai: "otto",
+      assistant: "otto",
+      apps: "apps",
+      architectures: "reviews",
+      community: "content",
+      customization: "projects",
+      "design-documents": "design",
+      executions: "workflows",
+      folders: "projects",
+      git: "projects",
+      github: "github",
+      gitlab: "integrations",
+      knowledge: "otto",
+      marketplace: "plugins",
+      "native-nodes": "plugins",
+      nodes: "plugins",
+      parser: "projects",
+      plugins: "plugins",
+      "project-jobs": "projects",
+      projects: "projects",
+      "remote-hosts": "remote",
+      "review-comments": "reviews",
+      "review-suggestions": "reviews",
+      "review-threads": "reviews",
+      runs: "workflows",
+      search: "projects",
+      slack: "integrations",
+      social: "social",
+      "source-repositories": "projects",
+      store: "projects",
+      "task-spaces": "tasks",
+      templates: "workflows",
+      terminal: "terminal",
+      tokens: null,
+      variables: "data",
+      webhooks: "workflows",
+      wf: "workflows",
+      "work-items": "tasks",
+      workflows: "workflows",
+      "workspace-agents": "agents"
+    };
+  }
+});
+
+// packages/schema/dist/access/routes/resolve.js
+var require_resolve2 = __commonJS({
+  "packages/schema/dist/access/routes/resolve.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.routeAccessFeatures = routeAccessFeatures;
+    var constants_js_1 = require_constants6();
+    function routeAccessFeatures(path) {
+      if (path === "/wf/exec")
+        return ["workflows"];
+      const [, api, root] = path.split("/");
+      if (api !== "api" || !Object.hasOwn(constants_js_1.ACCESS_ROUTE_FEATURES, root))
+        return null;
+      if (root === "search")
+        return ["projects", "workflows", "plugins", "data"];
+      if (/\/(?:data-tables|data-table-schema|sql|variables)(?:\/|$)/.test(path))
+        return ["data"];
+      if (root === "marketplace" && /\/apps(?:\/|$)|\/app-development(?:\/|$)|\/app-tunnels(?:\/|$)/.test(path))
+        return ["apps"];
+      if (/\/nodes\/[^/]+\/invoke$/.test(path))
+        return ["workflows"];
+      if (root === "projects" && /\/(?:claude|assistant)(?:\/|$)/.test(path))
+        return ["otto"];
+      if (root === "projects" && path.endsWith("/persist"))
+        return ["terminal"];
+      if (root === "projects" && /\/(?:workflows|test-workflows|runs|executions)(?:\/|$)/.test(path))
+        return ["workflows"];
+      const feature = constants_js_1.ACCESS_ROUTE_FEATURES[root];
+      return feature ? [feature] : [];
+    }
+  }
+});
+
 // packages/schema/dist/app/analytics.js
 var require_analytics = __commonJS({
   "packages/schema/dist/app/analytics.js"(exports2) {
@@ -13398,6 +14144,7 @@ var require_billing = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.billingHierarchySchema = exports2.billingHierarchyInputSchema = exports2.billingChangeSchema = exports2.billingSelectionSchema = exports2.billingCatalogSchema = exports2.billingCreditPackSchema = exports2.billingOfferSchema = void 0;
     var zod_1 = require("zod");
+    var policy_js_1 = require_policy();
     var capacityAddonSchema = zod_1.z.object({
       addonId: zod_1.z.string().min(1).max(100),
       units: zod_1.z.number().int().positive().max(1e8),
@@ -13419,6 +14166,7 @@ var require_billing = __commonJS({
       annualDiscountPercent: zod_1.z.number().min(0).max(99),
       includedExecutions: zod_1.z.number().int().positive().max(1e8),
       includedAiCredits: zod_1.z.number().int().positive().max(1e8),
+      access: policy_js_1.accessProfileSchema.optional(),
       seatAddonId: zod_1.z.string().min(1).max(100).nullable(),
       executionAddon: capacityAddonSchema.nullable(),
       aiAddon: capacityAddonSchema.nullable(),
@@ -13452,9 +14200,16 @@ var require_billing = __commonJS({
       revision: zod_1.z.number().int().nonnegative(),
       freeExecutions: zod_1.z.number().int().positive().max(1e8),
       freeAiCredits: zod_1.z.number().int().positive().max(1e8),
+      freeAccess: policy_js_1.accessProfileSchema.optional(),
       offers: zod_1.z.array(exports2.billingOfferSchema).max(100),
       creditPacks: zod_1.z.array(exports2.billingCreditPackSchema).max(100).default([])
     }).strict().superRefine((catalog, ctx) => {
+      if (catalog.freeAccess && catalog.freeAccess.tier !== "free")
+        ctx.addIssue({
+          code: "custom",
+          path: ["freeAccess", "tier"],
+          message: "The Free profile must use the free tier"
+        });
       const products = [...catalog.offers, ...catalog.creditPacks].map((item) => item.productId);
       if (new Set(products).size !== products.length)
         ctx.addIssue({ code: "custom", message: "Product IDs must be unique" });
@@ -13489,7 +14244,7 @@ var require_billing = __commonJS({
 });
 
 // packages/schema/dist/remote/types.js
-var require_types = __commonJS({
+var require_types2 = __commonJS({
   "packages/schema/dist/remote/types.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13497,7 +14252,7 @@ var require_types = __commonJS({
 });
 
 // packages/schema/dist/remote/policy.js
-var require_policy = __commonJS({
+var require_policy2 = __commonJS({
   "packages/schema/dist/remote/policy.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13718,8 +14473,8 @@ var require_remote = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     __exportStar(require_constants3(), exports2);
     __exportStar(require_schema2(), exports2);
-    __exportStar(require_types(), exports2);
-    __exportStar(require_policy(), exports2);
+    __exportStar(require_types2(), exports2);
+    __exportStar(require_policy2(), exports2);
     __exportStar(require_channel(), exports2);
   }
 });
@@ -13773,7 +14528,7 @@ var require_hosting = __commonJS({
 });
 
 // packages/schema/dist/assistant/instructions/constants.js
-var require_constants5 = __commonJS({
+var require_constants7 = __commonJS({
   "packages/schema/dist/assistant/instructions/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13792,7 +14547,7 @@ var require_instructions = __commonJS({
     exports2.assistantProjectInstructionsSchema = void 0;
     exports2.isProjectInstructionPath = isProjectInstructionPath;
     var zod_1 = require("zod");
-    var constants_js_1 = require_constants5();
+    var constants_js_1 = require_constants7();
     exports2.assistantProjectInstructionsSchema = zod_1.z.object({
       files: zod_1.z.array(zod_1.z.object({
         path: zod_1.z.string().max(1024),
@@ -13900,6 +14655,12 @@ var require_dist = __commonJS({
     __exportStar(require_icons(), exports2);
     __exportStar(require_settings(), exports2);
     __exportStar(require_tokens(), exports2);
+    __exportStar(require_constants5(), exports2);
+    __exportStar(require_policy(), exports2);
+    __exportStar(require_types(), exports2);
+    __exportStar(require_resolve(), exports2);
+    __exportStar(require_capacity(), exports2);
+    __exportStar(require_resolve2(), exports2);
     __exportStar(require_plugin(), exports2);
     __exportStar(require_app(), exports2);
     __exportStar(require_contributions(), exports2);
@@ -13939,13 +14700,13 @@ var require_dist = __commonJS({
     __exportStar(require_remote(), exports2);
     __exportStar(require_hosting(), exports2);
     __exportStar(require_instructions(), exports2);
-    __exportStar(require_constants5(), exports2);
+    __exportStar(require_constants7(), exports2);
     __exportStar(require_catalog(), exports2);
   }
 });
 
 // packages/plugin-runtime/dist/constants.js
-var require_constants6 = __commonJS({
+var require_constants8 = __commonJS({
   "packages/plugin-runtime/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -14074,7 +14835,7 @@ var require_runner = __commonJS({
     exports2.start = start;
     var node_console_1 = require("node:console");
     var schema_1 = require_dist();
-    var constants_js_1 = require_constants6();
+    var constants_js_1 = require_constants8();
     var schema_js_1 = require_schema4();
     var NodeError = class extends Error {
       constructor(message, opts) {
@@ -14390,7 +15151,7 @@ var require_runner = __commonJS({
 });
 
 // packages/common/dist/constants.js
-var require_constants7 = __commonJS({
+var require_constants9 = __commonJS({
   "packages/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -14748,6 +15509,8 @@ var require_routing = __commonJS({
     exports2.controlPlanePath = controlPlanePath;
     exports2.workspaceRef = workspaceRef;
     function controlPlanePath(url, method = "GET") {
+      if (/^\/api\/access\/(?:effective|catalog|policy|history|inspect|impact|usage|scopes|credentials)(?:\/[^/]+)?$/.test(url.pathname))
+        return `${url.pathname.slice(4)}${url.search}`;
       const hosting = url.pathname.match(/^\/api\/organizations\/([^/]+)\/(hosting|storage-connections)(?:\/[^/]+(?:\/(?:validate|rotate|[a-f0-9]{64}))?)?$/);
       if (hosting)
         return url.pathname.replace(/^\/api\/organizations\//, "/orgs/") + url.search;
@@ -14929,7 +15692,7 @@ var require_dist2 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.compareWorkflowGraphs = exports2.edgeChanges = exports2.graphValues = exports2.graphValue = exports2.workspaceRef = exports2.controlPlanePath = exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
-    __exportStar(require_constants7(), exports2);
+    __exportStar(require_constants9(), exports2);
     __exportStar(require_legal_constants(), exports2);
     var cache_js_1 = require_cache();
     Object.defineProperty(exports2, "packageCacheEnvironment", { enumerable: true, get: function() {
