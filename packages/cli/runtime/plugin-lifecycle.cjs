@@ -4932,6 +4932,13 @@ var require_draft = __commonJS({
       label: zod_1.z.string().trim().min(1).max(120),
       description: zod_1.z.string().max(2e3),
       groupId: draftId.optional(),
+      creation: zod_1.z.object({
+        template: zod_1.z.enum(["project", "package", "workflow", "data-table"]),
+        path: zod_1.z.string().min(1).max(512).regex(/^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+$/).optional(),
+        projectId: zod_1.z.string().min(1).max(512).optional(),
+        packageName: zod_1.z.string().regex(/^(?:@[a-z0-9._-]+\/)?[a-z0-9][a-z0-9._-]*$/).max(214).optional()
+      }).strict().optional(),
+      implementation: zod_1.z.string().max(512).optional(),
       position: zod_1.z.object({ x: zod_1.z.number().finite().min(-1e5).max(1e5), y: zod_1.z.number().finite().min(-1e5).max(1e5) }).strict().optional()
     }).strict();
     exports2.ArchitectureDraft = zod_1.z.object({
@@ -4941,7 +4948,7 @@ var require_draft = __commonJS({
       items: zod_1.z.array(exports2.ArchitectureDraftItem).max(200),
       connections: zod_1.z.array(architecture_js_1.ArchitectureEdge.pick({ from: true, to: true, relation: true }).extend({ id: draftId }).strict()).max(500)
     }).strict();
-    exports2.ArchitectureDraftResult = zod_1.z.object({ draft: exports2.ArchitectureDraft.nullable(), revision: revision.nullable() }).strict();
+    exports2.ArchitectureDraftResult = zod_1.z.object({ draft: exports2.ArchitectureDraft.nullable(), revision: revision.nullable(), pendingToken: revision.optional() }).strict();
     exports2.SaveArchitectureDraft = zod_1.z.object({ draft: exports2.ArchitectureDraft, revision: revision.nullable() }).strict();
     exports2.ArchitectureDraftReview = zod_1.z.object({
       token: revision,
@@ -4958,13 +4965,23 @@ var require_draft = __commonJS({
           "self_dependency",
           "cycle",
           "partial_projection",
-          "unavailable_project"
+          "unavailable_project",
+          "invalid_creation",
+          "creation_conflict"
         ]),
         entityId: zod_1.z.string().optional()
       }).strict()),
-      changes: zod_1.z.array(zod_1.z.object({ projectId: zod_1.z.string(), path: zod_1.z.string(), before: zod_1.z.string(), after: zod_1.z.string() }).strict())
+      changes: zod_1.z.array(zod_1.z.object({ projectId: zod_1.z.string(), path: zod_1.z.string(), before: zod_1.z.string(), after: zod_1.z.string() }).strict()),
+      resources: zod_1.z.array(zod_1.z.object({
+        itemId: draftId,
+        template: zod_1.z.enum(["workflow", "data-table"]),
+        projectId: zod_1.z.string(),
+        id: zod_1.z.string(),
+        name: zod_1.z.string(),
+        description: zod_1.z.string()
+      }).strict()).default([])
     }).strict();
-    exports2.ApplyArchitectureDraft = zod_1.z.object({ token: revision }).strict();
+    exports2.ApplyArchitectureDraft = zod_1.z.object({ token: revision, cancel: zod_1.z.boolean().optional() }).strict();
   }
 });
 
