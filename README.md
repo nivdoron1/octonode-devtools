@@ -9,7 +9,7 @@ Requires Node.js **20.19+**, **22.12+**, or newer (`^20.19.0 || >=22.12.0`).
 
 This covers the installed CLI, API/plugin SDK, source parsing, and generated app/plugin
 bundles. Project code and third-party dependencies must support the selected Node
-version too. Node 22 or newer is recommended for new projects. Repository development,
+version too. Node 22.12 or newer is recommended for new projects. Repository development,
 OpenAPI generation and release packaging use Node 24; standalone installers include
 their own Node 24 runtime.
 

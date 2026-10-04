@@ -300,6 +300,12 @@ octonodes plugin validate dist/plugins/text-tools
 octonodes plugin test dist/plugins/text-tools uppercase --input '{"text":"hello"}'
 ```
 
+Custom tooling can import `NODE_ENGINE_RANGE` (`^20.19.0 || >=22.12.0`) and
+`NODE_BUILD_TARGET` (`node20.19`) from `@octonodes/sdk/plugins`. Set generated
+`package.json` `engines.node` to the range and esbuild's `target` to the build
+target to match CLI-generated artifacts. Your source and third-party dependencies
+must also support the selected runtime.
+
 Move the prototype's `definePlugin` definition from `octonode.config.ts` to
 `octonode.plugin.ts`. Use `@octonodes/sdk/plugin` for plugins and
 `@octonodes/sdk/project` for project defaults. Replace direct function references
