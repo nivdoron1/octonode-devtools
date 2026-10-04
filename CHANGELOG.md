@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.36] - 2026-10-04
+
+### Fixed
+
+- Support Node 20.19+, 22.12+ and newer for npm CLI/SDK installation, plugin parsing, and generated app/plugin builds.
+- Use the Supabase Auth client directly so login and session refresh work without a WebSocket global on Node 20.
+- Run consumer tests and strict-engine installation of public tarballs across Node 20, 22 and 24 on Linux, macOS and Windows; keep generation and installer packaging on Node 24.
+
 ## [0.2.28] - 2026-10-03
 
 ### Fixed
