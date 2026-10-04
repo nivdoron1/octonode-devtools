@@ -1,3 +1,4 @@
+import { NODE_ENGINE_RANGE } from "@octonodes/sdk/plugins";
 import { mkdirSync, mkdtempSync, renameSync, rmSync, writeFileSync, lstatSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { join, resolve } from "node:path";
@@ -126,7 +127,7 @@ export default async function handle(request: Request): Promise<Response> {
         name,
         private: true,
         type: "module",
-        engines: { node: ">=24" },
+        engines: { node: NODE_ENGINE_RANGE },
         installConfig: { hoistingLimits: "workspaces" },
         scripts: {
           dev: "octonodes app dev",
@@ -140,7 +141,7 @@ export default async function handle(request: Request): Promise<Response> {
           typescript: "5.9.3",
           "@types/react": "^19.0.0",
           ...(platform === "vite" ? { "@types/react-dom": "^19.0.0" } : {}),
-          "@types/node": "^24.0.0",
+          "@types/node": "^20.19.0",
           ...(platform === "vite" ? { vite: "8.3.1" } : {}),
           ...(platform === "next" ? { next: "16.3.6" } : {}),
         },
@@ -242,7 +243,7 @@ ${framework ? `The ${platform === "next" ? "Next.js" : "Vite"} page is a native 
 
 Publishing registers metadata but does not deploy the backend. After the first
 publish returns the app ID, copy the entire \`dist/web/${appId}\` directory
-to a Node 24 host. Configure HTTPS, \`PORT\`, \`OCTONODE_APP_ID\` and
+to a Node 20.19+, 22.12+, or newer supported host. Configure HTTPS, \`PORT\`, \`OCTONODE_APP_ID\` and
 \`OCTONODE_API_URL\`, then run \`node start.cjs\` from that directory.
 Check the public page and every hashed \`/extensions/<hash>.js\` asset
 before inviting installation. Restore the previous web artifact before clean

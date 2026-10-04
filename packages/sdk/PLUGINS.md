@@ -50,7 +50,7 @@ preserving post-crash file copies in the reported recovery directory.
 
 The first format supports portable bundled JavaScript with self-contained public
 declarations and license notices. Unsupported dynamic imports, external public types,
-native addons, and default library exports fail the build. Node 24 on macOS/Linux
+native addons, and default library exports fail the build. Node 20.19+, 22.12+, or newer on macOS/Linux
 is supported; use WSL on Windows. Library imports run with application privileges,
 not the workflow permission sandbox. Importing an artifact never starts its IPC runner.
 
@@ -299,6 +299,12 @@ octonodes plugin build            # Type-check and build octonode.plugin.ts
 octonodes plugin validate dist/plugins/text-tools
 octonodes plugin test dist/plugins/text-tools uppercase --input '{"text":"hello"}'
 ```
+
+Custom tooling can import `NODE_ENGINE_RANGE` (`^20.19.0 || >=22.12.0`) and
+`NODE_BUILD_TARGET` (`node20.19`) from `@octonodes/sdk/plugins`. Set generated
+`package.json` `engines.node` to the range and esbuild's `target` to the build
+target to match CLI-generated artifacts. Your source and third-party dependencies
+must also support the selected runtime.
 
 Move the prototype's `definePlugin` definition from `octonode.config.ts` to
 `octonode.plugin.ts`. Use `@octonodes/sdk/plugin` for plugins and

@@ -30,3 +30,5 @@ export {
 } from "../../schema/plugin-sdk";
 
 export type { PluginScope } from "../../schema/plugin-sdk";
+
+export { NODE_ENGINE_RANGE, NODE_BUILD_TARGET } from "../constants.js";

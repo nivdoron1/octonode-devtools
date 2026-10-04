@@ -1,4 +1,5 @@
 // Generated from engine plugin authoring. Do not edit.
+import { NODE_BUILD_TARGET } from "@octonodes/sdk/plugins";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve, join } from "node:path";
 import { isBuiltin } from "node:module";
@@ -88,7 +89,7 @@ export async function buildPluginLibrary(root: string, entry: string, output: st
     bundle: true,
     platform: "node",
     format: "esm",
-    target: "node24",
+    target: NODE_BUILD_TARGET,
     metafile: true,
     logLevel: "silent",
     legalComments: "eof",

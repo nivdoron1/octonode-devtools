@@ -17,7 +17,7 @@ An npm release does not automatically make those channels available.
 
 ### Prerequisites
 
-For npm-based installation, install [Node.js 24](https://nodejs.org/en/download)
+For npm-based installation, install [Node.js 20.19+, 22.12+, or newer](https://nodejs.org/en/download)
 and your chosen package manager. Check the runtime before installing:
 
 ```sh
@@ -25,10 +25,10 @@ node --version
 npm --version
 ```
 
-Node should report `v24.x.x`. Homebrew will install `node@24` as a dependency;
+Node should report `v20.19.0` or newer in Node 20, or `v22.12.0` or newer. Homebrew will install `node@24` as a dependency;
 the planned portable, MSI, DEB, RPM, Scoop, Chocolatey, Arch and Snap packages
 include their own Node 24 runtime. App and plugin projects still need a separate
-Node 24 development toolchain and a package manager to install project dependencies.
+supported Node development toolchain and a package manager to install project dependencies.
 
 ### npm, pnpm, Yarn and Bun
 
@@ -51,7 +51,7 @@ If pnpm reports no global bin directory, run [pnpm setup](https://pnpm.io/cli/se
 and open a new terminal. For [Yarn Classic](https://classic.yarnpkg.com/en/docs/cli/global),
 ensure the directory from `yarn global bin` is on PATH. Bun's global binaries
 normally live in `~/.bun/bin`; see [Bun installation](https://bun.com/docs/installation).
-Keep Node 24 on PATH even when using Bun as the package manager.
+Keep a supported Node version on PATH even when using Bun as the package manager.
 
 ### Homebrew — macOS and Linux
 
@@ -248,7 +248,7 @@ for signed APT/DNF repository setup.
 
 ## Create an app
 
-Use Node 24 and a CLI release containing `octonodes app`. The default scaffold
+Use Node 20.19+, 22.12+, or newer and a CLI release containing `octonodes app`. The default scaffold
 is a full Vite app with one hosted page and a backend. Contributions are optional.
 Use `--template extension` for a navbar launcher and panel inside Octonode.
 Run `octonodes app targets` to list supported view/action/launcher targets; add a
@@ -294,7 +294,7 @@ until their administrator approves an update.
 
 Full apps include a connected backend. Set `web.applicationUrl` in `octonode.app.json` to a permanent HTTPS
 origin, add only necessary `web.requestedActions`, and run `npm test`. The CLI
-publishes release metadata; deploy `dist/web/<app-id>` to a Node 24
+publishes release metadata; deploy `dist/web/<app-id>` to a supported Node
 host yourself, set `OCTONODE_APP_ID` and `OCTONODE_API_URL`, and run
 `node start.cjs`. Keep prior content-hashed assets for pinned installations.
 The [Playbook app guide](https://playbook.octonodes.com/docs/apps) covers the

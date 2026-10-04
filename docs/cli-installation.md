@@ -5,6 +5,16 @@ This is for `@octonodes/cli` and its `octonodes` command, as described in agent
 Package-manager listings, download hosting, repositories, and registry submissions
 are operator publication steps. This change creates none of them.
 
+## Node runtime compatibility
+
+The npm CLI and SDK support Node 20.19+, 22.12+, and newer
+(`^20.19.0 || >=22.12.0`), including plugin source parsing and app/plugin builds.
+Node 22.12 or newer is recommended for new projects. The contributor toolchain,
+OpenAPI generation and installer packaging use Node 24. CI installs public
+package tarballs with `--engine-strict` and exercises them on all three runtime
+versions on Linux, macOS and Windows. External project dependencies may require
+a newer Node version.
+
 ## Channels
 
 | Channel | Prepared artifact | Publication destination |

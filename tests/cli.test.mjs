@@ -259,11 +259,13 @@ test("CLI login stores a reusable token with user-only permissions", async () =>
   }
 });
 
-test("CLI signs Studio users in through Supabase and restores their session", async () => {
+test("CLI signs Studio users in through Supabase without WebSocket and restores their session", async () => {
   const configDir = mkdtempSync(join(tmpdir(), "octonodes-supabase-"));
   const originalConfigDir = process.env.OCTONODE_CONFIG_DIR;
   const originalToken = process.env.OCTONODE_TOKEN;
   const originalFetch = globalThis.fetch;
+  const originalWebSocket = Object.getOwnPropertyDescriptor(globalThis, "WebSocket");
+  delete globalThis.WebSocket;
   const accessToken = testJwt({ exp: Math.floor(Date.now() / 1000) + 3600, sub: "user-1" });
   const user = {
     id: "user-1",
@@ -305,12 +307,16 @@ test("CLI signs Studio users in through Supabase and restores their session", as
     assert.equal(await cliAuth.accessToken(), accessToken);
     const session = JSON.parse(readFileSync(join(configDir, "session.json"), "utf8"));
     assert.equal(session.refreshToken, "refresh-token");
+    for (const request of requests.slice(1)) assert.equal(request.headers.get("apikey"), "publishable-key");
+    assert.equal(requests[1].headers.get("authorization"), "Bearer publishable-key");
+    assert.equal(requests.at(-1).headers.get("authorization"), `Bearer ${accessToken}`);
     assert.deepEqual(
       requests.map((request) => new URL(request.url).pathname),
       ["/api/auth/config", "/auth/v1/otp", "/auth/v1/verify", "/auth/v1/user"],
     );
   } finally {
     globalThis.fetch = originalFetch;
+    if (originalWebSocket) Object.defineProperty(globalThis, "WebSocket", originalWebSocket);
     if (originalConfigDir === undefined) delete process.env.OCTONODE_CONFIG_DIR;
     else process.env.OCTONODE_CONFIG_DIR = originalConfigDir;
     if (originalToken === undefined) delete process.env.OCTONODE_TOKEN;

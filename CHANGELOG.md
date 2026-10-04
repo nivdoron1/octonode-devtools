@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.36] - 2026-10-04
+
+### Fixed
+
+- Install the npm CLI/SDK, parse plugin source, and build generated apps/plugins on Node 20.19+, 22.12+ and newer; see the [runtime requirements](README.md#prerequisites).
+- Sign in and refresh CLI sessions on Node 20 without a WebSocket global by using the Supabase Auth client directly.
+
+### For contributors
+
+- Run consumer tests and strict-engine installation of public tarballs across Node 20, 22 and 24 on Linux, macOS and Windows; keep generation and installer packaging on Node 24.
+
 ## [0.2.28] - 2026-10-03
 
 ### Fixed
