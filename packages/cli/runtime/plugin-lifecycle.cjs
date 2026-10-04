@@ -4833,10 +4833,11 @@ var require_architecture = __commonJS({
   "packages/schema/dist/architecture.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ArchitectureProjection = exports2.ArchitectureSeed = exports2.ArchitectureEdge = exports2.ArchitectureNode = exports2.ArchitectureScope = exports2.ArchitectureEntityKind = exports2.ArchitectureMode = void 0;
+    exports2.ArchitectureProjection = exports2.ArchitectureSeed = exports2.ArchitectureEdge = exports2.ArchitectureNode = exports2.ArchitectureScope = exports2.ArchitectureEntityKind = exports2.ArchitectureLevel = exports2.ArchitectureMode = void 0;
     var zod_1 = require("zod");
     var architectureId = zod_1.z.string().min(1).max(1024);
     exports2.ArchitectureMode = zod_1.z.enum(["inclusive", "exclusive"]);
+    exports2.ArchitectureLevel = zod_1.z.enum(["system", "components", "overview", "implementation"]);
     exports2.ArchitectureEntityKind = zod_1.z.enum([
       "repository",
       "package",
@@ -4863,7 +4864,8 @@ var require_architecture = __commonJS({
       status: zod_1.z.enum(["available", "unavailable", "reference", "boundary"]),
       scope: exports2.ArchitectureScope,
       ownerIds: zod_1.z.array(architectureId).max(100),
-      boundaryOf: architectureId.optional()
+      boundaryOf: architectureId.optional(),
+      source: zod_1.z.object({ projectId: architectureId, path: zod_1.z.string().min(1).max(1024) }).strict().optional()
     }).strict();
     exports2.ArchitectureEdge = zod_1.z.object({
       id: architectureId,
@@ -4896,11 +4898,98 @@ var require_architecture = __commonJS({
       architectureId,
       name: zod_1.z.string().min(1).max(240),
       truncated: zod_1.z.boolean(),
+      summary: zod_1.z.object({
+        nodeCount: zod_1.z.number().int().nonnegative(),
+        edgeCount: zod_1.z.number().int().nonnegative(),
+        omittedNodes: zod_1.z.number().int().nonnegative(),
+        omittedEdges: zod_1.z.number().int().nonnegative(),
+        hiddenByView: zod_1.z.number().int().nonnegative(),
+        matchedNodes: zod_1.z.number().int().nonnegative().optional()
+      }).strict().optional(),
+      matches: zod_1.z.array(architectureId).max(5e3).optional(),
       diagnostics: zod_1.z.array(zod_1.z.object({
         code: zod_1.z.string().min(1).max(120),
         message: zod_1.z.string().min(1).max(512)
       }).strict()).max(100)
     }).strict();
+  }
+});
+
+// packages/schema/dist/architecture/draft.js
+var require_draft = __commonJS({
+  "packages/schema/dist/architecture/draft.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ApplyArchitectureDraft = exports2.ArchitectureDraftReview = exports2.SaveArchitectureDraft = exports2.ArchitectureDraftResult = exports2.ArchitectureDraft = exports2.ArchitectureDraftItem = void 0;
+    var zod_1 = require("zod");
+    var architecture_js_1 = require_architecture();
+    var draftId = zod_1.z.string().regex(/^draft:[a-zA-Z0-9_-]+$/).max(100);
+    var revision = zod_1.z.string().regex(/^[a-f0-9]{64}$/);
+    exports2.ArchitectureDraftItem = zod_1.z.object({
+      id: draftId,
+      type: zod_1.z.enum(["component", "group", "note"]),
+      kind: architecture_js_1.ArchitectureEntityKind.exclude(["repository", "boundary"]),
+      label: zod_1.z.string().trim().min(1).max(120),
+      description: zod_1.z.string().max(2e3),
+      groupId: draftId.optional(),
+      position: zod_1.z.object({ x: zod_1.z.number().finite().min(-1e5).max(1e5), y: zod_1.z.number().finite().min(-1e5).max(1e5) }).strict().optional()
+    }).strict();
+    exports2.ArchitectureDraft = zod_1.z.object({
+      version: zod_1.z.literal(1),
+      name: zod_1.z.string().trim().min(1).max(120),
+      baseRevision: revision,
+      items: zod_1.z.array(exports2.ArchitectureDraftItem).max(200),
+      connections: zod_1.z.array(architecture_js_1.ArchitectureEdge.pick({ from: true, to: true, relation: true }).extend({ id: draftId }).strict()).max(500)
+    }).strict();
+    exports2.ArchitectureDraftResult = zod_1.z.object({ draft: exports2.ArchitectureDraft.nullable(), revision: revision.nullable() }).strict();
+    exports2.SaveArchitectureDraft = zod_1.z.object({ draft: exports2.ArchitectureDraft, revision: revision.nullable() }).strict();
+    exports2.ArchitectureDraftReview = zod_1.z.object({
+      token: revision,
+      currentRevision: revision,
+      baseChanged: zod_1.z.boolean(),
+      applicableConnections: zod_1.z.array(zod_1.z.string()),
+      plannedItems: zod_1.z.number().int().nonnegative(),
+      plannedConnections: zod_1.z.number().int().nonnegative(),
+      issues: zod_1.z.array(zod_1.z.object({
+        code: zod_1.z.enum([
+          "duplicate_id",
+          "missing_endpoint",
+          "invalid_group",
+          "self_dependency",
+          "cycle",
+          "partial_projection",
+          "unavailable_project"
+        ]),
+        entityId: zod_1.z.string().optional()
+      }).strict()),
+      changes: zod_1.z.array(zod_1.z.object({ projectId: zod_1.z.string(), path: zod_1.z.string(), before: zod_1.z.string(), after: zod_1.z.string() }).strict())
+    }).strict();
+    exports2.ApplyArchitectureDraft = zod_1.z.object({ token: revision }).strict();
+  }
+});
+
+// packages/schema/dist/architecture/index.js
+var require_architecture2 = __commonJS({
+  "packages/schema/dist/architecture/index.js"(exports2) {
+    "use strict";
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    }) : (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      o[k2] = m[k];
+    }));
+    var __exportStar = exports2 && exports2.__exportStar || function(m, exports3) {
+      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    __exportStar(require_draft(), exports2);
   }
 });
 
@@ -14639,6 +14728,7 @@ var require_dist = __commonJS({
     __exportStar(require_attachments(), exports2);
     __exportStar(require_knowledge(), exports2);
     __exportStar(require_architecture(), exports2);
+    __exportStar(require_architecture2(), exports2);
     __exportStar(require_registry(), exports2);
     __exportStar(require_publications(), exports2);
     __exportStar(require_media(), exports2);
