@@ -1,5 +1,10 @@
 # @octonodes/sdk
 
+Supports Node 20.19+, 22.12+, and newer (`^20.19.0 || >=22.12.0`).
+The package ships compiled JavaScript; consuming it does not require Node
+native TypeScript execution. Regenerating this repository requires Node 24.
+
+
 Typed TypeScript client for the public Octonode cloud API. It is generated from the published
 [API contract](https://octonodes.com/api/docs) and includes projects, workflows, executions,
 nodes, data tables, plugins, GitHub integration, and workspace operations.

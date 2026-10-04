@@ -5,7 +5,18 @@ Type-safe access to the public Octonode API through the `@octonodes/sdk` package
 use `https://api.octonode.dev` by default, and enforce the permissions of the supplied user or
 API token.
 
-Requires Node.js 24 or newer.
+Requires Node.js **20.19+**, **22.12+**, or newer (`^20.19.0 || >=22.12.0`).
+
+This covers the installed CLI, API/plugin SDK, source parsing, and generated app/plugin
+bundles. Project code and third-party dependencies must support the selected Node
+version too. Node 22 or newer is recommended for new projects. Repository development,
+OpenAPI generation and release packaging use Node 24; standalone installers include
+their own Node 24 runtime.
+
+CI builds on Node 24, then runs the tests and installs the actual public tarballs with
+`--engine-strict` on Node 20.19, 22.12 and 24 on Linux, macOS and Windows. Reproduce with
+`yarn check && yarn test:pack`, switch Node, then run `node scripts/runtime/test.mjs` and
+`npm run test:install`.
 
 ## Plugin development
 
@@ -58,7 +69,7 @@ octonodes app publish --workspace user:<id>
 
 For a hosted app, start with `octonodes app create inventory-labels --template
 full`, set `web.applicationUrl` to a permanent HTTPS origin, build and publish,
-then deploy the complete `dist/web/<app-id>` directory to a Node 24
+then deploy the complete `dist/web/<app-id>` directory to a supported Node
 host. The first publish returns `OCTONODE_APP_ID`; set it and
 `OCTONODE_API_URL` on the host before inviting installations. Publication does
 not deploy the backend. Read the [end-to-end Playbook](https://playbook.octonodes.com/docs/apps),
@@ -204,7 +215,7 @@ An npm release does not automatically make those channels available.
 
 #### Prerequisites
 
-For npm-based installation, install [Node.js 24](https://nodejs.org/en/download)
+For npm-based installation, install [Node.js 20.19+, 22.12+, or newer](https://nodejs.org/en/download)
 and your chosen package manager. Check the runtime before installing:
 
 ```sh
@@ -212,10 +223,10 @@ node --version
 npm --version
 ```
 
-Node should report `v24.x.x`. Homebrew will install `node@24` as a dependency;
+Node should report `v20.19.0` or newer in Node 20, or `v22.12.0` or newer. Homebrew will install `node@24` as a dependency;
 the planned portable, MSI, DEB, RPM, Scoop, Chocolatey, Arch and Snap packages
 include their own Node 24 runtime. App and plugin projects still need a separate
-Node 24 development toolchain and a package manager to install project dependencies.
+supported Node development toolchain and a package manager to install project dependencies.
 
 #### npm, pnpm, Yarn and Bun
 
@@ -238,7 +249,7 @@ If pnpm reports no global bin directory, run [pnpm setup](https://pnpm.io/cli/se
 and open a new terminal. For [Yarn Classic](https://classic.yarnpkg.com/en/docs/cli/global),
 ensure the directory from `yarn global bin` is on PATH. Bun's global binaries
 normally live in `~/.bun/bin`; see [Bun installation](https://bun.com/docs/installation).
-Keep Node 24 on PATH even when using Bun as the package manager.
+Keep a supported Node version on PATH even when using Bun as the package manager.
 
 #### Homebrew — macOS and Linux
 

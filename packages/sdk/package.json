@@ -57,7 +57,7 @@
     "zod": "^3.23.0"
   },
   "devDependencies": {
-    "@types/node": "^26.4.0"
+    "@types/node": "^20.19.0"
   },
   "typesVersions": {
     "*": {
@@ -77,5 +77,8 @@
         "dist/plugins/sdk/nodes/index.d.ts"
       ]
     }
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

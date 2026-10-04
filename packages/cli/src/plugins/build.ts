@@ -1,4 +1,5 @@
 // Generated from engine plugin authoring. Do not edit.
+import { NODE_BUILD_TARGET, NODE_ENGINE_RANGE } from "@octonodes/sdk/plugins";
 import {
   cpSync,
   existsSync,
@@ -190,7 +191,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
         external: [...new Set(npmAdapters.values())],
         platform: "node",
         format: "cjs",
-        target: "node24",
+        target: NODE_BUILD_TARGET,
         metafile: true,
         logLevel: "silent",
         legalComments: "eof",
@@ -307,7 +308,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
             version: manifest.version,
             private: true,
             type: "commonjs",
-            engines: { node: ">=24" },
+            engines: { node: NODE_ENGINE_RANGE },
             license: manifest.license,
             ...(workflow ? { dependencies: workflow.dependencies } : {}),
           },

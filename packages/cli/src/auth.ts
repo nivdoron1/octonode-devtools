@@ -6,7 +6,7 @@ import type { AddressInfo } from "node:net";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { createInterface } from "node:readline/promises";
-import { createClient, type Session } from "@supabase/supabase-js";
+import { AuthClient, type Session } from "@supabase/auth-js";
 import { terminal } from "./terminal";
 
 interface AuthConfig {
@@ -89,8 +89,20 @@ function saveSession(config: AuthConfig, session: Session): void {
 }
 
 function authClient(config: AuthConfig, flowType: "implicit" | "pkce" = "implicit") {
-  return createClient(config.supabaseUrl, config.supabasePublishableKey, {
-    auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false, flowType },
+  // The CLI only uses Auth; the full Supabase client also initializes Realtime,
+  // which requires a WebSocket transport unavailable by default on Node 20.
+  const url = new URL(config.supabaseUrl.endsWith("/") ? config.supabaseUrl : `${config.supabaseUrl}/`);
+  return new AuthClient({
+    url: new URL("auth/v1", url).href,
+    headers: {
+      apikey: config.supabasePublishableKey,
+      Authorization: `Bearer ${config.supabasePublishableKey}`,
+    },
+    storageKey: `sb-${url.hostname.split(".")[0]}-auth-token`,
+    autoRefreshToken: false,
+    persistSession: false,
+    detectSessionInUrl: false,
+    flowType,
   });
 }
 
@@ -238,7 +250,7 @@ async function browserLogin(config: AuthConfig, launch: (url: string) => Promise
   const callback = await oauthCallback();
   try {
     const supabase = authClient(config, "pkce");
-    const started = await supabase.auth.signInWithOAuth({
+    const started = await supabase.signInWithOAuth({
       provider: "github",
       options: { redirectTo: callback.url, skipBrowserRedirect: true },
     });
@@ -249,7 +261,7 @@ async function browserLogin(config: AuthConfig, launch: (url: string) => Promise
     void launch(started.data.url).catch((error) => {
       process.stderr.write(`Could not open a browser: ${error instanceof Error ? error.message : String(error)}\n`);
     });
-    const exchanged = await supabase.auth.exchangeCodeForSession(await callback.code);
+    const exchanged = await supabase.exchangeCodeForSession(await callback.code);
     if (exchanged.error) throw new Error(exchanged.error.message);
     if (!exchanged.data.session) throw new Error("Supabase did not return a session");
     saveSession(config, exchanged.data.session);
@@ -277,7 +289,7 @@ export async function login(apiUrl: string, options: LoginOptions = {}): Promise
   if (!email) throw new Error("email is required");
 
   const supabase = authClient(config);
-  const sent = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+  const sent = await supabase.signInWithOtp({ email, options: { shouldCreateUser: true } });
   if (sent.error) throw new Error(sent.error.message);
   if (process.stdout.isTTY) terminal.step(`Verification code sent to ${email}`);
   else process.stdout.write(`Verification code sent to ${email}.\n`);
@@ -287,7 +299,7 @@ export async function login(apiUrl: string, options: LoginOptions = {}): Promise
     piped.shift()?.trim() ||
     (process.stdin.isTTY ? await promptSecret("Verification code: ") : "");
   if (!code) throw new Error("verification code is required");
-  const verified = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
+  const verified = await supabase.verifyOtp({ email, token: code, type: "email" });
   if (verified.error) throw new Error(verified.error.message);
   if (!verified.data.session) throw new Error("Supabase did not return a session");
 
@@ -306,7 +318,7 @@ export async function accessToken(): Promise<string | undefined> {
   const stored = readSession();
   if (!stored) return undefined;
   const supabase = authClient(stored);
-  const result = await supabase.auth.setSession({
+  const result = await supabase.setSession({
     access_token: stored.accessToken,
     refresh_token: stored.refreshToken,
   });
@@ -327,13 +339,13 @@ export async function logout(): Promise<{ removed: boolean; warning?: string }> 
   let warning: string | undefined;
   if (stored) {
     const supabase = authClient(stored);
-    const restored = await supabase.auth.setSession({
+    const restored = await supabase.setSession({
       access_token: stored.accessToken,
       refresh_token: stored.refreshToken,
     });
     if (restored.error) warning = `Supabase session could not be revoked: ${restored.error.message}`;
     else {
-      const signedOut = await supabase.auth.signOut({ scope: "local" });
+      const signedOut = await supabase.signOut({ scope: "local" });
       if (signedOut.error) warning = `Supabase session could not be revoked: ${signedOut.error.message}`;
     }
   }

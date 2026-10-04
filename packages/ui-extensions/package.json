@@ -45,6 +45,9 @@
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nivdoron1/octonode-devtools.git",

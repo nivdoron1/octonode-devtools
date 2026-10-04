@@ -50,7 +50,7 @@ preserving post-crash file copies in the reported recovery directory.
 
 The first format supports portable bundled JavaScript with self-contained public
 declarations and license notices. Unsupported dynamic imports, external public types,
-native addons, and default library exports fail the build. Node 24 on macOS/Linux
+native addons, and default library exports fail the build. Node 20.19+, 22.12+, or newer on macOS/Linux
 is supported; use WSL on Windows. Library imports run with application privileges,
 not the workflow permission sandbox. Importing an artifact never starts its IPC runner.
 

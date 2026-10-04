@@ -1129,7 +1129,7 @@ __metadata:
   dependencies:
     "@octonodes/sdk": "workspace:*"
     "@octonodes/ui-extensions": "workspace:*"
-    "@supabase/supabase-js": "npm:2.107.0"
+    "@supabase/auth-js": "npm:2.107.0"
     esbuild: "npm:0.28.1"
     tar: "npm:7.5.22"
     yaml: "npm:^2.4.5"
@@ -1156,7 +1156,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@octonodes/sdk@workspace:packages/sdk"
   dependencies:
-    "@types/node": "npm:^26.4.0"
+    "@types/node": "npm:^20.19.0"
     typescript: "npm:5.9.3"
     zod: "npm:^3.23.0"
   languageName: unknown
@@ -1248,64 +1248,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/functions-js@npm:2.107.0":
-  version: 2.107.0
-  resolution: "@supabase/functions-js@npm:2.107.0"
-  dependencies:
-    tslib: "npm:2.8.1"
-  checksum: 10c0/296f26780241854b2b757ef5d340c461c4c5a7404d5fcecc12090abf8815d859d10731ededbe8379e0539d4cf51a8554f5de8208ef0157fd93189e6ac5bc74b3
-  languageName: node
-  linkType: hard
-
-"@supabase/phoenix@npm:^0.4.2":
-  version: 0.4.5
-  resolution: "@supabase/phoenix@npm:0.4.5"
-  checksum: 10c0/33be3994c870eb3a5f89d3bf6d57783a14f49f710b15e852f85c9750b45f3db5a637b30f7046474fa88f40cce50620e3bce18a27d9819ae16be792776bbfeb9c
-  languageName: node
-  linkType: hard
-
-"@supabase/postgrest-js@npm:2.107.0":
-  version: 2.107.0
-  resolution: "@supabase/postgrest-js@npm:2.107.0"
-  dependencies:
-    tslib: "npm:2.8.1"
-  checksum: 10c0/09f9ed081b24debfd36f7d8fab5226527e835a5eab526615604c4ea3414545a625236750220ba20902c2c38c7c03d763df8fe1b95ce163fa79f57e5287318ca0
-  languageName: node
-  linkType: hard
-
-"@supabase/realtime-js@npm:2.107.0":
-  version: 2.107.0
-  resolution: "@supabase/realtime-js@npm:2.107.0"
-  dependencies:
-    "@supabase/phoenix": "npm:^0.4.2"
-    tslib: "npm:2.8.1"
-  checksum: 10c0/698a75167ef4bc1565147838d115f4ac639efece54bb46e20551e65f9f6f72a7786e6c6e516d488ad0d01ac2a061c9503be2408b68b4f8384bad709262a289f1
-  languageName: node
-  linkType: hard
-
-"@supabase/storage-js@npm:2.107.0":
-  version: 2.107.0
-  resolution: "@supabase/storage-js@npm:2.107.0"
-  dependencies:
-    iceberg-js: "npm:^0.8.1"
-    tslib: "npm:2.8.1"
-  checksum: 10c0/5f72e6d4ed137fc29e71affdf84334fc8d93f9317e5c40839fbe4160ffd6c135a4157d6dbace160f16fb6017226f654894af8d4e48823ebea814c2d4c7202c44
-  languageName: node
-  linkType: hard
-
-"@supabase/supabase-js@npm:2.107.0":
-  version: 2.107.0
-  resolution: "@supabase/supabase-js@npm:2.107.0"
-  dependencies:
-    "@supabase/auth-js": "npm:2.107.0"
-    "@supabase/functions-js": "npm:2.107.0"
-    "@supabase/postgrest-js": "npm:2.107.0"
-    "@supabase/realtime-js": "npm:2.107.0"
-    "@supabase/storage-js": "npm:2.107.0"
-  checksum: 10c0/fa934ac10d990bc548f511ce69e51ee3d32d8dca94adae57d73a30152d716f78a3f6f129bf3c385cbaa5a710610d87575b12937ffc4fb5c2289ced4207b496f0
-  languageName: node
-  linkType: hard
-
 "@types/jsesc@npm:^2.5.0":
   version: 2.5.1
   resolution: "@types/jsesc@npm:2.5.1"
@@ -1320,12 +1262,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^26.4.0":
-  version: 26.6.0
-  resolution: "@types/node@npm:26.6.0"
+"@types/node@npm:^20.19.0":
+  version: 20.19.43
+  resolution: "@types/node@npm:20.19.43"
   dependencies:
-    undici-types: "npm:~8.9.0"
-  checksum: 10c0/147a3ad48c8deab7ba55b323be868b5ff9df950803a7a61662f70a50e703739c98041b68142363a7eef7a1e4b61b5d5c3d802cf2d9982125eecebe768d677bb9
+    undici-types: "npm:~6.21.0"
+  checksum: 10c0/9bcec3b5295bdd77ff0b44a528a69f7e22028c347507ba2c69be47ec84e30299f45043b222e9c86c510e138c9c53b2419dd5cd34920602a4a5a381c288075318
   languageName: node
   linkType: hard
 
@@ -2291,13 +2233,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iceberg-js@npm:^0.8.1":
-  version: 0.8.1
-  resolution: "iceberg-js@npm:0.8.1"
-  checksum: 10c0/e504da64cc26e8ad7c5344353a7203c671a740c14eb6086f20505f5e9739cab774493e616032530c962df97f2a855115cc2e89a47dd81581df5917b21a69ec48
-  languageName: node
-  linkType: hard
-
 "iconv-lite@npm:^0.7.2, iconv-lite@npm:~0.7.0":
   version: 0.7.3
   resolution: "iconv-lite@npm:0.7.3"
@@ -2633,7 +2568,7 @@ __metadata:
   resolution: "octonode-devtools@workspace:."
   dependencies:
     "@hey-api/openapi-ts": "npm:0.98.1"
-    "@types/node": "npm:^26.4.0"
+    "@types/node": "npm:^20.19.0"
     typescript: "npm:5.9.3"
   languageName: unknown
   linkType: soft
@@ -3193,10 +3128,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~8.9.0":
-  version: 8.9.0
-  resolution: "undici-types@npm:8.9.0"
-  checksum: 10c0/51c712c20c087368f62c6fc0f2bc49fa76bfe5dec28ff01584bb677ff29b0622569783c02d43e151143808c48c0503f804093bd2c491b10f2a830138034cb451
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
   languageName: node
   linkType: hard
 

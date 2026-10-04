@@ -98,7 +98,7 @@ npm test
 octonodes app validate dist/apps/<app-id>
 octonodes app publish --workspace user:<id>
 # The first publish returns <app-id>. For full apps, deploy dist/web/<app-id>
-# to a Node 24 host, then run there with the returned registered ID:
+# to a supported Node host, then run there with the returned registered ID:
 cd dist/web/<app-id>
 PORT=3000 OCTONODE_APP_ID=<app-id> OCTONODE_API_URL=https://octonodes.com node start.cjs
 # Back in the source project, after incrementing the source version:
@@ -136,7 +136,7 @@ verifies an app bearer using the existing SDK; production sets `OCTONODE_APP_ID`
 
 ## Production output and pinned releases
 
-Run `node dist/web/<id>/start.cjs` on a Node 24 host with `PORT`, `OCTONODE_APP_ID`
+Run `node dist/web/<id>/start.cjs` on a supported Node host with `PORT`, `OCTONODE_APP_ID`
 and `OCTONODE_API_URL`. The standalone launcher validates its inventory. Configure HTTPS
 on the host. Extension URLs are content-addressed; incremental builds retain previous
 verified assets. Restore the previous complete web artifact before building in clean CI,

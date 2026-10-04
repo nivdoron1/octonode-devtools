@@ -14801,8 +14801,10 @@ var require_constants8 = __commonJS({
   "packages/plugin-runtime/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.LANGUAGE = void 0;
+    exports2.NODE_BUILD_TARGET = exports2.NODE_ENGINE_RANGE = exports2.LANGUAGE = void 0;
     exports2.LANGUAGE = "typescript";
+    exports2.NODE_ENGINE_RANGE = "^20.19.0 || >=22.12.0";
+    exports2.NODE_BUILD_TARGET = "node20.19";
   }
 });
 
@@ -15944,7 +15946,7 @@ var require_dist3 = __commonJS({
   "packages/plugin-runtime/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.disposeServiceInstances = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;
+    exports2.NODE_BUILD_TARGET = exports2.NODE_ENGINE_RANGE = exports2.PluginConnection = exports2.PluginNode = exports2.PluginManifest = exports2.pluginDefinitionPath = exports2.loadPluginDefinition = exports2.startPlugin = exports2.definePlugin = exports2.validate = exports2.disposeServiceInstances = exports2.NodeError = exports2.start = exports2.runNode = exports2.defineConst = exports2.defineClass = exports2.defineService = exports2.defineNode = void 0;
     var node_js_1 = require_node();
     Object.defineProperty(exports2, "defineNode", { enumerable: true, get: function() {
       return node_js_1.defineNode;
@@ -15998,6 +16000,13 @@ var require_dist3 = __commonJS({
     } });
     Object.defineProperty(exports2, "PluginConnection", { enumerable: true, get: function() {
       return schema_1.PluginConnection;
+    } });
+    var constants_js_1 = require_constants8();
+    Object.defineProperty(exports2, "NODE_ENGINE_RANGE", { enumerable: true, get: function() {
+      return constants_js_1.NODE_ENGINE_RANGE;
+    } });
+    Object.defineProperty(exports2, "NODE_BUILD_TARGET", { enumerable: true, get: function() {
+      return constants_js_1.NODE_BUILD_TARGET;
     } });
   }
 });

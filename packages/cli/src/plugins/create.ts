@@ -1,3 +1,4 @@
+import { NODE_ENGINE_RANGE } from "@octonodes/sdk/plugins";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { generateNodeCatalog } from "@octonodes/sdk/definitions/compiler";
@@ -18,7 +19,7 @@ export function createPlugin(name: string, version: string): string {
       {
         name,
         private: true,
-        engines: { node: ">=24" },
+        engines: { node: NODE_ENGINE_RANGE },
         scripts: {
           build: "octonodes plugin build",
           test: "npm run build && node --test tests/*.test.cjs",
@@ -27,7 +28,7 @@ export function createPlugin(name: string, version: string): string {
         devDependencies: {
           "@octonodes/cli": version,
           typescript: "5.9.3",
-          "@types/node": "^24.0.0",
+          "@types/node": "^20.19.0",
         },
       },
       null,
@@ -39,7 +40,7 @@ export function createPlugin(name: string, version: string): string {
     JSON.stringify(
       {
         compilerOptions: {
-          target: "ES2024",
+          target: "ES2022",
           module: "Node16",
           strict: true,
           skipLibCheck: true,

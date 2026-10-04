@@ -1,3 +1,4 @@
+import { NODE_BUILD_TARGET } from "@octonodes/sdk/plugins";
 import {
   mkdirSync,
   mkdtempSync,
@@ -100,7 +101,7 @@ export async function buildAppProject(directory: string, applicationUrl?: string
       platform: "node",
       preserveSymlinks: true,
       format: "cjs",
-      target: "node24",
+      target: NODE_BUILD_TARGET,
       outfile: join(stage, "server.cjs"),
       logLevel: "silent",
       metafile: true,
@@ -155,7 +156,7 @@ process.once("SIGINT",()=>host.close());process.once("SIGTERM",()=>host.close())
       bundle: true,
       platform: "node",
       format: "cjs",
-      target: "node24",
+      target: NODE_BUILD_TARGET,
       outfile: join(stage, "start.cjs"),
       logLevel: "silent",
     });
