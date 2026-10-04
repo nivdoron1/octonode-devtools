@@ -2776,7 +2776,7 @@ var require_attachments = __commonJS({
     var constants_js_1 = require_constants2();
     __exportStar(require_constants2(), exports2);
     __exportStar(require_models(), exports2);
-    exports2.attachmentDomainSchema = zod_1.z.enum(["chat", "assistant"]);
+    exports2.attachmentDomainSchema = zod_1.z.enum(["chat", "assistant", "support"]);
     exports2.attachmentMimeSchema = zod_1.z.enum(constants_js_1.ATTACHMENT_MIME_TYPES);
     exports2.attachmentIdListSchema = zod_1.z.array(zod_1.z.string().uuid()).max(constants_js_1.ATTACHMENT_LIMITS.messageFiles).refine((ids) => new Set(ids).size === ids.length, "Attachment IDs must be unique");
     exports2.attachmentUploadSchema = zod_1.z.object({
@@ -3184,6 +3184,372 @@ var require_collaboration = __commonJS({
       currentVersion: exports2.revisionSchema.optional(),
       currentHeadSha: exports2.gitShaSchema.optional()
     }).strict();
+  }
+});
+
+// packages/schema/dist/support/constants.js
+var require_constants3 = __commonJS({
+  "packages/schema/dist/support/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.SUPPORT_LIMITS = exports2.SUPPORT_QUEUES = exports2.SUPPORT_STATUSES = exports2.SUPPORT_ISSUE_TYPES = exports2.PLATFORM_SCOPES = void 0;
+    exports2.PLATFORM_SCOPES = ["app-support"];
+    exports2.SUPPORT_ISSUE_TYPES = [
+      "app_not_working",
+      "bug_report",
+      "payment_issue",
+      "account_access",
+      "how_to",
+      "other"
+    ];
+    exports2.SUPPORT_STATUSES = ["queued", "open", "waiting_customer", "waiting_internal", "closed"];
+    exports2.SUPPORT_QUEUES = [
+      "active",
+      "unassigned",
+      "mine",
+      "needs_response",
+      "overdue",
+      "waiting",
+      "closed",
+      "all"
+    ];
+    exports2.SUPPORT_LIMITS = {
+      page: 50,
+      maxPage: 100,
+      dailyRequests: 20,
+      activeRequests: 10,
+      realtimeTtlMs: 3e4,
+      sessionMs: 3e5,
+      socketLimit: 200,
+      uploadBytes: 1e7
+    };
+  }
+});
+
+// packages/schema/dist/support/schema.js
+var require_schema2 = __commonJS({
+  "packages/schema/dist/support/schema.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.supportLabelsInputSchema = exports2.supportLabelsSchema = exports2.supportUnreadSchema = exports2.supportNotificationPageSchema = exports2.supportNotificationSchema = exports2.supportSettingsInputSchema = exports2.supportSettingsSchema = exports2.supportTemplateInputSchema = exports2.supportTemplateSchema = exports2.supportReportSchema = exports2.supportReadSchema = exports2.supportRealtimeTicketSchema = exports2.supportRealtimeRequestSchema = exports2.supportAccessSchema = exports2.supportGrantSchema = exports2.supportAgentSchema = exports2.supportNoteViewSchema = exports2.supportActivitySchema = exports2.supportMessagePageSchema = exports2.supportTicketPageSchema = exports2.supportTicketSchema = exports2.supportListQuerySchema = exports2.supportNoteSchema = exports2.supportTakeSchema = exports2.supportStateSchema = exports2.supportCloseSchema = exports2.supportTransferSchema = exports2.supportReplySchema = exports2.supportCreateSchema = exports2.supportMutationSchema = exports2.supportStatusSchema = exports2.supportIssueTypeSchema = exports2.platformScopeSchema = void 0;
+    var zod_1 = require("zod");
+    var index_js_1 = require_attachments();
+    var collaboration_js_1 = require_collaboration();
+    var constants_js_1 = require_constants3();
+    exports2.platformScopeSchema = zod_1.z.enum(constants_js_1.PLATFORM_SCOPES);
+    exports2.supportIssueTypeSchema = zod_1.z.enum(constants_js_1.SUPPORT_ISSUE_TYPES);
+    exports2.supportStatusSchema = zod_1.z.enum(constants_js_1.SUPPORT_STATUSES);
+    exports2.supportMutationSchema = zod_1.z.object({ clientMutationId: zod_1.z.string().uuid(), expectedVersion: zod_1.z.number().int().positive() }).strict();
+    exports2.supportCreateSchema = zod_1.z.object({
+      clientMutationId: zod_1.z.string().uuid(),
+      issueType: exports2.supportIssueTypeSchema,
+      subject: zod_1.z.string().trim().min(1).max(200),
+      description: zod_1.z.string().trim().min(1).max(16384),
+      intakeId: zod_1.z.string().uuid().optional(),
+      attachmentIds: index_js_1.attachmentIdListSchema.optional(),
+      source: zod_1.z.enum(["studio", "landing"]).default("studio"),
+      followUpOfTicketId: zod_1.z.string().uuid().optional()
+    }).strict();
+    exports2.supportReplySchema = exports2.supportMutationSchema.extend({
+      body: zod_1.z.string().trim().max(16384),
+      attachmentIds: index_js_1.attachmentIdListSchema.optional()
+    });
+    exports2.supportTransferSchema = exports2.supportMutationSchema.extend({
+      assigneeId: zod_1.z.string().uuid(),
+      reason: zod_1.z.string().trim().min(1).max(2e3)
+    });
+    exports2.supportCloseSchema = exports2.supportMutationSchema.extend({ summary: zod_1.z.string().trim().min(1).max(4e3) });
+    exports2.supportStateSchema = exports2.supportMutationSchema.extend({
+      status: zod_1.z.enum(["open", "waiting_customer", "waiting_internal"])
+    });
+    exports2.supportTakeSchema = exports2.supportMutationSchema.extend({
+      reason: zod_1.z.string().trim().min(1).max(2e3).optional()
+    });
+    exports2.supportNoteSchema = exports2.supportMutationSchema.extend({ body: zod_1.z.string().trim().min(1).max(16384) });
+    exports2.supportListQuerySchema = zod_1.z.object({
+      view: zod_1.z.enum(constants_js_1.SUPPORT_QUEUES).default("active"),
+      cursor: zod_1.z.string().max(2048).optional(),
+      issueType: exports2.supportIssueTypeSchema.optional(),
+      assigneeId: zod_1.z.string().uuid().optional(),
+      priority: zod_1.z.enum(["low", "normal", "high", "urgent"]).optional(),
+      tag: zod_1.z.string().trim().min(1).max(40).optional(),
+      sort: zod_1.z.enum(["recent", "oldest"]).optional(),
+      limit: zod_1.z.coerce.number().int().min(1).max(100).default(50),
+      q: zod_1.z.string().trim().max(200).default("")
+    });
+    exports2.supportTicketSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      number: zod_1.z.number().int().positive(),
+      conversationId: zod_1.z.string().uuid(),
+      requesterId: zod_1.z.string().uuid(),
+      issueType: exports2.supportIssueTypeSchema,
+      subject: zod_1.z.string(),
+      status: exports2.supportStatusSchema,
+      source: zod_1.z.enum(["studio", "landing"]),
+      assigneeId: zod_1.z.string().uuid().nullable(),
+      acceptedBy: zod_1.z.string().uuid().nullable(),
+      acceptedAt: zod_1.z.number().nullable(),
+      closedBy: zod_1.z.string().uuid().nullable(),
+      closedAt: zod_1.z.number().nullable(),
+      closeSummary: zod_1.z.string().nullable(),
+      followUpOfTicketId: zod_1.z.string().uuid().nullable(),
+      version: zod_1.z.number().int().positive(),
+      createdAt: zod_1.z.number(),
+      updatedAt: zod_1.z.number(),
+      firstResponseAt: zod_1.z.number().nullable(),
+      lastMessageAt: zod_1.z.number(),
+      unread: zod_1.z.number().int().nonnegative()
+    });
+    exports2.supportTicketPageSchema = zod_1.z.object({
+      items: exports2.supportTicketSchema.array(),
+      nextCursor: zod_1.z.string().nullable()
+    });
+    exports2.supportMessagePageSchema = zod_1.z.object({ items: collaboration_js_1.messageSchema.array(), nextCursor: zod_1.z.string().nullable() });
+    exports2.supportActivitySchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      seq: zod_1.z.number(),
+      ticketId: zod_1.z.string().uuid(),
+      actorId: zod_1.z.string().uuid(),
+      kind: zod_1.z.string(),
+      previousAssigneeId: zod_1.z.string().uuid().nullable(),
+      assigneeId: zod_1.z.string().uuid().nullable(),
+      reason: zod_1.z.string().nullable(),
+      status: exports2.supportStatusSchema,
+      version: zod_1.z.number(),
+      createdAt: zod_1.z.number()
+    });
+    exports2.supportNoteViewSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      seq: zod_1.z.number(),
+      actorId: zod_1.z.string().uuid(),
+      body: zod_1.z.string(),
+      createdAt: zod_1.z.number()
+    });
+    exports2.supportAgentSchema = zod_1.z.object({
+      userId: zod_1.z.string().uuid(),
+      email: zod_1.z.string().nullable(),
+      version: zod_1.z.number(),
+      grantedAt: zod_1.z.number(),
+      grantedBy: zod_1.z.string().uuid()
+    });
+    exports2.supportGrantSchema = zod_1.z.object({
+      enabled: zod_1.z.boolean(),
+      expectedVersion: zod_1.z.number().int().nonnegative(),
+      reason: zod_1.z.string().trim().min(1).max(2e3),
+      clientMutationId: zod_1.z.string().uuid()
+    }).strict();
+    exports2.supportAccessSchema = zod_1.z.object({
+      uploads: zod_1.z.boolean(),
+      available: zod_1.z.boolean(),
+      staff: zod_1.z.boolean(),
+      canManageAgents: zod_1.z.boolean(),
+      userId: zod_1.z.string().uuid()
+    });
+    exports2.supportRealtimeRequestSchema = zod_1.z.object({ ticketId: zod_1.z.string().uuid().optional(), staff: zod_1.z.boolean().default(false) }).strict();
+    exports2.supportRealtimeTicketSchema = zod_1.z.object({ ticket: zod_1.z.string(), expiresAt: zod_1.z.number(), path: zod_1.z.string() });
+    exports2.supportReadSchema = zod_1.z.object({ sequence: zod_1.z.number().int().nonnegative() }).strict();
+    exports2.supportReportSchema = zod_1.z.object({
+      queued: zod_1.z.number(),
+      active: zod_1.z.number(),
+      closed: zod_1.z.number(),
+      overdue: zod_1.z.number(),
+      transfers: zod_1.z.number(),
+      meanAcceptanceMs: zod_1.z.number().nullable(),
+      meanResponseMs: zod_1.z.number().nullable(),
+      meanResolutionMs: zod_1.z.number().nullable()
+    });
+    exports2.supportTemplateSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      title: zod_1.z.string().trim().min(1).max(100),
+      body: zod_1.z.string().trim().min(1).max(16384),
+      version: zod_1.z.number().int().positive()
+    });
+    exports2.supportTemplateInputSchema = exports2.supportTemplateSchema.pick({ title: true, body: true }).extend({ expectedVersion: zod_1.z.number().int().nonnegative() }).strict();
+    exports2.supportSettingsSchema = zod_1.z.object({
+      version: zod_1.z.number().int().positive(),
+      responseTargetMinutes: zod_1.z.number().int().min(1).max(43200).nullable(),
+      retentionDays: zod_1.z.number().int().min(1).max(3650).nullable()
+    });
+    exports2.supportSettingsInputSchema = exports2.supportSettingsSchema.omit({ version: true }).extend({ expectedVersion: zod_1.z.number().int().positive() }).strict();
+    exports2.supportNotificationSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      seq: zod_1.z.number(),
+      ticketId: zod_1.z.string().uuid(),
+      kind: zod_1.z.string(),
+      createdAt: zod_1.z.number(),
+      readAt: zod_1.z.number().nullable()
+    });
+    exports2.supportNotificationPageSchema = zod_1.z.object({
+      items: exports2.supportNotificationSchema.array(),
+      nextCursor: zod_1.z.string().nullable()
+    });
+    exports2.supportUnreadSchema = zod_1.z.object({
+      unread: zod_1.z.number().int().nonnegative(),
+      liveTickets: zod_1.z.number().int().nonnegative()
+    });
+    exports2.supportLabelsSchema = zod_1.z.object({
+      priority: zod_1.z.enum(["low", "normal", "high", "urgent"]),
+      tags: zod_1.z.array(zod_1.z.string().trim().min(1).max(40)).max(10).refine((tags) => new Set(tags).size === tags.length, "Tags must be unique")
+    }).strict();
+    exports2.supportLabelsInputSchema = exports2.supportLabelsSchema.extend({
+      clientMutationId: zod_1.z.string().uuid(),
+      expectedVersion: zod_1.z.number().int().positive()
+    });
+  }
+});
+
+// packages/schema/dist/support/types.js
+var require_types = __commonJS({
+  "packages/schema/dist/support/types.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+  }
+});
+
+// packages/schema/dist/support/recovery/constants.js
+var require_constants4 = __commonJS({
+  "packages/schema/dist/support/recovery/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.SUPPORT_ARCHIVE_MAX_BYTES = exports2.SUPPORT_ARCHIVE_PAGE_SIZE = exports2.SUPPORT_ARCHIVE_TABLES = exports2.SUPPORT_ARCHIVE_VERSION = void 0;
+    exports2.SUPPORT_ARCHIVE_VERSION = 1;
+    exports2.SUPPORT_ARCHIVE_TABLES = [
+      "conversations",
+      "conversation_members",
+      "messages",
+      "message_reactions",
+      "attachments",
+      "message_attachments",
+      "support_tickets",
+      "support_intakes",
+      "support_activity",
+      "support_labels",
+      "support_notes",
+      "support_reads",
+      "support_replays",
+      "support_templates",
+      "support_notifications",
+      "support_settings",
+      "support_admin_events",
+      "support_deadline_alerts",
+      "support_erased_users",
+      "support_erased_tickets"
+    ];
+    exports2.SUPPORT_ARCHIVE_PAGE_SIZE = 25;
+    exports2.SUPPORT_ARCHIVE_MAX_BYTES = 1048576;
+  }
+});
+
+// packages/schema/dist/support/recovery/schema.js
+var require_schema3 = __commonJS({
+  "packages/schema/dist/support/recovery/schema.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.supportMaintenanceViewSchema = exports2.supportArchiveManifestSchema = exports2.supportArchivePageSchema = exports2.supportMaintenanceInputSchema = void 0;
+    var zod_1 = require("zod");
+    var constants_js_1 = require_constants4();
+    exports2.supportMaintenanceInputSchema = zod_1.z.object({
+      clientMutationId: zod_1.z.string().uuid(),
+      expectedEpoch: zod_1.z.number().int().positive(),
+      kind: zod_1.z.enum(["backup", "restore", "erase"]),
+      backupId: zod_1.z.string().uuid().optional(),
+      userId: zod_1.z.string().uuid().optional(),
+      ticketId: zod_1.z.string().uuid().optional(),
+      reason: zod_1.z.string().trim().min(1).max(2e3)
+    }).strict().superRefine((input, ctx) => {
+      if (input.kind === "restore" && !input.backupId)
+        ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "backupId required" });
+      if (input.kind === "erase" && Number(!!input.userId) + Number(!!input.ticketId) !== 1)
+        ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "exactly one erasure target required" });
+      if (input.kind !== "erase" && (input.userId || input.ticketId) || input.kind !== "restore" && input.backupId)
+        ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, message: "unexpected target" });
+    });
+    exports2.supportArchivePageSchema = zod_1.z.object({
+      table: zod_1.z.enum(constants_js_1.SUPPORT_ARCHIVE_TABLES),
+      rows: zod_1.z.record(zod_1.z.union([zod_1.z.string(), zod_1.z.number().finite(), zod_1.z.null()])).array().max(constants_js_1.SUPPORT_ARCHIVE_PAGE_SIZE)
+    }).strict();
+    exports2.supportArchiveManifestSchema = zod_1.z.object({
+      version: zod_1.z.literal(constants_js_1.SUPPORT_ARCHIVE_VERSION),
+      desk: zod_1.z.literal("octonode"),
+      id: zod_1.z.string().uuid(),
+      generation: zod_1.z.number().int().positive(),
+      pages: zod_1.z.number().int().nonnegative(),
+      chain: zod_1.z.string().regex(/^[0-9a-f]{64}$/),
+      counts: zod_1.z.record(zod_1.z.number().int().nonnegative()),
+      createdAt: zod_1.z.number().int()
+    }).strict();
+    exports2.supportMaintenanceViewSchema = zod_1.z.object({
+      id: zod_1.z.string().uuid(),
+      kind: zod_1.z.enum(["backup", "restore", "erase"]),
+      status: zod_1.z.enum(["running", "failed", "complete", "cancelled"]),
+      phase: zod_1.z.string(),
+      createdAt: zod_1.z.number(),
+      updatedAt: zod_1.z.number(),
+      error: zod_1.z.string().nullable()
+    });
+  }
+});
+
+// packages/schema/dist/support/recovery/types.js
+var require_types2 = __commonJS({
+  "packages/schema/dist/support/recovery/types.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+  }
+});
+
+// packages/schema/dist/support/recovery/index.js
+var require_recovery = __commonJS({
+  "packages/schema/dist/support/recovery/index.js"(exports2) {
+    "use strict";
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    }) : (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      o[k2] = m[k];
+    }));
+    var __exportStar = exports2 && exports2.__exportStar || function(m, exports3) {
+      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    __exportStar(require_constants4(), exports2);
+    __exportStar(require_schema3(), exports2);
+    __exportStar(require_types2(), exports2);
+  }
+});
+
+// packages/schema/dist/support/index.js
+var require_support = __commonJS({
+  "packages/schema/dist/support/index.js"(exports2) {
+    "use strict";
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    }) : (function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      o[k2] = m[k];
+    }));
+    var __exportStar = exports2 && exports2.__exportStar || function(m, exports3) {
+      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    __exportStar(require_constants3(), exports2);
+    __exportStar(require_schema2(), exports2);
+    __exportStar(require_types(), exports2);
+    __exportStar(require_recovery(), exports2);
   }
 });
 
@@ -4206,7 +4572,7 @@ var require_capabilities = __commonJS({
 });
 
 // packages/schema/dist/remote/constants.js
-var require_constants3 = __commonJS({
+var require_constants5 = __commonJS({
   "packages/schema/dist/remote/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -4237,13 +4603,13 @@ var require_constants3 = __commonJS({
 });
 
 // packages/schema/dist/remote/schema.js
-var require_schema2 = __commonJS({
+var require_schema4 = __commonJS({
   "packages/schema/dist/remote/schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.remoteFrameSchema = exports2.remoteGrantSchema = exports2.remoteGrantInputSchema = exports2.remoteCommandSchema = exports2.remoteCommandInputSchema = exports2.remoteTerminalQuerySchema = exports2.remoteTerminalSchema = exports2.remoteConnectionSchema = exports2.remoteDeviceSchema = exports2.remoteHostEnrollmentSchema = exports2.remoteHostSchema = exports2.remoteCredentialFenceSchema = exports2.remoteRecoveryCommandSchema = exports2.remoteRecoverySchema = exports2.remotePairSchema = exports2.remoteFileTransferSchema = exports2.remoteFileTransferInputSchema = exports2.remoteFileDownloadSchema = exports2.remoteFileChunkSchema = exports2.remoteFileMetadataSchema = exports2.remoteFileRevisionSchema = exports2.remotePreviewSchema = exports2.remotePreviewInputSchema = exports2.remotePreviewPortsSchema = exports2.remoteHostCreateSchema = exports2.remoteTargetSchema = exports2.remoteHostIdSchema = void 0;
     var zod_1 = require("zod");
-    var constants_js_1 = require_constants3();
+    var constants_js_1 = require_constants5();
     exports2.remoteHostIdSchema = zod_1.z.string().uuid();
     exports2.remoteTargetSchema = zod_1.z.object({ computerId: exports2.remoteHostIdSchema, checkoutId: zod_1.z.string().uuid() }).strict();
     exports2.remoteHostCreateSchema = zod_1.z.object({ name: zod_1.z.string().trim().min(1).max(80) }).strict();
@@ -4518,7 +4884,7 @@ var require_chat = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.canTransitionAgentRun = exports2.claudeSandboxRequestSchema = exports2.agentServiceRunRequestSchema = exports2.agentToolAuditSchema = exports2.agentStreamEventSchema = exports2.agentRunSchema = exports2.agentUsageSchema = exports2.assistantConversationUpdateSchema = exports2.assistantConversationConfigSchema = exports2.assistantSettingsSchema = exports2.agentToolRiskSchema = exports2.agentErrorCodeSchema = exports2.agentRunStatusSchema = void 0;
     var zod_1 = require("zod");
-    var schema_js_1 = require_schema2();
+    var schema_js_1 = require_schema4();
     var index_js_1 = require_attachments();
     var models_js_1 = require_models2();
     var artifacts_js_1 = require_artifacts();
@@ -4773,7 +5139,7 @@ var require_chat = __commonJS({
 });
 
 // packages/schema/dist/agent/constants.js
-var require_constants4 = __commonJS({
+var require_constants6 = __commonJS({
   "packages/schema/dist/agent/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -4932,6 +5298,13 @@ var require_draft = __commonJS({
       label: zod_1.z.string().trim().min(1).max(120),
       description: zod_1.z.string().max(2e3),
       groupId: draftId.optional(),
+      creation: zod_1.z.object({
+        template: zod_1.z.enum(["project", "package", "workflow", "data-table"]),
+        path: zod_1.z.string().min(1).max(512).regex(/^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+$/).optional(),
+        projectId: zod_1.z.string().min(1).max(512).optional(),
+        packageName: zod_1.z.string().regex(/^(?:@[a-z0-9._-]+\/)?[a-z0-9][a-z0-9._-]*$/).max(214).optional()
+      }).strict().optional(),
+      implementation: zod_1.z.string().max(512).optional(),
       position: zod_1.z.object({ x: zod_1.z.number().finite().min(-1e5).max(1e5), y: zod_1.z.number().finite().min(-1e5).max(1e5) }).strict().optional()
     }).strict();
     exports2.ArchitectureDraft = zod_1.z.object({
@@ -4941,7 +5314,7 @@ var require_draft = __commonJS({
       items: zod_1.z.array(exports2.ArchitectureDraftItem).max(200),
       connections: zod_1.z.array(architecture_js_1.ArchitectureEdge.pick({ from: true, to: true, relation: true }).extend({ id: draftId }).strict()).max(500)
     }).strict();
-    exports2.ArchitectureDraftResult = zod_1.z.object({ draft: exports2.ArchitectureDraft.nullable(), revision: revision.nullable() }).strict();
+    exports2.ArchitectureDraftResult = zod_1.z.object({ draft: exports2.ArchitectureDraft.nullable(), revision: revision.nullable(), pendingToken: revision.optional() }).strict();
     exports2.SaveArchitectureDraft = zod_1.z.object({ draft: exports2.ArchitectureDraft, revision: revision.nullable() }).strict();
     exports2.ArchitectureDraftReview = zod_1.z.object({
       token: revision,
@@ -4958,13 +5331,23 @@ var require_draft = __commonJS({
           "self_dependency",
           "cycle",
           "partial_projection",
-          "unavailable_project"
+          "unavailable_project",
+          "invalid_creation",
+          "creation_conflict"
         ]),
         entityId: zod_1.z.string().optional()
       }).strict()),
-      changes: zod_1.z.array(zod_1.z.object({ projectId: zod_1.z.string(), path: zod_1.z.string(), before: zod_1.z.string(), after: zod_1.z.string() }).strict())
+      changes: zod_1.z.array(zod_1.z.object({ projectId: zod_1.z.string(), path: zod_1.z.string(), before: zod_1.z.string(), after: zod_1.z.string() }).strict()),
+      resources: zod_1.z.array(zod_1.z.object({
+        itemId: draftId,
+        template: zod_1.z.enum(["workflow", "data-table"]),
+        projectId: zod_1.z.string(),
+        id: zod_1.z.string(),
+        name: zod_1.z.string(),
+        description: zod_1.z.string()
+      }).strict()).default([])
     }).strict();
-    exports2.ApplyArchitectureDraft = zod_1.z.object({ token: revision }).strict();
+    exports2.ApplyArchitectureDraft = zod_1.z.object({ token: revision, cancel: zod_1.z.boolean().optional() }).strict();
   }
 });
 
@@ -5870,7 +6253,7 @@ var require_definitions = __commonJS({
 });
 
 // packages/schema/dist/json/schema.js
-var require_schema3 = __commonJS({
+var require_schema5 = __commonJS({
   "packages/schema/dist/json/schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -12605,7 +12988,7 @@ var require_tokens = __commonJS({
 });
 
 // packages/schema/dist/access/constants.js
-var require_constants5 = __commonJS({
+var require_constants7 = __commonJS({
   "packages/schema/dist/access/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -12879,10 +13262,10 @@ var require_policy = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.accessCredentialRevokeSchema = exports2.accessCredentialsSchema = exports2.accessCredentialSchema = exports2.accessCredentialsQuerySchema = exports2.accessUsageSchema = exports2.accessScopesSchema = exports2.accessScopesQuerySchema = exports2.accessCatalogSchema = exports2.accessPolicyHistorySchema = exports2.accessImpactResultSchema = exports2.accessImpactSchema = exports2.accessInspectionResultSchema = exports2.accessInspectionSchema = exports2.accessCredentialRefSchema = exports2.accessEffectiveQuerySchema = exports2.accessPolicyQuerySchema = exports2.effectiveAccessSchema = exports2.accessDecisionSchema = exports2.accessReasonSchema = exports2.accessPolicyHeadSchema = exports2.accessPolicyRecordSchema = exports2.accessPolicyWriteSchema = exports2.accessPolicyTargetSchema = exports2.accessProfileSchema = exports2.accessPolicySchema = exports2.credentialPolicySchema = exports2.accessLimitsSchema = exports2.accessLimitSchema = exports2.accessMeterSchema = exports2.accessFeatureSchema = void 0;
-    var constants_js_1 = require_constants5();
+    var constants_js_1 = require_constants7();
     var zod_1 = require("zod");
     var constants_js_2 = require_constants();
-    var constants_js_3 = require_constants5();
+    var constants_js_3 = require_constants7();
     exports2.accessFeatureSchema = zod_1.z.enum(constants_js_3.ACCESS_FEATURES);
     exports2.accessMeterSchema = zod_1.z.enum(constants_js_3.ACCESS_METERS);
     exports2.accessLimitSchema = zod_1.z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
@@ -13085,7 +13468,7 @@ var require_policy = __commonJS({
 });
 
 // packages/schema/dist/access/types.js
-var require_types = __commonJS({
+var require_types3 = __commonJS({
   "packages/schema/dist/access/types.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13099,7 +13482,7 @@ var require_resolve = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.resolveAccess = resolveAccess;
     var constants_js_1 = require_constants();
-    var constants_js_2 = require_constants5();
+    var constants_js_2 = require_constants7();
     function resolveAccess(input) {
       const limits = {};
       let credentials = { deniedTypes: [], deniedScopes: [], maxLifetimeSeconds: null };
@@ -13153,7 +13536,7 @@ var require_capacity = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.accessRunReservationSchema = exports2.capacityResponseSchema = exports2.capacityRequestSchema = exports2.capacityPrincipalSchema = exports2.capacityClaimSchema = exports2.capacityOwnerSchema = exports2.capacityUsageSchema = exports2.capacityQuantitiesSchema = void 0;
-    var constants_js_1 = require_constants5();
+    var constants_js_1 = require_constants7();
     var zod_1 = require("zod");
     var collaboration_js_1 = require_collaboration();
     var constants_js_2 = require_constants();
@@ -13236,7 +13619,7 @@ var require_capacity = __commonJS({
 });
 
 // packages/schema/dist/access/routes/constants.js
-var require_constants6 = __commonJS({
+var require_constants8 = __commonJS({
   "packages/schema/dist/access/routes/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -13284,6 +13667,7 @@ var require_constants6 = __commonJS({
       runs: "workflows",
       search: "projects",
       slack: "integrations",
+      support: null,
       social: "social",
       "source-repositories": "projects",
       store: "projects",
@@ -13307,7 +13691,7 @@ var require_resolve2 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.routeAccessFeatures = routeAccessFeatures;
-    var constants_js_1 = require_constants6();
+    var constants_js_1 = require_constants8();
     function routeAccessFeatures(path) {
       if (path === "/wf/exec")
         return ["workflows"];
@@ -14334,7 +14718,7 @@ var require_billing = __commonJS({
 });
 
 // packages/schema/dist/remote/types.js
-var require_types2 = __commonJS({
+var require_types4 = __commonJS({
   "packages/schema/dist/remote/types.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -14390,8 +14774,8 @@ var require_channel = __commonJS({
     exports2.remoteBytes = remoteBytes;
     exports2.remoteBody = remoteBody;
     exports2.remoteSocketMessage = remoteSocketMessage;
-    var constants_js_1 = require_constants3();
-    var schema_js_1 = require_schema2();
+    var constants_js_1 = require_constants5();
+    var schema_js_1 = require_schema4();
     var RemoteChannel = class {
       constructor(write) {
         this.queue = [];
@@ -14561,9 +14945,9 @@ var require_remote = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    __exportStar(require_constants3(), exports2);
-    __exportStar(require_schema2(), exports2);
-    __exportStar(require_types2(), exports2);
+    __exportStar(require_constants5(), exports2);
+    __exportStar(require_schema4(), exports2);
+    __exportStar(require_types4(), exports2);
     __exportStar(require_policy2(), exports2);
     __exportStar(require_channel(), exports2);
   }
@@ -14618,7 +15002,7 @@ var require_hosting = __commonJS({
 });
 
 // packages/schema/dist/assistant/instructions/constants.js
-var require_constants7 = __commonJS({
+var require_constants9 = __commonJS({
   "packages/schema/dist/assistant/instructions/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -14637,7 +15021,7 @@ var require_instructions = __commonJS({
     exports2.assistantProjectInstructionsSchema = void 0;
     exports2.isProjectInstructionPath = isProjectInstructionPath;
     var zod_1 = require("zod");
-    var constants_js_1 = require_constants7();
+    var constants_js_1 = require_constants9();
     exports2.assistantProjectInstructionsSchema = zod_1.z.object({
       files: zod_1.z.array(zod_1.z.object({
         path: zod_1.z.string().max(1024),
@@ -14719,13 +15103,14 @@ var require_dist = __commonJS({
     __exportStar(require_source(), exports2);
     __exportStar(require_graph(), exports2);
     __exportStar(require_collaboration(), exports2);
+    __exportStar(require_support(), exports2);
     __exportStar(require_task_management(), exports2);
     __exportStar(require_collaboration2(), exports2);
     __exportStar(require_documents(), exports2);
     __exportStar(require_dashboard(), exports2);
     __exportStar(require_capabilities(), exports2);
     __exportStar(require_chat(), exports2);
-    __exportStar(require_constants4(), exports2);
+    __exportStar(require_constants6(), exports2);
     __exportStar(require_attachments(), exports2);
     __exportStar(require_knowledge(), exports2);
     __exportStar(require_architecture(), exports2);
@@ -14736,7 +15121,7 @@ var require_dist = __commonJS({
     __exportStar(require_media_types(), exports2);
     __exportStar(require_templates(), exports2);
     __exportStar(require_constants(), exports2);
-    var schema_1 = require_schema3();
+    var schema_1 = require_schema5();
     Object.defineProperty(exports2, "octonodeJsonSchema", { enumerable: true, get: function() {
       return schema_1.octonodeJsonSchema;
     } });
@@ -14746,9 +15131,9 @@ var require_dist = __commonJS({
     __exportStar(require_icons(), exports2);
     __exportStar(require_settings(), exports2);
     __exportStar(require_tokens(), exports2);
-    __exportStar(require_constants5(), exports2);
+    __exportStar(require_constants7(), exports2);
     __exportStar(require_policy(), exports2);
-    __exportStar(require_types(), exports2);
+    __exportStar(require_types3(), exports2);
     __exportStar(require_resolve(), exports2);
     __exportStar(require_capacity(), exports2);
     __exportStar(require_resolve2(), exports2);
@@ -14791,13 +15176,13 @@ var require_dist = __commonJS({
     __exportStar(require_remote(), exports2);
     __exportStar(require_hosting(), exports2);
     __exportStar(require_instructions(), exports2);
-    __exportStar(require_constants7(), exports2);
+    __exportStar(require_constants9(), exports2);
     __exportStar(require_catalog(), exports2);
   }
 });
 
 // packages/plugin-runtime/dist/constants.js
-var require_constants8 = __commonJS({
+var require_constants10 = __commonJS({
   "packages/plugin-runtime/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -14809,7 +15194,7 @@ var require_constants8 = __commonJS({
 });
 
 // packages/plugin-runtime/dist/json/schema.js
-var require_schema4 = __commonJS({
+var require_schema6 = __commonJS({
   "packages/plugin-runtime/dist/json/schema.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -14928,8 +15313,8 @@ var require_runner = __commonJS({
     exports2.start = start;
     var node_console_1 = require("node:console");
     var schema_1 = require_dist();
-    var constants_js_1 = require_constants8();
-    var schema_js_1 = require_schema4();
+    var constants_js_1 = require_constants10();
+    var schema_js_1 = require_schema6();
     var NodeError = class extends Error {
       constructor(message, opts) {
         super(message);
@@ -15244,7 +15629,7 @@ var require_runner = __commonJS({
 });
 
 // packages/common/dist/constants.js
-var require_constants9 = __commonJS({
+var require_constants11 = __commonJS({
   "packages/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -15604,6 +15989,14 @@ var require_routing = __commonJS({
     function controlPlanePath(url, method = "GET") {
       if (/^\/api\/access\/(?:effective|catalog|policy|history|inspect|impact|usage|scopes|credentials)(?:\/[^/]+)?$/.test(url.pathname))
         return `${url.pathname.slice(4)}${url.search}`;
+      if (/^\/api\/support\/(?:access|realtime(?:-ticket)?|(?:staff\/)?tickets(?:\/[^/]+(?:\/(?:messages|read|take|transfer|close|state|notes|activity|labels))?)?|staff\/(?:agents|reports))$/.test(url.pathname) || /^\/api\/super-admin\/support\/agents(?:\/[^/]+)?$/.test(url.pathname))
+        return `${url.pathname.slice(4)}${url.search}`;
+      if (/^\/api\/support\/(?:intakes|files\/[^/]+(?:\/[^/]+(?:\/content)?)?)$/.test(url.pathname))
+        return `${url.pathname.slice(4)}${url.search}`;
+      if (/^\/api\/support\/(?:staff\/)?(?:unread|notifications(?:\/read)?|settings|templates(?:\/[^/]+)?)$/.test(url.pathname))
+        return `${url.pathname.slice(4)}${url.search}`;
+      if (/^\/api\/support\/staff\/maintenance(?:\/[^/]+(?:\/(?:step|cancel))?)?$/.test(url.pathname))
+        return `${url.pathname.slice(4)}${url.search}`;
       const hosting = url.pathname.match(/^\/api\/organizations\/([^/]+)\/(hosting|storage-connections)(?:\/[^/]+(?:\/(?:validate|rotate|[a-f0-9]{64}))?)?$/);
       if (hosting)
         return url.pathname.replace(/^\/api\/organizations\//, "/orgs/") + url.search;
@@ -15785,7 +16178,7 @@ var require_dist2 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.compareWorkflowGraphs = exports2.edgeChanges = exports2.graphValues = exports2.graphValue = exports2.workspaceRef = exports2.controlPlanePath = exports2.installedPluginNodesPage = exports2.layeredLayout = exports2.packageCacheEnvironment = void 0;
-    __exportStar(require_constants9(), exports2);
+    __exportStar(require_constants11(), exports2);
     __exportStar(require_legal_constants(), exports2);
     var cache_js_1 = require_cache();
     Object.defineProperty(exports2, "packageCacheEnvironment", { enumerable: true, get: function() {
@@ -15973,7 +16366,7 @@ var require_dist3 = __commonJS({
     Object.defineProperty(exports2, "disposeServiceInstances", { enumerable: true, get: function() {
       return runner_js_1.disposeServiceInstances;
     } });
-    var schema_js_1 = require_schema4();
+    var schema_js_1 = require_schema6();
     Object.defineProperty(exports2, "validate", { enumerable: true, get: function() {
       return schema_js_1.validate;
     } });
@@ -16001,7 +16394,7 @@ var require_dist3 = __commonJS({
     Object.defineProperty(exports2, "PluginConnection", { enumerable: true, get: function() {
       return schema_1.PluginConnection;
     } });
-    var constants_js_1 = require_constants8();
+    var constants_js_1 = require_constants10();
     Object.defineProperty(exports2, "NODE_ENGINE_RANGE", { enumerable: true, get: function() {
       return constants_js_1.NODE_ENGINE_RANGE;
     } });

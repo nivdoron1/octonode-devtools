@@ -1095,7 +1095,7 @@ export type GetApiSocialConversationsByIdMessagesResponses = {
             attachments?: Array<{
                 id: string;
                 conversationId: string;
-                domain: 'chat' | 'assistant';
+                domain: 'chat' | 'assistant' | 'support';
                 name: string;
                 mime: 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif' | 'application/pdf' | 'text/plain' | 'text/markdown' | 'text/csv' | 'application/json' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.presentationml.presentation' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 size: number;
