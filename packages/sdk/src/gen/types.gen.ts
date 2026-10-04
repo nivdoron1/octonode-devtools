@@ -5164,6 +5164,10 @@ export type GetApiMarketplacePluginsByIdData = {
         id: string;
     };
     query?: {
+        nodes?: 'none' | 'page';
+        kind?: 'action' | 'trigger';
+        sort?: 'name' | 'id';
+        direction?: 'asc' | 'desc';
         q?: string;
         offset?: number;
         limit?: number;
@@ -5246,6 +5250,9 @@ export type GetApiMarketplacePluginsByIdResponses = {
                     };
                 };
             };
+            language?: string;
+            trigger?: boolean;
+            env?: Array<string>;
         }>;
         nextVersionOffset?: number | null;
         library?: {
@@ -5304,7 +5311,11 @@ export type GetApiMarketplacePluginsByIdResponses = {
         nodesTotal: number;
         nodesOffset: number;
         nodesLimit: number;
-        attachedProjects: Array<unknown>;
+        attachedProjects: Array<{
+            id: string;
+            name?: string;
+            path?: string;
+        }>;
     };
 };
 
@@ -5565,6 +5576,10 @@ export type GetApiPluginsByPluginIdData = {
         pluginId: string;
     };
     query?: {
+        nodes?: 'none' | 'page';
+        kind?: 'action' | 'trigger';
+        sort?: 'name' | 'id';
+        direction?: 'asc' | 'desc';
         global?: 'true';
         q?: string;
         offset?: number;
