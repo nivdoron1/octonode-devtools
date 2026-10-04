@@ -14,7 +14,7 @@ export interface NpmPackageMeta {
   license?: string;
   homepage?: string;
   repository?: string;
-  /** Entry type-declaration file, or null when the package ships no types. */
+  /** Entry declaration or explicitly requested JavaScript source for static SDK inspection. */
   dtsPath: string | null;
   /** Fallback export names discovered at runtime when dtsPath is null. */
   runtimeExports?: string[];
@@ -56,6 +56,10 @@ export interface NpmOutputStreams {
   path: string[];
 }
 
+export interface NpmSchemaBudget {
+  remaining: number;
+}
+
 export interface CompiledNpmPlugin {
   /** A valid octonode.plugin.json object. */
   manifest: Record<string, unknown>;
@@ -81,7 +85,7 @@ export interface NpmGenerateOptions {
   include?: string[];
   /** Discover public typed client methods without executing upstream code. */
   discoverClients?: boolean;
-  /** Zero-based constructor/factory overload per exported client name. */
+  /** Zero-based overload per exported function or client constructor/factory name. */
   overloads?: Record<string, number>;
   exclude?: string[];
   dir?: string;
