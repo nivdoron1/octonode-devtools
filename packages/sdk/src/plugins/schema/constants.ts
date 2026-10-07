@@ -171,6 +171,43 @@ export const TASK_VIEW_SORTS = ["rank", "updated", "due", "priority"] as const;
 export const TASK_LINK_TYPES = ["blocks", "duplicates", "relates"] as const;
 export const TASK_SPRINT_STATES = ["future", "active", "completed"] as const;
 export const TASK_RELEASE_STATES = ["unreleased", "released", "archived"] as const;
+/** One bulk request may touch at most this many work items, in a single all-or-nothing transaction. */
+export const WORK_ITEM_BULK_LIMIT = 100;
+/** A subtree read returns at most this many items; deeper or wider trees report `truncated`. */
+export const WORK_ITEM_TREE_LIMIT = 1000;
+/** Space configuration bounds; statuses also bound the status filter. */
+export const TASK_STATUS_LIMIT = 20;
+export const WORK_ITEM_TYPE_LIMIT = 50;
+export const TASK_FIELD_LIMIT = 50;
+export const TASK_FIELD_OPTION_LIMIT = 100;
+/**
+ * Task attachments live in a private R2 bucket. Types are an allowlist (no HTML or SVG, which can run script);
+ * the size cap is bounded by the Worker request body limit.
+ */
+export const TASK_ATTACHMENT_MAX_BYTES = 50 * 1024 * 1024;
+export const TASK_ATTACHMENT_ITEM_LIMIT = 50;
+export const TASK_ATTACHMENT_WORKSPACE_QUOTA_BYTES = 5 * 1024 * 1024 * 1024;
+export const TASK_ATTACHMENT_INLINE_MIME_TYPES = [
+  "image/png",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+  "image/avif",
+  "video/mp4",
+  "video/webm",
+  "application/pdf",
+] as const;
+export const TASK_ATTACHMENT_MIME_TYPES = [
+  ...TASK_ATTACHMENT_INLINE_MIME_TYPES,
+  "text/plain",
+  "text/markdown",
+  "text/csv",
+  "application/json",
+  "application/zip",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+] as const;
 
 export const SOURCE_CONTROL_REGION_KINDS = [
   "if",
