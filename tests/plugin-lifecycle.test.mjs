@@ -6,6 +6,8 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { runPluginLifecycle } from "../packages/cli/runtime/plugin-lifecycle.cjs";
 
+const windowsError = /Plugin dependency lifecycle currently supports macOS and Linux; use WSL on Windows/;
+
 function fixture(t, scope = "org") {
   const cwd = mkdtempSync(join(tmpdir(), "octonodes-restore-"));
   const alias = `fixture-${randomUUID()}`;
@@ -69,10 +71,10 @@ for (const scope of ["org", "public"]) {
     };
     await assert.rejects(
       runPluginLifecycle("restore", undefined, { cwd, "artifacts-only": true, token: "fixture-token" }),
-      /403 bundle access denied/,
+      process.platform === "win32" ? windowsError : /403 bundle access denied/,
     );
     const pluginPath = `/marketplace/plugins/${encodeURIComponent(member.pluginId)}`;
-    assert.deepEqual(requests, [
+    assert.deepEqual(requests, process.platform === "win32" ? [] : [
       "/marketplace/toolkits/toolkit/resolve",
       ...(scope === "public" ? [] : [pluginPath]),
       `${pluginPath}/versions/1.0.0/bundle`,
@@ -91,7 +93,7 @@ test("toolkit restore rejects a conflicting registry workspace before requesting
   };
   await assert.rejects(
     runPluginLifecycle("restore", undefined, { cwd, "artifacts-only": true, token: "fixture-token" }),
-    /Toolkit destination must match the registry workspace/,
+    process.platform === "win32" ? windowsError : /Toolkit destination must match the registry workspace/,
   );
   assert.equal(requests, 0);
   assert.equal(readFileSync(lockFile, "utf8"), originalLock);
