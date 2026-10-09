@@ -15,6 +15,8 @@ Choose one operation below, then read its page for the exact schema and calling 
 | [`project_file_read`](source/project_file_read.md) | Read one bounded project-relative file and its revision. | read |
 | [`project_file_create`](source/project_file_create.md) | Create one project-relative file; fails safely when the path already exists. | write |
 | [`project_file_write`](source/project_file_write.md) | Write one project-relative file using its exact base revision. | write |
+| [`project_file_rename`](source/project_file_rename.md) | Rename one project-relative file using its exact base revision; fails if the destination exists. | write |
+| [`project_file_delete`](source/project_file_delete.md) | Delete one project-relative file using its exact base revision; never delete files unless requested by the user. | write |
 | [`project_validate`](source/project_validate.md) | Compile and synchronize the bound project after source changes. | write |
 | [`project_nodes`](source/project_nodes.md) | List up to 100 nodes in the bound project. | read |
 | [`project_node_source_read`](source/project_node_source_read.md) | Read one node's TypeScript source and revision. | read |

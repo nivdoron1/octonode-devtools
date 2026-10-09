@@ -74,6 +74,8 @@ test("lists the curated Octonode tools", async () => {
       "project_file_read",
       "project_file_create",
       "project_file_write",
+      "project_file_rename",
+      "project_file_delete",
       "project_validate",
       "project_nodes",
       "project_node_source_read",
@@ -403,3 +405,28 @@ test("normalizes streaming and binary API responses", async () => {
     globalThis.fetch = originalFetch;
   }
 });
+
+for (const [name, method, extra] of [
+  ["project_file_rename", "PATCH", { newPath: "src/renamed.ts" }],
+  ["project_file_delete", "DELETE", {}],
+]) {
+  test(`${name} validates revisions and forwards project/worktree scope`, async () => {
+    const originalFetch = globalThis.fetch;
+    const calls = [];
+    globalThis.fetch = async (input) => { calls.push(input); return Response.json({ path: "src/node.ts" }); };
+    const headers = { "x-octonode-workspace": "user:owner", "x-octonode-project": "project-1", "x-octonode-projects": '["project-1"]', "x-octonode-worktree": "selected-checkout" };
+    try {
+      const invalid = await payload(await worker.fetch(request("tools/call", { name, arguments: { path: "src/node.ts", ...extra } }, headers), {}, context));
+      assert.ok(invalid.error || invalid.result?.isError);
+      assert.equal(calls.length, 0);
+      const args = { path: "src/node.ts", ...extra, baseRevision: "a".repeat(64) };
+      const body = await payload(await worker.fetch(request("tools/call", { name, arguments: args }, headers), { OCTONODE_API_URL: "https://api.example.test" }, context));
+      assert.equal(body.result.isError, undefined);
+      assert.equal(calls[0].method, method);
+      assert.equal(new URL(calls[0].url).pathname, "/api/projects/project-1/files/content");
+      assert.equal(new URL(calls[0].url).searchParams.get("project"), "project-1");
+      assert.equal(calls[0].headers.get("x-octonode-worktree"), "selected-checkout");
+      assert.deepEqual(await calls[0].json(), args);
+    } finally { globalThis.fetch = originalFetch; }
+  });
+}

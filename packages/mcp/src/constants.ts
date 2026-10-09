@@ -8,7 +8,7 @@ const string = (maxLength = 256): JsonSchema => ({ type: "string", minLength: 1,
 const id = string(128);
 const path = string(4_096);
 const revision: JsonSchema = { type: "string", pattern: "^[a-fA-F0-9]{64}$" };
-const content = string(1_000_000);
+const content: JsonSchema = { type: "string", maxLength: 1_000_000 };
 const object: JsonSchema = { type: "object", maxProperties: 100 };
 const integer: JsonSchema = { type: "integer" };
 const plainString: JsonSchema = { type: "string" };
@@ -262,6 +262,8 @@ const projectTools: ToolDefinition[] = [
     required: ["path", "content", "baseRevision"],
     body: ["path", "content", "baseRevision"],
   }),
+  projectTool({ name: "project_file_rename", description: "Rename one project-relative file using its exact base revision; fails if the destination exists.", path: "/api/projects/{projectId}/files/content", method: "PATCH", properties: { path, newPath: path, baseRevision: revision }, required: ["path", "newPath", "baseRevision"], body: ["path", "newPath", "baseRevision"] }),
+  projectTool({ name: "project_file_delete", description: "Delete one project-relative file using its exact base revision; never delete files unless requested by the user.", path: "/api/projects/{projectId}/files/content", method: "DELETE", properties: { path, baseRevision: revision }, required: ["path", "baseRevision"], body: ["path", "baseRevision"] }),
   projectTool({ name: "project_validate", description: "Compile and synchronize the bound project after source changes.", path: "/api/projects/{projectId}/compile", method: "POST" }),
   projectTool({ name: "project_nodes", description: "List up to 100 nodes in the bound project.", path: "/api/nodes?limit=100" }),
   projectTool({

@@ -40,7 +40,6 @@ Bundled input schema (use the live tool schema if the deployed server differs):
     },
     "content": {
       "type": "string",
-      "minLength": 1,
       "maxLength": 1000000
     }
   },

@@ -2097,6 +2097,58 @@ export type GetApiProjectsByProjectIdFilesResponses = {
 
 export type GetApiProjectsByProjectIdFilesResponse = GetApiProjectsByProjectIdFilesResponses[keyof GetApiProjectsByProjectIdFilesResponses];
 
+export type DeleteApiProjectsByProjectIdFilesContentData = {
+    body: {
+        path: string;
+        baseRevision: string;
+    };
+    path: {
+        projectId: string;
+    };
+    query?: never;
+    url: '/api/projects/{projectId}/files/content';
+};
+
+export type DeleteApiProjectsByProjectIdFilesContentErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    404: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    409: {
+        error: string;
+    };
+};
+
+export type DeleteApiProjectsByProjectIdFilesContentError = DeleteApiProjectsByProjectIdFilesContentErrors[keyof DeleteApiProjectsByProjectIdFilesContentErrors];
+
+export type DeleteApiProjectsByProjectIdFilesContentResponses = {
+    /**
+     * Success
+     */
+    200: {
+        path: string;
+    };
+};
+
+export type DeleteApiProjectsByProjectIdFilesContentResponse = DeleteApiProjectsByProjectIdFilesContentResponses[keyof DeleteApiProjectsByProjectIdFilesContentResponses];
+
 export type GetApiProjectsByProjectIdFilesContentData = {
     body?: never;
     path: {
@@ -2149,6 +2201,67 @@ export type GetApiProjectsByProjectIdFilesContentResponses = {
 };
 
 export type GetApiProjectsByProjectIdFilesContentResponse = GetApiProjectsByProjectIdFilesContentResponses[keyof GetApiProjectsByProjectIdFilesContentResponses];
+
+export type PatchApiProjectsByProjectIdFilesContentData = {
+    body: {
+        path: string;
+        newPath: string;
+        baseRevision: string;
+    };
+    path: {
+        projectId: string;
+    };
+    query?: never;
+    url: '/api/projects/{projectId}/files/content';
+};
+
+export type PatchApiProjectsByProjectIdFilesContentErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    404: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    409: {
+        error: string;
+    };
+};
+
+export type PatchApiProjectsByProjectIdFilesContentError = PatchApiProjectsByProjectIdFilesContentErrors[keyof PatchApiProjectsByProjectIdFilesContentErrors];
+
+export type PatchApiProjectsByProjectIdFilesContentResponses = {
+    /**
+     * Success
+     */
+    200: {
+        path: string;
+        content: string;
+        mtime: number;
+        revision: string;
+        conflict?: boolean;
+        compilerOptions?: {
+            [key: string]: boolean | number | Array<string>;
+        };
+        compilerError?: string;
+    };
+};
+
+export type PatchApiProjectsByProjectIdFilesContentResponse = PatchApiProjectsByProjectIdFilesContentResponses[keyof PatchApiProjectsByProjectIdFilesContentResponses];
 
 export type PostApiProjectsByProjectIdFilesContentData = {
     body: {
