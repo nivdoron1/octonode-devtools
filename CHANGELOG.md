@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.38] - 2026-10-09
+
+### Added
+
+- Rename and delete project files through hosted MCP with exact revision checks and the selected project and worktree scope.
+
+### Fixed
+
+- Create and write empty text files through project authoring tools.
+- Keep the public SDK and bundled MCP skill references aligned with the project file API.
+
 ## [0.2.37] - 2026-10-09
 
 ### Changed
