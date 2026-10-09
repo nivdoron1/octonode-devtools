@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.37] - 2026-10-09
+
+### Changed
+
+- Sync the SDK with support attachment domains and the latest work-item limits.
+
+### Fixed
+
+- Restore toolkit plugins using their destination workspace for access checks and downloads.
+- Keep merge checks stable across the Linux, macOS and Windows runtime matrix.
+- Preserve the documented Node 20.19+ and 22.12+ support for app servers.
+
 ## [0.2.36] - 2026-10-04
 
 ### Fixed

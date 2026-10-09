@@ -4090,7 +4090,8 @@
                                   "type": "string",
                                   "enum": [
                                     "chat",
-                                    "assistant"
+                                    "assistant",
+                                    "support"
                                   ]
                                 },
                                 "name": {
