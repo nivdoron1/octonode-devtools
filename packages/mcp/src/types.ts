@@ -1,5 +1,5 @@
 export type JsonSchema = Record<string, unknown>;
-export type Method = "GET" | "POST" | "PUT";
+export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export type ToolArguments = Record<string, unknown>;
 export type McpEnv = Env & { OCTONODE_API_URL?: string; OCTONODE_API?: Fetcher };
 

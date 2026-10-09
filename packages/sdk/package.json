@@ -1,6 +1,6 @@
 {
   "name": "@octonodes/sdk",
-  "version": "0.2.37",
+  "version": "0.2.38",
   "description": "Octonode API client and code-first plugin SDK.",
   "license": "MIT",
   "repository": {
