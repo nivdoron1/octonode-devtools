@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  check:
+  runtime:
     strategy:
       fail-fast: false
       matrix:
@@ -33,3 +33,17 @@ jobs:
         run: node scripts/runtime/test.mjs
       - name: Install and exercise public tarballs with strict engines
         run: npm run test:install
+
+  check:
+    needs: runtime
+    if: always()
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Require every supported runtime to pass
+        env:
+          RESULT: ${{ needs.runtime.result }}
+        shell: bash
+        run: test "$RESULT" = success
