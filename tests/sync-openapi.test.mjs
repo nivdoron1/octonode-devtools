@@ -38,7 +38,14 @@ test("packaged OpenAPI contains only developer operations", () => {
   const document = JSON.parse(readFileSync("packages/sdk/openapi.json", "utf8"));
   assert.ok(document.paths["/api/workflows"]?.get);
   assert.equal(document.paths["/api/tokens"], undefined);
+  assert.equal(document.paths["/api/projects/catalog"], undefined,
+    "the internal Sandbox catalog is rejected by the public gateway");
+  assert.ok(document.paths["/api/projects/{projectId}/instructions"]?.get);
+  assert.ok(document.paths["/api/projects/search"]?.get);
+  assert.ok(document.paths["/api/store/projects"]?.get);
   assert.equal(document.paths["/api/super-admin/organizations"], undefined);
+  assert.equal(document.paths["/api/workspaces/{kind}/{workspaceId}/apps"], undefined,
+    "installation management belongs to the internal Studio API, not the developer client");
 });
 
 test("public packages use the owned npm scope", () => {

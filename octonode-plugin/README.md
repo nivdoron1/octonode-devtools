@@ -25,6 +25,26 @@ schema, example call, scope, risk, and argument routing. They are generated from
 
 ## Load the skills
 
+This repository supplies both Codex and Claude marketplace catalogs. Their single entry
+loads the existing `octonode-plugin/` directory with install ID `octonode-plugin@octonode`.
+There is no separate `connect-skill-plugin` bundle. Local installation works from this
+checkout; GitHub installation requires the catalogs to be merged into the selected ref.
+
+- **Claude Code:** `claude plugin marketplace add ./`, then
+  `claude plugin install octonode-plugin@octonode`. For a merged release, replace `./`
+  with `nivdoron1/octonode-devtools`. Run `claude plugin list` to verify the install.
+- **Codex:** `codex plugin marketplace add ./`, then
+  `codex plugin add octonode-plugin@octonode`. For a merged release, replace `./`
+  with `nivdoron1/octonode-devtools`. Run `codex plugin list` to verify the install.
+
+The catalogs distribute skills; configure authenticated MCP separately below. They do
+not register an unauthenticated server or provide credentials. Repo marketplace delivery
+does not submit this bundle to either vendor's public plugin directory. See the official
+[Claude marketplace guide](https://code.claude.com/docs/en/plugin-marketplaces) and
+[OpenAI plugin packaging guide](https://developers.openai.com/plugins/build/plugins).
+
+For development without a marketplace:
+
 - **Claude Code:** from this repository, run `claude --plugin-dir ./octonode-plugin`.
   Skills are namespaced, for example `/octonode-plugin:octonode-plugin-author`.
 - **Codex:** install this directory through your local plugin marketplace. For skills-only local use,
@@ -36,6 +56,9 @@ schema, example call, scope, risk, and argument routing. They are generated from
 
 Preserve existing skill directories when copying. Marketplace publication is a separate distribution
 step; this source change does not publish or install the bundle into your clients.
+
+Maintainers can test both installed clients in disposable configuration directories with
+`yarn test:agent-plugins`. It makes no model calls and leaves normal client settings alone.
 
 ## Connect live project tools
 

@@ -266,7 +266,7 @@ async function browserLogin(config: AuthConfig, launch: (url: string) => Promise
     if (!exchanged.data.session) throw new Error("Supabase did not return a session");
     saveSession(config, exchanged.data.session);
     removeFile("access-token");
-    return `Finished octonodes login as ${exchanged.data.user?.email ?? "a Studio user"}.`;
+    return `Finished octonodes login as ${exchanged.data.user?.email ?? "a Studio user"}.\nPersonal workspace: user:${exchanged.data.session.user.id}`;
   } finally {
     callback.close();
   }
@@ -305,7 +305,24 @@ export async function login(apiUrl: string, options: LoginOptions = {}): Promise
 
   saveSession(config, verified.data.session);
   removeFile("access-token");
-  return `Finished octonodes login as ${verified.data.user?.email ?? email}.`;
+  return `Finished octonodes login as ${verified.data.user?.email ?? email}.\nPersonal workspace: user:${verified.data.session.user.id}`;
+}
+
+export async function whoami() {
+  if (process.env.OCTONODE_TOKEN?.trim() || readFile("access-token"))
+    throw new Error("API token authentication is active; run octonodes login and unset OCTONODE_TOKEN to inspect a Studio user");
+  const stored = readSession();
+  if (!stored) throw new Error("Run octonodes login before inspecting your Studio user");
+  const result = await authClient(stored).getUser(await accessToken());
+  if (result.error || !result.data.user)
+    throw new Error(`Could not verify Studio user${result.error ? `: ${result.error.message}` : ""}; run octonodes login again`);
+  const user = result.data.user;
+  return {
+    userId: user.id,
+    email: user.email,
+    providers: [...new Set(user.identities?.map((identity) => identity.provider) ?? [])],
+    workspace: `user:${user.id}`,
+  };
 }
 
 export async function accessToken(): Promise<string | undefined> {

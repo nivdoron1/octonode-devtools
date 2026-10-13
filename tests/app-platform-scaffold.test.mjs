@@ -27,6 +27,18 @@ test("platform scaffolds contain native entry points and keep the Octonode backe
       assert.equal(descriptor.web.entry, "src/server.ts");
       assert.deepEqual(descriptor.extensions, []);
       assert.equal(pkg.installConfig.hoistingLimits, "workspaces");
+      const page = readFileSync(join(app, platform === "plain" ? "src/welcome.html" : "src/web/App.tsx"), "utf8");
+      const css = platform === "plain" ? page : readFileSync(join(app, "src/web/welcome.css"), "utf8");
+      assert.match(page, /Workspace overview/);
+      assert.match(page, /Your shared projects appear here/);
+      assert.match(page, /Explore projects/);
+      assert.match(page, /class(?:Name)?="scene"/);
+      assert.match(css, /prefers-reduced-motion: reduce/);
+      assert.match(css, /prefers-color-scheme: dark/);
+      assert.doesNotMatch(page, /__CHANNEL__|hosted-app\.example|parent\.dispatchEvent|dangerouslySetInnerHTML/);
+      symlinkSync(resolve("node_modules"), join(app, "node_modules"), process.platform === "win32" ? "junction" : "dir");
+      const types = spawnSync(process.execPath, [resolve("node_modules/typescript/bin/tsc"), "--noEmit"], { cwd: app, encoding: "utf8" });
+      assert.equal(types.status, 0, types.stderr || types.stdout);
       if (platform === "plain") {
         assert.ok(!pkg.devDependencies.vite && !pkg.devDependencies.next);
         assert.match(readFileSync(join(app, "src/welcome.html"), "utf8"), /OCTONODE_HOSTED_BRIDGE/);
@@ -34,16 +46,13 @@ test("platform scaffolds contain native entry points and keep the Octonode backe
       }
       assert.ok(pkg.devDependencies[platform]);
       assert.match(readFileSync(join(app, "src/web/App.tsx"), "utf8"), /OctonodeAppProvider/);
-      if (platform === "vite") {
-        symlinkSync(resolve("node_modules"), join(app, "node_modules"), process.platform === "win32" ? "junction" : "dir");
-        const types = spawnSync(process.execPath, [resolve("node_modules/typescript/bin/tsc"), "--noEmit"], { cwd: app, encoding: "utf8" });
-        assert.equal(types.status, 0, types.stderr || types.stdout);
-      }
+
       assert.match(readFileSync(join(app, "src/server.ts"), "utf8"), /connectAppServer/);
       assert.match(
         readFileSync(join(app, platform === "vite" ? "index.html" : "app/page.tsx"), "utf8"),
         platform === "vite" ? /src\/web\/main.tsx/ : /src\/web\/App/,
       );
+      if (platform === "next") assert.match(readFileSync(join(app, "app/page.tsx"), "utf8"), /function Page\(\) \{ return <App \/>; \}/);
       snapshots[choice] = Object.fromEntries(readdirSync(app, { recursive: true })
         .filter((file) => statSync(join(app, file)).isFile())
         .map((file) => [file, readFileSync(join(app, file), "utf8")]));

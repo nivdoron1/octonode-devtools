@@ -347,7 +347,7 @@ export type GetApiAppsRuntimeSessionResponses = {
         };
         version: string;
         grants: Array<{
-            action: 'projects:read' | 'data:read' | 'data:write' | 'workflows:run';
+            action: 'projects:read' | 'data:read' | 'data:write' | 'workflows:run' | 'read:project' | 'write:project';
             projectId: string;
         }>;
         expiresAt: number;
@@ -435,7 +435,7 @@ export type GetApiMarketplaceAppsResponses = {
                 supportUrl?: string;
                 redirectUrls: Array<string>;
                 webhookUrl?: string;
-                requestedActions?: Array<'projects:read' | 'data:read' | 'data:write' | 'workflows:run'>;
+                requestedActions?: Array<'projects:read' | 'data:read' | 'data:write' | 'workflows:run' | 'read:project' | 'write:project'>;
                 extensions?: Array<{
                     id: string;
                     target: 'app.page' | 'workspace.block';
@@ -454,7 +454,7 @@ export type GetApiMarketplaceAppsResponses = {
                 }>;
                 privacyUrl?: string;
                 supportUrl?: string;
-                requestedActions?: Array<'projects:read' | 'data:read' | 'data:write' | 'workflows:run'>;
+                requestedActions?: Array<'projects:read' | 'data:read' | 'data:write' | 'workflows:run' | 'read:project' | 'write:project'>;
                 extensions: Array<{
                     id: string;
                     target: 'app.page' | 'workspace.block';
@@ -473,7 +473,7 @@ export type GetApiMarketplaceAppsResponses = {
                 }>;
                 privacyUrl?: string;
                 supportUrl?: string;
-                requestedActions?: Array<'projects:read' | 'data:read' | 'data:write' | 'workflows:run'>;
+                requestedActions?: Array<'projects:read' | 'data:read' | 'data:write' | 'workflows:run' | 'read:project' | 'write:project'>;
                 extensions: Array<{
                     id: string;
                     target: 'app.page' | 'workspace.block' | 'shell.panel' | 'shell.dock' | 'project.tab' | 'project.overview.block' | 'workflow.tab' | 'workflow.inspector.block' | 'node.view' | 'node.inspector.tab' | 'node.inspector.block' | 'task.space.view' | 'task.details.tab' | 'task.details.block' | 'task.card.badge' | 'document.tab' | 'document.panel' | 'editor.panel' | 'git.diff.panel' | 'table.view' | 'execution.details.block' | 'app.settings.section' | 'project.settings.section' | 'project.action' | 'file.action' | 'editor.action' | 'editor.selection-action' | 'workflow.action' | 'workflow.canvas.action' | 'workflow.selection-action' | 'workflow.edge.action' | 'node.action' | 'task.space.action' | 'task.action' | 'document.action' | 'document.selection-action' | 'document.block.action' | 'document.slash-command' | 'document.review.action' | 'git.diff.action' | 'table.action' | 'execution.action';
@@ -523,17 +523,11 @@ export type GetApiCapabilitiesResponses = {
      * Success
      */
     200: {
-        version: 1;
+        version: 2;
         mode: 'trusted-local' | 'configured-local-cloud' | 'hosted';
         items: Array<{
-            name: 'workspace_identity' | 'workspace_social' | 'task_management' | 'workspace_admin' | 'workflow_execution' | 'billing' | 'design_review' | 'design_preview' | 'architecture' | 'repository_registry' | 'repository_discovery' | 'repository_git_read' | 'repository_git_write' | 'design_architecture_embed' | 'workspace_registry_backup_restore' | 'github' | 'slack' | 'google' | 'meta' | 'qwen' | 'workflow_agents' | 'cloud_terminal' | 'mcp_catalog' | 'monitoring' | 'agent_monitoring' | 'backup_restore' | 'write_authority' | 'community_read' | 'community_authoring' | 'community_publishing' | 'workflow_templates';
-            available: true;
-            mode: 'trusted-local' | 'configured-local-cloud' | 'hosted';
-        } | {
-            name: 'workspace_identity' | 'workspace_social' | 'task_management' | 'workspace_admin' | 'workflow_execution' | 'billing' | 'design_review' | 'design_preview' | 'architecture' | 'repository_registry' | 'repository_discovery' | 'repository_git_read' | 'repository_git_write' | 'design_architecture_embed' | 'workspace_registry_backup_restore' | 'github' | 'slack' | 'google' | 'meta' | 'qwen' | 'workflow_agents' | 'cloud_terminal' | 'mcp_catalog' | 'monitoring' | 'agent_monitoring' | 'backup_restore' | 'write_authority' | 'community_read' | 'community_authoring' | 'community_publishing' | 'workflow_templates';
-            available: false;
-            mode: 'trusted-local' | 'configured-local-cloud' | 'hosted';
-            reason: 'not_implemented' | 'requires_cloud_configuration' | 'requires_hosted_runtime' | 'provider_not_configured' | 'disabled_by_policy' | 'missing_entitlement' | 'missing_permission';
+            name: 'repository_registry' | 'design_architecture_embed' | 'workflow_agents' | 'community_authoring' | 'community_publishing' | 'workflow_templates';
+            available: boolean;
         }>;
     };
 };
@@ -1004,6 +998,8 @@ export type GetApiSocialConversationsResponses = {
             lastMessageSeq: number | null;
             lastMessageAt: number | null;
             unreadCount: number;
+            projectIds?: Array<string>;
+            sessionScope?: 'workspace' | 'project' | 'workflow';
         }>;
         nextCursor: string | null;
     };
@@ -1136,6 +1132,9 @@ export type GetApiSocialConversationsByIdMessagesResponse = GetApiSocialConversa
 
 export type GetApiSocialNotificationsData = {
     body?: never;
+    headers?: {
+        'if-none-match'?: string;
+    };
     path?: never;
     query: {
         workspace: string;
@@ -1873,91 +1872,11 @@ export type GetApiProjectsTrashResponses = {
 
 export type GetApiProjectsTrashResponse = GetApiProjectsTrashResponses[keyof GetApiProjectsTrashResponses];
 
-export type GetApiProjectsCatalogData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/projects/catalog';
-};
-
-export type GetApiProjectsCatalogErrors = {
-    /**
-     * Error
-     */
-    403: {
-        error: string;
-    };
-};
-
-export type GetApiProjectsCatalogError = GetApiProjectsCatalogErrors[keyof GetApiProjectsCatalogErrors];
-
-export type GetApiProjectsCatalogResponses = {
-    /**
-     * Success
-     */
-    200: {
-        projects: Array<{
-            id: string;
-            name: string;
-            path?: string;
-            workflowCount: number;
-            environments?: Array<string>;
-            readOnly?: true;
-            legacyLanguage?: string;
-            local?: false;
-            cloudAction?: 'install' | 'sync';
-            hosted?: true;
-            unavailable?: true;
-            sourceKind?: 'repository' | 'managed' | 'standalone';
-            sourceRepositoryId?: string | null;
-            configLocator?: string;
-        }>;
-        repositories: Array<{
-            generation: number;
-            sourceRepository: {
-                sourceRepositoryId: string;
-                displayName: string;
-                rootLocator: string;
-                canonicalRootFingerprint: string;
-                remote: {
-                    fetchUrl: string;
-                    provider?: 'github';
-                    githubRepositoryId?: number;
-                } | null;
-                recovery: {
-                    kind: 'reclone';
-                    head: string;
-                    branch?: string;
-                } | {
-                    kind: 'relink';
-                };
-                status: 'ready' | 'missing' | 'conflict';
-                revision: number;
-            };
-            projects: Array<{
-                projectId: string;
-                sourceKind: 'repository' | 'managed' | 'standalone';
-                sourceRepositoryId: string | null;
-                configLocator: string;
-                projectRootLocator: string;
-                configFormat: 'yaml' | 'json';
-                configFingerprint: string;
-                storeKey: string;
-                identitySource: 'new' | 'legacy' | 'config';
-                status: 'ready' | 'missing' | 'conflict' | 'invalid';
-                revision: number;
-            }>;
-        }>;
-        hiddenIds: Array<string>;
-    };
-};
-
-export type GetApiProjectsCatalogResponse = GetApiProjectsCatalogResponses[keyof GetApiProjectsCatalogResponses];
-
 export type GetApiProjectsSearchData = {
     body?: never;
     path?: never;
     query?: {
+        project?: string;
         summary?: 'true';
         workspace?: string;
         q?: string;
@@ -2096,6 +2015,54 @@ export type GetApiProjectsByProjectIdFilesResponses = {
 };
 
 export type GetApiProjectsByProjectIdFilesResponse = GetApiProjectsByProjectIdFilesResponses[keyof GetApiProjectsByProjectIdFilesResponses];
+
+export type GetApiProjectsByProjectIdInstructionsData = {
+    body?: never;
+    path: {
+        projectId: string;
+    };
+    query?: never;
+    url: '/api/projects/{projectId}/instructions';
+};
+
+export type GetApiProjectsByProjectIdInstructionsErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    404: {
+        error: string;
+    };
+};
+
+export type GetApiProjectsByProjectIdInstructionsError = GetApiProjectsByProjectIdInstructionsErrors[keyof GetApiProjectsByProjectIdInstructionsErrors];
+
+export type GetApiProjectsByProjectIdInstructionsResponses = {
+    /**
+     * Success
+     */
+    200: {
+        files: Array<{
+            path: string;
+            content: string;
+            revision: string;
+        }>;
+        skipped: Array<string>;
+    };
+};
+
+export type GetApiProjectsByProjectIdInstructionsResponse = GetApiProjectsByProjectIdInstructionsResponses[keyof GetApiProjectsByProjectIdInstructionsResponses];
 
 export type DeleteApiProjectsByProjectIdFilesContentData = {
     body: {
@@ -2443,6 +2410,12 @@ export type GetApiProjectsByProjectIdPackageExportsResponses = {
      */
     200: {
         packages: Array<string>;
+        dependencies?: Array<{
+            name: string;
+            spec: string;
+            version: string | null;
+            pluginId: string | null;
+        }>;
         exports: Array<{
             name: string;
             kind: 'function' | 'constant' | 'type' | 'class' | 'value';
@@ -5213,10 +5186,24 @@ export type GetApiMarketplaceResponses = {
             tags: Array<string>;
             nodes?: Array<{
                 id: string;
+                sourceLanguage?: string;
+                execution?: {
+                    runtimeRef: string;
+                    entrypoint: {
+                        kind: 'file';
+                        path: string;
+                    };
+                    args?: Array<string>;
+                    invokeAs?: string;
+                };
                 source?: {
                     kind: 'plugin';
                 } | {
                     kind: 'npm';
+                    package: string;
+                    version: string;
+                } | {
+                    kind: 'pypi';
                     package: string;
                     version: string;
                 };
@@ -5325,10 +5312,24 @@ export type GetApiMarketplacePluginsByIdResponses = {
         tags: Array<string>;
         nodes: Array<{
             id: string;
+            sourceLanguage?: string;
+            execution?: {
+                runtimeRef: string;
+                entrypoint: {
+                    kind: 'file';
+                    path: string;
+                };
+                args?: Array<string>;
+                invokeAs?: string;
+            };
             source?: {
                 kind: 'plugin';
             } | {
                 kind: 'npm';
+                package: string;
+                version: string;
+            } | {
+                kind: 'pypi';
                 package: string;
                 version: string;
             };
@@ -5466,10 +5467,24 @@ export type GetApiPluginsResponses = {
         tags: Array<string>;
         nodes?: Array<{
             id: string;
+            sourceLanguage?: string;
+            execution?: {
+                runtimeRef: string;
+                entrypoint: {
+                    kind: 'file';
+                    path: string;
+                };
+                args?: Array<string>;
+                invokeAs?: string;
+            };
             source?: {
                 kind: 'plugin';
             } | {
                 kind: 'npm';
+                package: string;
+                version: string;
+            } | {
+                kind: 'pypi';
                 package: string;
                 version: string;
             };
@@ -5555,10 +5570,24 @@ export type GetApiPluginsSearchResponses = {
             tags: Array<string>;
             nodes?: Array<{
                 id: string;
+                sourceLanguage?: string;
+                execution?: {
+                    runtimeRef: string;
+                    entrypoint: {
+                        kind: 'file';
+                        path: string;
+                    };
+                    args?: Array<string>;
+                    invokeAs?: string;
+                };
                 source?: {
                     kind: 'plugin';
                 } | {
                     kind: 'npm';
+                    package: string;
+                    version: string;
+                } | {
+                    kind: 'pypi';
                     package: string;
                     version: string;
                 };
@@ -5633,10 +5662,24 @@ export type GetApiPluginsNodesResponses = {
     200: {
         items: Array<{
             id: string;
+            sourceLanguage?: string;
+            execution?: {
+                runtimeRef: string;
+                entrypoint: {
+                    kind: 'file';
+                    path: string;
+                };
+                args?: Array<string>;
+                invokeAs?: string;
+            };
             source?: {
                 kind: 'plugin';
             } | {
                 kind: 'npm';
+                package: string;
+                version: string;
+            } | {
+                kind: 'pypi';
                 package: string;
                 version: string;
             };
@@ -5734,10 +5777,24 @@ export type GetApiPluginsByPluginIdResponses = {
         tags: Array<string>;
         nodes: Array<{
             id: string;
+            sourceLanguage?: string;
+            execution?: {
+                runtimeRef: string;
+                entrypoint: {
+                    kind: 'file';
+                    path: string;
+                };
+                args?: Array<string>;
+                invokeAs?: string;
+            };
             source?: {
                 kind: 'plugin';
             } | {
                 kind: 'npm';
+                package: string;
+                version: string;
+            } | {
+                kind: 'pypi';
                 package: string;
                 version: string;
             };
@@ -6207,6 +6264,9 @@ export type PostApiNativeNodesByCatalogIdMaterializeResponses = {
         signature: {
             language: string;
             command: string;
+            args?: Array<string>;
+            invokeAs?: string;
+            runtimeError?: string;
             sourceExpressions?: {
                 [key: string]: string;
             };
@@ -6272,11 +6332,20 @@ export type PostApiNativeNodesByCatalogIdMaterializeResponse = PostApiNativeNode
 export type GetApiWorkspacesData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        projection?: 'compact';
+        workspace?: string;
+    };
     url: '/api/workspaces';
 };
 
 export type GetApiWorkspacesErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
     /**
      * Error
      */
@@ -6303,21 +6372,57 @@ export type GetApiWorkspacesResponses = {
             id: string;
             name: string;
             role: string;
-            permissions: {
-                [key: string]: boolean;
+            menuControls?: {
+                createTeam: boolean;
+                invite: boolean;
+                editPermissions: boolean;
             };
+            publishPlugin?: boolean;
             teams: Array<{
                 kind: 'team';
                 id: string;
                 name: string;
                 role: string;
-                permissions: {
-                    [key: string]: boolean;
-                };
+                publishPlugin?: boolean;
             }>;
         }>;
         remote: boolean;
         remoteComputers?: boolean;
+        access?: {
+            version: 2;
+            workspace: {
+                kind: 'user' | 'org' | 'team';
+                id: string;
+            };
+            uiBindings: {
+                [key: string]: boolean;
+            };
+            controls: {
+                readProjects?: boolean;
+                editProjects?: boolean;
+                readWorkflows?: boolean;
+                readPlugins?: boolean;
+                runWorkflow?: boolean;
+                readData?: boolean;
+                editData?: boolean;
+                readTasks?: boolean;
+                runAssistant?: boolean;
+                configureAssistant?: boolean;
+                readChat?: boolean;
+                moderateChat?: boolean;
+                readDesignDocs?: boolean;
+                publishPlugin?: boolean;
+                installPlugin?: boolean;
+                readApps?: boolean;
+                useApps?: boolean;
+                manageApps?: boolean;
+                cleanupApps?: boolean;
+                openAdmin?: boolean;
+                readBilling?: boolean;
+                searchWorkspace?: boolean;
+                manageProjectKeys?: boolean;
+            };
+        } | null;
     };
 };
 

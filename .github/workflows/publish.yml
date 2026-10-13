@@ -70,5 +70,9 @@ jobs:
       - run: yarn install --immutable
       - run: yarn check
       - run: git diff --exit-code -- packages/sdk/src/gen
+      - name: Exercise packed public packages in a fresh consumer before publication
+        run: |
+          yarn test:pack
+          npm run test:install
       - name: Publish only missing stable versions, in dependency order
         run: node scripts/releases/publish.mjs

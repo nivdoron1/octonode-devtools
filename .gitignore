@@ -8,3 +8,5 @@ dist/
 .env.*
 .DS_Store
 artifacts/
+docs/plans/
+docs/*-plan.md

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createClient, OCTONODE_API_URL, OctonodeClient } from "@octonodes/sdk";
-import { accessToken, login, logout } from "./auth";
+import { accessToken, login, logout, whoami } from "./auth";
 import { terminal } from "./terminal";
 import { CONNECT_HELP, connectCommand } from "./connect.js";
 import { APP_STUDIO_URL } from "./apps/constants";
@@ -80,6 +80,10 @@ function usage(topic?: string): void {
     process.stdout.write("Usage:\n  octonodes logout\n\nRemoves the locally saved access token.\n");
     return;
   }
+  if (topic === "whoami") {
+    process.stdout.write("Usage:\n  octonodes whoami\n\nVerifies the saved Studio user and prints their auth user ID, linked providers and personal workspace. API token authentication must be disabled.\n");
+    return;
+  }
   if (topic) {
     const children = [...new Set(operations.filter((name) => name.startsWith(`${topic}.`)).map((name) => name.slice(topic.length + 1).split(".")[0]))];
     if (children.length) {
@@ -92,7 +96,7 @@ function usage(topic?: string): void {
     return;
   }
   process.stdout.write("Apps: octonodes app <create|extension add|dev|build|validate|serve|publish> (see octonodes app --help)\nPlugins: octonodes plugin <create|build|validate|test|publish|install|update|remove|list|recover> (see octonodes plugin --help)\nFrozen restore: octonodes install --frozen --artifacts-only\nMCP clients: octonodes connect <codex|claude|cursor|headers> (see octonodes connect --help)\n\n");
-  process.stdout.write(`octonodes v${VERSION}\n\nUsage:\n  octonodes login [--base-url <url>]\n  octonodes login --email <email> [--base-url <url>]\n  octonodes login --token <api-token>\n  octonodes logout\n  octonodes connect <codex|claude|cursor|headers> --workspace <kind:id> --project <id>\n  octonodes operations [filter]\n  octonodes <resource> <command> [--input <json>] [--base-url <url>]\n\nAPI resources:\n${[...new Set(operations.map((name) => name.split(".")[0]))].map((name) => `  ${name}`).join("\n")}\n\nFlags:\n  -h, --h, --help  Show help\n  -v, --version     Show version\n\nEnvironment:\n  OCTONODE_TOKEN       Overrides the saved login\n  OCTONODE_URL         Overrides ${OCTONODE_API_URL}\n  OCTONODE_CONFIG_DIR  Overrides ~/.octonode\n`);
+  process.stdout.write(`octonodes v${VERSION}\n\nUsage:\n  octonodes login [--base-url <url>]\n  octonodes login --email <email> [--base-url <url>]\n  octonodes login --token <api-token>\n  octonodes logout\n  octonodes whoami\n  octonodes connect <codex|claude|cursor|headers> --workspace <kind:id> --project <id>\n  octonodes operations [filter]\n  octonodes <resource> <command> [--input <json>] [--base-url <url>]\n\nAPI resources:\n${[...new Set(operations.map((name) => name.split(".")[0]))].map((name) => `  ${name}`).join("\n")}\n\nFlags:\n  -h, --h, --help  Show help\n  -v, --version     Show version\n\nEnvironment:\n  OCTONODE_TOKEN       Overrides the saved login\n  OCTONODE_URL         Overrides ${OCTONODE_API_URL}\n  OCTONODE_CONFIG_DIR  Overrides ~/.octonode\n`);
 }
 
 async function main(): Promise<void> {
@@ -129,6 +133,10 @@ async function main(): Promise<void> {
     if (process.env.OCTONODE_TOKEN) {
       process.stdout.write("OCTONODE_TOKEN is still set and will continue to authenticate commands.\n");
     }
+    return;
+  }
+  if (command === "whoami") {
+    process.stdout.write(`${JSON.stringify(await whoami(), null, 2)}\n`);
     return;
   }
   if (command === "operations") {

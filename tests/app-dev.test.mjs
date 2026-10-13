@@ -118,10 +118,10 @@ test("full app release requires a production URL and separates server code from 
     await assert.rejects(buildAppProject(root), /applicationUrl/);
     const descriptorPath = join(root, "octonode.app.json");
     const descriptor = JSON.parse(readFileSync(descriptorPath, "utf8"));
-    descriptor.web.requestedActions = ["data:read"];
+    descriptor.web.requestedActions = ["projects:read", "data:read", "data:write", "workflows:run", "read:project", "write:project"];
     writeFileSync(descriptorPath, JSON.stringify(descriptor));
     const built = await buildAppProject(root, "https://example.com");
-    assert.deepEqual(built.manifest.app.requestedActions, ["data:read"]);
+    assert.deepEqual(built.manifest.app.requestedActions, descriptor.web.requestedActions);
     assert.equal(built.manifest.app.hosting, "self-hosted");
     assert.equal(
       built.manifest.app.extensions[0].url,

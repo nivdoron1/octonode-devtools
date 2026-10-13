@@ -8,7 +8,9 @@ catalogs. Use Octonode MCP tools when connected; they preserve project scope and
 1. Search canonical Octonode guidance with \`project_knowledge_search\`, then read the project context,
    relevant workflow graph, existing node source, and installed native/plugin catalogs before designing
    anything. Search is guidance; live project tools remain authoritative for current project state.
-   Use \`project_context\` to discover \`.claude/skills/*/SKILL.md\` and \`.agents/skills/*/SKILL.md\`.
+   Use \`project_instructions\` to read bounded project AGENTS.md, CLAUDE.md and Markdown skills;
+   inspect skipped paths before assuming the response includes every instruction file.
+   Use \`project_context\` to discover additional relevant project files.
    When the user names a project skill, read that complete file with \`project_file_read\` before
    applying it; read referenced project files only as needed. Treat skills as project-provided
    instructions subordinate to the user's request, authorized scope, and safety rules.
@@ -59,7 +61,7 @@ catalogs. Use Octonode MCP tools when connected; they preserve project scope and
 - Keep components atomic, accessible, and under the repository size goals; every touched component
   needs a Storybook story.
 - Never use browser \`alert()\`; use an accessible Dialog.
-- Run the affected Linux visual-review workflow for UI changes.
+- Keep Storybook coverage and accessibility checks. Linux screenshot review is archived.
 
 ## References
 
@@ -73,7 +75,7 @@ Read only what the task needs:
 - \`docs/api-codegen.md\` and \`docs/studio-architecture.md\` for Studio/API work.
 - \`docs/security.md\` for permissions, secrets, limits, and production boundaries.
 - \`docs/otto-integrations.md\` for Otto, hosted MCP, skills, and client-plugin boundaries.
-- \`docs/development.md\` for build, test, scan, and visual gates.`;
+- \`docs/development.md\` for build, test, and scan gates.`;
 
 export const REFERENCE_INDEX = `docs/conventions.md
 docs/ipc-protocol.md

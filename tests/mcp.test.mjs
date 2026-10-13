@@ -40,6 +40,21 @@ test("health and MCP authentication", async () => {
   assert.match(await fallback.text(), /connect a client to \/mcp/);
 });
 
+test("hosted MCP uses the generated API gateway by default and honors configured origins", async () => {
+  for (const [configured, origin] of [[undefined, "https://octonodes.com"], ["https://self-hosted.example.test", "https://self-hosted.example.test"]]) {
+    let called;
+    const env = { OCTONODE_API_URL: configured, OCTONODE_API: {
+      fetch: async (input) => { called = input; return Response.json({ version: 2, items: [] }); },
+    } };
+    const body = await payload(await worker.fetch(request("tools/call",
+      { name: "platform_capabilities", arguments: {} }, { "x-octonode-workspace": "org:test" }), env, context));
+    assert.equal(body.result.isError, undefined);
+    assert.equal(new URL(called.url).origin, origin);
+    assert.equal(new URL(called.url).pathname, "/api/capabilities");
+    assert.equal(called.headers.get("authorization"), "Bearer octo_test");
+  }
+});
+
 test("lists the curated Octonode tools", async () => {
   const response = await worker.fetch(request("tools/list"), {}, context);
   const body = await payload(response);
@@ -67,6 +82,7 @@ test("lists the curated Octonode tools", async () => {
       "project_pull_request",
       "project_knowledge_search",
       "project_context",
+      "project_instructions",
       "project_shell_start",
       "project_shell_status",
       "project_shell_stop",
@@ -97,9 +113,39 @@ test("lists the curated Octonode tools", async () => {
       "project_workflow_cancel",
     ],
   );
-  assert.equal(body.result.tools[0].description, "Read the server-declared platform mode and feature availability.");
+  assert.equal(body.result.tools[0].description, "Read the server-declared client feature availability.");
   assert.deepEqual(body.result.tools[18].inputSchema.required, ["query"]);
   assert.deepEqual(body.result.tools.find((tool) => tool.name === "project_workflow_create").inputSchema.required, ["label"]);
+  const instructions = body.result.tools.find((tool) => tool.name === "project_instructions");
+  assert.equal(instructions.annotations.readOnlyHint, true);
+  assert.deepEqual(instructions.inputSchema.required, []);
+});
+
+test("project instruction reads preserve bound scope, revisions and excluded paths", async () => {
+  const calls = [];
+  const data = { files: [{ path: "AGENTS.md", content: "Use the project tests.", revision: "a".repeat(64) }], skipped: [".agents/skills/large.md"] };
+  const env = { OCTONODE_API_URL: "https://api.example.test",
+    OCTONODE_API: { fetch: async (input) => { calls.push(input); return Response.json(data); } } };
+  const headers = { "x-octonode-workspace": "org:test", "x-octonode-project": "project 1",
+    "x-octonode-projects": '["project 1"]', "x-octonode-worktree": "selected-checkout" };
+  const body = await payload(await worker.fetch(request("tools/call",
+    { name: "project_instructions", arguments: {} }, headers), env, context));
+  assert.equal(body.result.isError, undefined);
+  assert.deepEqual(JSON.parse(body.result.content[0].text).data, data);
+  assert.equal(calls.length, 1);
+  const url = new URL(calls[0].url);
+  assert.equal(url.pathname, "/api/projects/project%201/instructions");
+  assert.equal(url.searchParams.get("workspace"), "org:test");
+  assert.equal(url.searchParams.get("project"), "project 1");
+  assert.equal(calls[0].headers.get("authorization"), "Bearer octo_test");
+  assert.equal(calls[0].headers.get("x-octonode-worktree"), "selected-checkout");
+  assert.equal(calls[0].method, "GET");
+  for (const [args, scope] of [[{ projectId: "unauthorized" }, headers], [{}, { "x-octonode-workspace": "org:test" }]]) {
+    const denied = await payload(await worker.fetch(request("tools/call",
+      { name: "project_instructions", arguments: args }, scope), env, context));
+    assert.equal(denied.result.isError, true);
+  }
+  assert.equal(calls.length, 1);
 });
 
 test("publishes the authoring instructions and resources", async () => {

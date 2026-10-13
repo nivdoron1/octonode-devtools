@@ -17,11 +17,16 @@ Connect an MCP client to `http://localhost:8787/mcp` and send its Octonode token
 default project. For multi-project clients, send `x-octonode-projects` as a JSON array; a tool's
 `projectId` must be in that allow-list. Optionally send
 `x-octonode-worktree` to target a managed checkout. Set the Worker variable `OCTONODE_API_URL`
-only when using a self-hosted API; otherwise the SDK default is used.
+only when using a self-hosted API; otherwise the SDK default is `https://octonodes.com`,
+the gateway serving the generated `/api/*` developer routes. An existing override
+pointing to the control plane `https://api.octonode.dev` must be corrected explicitly.
 
-The Worker exposes the same 43 collaboration and project-authoring tools as Octonode's canonical
-hosted MCP catalog, including the original descriptions, JSON Schemas, risk annotations, server
-instructions, and authoring/reference resources.
+This candidate registers 49 collaboration and project-authoring tools, including
+`project_instructions`, with descriptions, JSON Schemas, risk annotations, server
+instructions and authoring/reference resources. The live endpoint's `tools/list`
+response is authoritative until this candidate is deployed. For an existing Worker
+built with the 0.2.38 SDK, set `OCTONODE_API_URL=https://octonodes.com` until it is rebuilt
+and deployed with the corrected SDK default.
 
 Clients that only support local stdio servers can use `mcp-remote`:
 

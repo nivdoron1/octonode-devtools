@@ -37,6 +37,8 @@ export const WORKSPACE_ACTIONS = [
   "teams:manage",
   "plugins:publish",
   "plugins:install",
+  "plugins:submit",
+  "plugins:approve",
   "org:settings",
   "social:read",
   "social:write",
@@ -64,6 +66,7 @@ export const WORKSPACE_ACTIONS = [
   "data:export",
   "data:restore",
   "workspace:delete",
+  "knowledge:read",
   "content:read",
   "content:write",
   "content:publish",
@@ -86,6 +89,25 @@ export const WORKSPACE_ACTIONS = [
 ] as const;
 
 export type WorkspaceAction = (typeof WORKSPACE_ACTIONS)[number];
+
+export const APP_ACTIONS = [
+  "projects:read",
+  "data:read",
+  "data:write",
+  "workflows:run",
+  "read:project",
+  "write:project",
+] as const;
+
+/** User authority ceilings are distinct from exact installation grants. */
+export const APP_ACTION_PERMISSIONS = {
+  "projects:read": "projects:read",
+  "data:read": "data:read",
+  "data:write": "data:write",
+  "workflows:run": "workflows:run",
+  "read:project": "projects:read",
+  "write:project": "projects:write",
+} as const satisfies Record<(typeof APP_ACTIONS)[number], WorkspaceAction>;
 
 export const AGENT_RUN_STATUSES = [
   "queued",

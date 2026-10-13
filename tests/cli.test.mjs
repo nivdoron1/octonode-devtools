@@ -36,7 +36,7 @@ test("SDK client configures the cloud origin and bearer token", async () => {
     await first.projects.api.get();
     await second.projects.api.get();
     await second.projects.api.projectId.get({ path: { projectId: "project 1" } });
-    assert.equal(requests[0].url, "https://api.octonode.dev/api/store/projects");
+    assert.equal(requests[0].url, "https://octonodes.com/api/store/projects");
     assert.equal(requests[0].headers.get("authorization"), "Bearer first-token");
     assert.equal(requests[1].url, "https://second.example.test/api/store/projects");
     assert.equal(requests[1].headers.get("authorization"), "Bearer second-token");
@@ -44,6 +44,21 @@ test("SDK client configures the cloud origin and bearer token", async () => {
     assert.equal(requests[2].url, "https://second.example.test/api/projects/project%201");
   } finally {
     globalThis.fetch = originalFetch;
+  }
+});
+
+test("CLI defaults generated operations to the gateway and preserves explicit origin overrides", () => {
+  const preload = `globalThis.fetch = async (input) => {
+    const request = new Request(input);
+    return Response.json({ url: request.url, authorization: request.headers.get("authorization") });
+  };`;
+  for (const [args, origin] of [[[], "https://octonodes.com"], [["--base-url", "https://self-hosted.example.test"], "https://self-hosted.example.test"]]) {
+    const env = { ...process.env, OCTONODE_TOKEN: "origin-test-token" };
+    delete env.OCTONODE_URL;
+    const result = spawnSync(process.execPath, ["--import", `data:text/javascript,${encodeURIComponent(preload)}`,
+      "packages/cli/dist/index.js", "identity", "api", "get", ...args], { encoding: "utf8", env });
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout), { url: `${origin}/api/identity`, authorization: "Bearer origin-test-token" });
   }
 });
 
@@ -268,13 +283,13 @@ test("CLI signs Studio users in through Supabase without WebSocket and restores 
   delete globalThis.WebSocket;
   const accessToken = testJwt({ exp: Math.floor(Date.now() / 1000) + 3600, sub: "user-1" });
   const user = {
-    id: "user-1",
+    id: "verified-user-1",
     aud: "authenticated",
     role: "authenticated",
     email: "user@example.test",
     app_metadata: {},
     user_metadata: {},
-    identities: [],
+    identities: [{ provider: "email" }, { provider: "github" }],
     created_at: new Date(0).toISOString(),
   };
   const requests = [];
@@ -305,6 +320,7 @@ test("CLI signs Studio users in through Supabase without WebSocket and restores 
     const message = await cliAuth.login("https://api.test", { email: user.email, code: "123456" });
     assert.match(message, /user@example\.test/);
     assert.equal(await cliAuth.accessToken(), accessToken);
+    assert.match(message, /Personal workspace: user:verified-user-1/);
     const session = JSON.parse(readFileSync(join(configDir, "session.json"), "utf8"));
     assert.equal(session.refreshToken, "refresh-token");
     for (const request of requests.slice(1)) assert.equal(request.headers.get("apikey"), "publishable-key");
@@ -314,6 +330,22 @@ test("CLI signs Studio users in through Supabase without WebSocket and restores 
       requests.map((request) => new URL(request.url).pathname),
       ["/api/auth/config", "/auth/v1/otp", "/auth/v1/verify", "/auth/v1/user"],
     );
+    assert.deepEqual(await cliAuth.whoami(), {
+      userId: "verified-user-1",
+      email: "user@example.test",
+      providers: ["email", "github"],
+      workspace: "user:verified-user-1",
+    });
+    process.env.OCTONODE_TOKEN = "octo_pat_other-account";
+    await assert.rejects(cliAuth.whoami(), /API token authentication is active/);
+    delete process.env.OCTONODE_TOKEN;
+    writeFileSync(join(configDir, "access-token"), "octo_pat_other-account");
+    await assert.rejects(cliAuth.whoami(), /API token authentication is active/);
+    rmSync(join(configDir, "access-token"));
+    globalThis.fetch = async () => Response.json({ message: "Session revoked" }, { status: 401 });
+    await assert.rejects(cliAuth.whoami(), /run.*login/i);
+    rmSync(join(configDir, "session.json"));
+    await assert.rejects(cliAuth.whoami(), /Run octonodes login/);
   } finally {
     globalThis.fetch = originalFetch;
     if (originalWebSocket) Object.defineProperty(globalThis, "WebSocket", originalWebSocket);
@@ -378,6 +410,7 @@ test("CLI signs Studio users in through GitHub browser OAuth", async () => {
       },
     });
     assert.match(message, /github@example\.test/);
+    assert.match(message, /Personal workspace: user:user-2/);
     const tokenRequest = requests.find((request) => request.url.includes("grant_type=pkce"));
     assert.ok(tokenRequest);
     const tokenBody = JSON.parse(await tokenRequest.text());

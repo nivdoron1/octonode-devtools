@@ -17,6 +17,7 @@ export async function appCommand(args: string[], version: string): Promise<void>
       target: { type: "string" },
       template: { type: "string" },
       platform: { type: "string" },
+      "project-access": { type: "string" },
       port: { type: "string" },
       "use-localhost": { type: "boolean" },
       "tunnel-url": { type: "string" },
@@ -70,7 +71,7 @@ export async function appCommand(args: string[], version: string): Promise<void>
   if (command === "create" && target && positionals.length === 2 && !values.cwd && !values.target) {
     const template = values.template ?? "full";
     const platform = values.platform ?? (template === "full" ? "vite" : undefined);
-    const created = createApp(target, version, template, platform);
+    const created = createApp(target, version, template, platform, values["project-access"]);
     if (!terminal.created(created, platform))
       process.stdout.write(`Created ${created}\nNext: npm install, then npm run dev in that directory.\n`);
     return;

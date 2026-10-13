@@ -6,7 +6,7 @@ Choose one operation below, then read its page for the exact schema and calling 
 
 | Operation | When to use it | Effect |
 | --- | --- | --- |
-| [`platform_capabilities`](workspace/platform_capabilities.md) | Read the server-declared platform mode and feature availability. | read |
+| [`platform_capabilities`](workspace/platform_capabilities.md) | Read the server-declared client feature availability. | read |
 | [`profile_get`](workspace/profile_get.md) | Get the caller's workspace profile. | read |
 | [`profile_avatar_get`](workspace/profile_avatar_get.md) | Read a workspace member avatar as base64. | read |
 | [`workspace_members`](workspace/workspace_members.md) | Search workspace member profiles. | read |

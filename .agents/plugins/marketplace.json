@@ -1,0 +1,20 @@
+{
+  "name": "octonode",
+  "interface": {
+    "displayName": "Octonode"
+  },
+  "plugins": [
+    {
+      "name": "octonode-plugin",
+      "source": {
+        "source": "local",
+        "path": "./octonode-plugin"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

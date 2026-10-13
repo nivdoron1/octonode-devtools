@@ -1,0 +1,14 @@
+{
+  "name": "octonode",
+  "description": "Octonode project tools and workflow plugin skills.",
+  "owner": {
+    "name": "Octonode"
+  },
+  "plugins": [
+    {
+      "name": "octonode-plugin",
+      "source": "./octonode-plugin",
+      "description": "Connect to Octonode and create, test, publish, and manage workflow plugins."
+    }
+  ]
+}
