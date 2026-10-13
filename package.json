@@ -16,7 +16,8 @@
     "mcp:deploy": "yarn workspace @octonodes/mcp deploy",
     "test:pack": "node -e \"require('node:fs').mkdirSync('artifacts/runtime', { recursive: true })\" && yarn workspace @octonodes/sdk pack --out ../../artifacts/runtime/sdk.tgz && yarn workspace @octonodes/ui-extensions pack --out ../../artifacts/runtime/ui-extensions.tgz && yarn workspace @octonodes/cli pack --out ../../artifacts/runtime/cli.tgz",
     "test:install": "node scripts/runtime/installation.mjs",
-    "test:runtime": "node scripts/runtime/test.mjs"
+    "test:runtime": "node scripts/runtime/test.mjs",
+    "test:agent-plugins": "node scripts/agent/plugins.mjs"
   },
   "packageManager": "yarn@4.14.1",
   "engines": {
