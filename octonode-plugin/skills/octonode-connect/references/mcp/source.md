@@ -8,6 +8,7 @@ Choose one operation below, then read its page for the exact schema and calling 
 | --- | --- | --- |
 | [`project_knowledge_search`](source/project_knowledge_search.md) | Search canonical Octonode documentation and code-authoring guidance before architecture or implementation decisions. | read |
 | [`project_context`](source/project_context.md) | List editable files in the bound Octonode project. | read |
+| [`project_instructions`](source/project_instructions.md) | Read bounded project agent instructions and Markdown skills from the authorized project, with file revisions and skipped paths. | read |
 | [`project_shell_start`](source/project_shell_start.md) | Run a shell command on the bound remote checkout. | write |
 | [`project_shell_status`](source/project_shell_status.md) | Inspect a previously admitted remote shell command and its bounded output without running it again. | read |
 | [`project_shell_stop`](source/project_shell_stop.md) | Stop an admitted remote shell command and its process group. | write |

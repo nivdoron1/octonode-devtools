@@ -1,9 +1,10 @@
 // Generated from packages/schema/src/app.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
+import { APP_ACTIONS } from "./constants.js";
 import { IconName } from "./icons.js";
 import { APP_VIEW_TARGETS, appContributionSchema, appLauncherSchema } from "./app/contributions.js";
 
-export const AppAction = z.enum(["projects:read", "data:read", "data:write", "workflows:run"]);
+export const AppAction = z.enum(APP_ACTIONS);
 export type AppAction = z.infer<typeof AppAction>;
 
 /** Registration validation only; outbound callers must also enforce DNS/redirect SSRF policy. */
@@ -63,7 +64,7 @@ export const SelfHostedApp = z
     webhookUrl: appUrl.optional(),
     requestedActions: z
       .array(AppAction)
-      .max(4)
+      .max(APP_ACTIONS.length)
       .default([])
       .refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
     extensions: z.array(SelfHostedAppExtension).max(32).default([]),
@@ -154,7 +155,7 @@ export const ContributionApp = extensionOnlyAppSchema
     apiVersion: z.literal("3"),
     requestedActions: z
       .array(AppAction)
-      .max(4)
+      .max(APP_ACTIONS.length)
       .default([])
       .refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
     extensions: z.array(appContributionSchema).min(1).max(32),

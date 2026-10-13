@@ -8,6 +8,11 @@ import { runPluginLifecycle } from "../packages/cli/runtime/plugin-lifecycle.cjs
 
 const windowsError = /Plugin dependency lifecycle currently supports macOS and Linux; use WSL on Windows/;
 
+test("bundled lifecycle excludes private API documentation contact", () => {
+  const bundle = readFileSync(new URL("../packages/cli/runtime/plugin-lifecycle.cjs", import.meta.url), "utf8");
+  assert.doesNotMatch(bundle, /PRIVATE_API_DOC_EMAIL/);
+});
+
 function fixture(t, scope = "org") {
   const cwd = mkdtempSync(join(tmpdir(), "octonodes-restore-"));
   const alias = `fixture-${randomUUID()}`;

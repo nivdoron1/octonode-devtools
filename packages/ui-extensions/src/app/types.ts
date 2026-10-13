@@ -19,7 +19,7 @@ export type HostedApp = {
 };
 
 export type AppGrant = {
-  action: "projects:read" | "data:read" | "data:write" | "workflows:run";
+  action: "projects:read" | "data:read" | "data:write" | "workflows:run" | "read:project" | "write:project";
   projectId: string;
 };
 

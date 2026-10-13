@@ -1176,7 +1176,9 @@
                               "projects:read",
                               "data:read",
                               "data:write",
-                              "workflows:run"
+                              "workflows:run",
+                              "read:project",
+                              "write:project"
                             ]
                           },
                           "projectId": {
@@ -1507,10 +1509,12 @@
                                         "projects:read",
                                         "data:read",
                                         "data:write",
-                                        "workflows:run"
+                                        "workflows:run",
+                                        "read:project",
+                                        "write:project"
                                       ]
                                     },
-                                    "maxItems": 4,
+                                    "maxItems": 6,
                                     "default": []
                                   },
                                   "extensions": {
@@ -1672,7 +1676,9 @@
                                         "projects:read",
                                         "data:read",
                                         "data:write",
-                                        "workflows:run"
+                                        "workflows:run",
+                                        "read:project",
+                                        "write:project"
                                       ]
                                     },
                                     "maxItems": 0,
@@ -1835,10 +1841,12 @@
                                         "projects:read",
                                         "data:read",
                                         "data:write",
-                                        "workflows:run"
+                                        "workflows:run",
+                                        "read:project",
+                                        "write:project"
                                       ]
                                     },
-                                    "maxItems": 4,
+                                    "maxItems": 6,
                                     "default": []
                                   },
                                   "extensions": {
@@ -2300,7 +2308,7 @@
     "/api/capabilities": {
       "get": {
         "operationId": "getApiCapabilities",
-        "summary": "Get platform capabilities for this deployment",
+        "summary": "Get client feature availability for this deployment",
         "tags": [
           "Capabilities"
         ],
@@ -2314,7 +2322,7 @@
                   "properties": {
                     "version": {
                       "type": "number",
-                      "const": 1
+                      "const": 2
                     },
                     "mode": {
                       "type": "string",
@@ -2327,136 +2335,26 @@
                     "items": {
                       "type": "array",
                       "items": {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "name": {
-                                "type": "string",
-                                "enum": [
-                                  "workspace_identity",
-                                  "workspace_social",
-                                  "task_management",
-                                  "workspace_admin",
-                                  "workflow_execution",
-                                  "billing",
-                                  "design_review",
-                                  "design_preview",
-                                  "architecture",
-                                  "repository_registry",
-                                  "repository_discovery",
-                                  "repository_git_read",
-                                  "repository_git_write",
-                                  "design_architecture_embed",
-                                  "workspace_registry_backup_restore",
-                                  "github",
-                                  "slack",
-                                  "google",
-                                  "meta",
-                                  "qwen",
-                                  "workflow_agents",
-                                  "cloud_terminal",
-                                  "mcp_catalog",
-                                  "monitoring",
-                                  "agent_monitoring",
-                                  "backup_restore",
-                                  "write_authority",
-                                  "community_read",
-                                  "community_authoring",
-                                  "community_publishing",
-                                  "workflow_templates"
-                                ]
-                              },
-                              "available": {
-                                "type": "boolean",
-                                "const": true
-                              },
-                              "mode": {
-                                "type": "string",
-                                "enum": [
-                                  "trusted-local",
-                                  "configured-local-cloud",
-                                  "hosted"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "name",
-                              "available",
-                              "mode"
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "enum": [
+                              "repository_registry",
+                              "design_architecture_embed",
+                              "workflow_agents",
+                              "community_authoring",
+                              "community_publishing",
+                              "workflow_templates"
                             ]
                           },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "name": {
-                                "type": "string",
-                                "enum": [
-                                  "workspace_identity",
-                                  "workspace_social",
-                                  "task_management",
-                                  "workspace_admin",
-                                  "workflow_execution",
-                                  "billing",
-                                  "design_review",
-                                  "design_preview",
-                                  "architecture",
-                                  "repository_registry",
-                                  "repository_discovery",
-                                  "repository_git_read",
-                                  "repository_git_write",
-                                  "design_architecture_embed",
-                                  "workspace_registry_backup_restore",
-                                  "github",
-                                  "slack",
-                                  "google",
-                                  "meta",
-                                  "qwen",
-                                  "workflow_agents",
-                                  "cloud_terminal",
-                                  "mcp_catalog",
-                                  "monitoring",
-                                  "agent_monitoring",
-                                  "backup_restore",
-                                  "write_authority",
-                                  "community_read",
-                                  "community_authoring",
-                                  "community_publishing",
-                                  "workflow_templates"
-                                ]
-                              },
-                              "available": {
-                                "type": "boolean",
-                                "const": false
-                              },
-                              "mode": {
-                                "type": "string",
-                                "enum": [
-                                  "trusted-local",
-                                  "configured-local-cloud",
-                                  "hosted"
-                                ]
-                              },
-                              "reason": {
-                                "type": "string",
-                                "enum": [
-                                  "not_implemented",
-                                  "requires_cloud_configuration",
-                                  "requires_hosted_runtime",
-                                  "provider_not_configured",
-                                  "disabled_by_policy",
-                                  "missing_entitlement",
-                                  "missing_permission"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "name",
-                              "available",
-                              "mode",
-                              "reason"
-                            ]
+                          "available": {
+                            "type": "boolean"
                           }
+                        },
+                        "required": [
+                          "name",
+                          "available"
                         ]
                       }
                     }
@@ -3849,6 +3747,23 @@
                           "unreadCount": {
                             "type": "integer",
                             "minimum": 0
+                          },
+                          "projectIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128
+                            },
+                            "maxItems": 100
+                          },
+                          "sessionScope": {
+                            "type": "string",
+                            "enum": [
+                              "workspace",
+                              "project",
+                              "workflow"
+                            ]
                           }
                         },
                         "required": [
@@ -4535,6 +4450,9 @@
               }
             }
           },
+          "304": {
+            "description": "Not modified"
+          },
           "400": {
             "description": "Error",
             "content": {
@@ -4597,6 +4515,14 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 100
+            }
+          },
+          {
+            "in": "header",
+            "name": "if-none-match",
+            "schema": {
+              "type": "string",
+              "maxLength": 512
             }
           }
         ]
@@ -7262,325 +7188,6 @@
         }
       }
     },
-    "/api/projects/catalog": {
-      "get": {
-        "operationId": "getApiProjectsCatalog",
-        "summary": "Read internal workspace browsing metadata",
-        "tags": [
-          "Projects"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "projects": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "path": {
-                            "type": "string"
-                          },
-                          "workflowCount": {
-                            "type": "number"
-                          },
-                          "environments": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "readOnly": {
-                            "type": "boolean",
-                            "const": true
-                          },
-                          "legacyLanguage": {
-                            "type": "string"
-                          },
-                          "local": {
-                            "type": "boolean",
-                            "const": false
-                          },
-                          "cloudAction": {
-                            "type": "string",
-                            "enum": [
-                              "install",
-                              "sync"
-                            ]
-                          },
-                          "hosted": {
-                            "type": "boolean",
-                            "const": true
-                          },
-                          "unavailable": {
-                            "type": "boolean",
-                            "const": true
-                          },
-                          "sourceKind": {
-                            "type": "string",
-                            "enum": [
-                              "repository",
-                              "managed",
-                              "standalone"
-                            ]
-                          },
-                          "sourceRepositoryId": {
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          },
-                          "configLocator": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "name",
-                          "workflowCount"
-                        ]
-                      }
-                    },
-                    "repositories": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "generation": {
-                            "type": "integer",
-                            "minimum": 0
-                          },
-                          "sourceRepository": {
-                            "type": "object",
-                            "properties": {
-                              "sourceRepositoryId": {
-                                "type": "string"
-                              },
-                              "displayName": {
-                                "type": "string"
-                              },
-                              "rootLocator": {
-                                "type": "string"
-                              },
-                              "canonicalRootFingerprint": {
-                                "type": "string"
-                              },
-                              "remote": {
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
-                                "properties": {
-                                  "fetchUrl": {
-                                    "type": "string"
-                                  },
-                                  "provider": {
-                                    "type": "string",
-                                    "const": "github"
-                                  },
-                                  "githubRepositoryId": {
-                                    "type": "integer",
-                                    "exclusiveMinimum": 0
-                                  }
-                                },
-                                "required": [
-                                  "fetchUrl"
-                                ]
-                              },
-                              "recovery": {
-                                "oneOf": [
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "kind": {
-                                        "type": "string",
-                                        "const": "reclone"
-                                      },
-                                      "head": {
-                                        "type": "string"
-                                      },
-                                      "branch": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "kind",
-                                      "head"
-                                    ]
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "kind": {
-                                        "type": "string",
-                                        "const": "relink"
-                                      }
-                                    },
-                                    "required": [
-                                      "kind"
-                                    ]
-                                  }
-                                ]
-                              },
-                              "status": {
-                                "type": "string",
-                                "enum": [
-                                  "ready",
-                                  "missing",
-                                  "conflict"
-                                ]
-                              },
-                              "revision": {
-                                "type": "integer",
-                                "minimum": 0
-                              }
-                            },
-                            "required": [
-                              "sourceRepositoryId",
-                              "displayName",
-                              "rootLocator",
-                              "canonicalRootFingerprint",
-                              "remote",
-                              "recovery",
-                              "status",
-                              "revision"
-                            ]
-                          },
-                          "projects": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "projectId": {
-                                  "type": "string",
-                                  "minLength": 1,
-                                  "maxLength": 240
-                                },
-                                "sourceKind": {
-                                  "type": "string",
-                                  "enum": [
-                                    "repository",
-                                    "managed",
-                                    "standalone"
-                                  ]
-                                },
-                                "sourceRepositoryId": {
-                                  "type": [
-                                    "string",
-                                    "null"
-                                  ]
-                                },
-                                "configLocator": {
-                                  "type": "string"
-                                },
-                                "projectRootLocator": {
-                                  "type": "string"
-                                },
-                                "configFormat": {
-                                  "type": "string",
-                                  "enum": [
-                                    "yaml",
-                                    "json"
-                                  ]
-                                },
-                                "configFingerprint": {
-                                  "type": "string"
-                                },
-                                "storeKey": {
-                                  "type": "string"
-                                },
-                                "identitySource": {
-                                  "type": "string",
-                                  "enum": [
-                                    "new",
-                                    "legacy",
-                                    "config"
-                                  ]
-                                },
-                                "status": {
-                                  "type": "string",
-                                  "enum": [
-                                    "ready",
-                                    "missing",
-                                    "conflict",
-                                    "invalid"
-                                  ]
-                                },
-                                "revision": {
-                                  "type": "integer",
-                                  "minimum": 0
-                                }
-                              },
-                              "required": [
-                                "projectId",
-                                "sourceKind",
-                                "sourceRepositoryId",
-                                "configLocator",
-                                "projectRootLocator",
-                                "configFormat",
-                                "configFingerprint",
-                                "storeKey",
-                                "identitySource",
-                                "status",
-                                "revision"
-                              ]
-                            }
-                          }
-                        },
-                        "required": [
-                          "generation",
-                          "sourceRepository",
-                          "projects"
-                        ]
-                      }
-                    },
-                    "hiddenIds": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "required": [
-                    "projects",
-                    "repositories",
-                    "hiddenIds"
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/projects/search": {
       "get": {
         "operationId": "getApiProjectsSearch",
@@ -7728,6 +7335,15 @@
           }
         },
         "parameters": [
+          {
+            "in": "query",
+            "name": "project",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          },
           {
             "in": "query",
             "name": "summary",
@@ -7972,6 +7588,131 @@
             }
           },
           "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/api/projects/{projectId}/instructions": {
+      "get": {
+        "operationId": "getApiProjectsByProjectIdInstructions",
+        "summary": "Read project agent instructions",
+        "tags": [
+          "Projects"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string",
+                            "maxLength": 1024
+                          },
+                          "content": {
+                            "type": "string",
+                            "maxLength": 16000
+                          },
+                          "revision": {
+                            "type": "string",
+                            "maxLength": 128
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "content",
+                          "revision"
+                        ]
+                      },
+                      "maxItems": 32
+                    },
+                    "skipped": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "maxLength": 1024
+                      },
+                      "maxItems": 256
+                    }
+                  },
+                  "required": [
+                    "files",
+                    "skipped"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
             "description": "Error",
             "content": {
               "application/json": {
@@ -8895,6 +8636,38 @@
                       "type": "array",
                       "items": {
                         "type": "string"
+                      }
+                    },
+                    "dependencies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "spec": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "pluginId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "spec",
+                          "version",
+                          "pluginId"
+                        ]
                       }
                     },
                     "exports": {
@@ -18085,6 +17858,56 @@
                                 "id": {
                                   "type": "string"
                                 },
+                                "sourceLanguage": {
+                                  "type": "string"
+                                },
+                                "execution": {
+                                  "type": "object",
+                                  "properties": {
+                                    "runtimeRef": {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+                                    },
+                                    "entrypoint": {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "file"
+                                        },
+                                        "path": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 1024
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "path"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "args": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "maxLength": 4096
+                                      },
+                                      "maxItems": 100,
+                                      "default": []
+                                    },
+                                    "invokeAs": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300
+                                    }
+                                  },
+                                  "required": [
+                                    "runtimeRef",
+                                    "entrypoint"
+                                  ],
+                                  "additionalProperties": false
+                                },
                                 "source": {
                                   "oneOf": [
                                     {
@@ -18105,6 +17928,26 @@
                                         "kind": {
                                           "type": "string",
                                           "const": "npm"
+                                        },
+                                        "package": {
+                                          "type": "string"
+                                        },
+                                        "version": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "package",
+                                        "version"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "pypi"
                                         },
                                         "package": {
                                           "type": "string"
@@ -18488,6 +18331,56 @@
                           "id": {
                             "type": "string"
                           },
+                          "sourceLanguage": {
+                            "type": "string"
+                          },
+                          "execution": {
+                            "type": "object",
+                            "properties": {
+                              "runtimeRef": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-z0-9-]{0,63}$"
+                              },
+                              "entrypoint": {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "file"
+                                  },
+                                  "path": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 1024
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "path"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "args": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "maxLength": 4096
+                                },
+                                "maxItems": 100,
+                                "default": []
+                              },
+                              "invokeAs": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300
+                              }
+                            },
+                            "required": [
+                              "runtimeRef",
+                              "entrypoint"
+                            ],
+                            "additionalProperties": false
+                          },
                           "source": {
                             "oneOf": [
                               {
@@ -18508,6 +18401,26 @@
                                   "kind": {
                                     "type": "string",
                                     "const": "npm"
+                                  },
+                                  "package": {
+                                    "type": "string"
+                                  },
+                                  "version": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "package",
+                                  "version"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "pypi"
                                   },
                                   "package": {
                                     "type": "string"
@@ -19171,6 +19084,56 @@
                             "id": {
                               "type": "string"
                             },
+                            "sourceLanguage": {
+                              "type": "string"
+                            },
+                            "execution": {
+                              "type": "object",
+                              "properties": {
+                                "runtimeRef": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9-]{0,63}$"
+                                },
+                                "entrypoint": {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "file"
+                                    },
+                                    "path": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "args": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "maxLength": 4096
+                                  },
+                                  "maxItems": 100,
+                                  "default": []
+                                },
+                                "invokeAs": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300
+                                }
+                              },
+                              "required": [
+                                "runtimeRef",
+                                "entrypoint"
+                              ],
+                              "additionalProperties": false
+                            },
                             "source": {
                               "oneOf": [
                                 {
@@ -19191,6 +19154,26 @@
                                     "kind": {
                                       "type": "string",
                                       "const": "npm"
+                                    },
+                                    "package": {
+                                      "type": "string"
+                                    },
+                                    "version": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "package",
+                                    "version"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "pypi"
                                     },
                                     "package": {
                                       "type": "string"
@@ -19452,6 +19435,56 @@
                                 "id": {
                                   "type": "string"
                                 },
+                                "sourceLanguage": {
+                                  "type": "string"
+                                },
+                                "execution": {
+                                  "type": "object",
+                                  "properties": {
+                                    "runtimeRef": {
+                                      "type": "string",
+                                      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+                                    },
+                                    "entrypoint": {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "file"
+                                        },
+                                        "path": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 1024
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "path"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "args": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "maxLength": 4096
+                                      },
+                                      "maxItems": 100,
+                                      "default": []
+                                    },
+                                    "invokeAs": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300
+                                    }
+                                  },
+                                  "required": [
+                                    "runtimeRef",
+                                    "entrypoint"
+                                  ],
+                                  "additionalProperties": false
+                                },
                                 "source": {
                                   "oneOf": [
                                     {
@@ -19472,6 +19505,26 @@
                                         "kind": {
                                           "type": "string",
                                           "const": "npm"
+                                        },
+                                        "package": {
+                                          "type": "string"
+                                        },
+                                        "version": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "package",
+                                        "version"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "pypi"
                                         },
                                         "package": {
                                           "type": "string"
@@ -19758,6 +19811,56 @@
                           "id": {
                             "type": "string"
                           },
+                          "sourceLanguage": {
+                            "type": "string"
+                          },
+                          "execution": {
+                            "type": "object",
+                            "properties": {
+                              "runtimeRef": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-z0-9-]{0,63}$"
+                              },
+                              "entrypoint": {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "file"
+                                  },
+                                  "path": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 1024
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "path"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "args": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "maxLength": 4096
+                                },
+                                "maxItems": 100,
+                                "default": []
+                              },
+                              "invokeAs": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300
+                              }
+                            },
+                            "required": [
+                              "runtimeRef",
+                              "entrypoint"
+                            ],
+                            "additionalProperties": false
+                          },
                           "source": {
                             "oneOf": [
                               {
@@ -19778,6 +19881,26 @@
                                   "kind": {
                                     "type": "string",
                                     "const": "npm"
+                                  },
+                                  "package": {
+                                    "type": "string"
+                                  },
+                                  "version": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "package",
+                                  "version"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "pypi"
                                   },
                                   "package": {
                                     "type": "string"
@@ -20073,6 +20196,56 @@
                           "id": {
                             "type": "string"
                           },
+                          "sourceLanguage": {
+                            "type": "string"
+                          },
+                          "execution": {
+                            "type": "object",
+                            "properties": {
+                              "runtimeRef": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-z0-9-]{0,63}$"
+                              },
+                              "entrypoint": {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "file"
+                                  },
+                                  "path": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 1024
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "path"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "args": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "maxLength": 4096
+                                },
+                                "maxItems": 100,
+                                "default": []
+                              },
+                              "invokeAs": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300
+                              }
+                            },
+                            "required": [
+                              "runtimeRef",
+                              "entrypoint"
+                            ],
+                            "additionalProperties": false
+                          },
                           "source": {
                             "oneOf": [
                               {
@@ -20093,6 +20266,26 @@
                                   "kind": {
                                     "type": "string",
                                     "const": "npm"
+                                  },
+                                  "package": {
+                                    "type": "string"
+                                  },
+                                  "version": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "package",
+                                  "version"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "pypi"
                                   },
                                   "package": {
                                     "type": "string"
@@ -21631,6 +21824,18 @@
                         "command": {
                           "type": "string"
                         },
+                        "args": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "invokeAs": {
+                          "type": "string"
+                        },
+                        "runtimeError": {
+                          "type": "string"
+                        },
                         "sourceExpressions": {
                           "type": "object",
                           "additionalProperties": {
@@ -21975,7 +22180,7 @@
     "/api/workspaces": {
       "get": {
         "operationId": "getApiWorkspaces",
-        "summary": "List the user's workspaces (personal + orgs with nested teams)",
+        "summary": "List the user's workspaces, optionally with compact UI access for the selected workspace",
         "tags": [
           "Workspaces"
         ],
@@ -22032,11 +22237,27 @@
                           "role": {
                             "type": "string"
                           },
-                          "permissions": {
+                          "menuControls": {
                             "type": "object",
-                            "additionalProperties": {
-                              "type": "boolean"
-                            }
+                            "properties": {
+                              "createTeam": {
+                                "type": "boolean"
+                              },
+                              "invite": {
+                                "type": "boolean"
+                              },
+                              "editPermissions": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "createTeam",
+                              "invite",
+                              "editPermissions"
+                            ]
+                          },
+                          "publishPlugin": {
+                            "type": "boolean"
                           },
                           "teams": {
                             "type": "array",
@@ -22056,19 +22277,15 @@
                                 "role": {
                                   "type": "string"
                                 },
-                                "permissions": {
-                                  "type": "object",
-                                  "additionalProperties": {
-                                    "type": "boolean"
-                                  }
+                                "publishPlugin": {
+                                  "type": "boolean"
                                 }
                               },
                               "required": [
                                 "kind",
                                 "id",
                                 "name",
-                                "role",
-                                "permissions"
+                                "role"
                               ]
                             }
                           }
@@ -22078,7 +22295,6 @@
                           "id",
                           "name",
                           "role",
-                          "permissions",
                           "teams"
                         ]
                       }
@@ -22088,12 +22304,150 @@
                     },
                     "remoteComputers": {
                       "type": "boolean"
+                    },
+                    "access": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "version": {
+                          "type": "number",
+                          "const": 2
+                        },
+                        "workspace": {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "user",
+                                "org",
+                                "team"
+                              ]
+                            },
+                            "id": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ]
+                        },
+                        "uiBindings": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "boolean"
+                          }
+                        },
+                        "controls": {
+                          "type": "object",
+                          "properties": {
+                            "readProjects": {
+                              "type": "boolean"
+                            },
+                            "editProjects": {
+                              "type": "boolean"
+                            },
+                            "readWorkflows": {
+                              "type": "boolean"
+                            },
+                            "readPlugins": {
+                              "type": "boolean"
+                            },
+                            "runWorkflow": {
+                              "type": "boolean"
+                            },
+                            "readData": {
+                              "type": "boolean"
+                            },
+                            "editData": {
+                              "type": "boolean"
+                            },
+                            "readTasks": {
+                              "type": "boolean"
+                            },
+                            "runAssistant": {
+                              "type": "boolean"
+                            },
+                            "configureAssistant": {
+                              "type": "boolean"
+                            },
+                            "readChat": {
+                              "type": "boolean"
+                            },
+                            "moderateChat": {
+                              "type": "boolean"
+                            },
+                            "readDesignDocs": {
+                              "type": "boolean"
+                            },
+                            "publishPlugin": {
+                              "type": "boolean"
+                            },
+                            "installPlugin": {
+                              "type": "boolean"
+                            },
+                            "readApps": {
+                              "type": "boolean"
+                            },
+                            "useApps": {
+                              "type": "boolean"
+                            },
+                            "manageApps": {
+                              "type": "boolean"
+                            },
+                            "cleanupApps": {
+                              "type": "boolean"
+                            },
+                            "openAdmin": {
+                              "type": "boolean"
+                            },
+                            "readBilling": {
+                              "type": "boolean"
+                            },
+                            "searchWorkspace": {
+                              "type": "boolean"
+                            },
+                            "manageProjectKeys": {
+                              "type": "boolean"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "version",
+                        "workspace",
+                        "uiBindings",
+                        "controls"
+                      ],
+                      "additionalProperties": false
                     }
                   },
                   "required": [
                     "personal",
                     "orgs",
                     "remote"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
                   ]
                 }
               }
@@ -22117,7 +22471,26 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "projection",
+            "schema": {
+              "type": "string",
+              "const": "compact"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workspace",
+            "schema": {
+              "type": "string",
+              "pattern": "^(user|org|team):[^:]+$",
+              "maxLength": 256
+            }
+          }
+        ]
       }
     },
     "/api/workspaces/permissions": {
