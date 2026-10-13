@@ -1,5 +1,47 @@
 # Changelog
 
+## [0.2.40] - Unreleased candidate
+
+### Added
+
+- Declare independent `read:project` and `write:project` app scopes for explicitly selected projects.
+- Opt into project-file consent with `octonodes app create <name> --project-access read|write`; ordinary apps request no new scopes.
+- Carry both scopes in generated SDK app contracts and UI-extension grant types.
+- Inspect the verified Studio user and personal workspace with `octonodes whoami`; login also prints the workspace.
+
+### Changed
+
+- Start new full apps with an animated Workspace overview, project navigation, responsive light/dark styling, and reduced-motion support. Vite and Next.js emit React JSX; the plain starter emits the same design as HTML.
+
+### Fixed
+
+- Render the Next.js starter through a page wrapper so optional app props pass the framework’s production page checks.
+- Keep plain starter content hidden until workspace verification succeeds, cancel stale requests, and hide content on session expiry.
+- Exclude unused private engine exports from the packaged plugin lifecycle.
+
+These scopes prepare the contract for a later isolated execution environment. This
+release does not provision a sandbox or add project-file/process APIs.
+
+## [0.2.39] - Unreleased candidate
+
+### Added
+
+- Read project agent instructions through the generated SDK/CLI and scoped hosted MCP tool `project_instructions`.
+- Discover the existing Octonode client plugin through Claude and Codex repository marketplace catalogs.
+- Verify every generated CLI HTTP operation and final packed consumers before npm publication.
+
+### Changed
+
+- Align the public contract with engine main: capabilities use the version 2 client feature projection; workspace responses use compact access controls instead of per-team permission maps. Consumers using the former response types must update their access/capability handling.
+- Include project-scoped search, conversation session scope, conditional notification requests, project dependency exports and Python runtime metadata in generated SDK types.
+
+### Fixed
+
+- Remove the internal Sandbox project catalog from the public SDK/CLI contract; project search and store listings remain available.
+- Route public SDK/CLI and default hosted MCP requests to the Studio API gateway at `https://octonodes.com`; the control-plane origin does not serve generated `/api/*` operations.
+- Install and import plugin libraries whose default UUID alias begins with a digit.
+- Declare the CLI's TypeScript and Zod 3 runtime dependencies so fresh consumer plugin operations work without workspace hoisting.
+
 ## [0.2.38] - 2026-10-09
 
 ### Added

@@ -2,7 +2,7 @@
 
 Type-safe access to the public Octonode API through the `@octonodes/sdk` package and the
 `octonodes` command-line client. Both are generated from the same developer OpenAPI contract,
-use `https://api.octonode.dev` by default, and enforce the permissions of the supplied user or
+use `https://octonodes.com` by default, and enforce the permissions of the supplied user or
 API token.
 
 Requires Node.js **20.19+**, **22.12+**, or newer (`^20.19.0 || >=22.12.0`).
@@ -44,7 +44,9 @@ for a navbar launcher and panel inside Octonode without a backend. Contributions
 Run `octonodes app targets` to list supported views, actions, and launcher placements;
 add a contextual entry with `octonodes app extension add explain-node --target node.action`.
 The extension starter uses source descriptor `octonode.app/v2` and builds app manifest v3.
-Use the branch-built packages and a matching host until this support is published.
+The published 0.2.38 CLI includes these app descriptors and templates. Installed
+workspace behavior also requires the matching host deployment and grants; a CLI
+release alone does not deploy the app platform.
 
 ```sh
 npm install --global @octonodes/cli
@@ -56,7 +58,8 @@ npm run dev
 ```
 
 The project contains `octonode.app.json`, a React page, a backend, a Projects route, and a
-build check. The React page verifies the workspace session before showing content and registers its navigation in Studio. Yarn workspaces use the generated `installConfig.hoistingLimits: workspaces`. `app dev` runs a live preview and automatically provisions a
+build check. New full apps start with an animated workspace overview, light/dark
+styling, and reduced-motion support. The React page verifies the workspace session before showing content and registers its navigation in Studio. Yarn workspaces use the generated `installConfig.hoistingLimits: workspaces`. `app dev` runs a live preview and automatically provisions a
 verified HTTPS tunnel. It needs no Cloudflare account or separate tunnel install.
 Use `octonodes app dev --use-localhost` for offline UI work. To preview in a real
 workspace, run `octonodes login` and `octonodes app dev --workspace user:<id>`.
@@ -76,7 +79,7 @@ not deploy the backend. Read the [end-to-end Playbook](https://playbook.octonode
 [CLI app commands](packages/cli/README.md#create-an-app),
 [app SDK guide](packages/ui-extensions/README.md#hosted-pages-and-routing),
 [native extension API guide](packages/ui-extensions/README.md#native-app-contributions-v3),
-[CLI implementation notes](docs/app-cli-plan.md), and
+and
 [Shopify CLI comparison](docs/app-cli-shopify-comparison.md).
 
 ## Packages
@@ -88,7 +91,12 @@ not deploy the backend. Read the [end-to-end Playbook](https://playbook.octonode
 | [`@octonodes/mcp`](packages/mcp/README.md)                     | An MCP client needs remote Octonode tools hosted on Cloudflare Workers.               |
 | [`@octonodes/ui-extensions`](packages/ui-extensions/README.md) | Plugin inspector layouts and installed app launchers, panels, tabs, views, and actions. |
 
-Only compiled `dist` files, package metadata, and package README files are published. Source,
+The three npm consumer packages are `@octonodes/sdk`, `@octonodes/cli`, and
+`@octonodes/ui-extensions`. `@octonodes/mcp` is the hosted Worker, not a package
+to install with npm. The main repository's `@octonode/*` workspaces are internal
+engine packages and are not interchangeable with the public SDK.
+
+Only compiled `dist` files, packaged CLI runtime files, package metadata, and package README files are published. Source,
 tests, generation scripts, and repository configuration are not included in the npm packages.
 
 ## SDK
@@ -460,6 +468,12 @@ GitHub provider, completes a PKCE exchange through a temporary `127.0.0.1` callb
 the refreshable session in `~/.octonode/session.json`. The browser never receives the saved CLI
 session. If it cannot open automatically, the CLI prints the URL.
 
+Login prints the personal workspace. `octonodes whoami` verifies the saved Studio
+user and returns their auth `userId`, email, linked providers and `workspace`.
+Use that workspace for `app dev --workspace`. The general `identity api get`
+endpoint can return a workspace-prefixed resource identity, not the auth UUID.
+API token overrides must be disabled before using `whoami`.
+
 Supabase must allow this redirect pattern:
 
 ```text
@@ -535,7 +549,7 @@ shell.
 | Variable              | Behavior                                                  |
 | --------------------- | --------------------------------------------------------- |
 | `OCTONODE_TOKEN`      | Overrides all saved login credentials.                    |
-| `OCTONODE_URL`        | Overrides the default `https://api.octonode.dev`.         |
+| `OCTONODE_URL`        | Overrides the default `https://octonodes.com`.         |
 | `OCTONODE_CONFIG_DIR` | Overrides the default `~/.octonode` credential directory. |
 
 Use `-h`, `--h`, or `--help` globally or after a command.
@@ -549,7 +563,18 @@ behavior:
 corepack enable
 yarn install --immutable
 yarn check
+yarn test:pack
+npm run test:install
 ```
+
+`yarn test` checks every generated CLI operation's URL, HTTP method, bearer header,
+path encoding, request body and response against the public OpenAPI contract using a
+local HTTP fixture. That proves client routing; authorized production mutations require
+a disposable workspace and a scoped credential. `npm run test:install` exercises packed
+packages in a fresh consumer, including a digit-leading plugin UUID, library import,
+frozen restore/removal and full app builds. `yarn test:agent-plugins` additionally
+tests the installed Claude and Codex clients with temporary configuration directories
+and no model calls.
 
 Regenerate the client after replacing `packages/sdk/openapi.json`:
 
@@ -581,3 +606,21 @@ See the [changelog](CHANGELOG.md) for release history.
 ## License
 
 MIT
+
+### Published 0.2.38 gateway workaround
+
+The generated developer routes belong to `https://octonodes.com`. Published 0.2.38
+defaults to the control-plane origin and receives 404 for these `/api/*` routes.
+Until the corrected candidate is published, pass the gateway explicitly:
+
+```sh
+OCTONODE_URL=https://octonodes.com octonodes identity api get
+```
+
+```ts
+const client = createClient(token, { url: "https://octonodes.com" });
+```
+
+The candidate corrects the SDK default inherited by CLI and MCP. Explicit self-hosted
+overrides remain supported. Existing MCP Worker overrides must be corrected by their
+operator; changing source does not change an already deployed Worker.

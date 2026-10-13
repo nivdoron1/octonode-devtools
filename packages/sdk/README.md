@@ -115,7 +115,12 @@ configuration, and execution guides.
 
 ## Configuration
 
-Requests default to `https://api.octonode.dev`. Pass a different URL or shared headers when
+Published 0.2.38 uses the control-plane origin, which returns 404 for generated
+`/api/*` routes. Until the corrected candidate is published, use
+`createClient(token, { url: "https://octonodes.com" })` explicitly. The candidate's
+default below targets the developer gateway.
+
+Requests default to `https://octonodes.com`. Pass a different URL or shared headers when
 creating the client:
 
 ```ts
@@ -131,7 +136,7 @@ construction:
 ```ts
 import { OctonodeClient } from "@octonodes/sdk";
 
-const octonode = new OctonodeClient(token, "https://api.octonode.dev", {
+const octonode = new OctonodeClient(token, "https://octonodes.com", {
   "x-client-name": "my-integration",
 });
 ```

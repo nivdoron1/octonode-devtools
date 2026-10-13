@@ -307,6 +307,7 @@ octonodes app create my-app                     # Vite
 octonodes app create my-vite-app --platform vite
 octonodes app create my-next-app --platform next
 octonodes app create my-plain-app --platform plain
+octonodes app create coding-app --project-access write
 ```
 
 Vite and Next.js create a full app with a real framework page in `src/web/App.tsx`,
@@ -314,7 +315,13 @@ verified workspace content, a Projects route registered in Studio, and the verif
 builds Vite or a Next.js static export into the same verified web artifact and
 serves it through the development tunnel. Next.js server features are outside
 this static export; add backend routes in `src/server.ts`.
-Plain uses `src/welcome.html`, `src/hosted.ts`, and the same backend without Vite or Next.js.
+All full-app platforms start with the animated **Workspace overview** page, an
+**Explore projects** link, responsive light/dark styling, and reduced-motion support.
+Vite and Next.js emit native React JSX; plain emits `src/welcome.html` and
+`src/hosted.ts` with the same design and verified backend. The overview is part of
+the generated app, so customize these source files after creation. Studio’s
+Storybook fixture is a separate preview and is not shipped with the CLI.
+Extension-only starters have no hosted page.
 
 Generated workspaces include `installConfig.hoistingLimits: workspaces` for Yarn 4.
 The hosted SDK keeps normal browser history and mirrors embedded routes into Studio’s
@@ -379,6 +386,17 @@ octonodes login
 If the browser cannot open, visit the URL printed by the command. The CLI receives the result on a
 temporary loopback callback, stores the refreshable session in `~/.octonode/session.json`, and
 refreshes expired access tokens automatically.
+
+Login prints your personal workspace. Run `octonodes whoami` to retrieve the
+verified auth `userId`, email, linked providers and `workspace` again. Use its
+`workspace` value for `app dev --workspace` and its `userId` for backend owner
+checks. The general `identity api get` endpoint can return a `workspace:user:`
+prefixed resource identity; that is not the auth UUID. `whoami` refuses API token
+overrides so a saved user's ID cannot be mistaken for the active token's account.
+
+The app descriptor ID identifies the app source. Studio development previews
+receive a temporary app ID; backends must verify against `OCTONODE_APP_ID`, which
+the CLI supplies for each preview. Configure the registered app ID for production.
 
 For terminal-only login, request an email code:
 
@@ -469,7 +487,7 @@ the [Octonode community](https://community.octonodes.com/community).
 | Variable | Purpose |
 | --- | --- |
 | `OCTONODE_TOKEN` | Overrides every saved login. |
-| `OCTONODE_URL` | Overrides `https://api.octonode.dev`. |
+| `OCTONODE_URL` | Overrides `https://octonodes.com`. |
 | `OCTONODE_CONFIG_DIR` | Overrides the default `~/.octonode` directory. |
 
 Use `--base-url <url>` to override the API URL for one login or API command:
@@ -500,3 +518,15 @@ out of shell history, logs, and source control.
 
 Use [`@octonodes/sdk`](https://www.npmjs.com/package/@octonodes/sdk) for typed application code and
 direct access to the same API operations.
+
+Published 0.2.38 requires `OCTONODE_URL=https://octonodes.com` (or
+`--base-url https://octonodes.com`) for generated API commands; its control-plane
+default returns 404 for `/api/*`. This candidate corrects that default.
+
+Project-file scopes are opt-in. `--project-access read` requests `projects:read`
+for discovery and `read:project` for source files. `--project-access write` also
+requests `write:project`. For full apps these are stored in
+`web.requestedActions`; extension apps use `requestedActions`. Studio requires
+explicit consent for selected projects. The scopes do not grant table data,
+workflow execution, or arbitrary commands, and the creation flag does not start
+an execution sandbox. A supporting engine release must be deployed first.
