@@ -1,8 +1,15 @@
+import type { AppAction } from "@octonodes/sdk/plugins";
+
+export const PROJECT_ACCESS_ACTIONS = {
+  read: ["projects:read", "read:project"],
+  write: ["projects:read", "read:project", "write:project"],
+} as const satisfies Record<string, readonly AppAction[]>;
+
 // App installation and preview routes are served by the Studio gateway.
 export const APP_STUDIO_URL = "https://octonodes.com";
 export const APP_SOURCE = "octonode.app.json";
 export const APP_HELP = `Usage:
-  octonodes app create <name> [--template extension|full] [--platform plain|vite|next]
+  octonodes app create <name> [--template extension|full] [--platform plain|vite|next] [--project-access read|write]
   octonodes app targets
   octonodes app extension add <id> --target <target> [--cwd <directory>]
   octonodes app dev [directory] [--use-localhost | --tunnel-url <https-origin>] [--port <port>] [--no-open] [--workspace kind:id]
@@ -13,6 +20,7 @@ export const APP_HELP = `Usage:
 
 Create defaults to a full Vite app (--platform vite). Use --platform plain for HTML or
 --platform next for Next.js. Use --template extension for an in-app panel and navbar launcher.
+--project-access declares explicit project-file permissions; it does not start a sandbox.
 Extension templates use octonode.app/v2; app targets lists the supported view/action/launcher targets.
 Build compiles declared browser entries and generates
 release hashes in dist/apps/<id>. Existing projects are never overwritten. No login is needed.

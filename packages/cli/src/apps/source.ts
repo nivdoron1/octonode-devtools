@@ -83,7 +83,7 @@ export function readAppSource(root: string): AppSource {
       throw new Error("web.entry must be a server module under src/");
     safePath(source.web.entry);
     AppAction.array()
-      .max(4)
+      .max(AppAction.options.length)
       .parse(source.web.requestedActions ?? []);
     if (source.settings?.length)
       throw new Error("Shared settings require an extension-only app; configure full apps in their backend");

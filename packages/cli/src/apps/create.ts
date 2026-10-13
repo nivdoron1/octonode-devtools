@@ -2,10 +2,10 @@ import { NODE_ENGINE_RANGE } from "@octonodes/sdk/plugins";
 import { mkdirSync, mkdtempSync, renameSync, rmSync, writeFileSync, lstatSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { join, resolve } from "node:path";
-import { APP_SOURCE } from "./constants";
+import { APP_SOURCE, PROJECT_ACCESS_ACTIONS } from "./constants";
 import { appManifest, readAppSource } from "./source";
 import type { AppSource } from "./types";
-import { appCss, welcomeHtml, welcomeReact } from "./welcome";
+import { appCss, welcomeHosted, welcomeHtml, welcomeReact } from "./welcome";
 import {APP_ACTION_TARGETS,APP_VIEW_TARGETS,type ContributionApp} from "@octonodes/sdk/plugins";
 
 const json = (value: unknown) => JSON.stringify(value, null, 2) + "\n";
@@ -21,11 +21,14 @@ export default defineExtension(${JSON.stringify(target)}, function Notice() {
 });
 `;
 }
-export function createApp(name: string, version: string, template = "full", platform: string | undefined = template === "full" ? "vite" : undefined): string {
+export function createApp(name: string, version: string, template = "full", platform: string | undefined = template === "full" ? "vite" : undefined, projectAccess?: string): string {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(name)) throw new Error("App name must be lowercase alphanumeric/dash");
   if (!["extension", "full"].includes(template)) throw new Error("Choose --template extension or full");
   if (platform && !["plain", "vite", "next"].includes(platform)) throw new Error("Choose --platform plain, vite or next");
   if (platform && template !== "full") throw new Error("--platform requires --template full");
+  if (projectAccess !== undefined && projectAccess !== "read" && projectAccess !== "write")
+    throw new Error("Choose --project-access read or write");
+  const requestedActions = projectAccess ? [...PROJECT_ACCESS_ACTIONS[projectAccess]] : undefined;
   const framework = platform === "vite" || platform === "next";
   const appId = randomUUID();
   const root = resolve(name);
@@ -40,9 +43,9 @@ export function createApp(name: string, version: string, template = "full", plat
         id: appId,
         name,
         version: "0.1.0",
-        ...(template === "full" ? { web: { entry: "src/server.ts", ...(platform ? { platform } : {}) } } : {}),
+        ...(template === "full" ? { web: { entry: "src/server.ts", ...(platform ? { platform } : {}), ...(requestedActions ? { requestedActions } : {}) } } : {}),
         ...(template === "extension"
-          ? { settings: [{ id: "message", label: "Message", defaultValue: "Welcome to the workspace" }] }
+          ? { settings: [{ id: "message", label: "Message", defaultValue: "Welcome to the workspace" }], ...(requestedActions ? { requestedActions } : {}) }
           : {}),
         extensions: template === "extension" ? [{ id: "assistant", target: "shell.panel", title:"Workspace assistant",entry: "src/extensions/assistant.tsx" }] : [],
         ...(template === "extension" ? {launchers:[{id:"open-assistant",target:"shell.navbar.action",title:"Workspace assistant",icon:"terminal",opens:"assistant"}]} : {}),
@@ -51,23 +54,7 @@ export function createApp(name: string, version: string, template = "full", plat
     if (template === "extension") writeFileSync(join(root, "src/extensions/assistant.tsx"), extensionCode("shell.panel"));
     if (template === "full") {
       if (!framework) writeFileSync(join(root, "src/welcome.html"), welcomeHtml(name));
-      if (!framework) writeFileSync(join(root, "src/hosted.ts"), `import { connectHostedApp } from "@octonodes/ui-extensions/app";
-const app = connectHostedApp();
-const output = document.getElementById("message")!;
-let token: string | undefined;
-const update = () => {
-  const current = app.getSnapshot();
-  if (current.status === "expired") output.textContent = "Session expired. Reopen the app from Studio.";
-  if (current.status !== "ready" || current.token === token) return;
-  token = current.token;
-  app.fetch("/api/context").then(async response => {
-    if (!response.ok) throw Error("Could not load context (" + response.status + ").");
-    const data = await response.json(); output.textContent = "Connected to " + data.workspace.kind + ":" + data.workspace.id;
-  }).catch(error => { output.textContent = error.message; });
-};
-output.textContent = "Open this app from Studio to connect your workspace.";
-app.subscribe(update); update();
-`);
+      if (!framework) writeFileSync(join(root, "src/hosted.ts"), welcomeHosted());
       writeFileSync(
         join(root, "src/server.ts"),
         `// Export a Fetch API handler. app dev and app serve adapt it to Node HTTP.
@@ -115,7 +102,7 @@ export default async function handle(request: Request): Promise<Response> {
           writeFileSync(join(root, "vite.config.mjs"), 'export default { build: { outDir: "web-dist" } };\n');
         } else {
           mkdirSync(join(root, "app"));
-          writeFileSync(join(root, "app/page.tsx"), 'import App from "../src/web/App";\nexport default App;\n');
+          writeFileSync(join(root, "app/page.tsx"), 'import App from "../src/web/App";\nexport default function Page() { return <App />; }\n');
           writeFileSync(join(root, "app/layout.tsx"), `import "../src/web/welcome.css";\nexport const metadata = { title: "${name} · Octonode" };\nexport default function Layout({ children }: { children: React.ReactNode }) { return <html lang="en"><body>{children}</body></html>; }\n`);
           writeFileSync(join(root, "next.config.mjs"), 'export default { output: "export" };\n');
         }
@@ -190,11 +177,11 @@ An Octonode app created by \`octonodes app create\`. ${template === "full" ? "It
 ## Work locally
 
 ${template === "full" ? `Yarn workspaces use the generated \`installConfig.hoistingLimits: workspaces\`. Keep it
-and run \`yarn install\` at the workspace root. Full React apps verify the
-workspace session before showing content and register Overview (\`/\`) and
-Projects (\`/projects\`) routes in Studio’s sidebar. The top navbar is optional: render
-\`<App showNavbar />\` in \`src/web/main.tsx\` to enable it for Vite, or render
-\`<App showNavbar />\` from \`app/page.tsx\` for Next.js. Sidebar registration is always enabled.` : `The extension starter has no hosted page or backend. Its declared navbar launcher
+and run \`yarn install\` at the workspace root. Full apps verify the
+workspace session before showing content. The animated workspace overview is the default
+landing page, with responsive light/dark styling and reduced-motion support. Full apps register Overview (\`/\`) and
+Projects (\`/projects\`) routes in Studio’s sidebar. Sidebar registration is always enabled.
+${framework ? "The top navbar is optional: render `<App showNavbar />` in `src/web/main.tsx` for Vite or from `app/page.tsx` for Next.js." : "The plain page lives in `src/welcome.html`, with session verification and route handling in `src/hosted.ts`."}` : `The extension starter has no hosted page or backend. Its declared navbar launcher
 opens a sandboxed panel inside Octonode. Use \`octonodes app targets\` to discover
 supported contextual contributions.`}
 
@@ -208,13 +195,14 @@ The CLI opens a live HTTPS preview and downloads a verified tunnel helper on fir
 use. Development opens a public Quick Tunnel automatically. No Cloudflare account or separate installation is needed. Use
 \`octonodes app dev --use-localhost\` for offline UI work.
 Edit \`octonode.app.json\` and the generated source files. ${framework ? `The ${platform === "next" ? "Next.js" : "Vite"} welcome page lives in \`src/web/App.tsx\`. ` : ""}The descriptor owns
-app identity, version, extension targets and entry files. Do not edit \`dist/\`.
+app identity, version, extension targets and entry files. Optional \`--project-access read|write\` declares project-file scopes for selected projects; write requests both read and write access. These scopes require fresh Studio consent and a supporting platform release. The flag does not provision a sandbox or expose project files. Do not edit \`dist/\`.
 ${template === "extension" ? "Add a page with `octonodes app extension add overview --target app.page`." : "Add a contribution with `octonodes app extension add notice --target workspace.block`."}
 
 ## Preview and publish in Octonode
 
 \`\`\`sh
 octonodes login
+octonodes whoami
 octonodes app dev --workspace user:<your-user-id>
 npm test
 octonodes app validate dist/apps/${appId}
