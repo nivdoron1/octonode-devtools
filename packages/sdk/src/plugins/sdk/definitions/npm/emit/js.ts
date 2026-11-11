@@ -1,7 +1,7 @@
 // Generated from packages/plugin/src/npm/emit/js.ts. Do not edit; run the Octonode SDK sync.
 // packages/plugin/src/npm/emit/js.ts
 import type { CompiledNpmPlugin, NpmNodeDescriptor } from "../types";
-import { clientOutputSource } from "../../clients/output";
+import { clientOutputSource } from "../../clients";
 
 /** Render the single IPC adapter used by every node extracted from a package. */
 function runner(plan: CompiledNpmPlugin): string {
@@ -41,7 +41,7 @@ function toJson(value) {
     throw new NodeError("npm export returned a value that is not JSON-serializable", "VALIDATION_ERROR");
   }
 }
-${plan.nodes.some((node) => node.outputStreams?.length) ? clientOutputSource("javascript") : ""}
+${plan.nodes.some((node) => node.outputStreams?.length) ? clientOutputSource() : ""}
 const NODES = ${JSON.stringify(descriptors, null, 2)};
 const node = NODES[process.argv[2]];
 if (require.main === module && !node) throw new Error('unknown generated npm node "' + process.argv[2] + '"');

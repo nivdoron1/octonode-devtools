@@ -1,14 +1,14 @@
 // Generated from packages/ui-extensions/src/app/hosted.ts. Do not edit; run the Octonode SDK sync.
-import type { HostedApp, HostedAppNavigationItem, HostedAppState } from "./types.js";
-import { HOSTED_APP_PROTOCOL } from "./constants.js";
+import { HOSTED_APP_PROTOCOL, HOSTED_HEARTBEAT_INTERVAL_MS, HOSTED_URL_URL } from "./constants";
+import type { HostedApp, HostedAppNavigationItem, HostedAppState } from "./types";
 
 /** Only app-relative routes may cross the Studio boundary. */
 export function appRoute(value: unknown): string | null {
   if (typeof value !== "string" || value.length > 4096 || !value.startsWith("/") || /[\\\s\p{Cc}]/u.test(value))
     return null;
   try {
-    const url = new URL(value, "https://app.invalid");
-    if (url.origin !== "https://app.invalid" || url.username || url.password || url.hash.includes("octonode_session"))
+    const url = new URL(value, HOSTED_URL_URL);
+    if (url.origin !== HOSTED_URL_URL || url.username || url.password || url.hash.includes("octonode_session"))
       return null;
     return url.pathname + url.search + url.hash;
   } catch {
@@ -126,7 +126,7 @@ export function connectHostedApp(): HostedApp {
   const heartbeat = setInterval(() => {
     if (state.expiresAt && state.expiresAt <= Date.now()) publish({ status: "expired", token: undefined });
     send({ type: "ready" });
-  }, 1000);
+  }, HOSTED_HEARTBEAT_INTERVAL_MS);
   send({ type: "ready" });
   return {
     getSnapshot: () => state,

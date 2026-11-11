@@ -1,17 +1,18 @@
 // Generated from packages/ui-extensions/src/contributions.ts. Do not edit; run the Octonode SDK sync.
-import { request } from "./app/index.js";
+import type { EnvironmentValueRecord } from "./types";
+import { request } from "./app";
 import type {
   ActionApi,
   ActionDefinition,
   AppExtensionTarget,
   ExtensionApi,
   ExtensionEnvironment,
-} from "./contributions.types.js";
-import { getAppSession } from "./index.js";
+} from "./contributions.types";
+import { getAppSession } from ".";
 
 function environment(target: AppExtensionTarget): ExtensionEnvironment {
   getAppSession();
-  const value = (globalThis as typeof globalThis & { __octonodeExtension?: ExtensionEnvironment }).__octonodeExtension;
+  const value = (globalThis as typeof globalThis & EnvironmentValueRecord).__octonodeExtension;
   if (!value || value.target !== target) throw new Error("Extension target context unavailable");
   return value;
 }

@@ -6,11 +6,13 @@ import {
   makeManifestError,
   makeManifestResult,
   makeOkResult,
+  diagnosticExplanation,
+  runtimeErrorIdentity,
   type NodeManifest,
 } from "../schema/plugin-sdk";
-import type { Envelope, NodeDefinition, ServiceDefinition, ServiceMethodSpec, NodeErrorOptions } from "./types.js";
-import { LANGUAGE } from "./constants.js";
-import { validate } from "./json/schema.js";
+import type { Envelope, NodeDefinition, ServiceDefinition, ServiceMethodSpec, NodeErrorOptions } from "./types";
+import { LANGUAGE } from "./constants";
+import { jsonSafetyError, validate } from "./json";
 
 /**
  * A deliberate, terminal failure a node author can raise. The runner converts
@@ -195,6 +197,7 @@ export async function processRequest(node: NodeDefinition, raw: string): Promise
         code: "RUNTIME_ERROR",
         message: `Failed to build manifest: ${describe(err)}`,
         retryable: false,
+        ...runtimeErrorIdentity(err),
       });
     }
   }
@@ -219,6 +222,7 @@ export async function processRequest(node: NodeDefinition, raw: string): Promise
       message: `Inputs failed schema validation: ${inputErrors[0].path} ${inputErrors[0].message}`,
       retryable: false,
       details: { errors: inputErrors },
+      diagnostic: { ...diagnosticExplanation("validation"), input: inputErrors[0].path },
     });
   }
 
@@ -235,6 +239,7 @@ export async function processRequest(node: NodeDefinition, raw: string): Promise
         message: err.message,
         retryable: err.retryable,
         stack: err.stack,
+        ...runtimeErrorIdentity(err),
       });
     }
     return makeErrorResult(invocationId, {
@@ -242,6 +247,7 @@ export async function processRequest(node: NodeDefinition, raw: string): Promise
       message: describe(err),
       retryable: false,
       stack: err instanceof Error ? err.stack : undefined,
+      ...runtimeErrorIdentity(err),
     });
   }
 
@@ -252,6 +258,7 @@ export async function processRequest(node: NodeDefinition, raw: string): Promise
       message: `Outputs failed schema validation: ${outputErrors[0].path} ${outputErrors[0].message}`,
       retryable: false,
       details: { errors: outputErrors },
+      diagnostic: { ...diagnosticExplanation("validation"), action: "reviewOutput" },
     });
   }
 
@@ -265,39 +272,12 @@ export async function processRequest(node: NodeDefinition, raw: string): Promise
     return makeErrorResult(invocationId, {
       code: "VALIDATION_ERROR",
       message: `Outputs must be losslessly JSON-serializable: ${serializationError}`,
+      diagnostic: diagnosticExplanation("serialization"),
       retryable: false,
     });
   }
 
   return makeOkResult(invocationId, outputs);
-}
-
-export function jsonSafetyError(value: unknown, path = "$", ancestors = new Set<object>()): string | undefined {
-  if (value === null || typeof value === "string" || typeof value === "boolean") return undefined;
-  if (typeof value === "number") return Number.isFinite(value) ? undefined : `${path} is not a finite number`;
-  if (typeof value !== "object") return `${path} has type ${typeof value}`;
-  if (ancestors.has(value)) return `${path} is cyclic`;
-  ancestors.add(value);
-  try {
-    if (Array.isArray(value)) {
-      for (let index = 0; index < value.length; index++) {
-        if (!(index in value)) return `${path}[${index}] is an array hole`;
-        const error = jsonSafetyError(value[index], `${path}[${index}]`, ancestors);
-        if (error) return error;
-      }
-      return undefined;
-    }
-    const prototype = Object.getPrototypeOf(value);
-    if (prototype !== Object.prototype && prototype !== null) return `${path} is not a plain object`;
-    if (Object.getOwnPropertySymbols(value).length) return `${path} has symbol keys`;
-    for (const [key, item] of Object.entries(value)) {
-      const error = jsonSafetyError(item, `${path}.${key}`, ancestors);
-      if (error) return error;
-    }
-    return undefined;
-  } finally {
-    ancestors.delete(value);
-  }
 }
 
 function write(envelope: Envelope): void {

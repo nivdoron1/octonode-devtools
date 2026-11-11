@@ -1,5 +1,5 @@
 // Generated from packages/plugin/src/npm/types.ts. Do not edit; run the Octonode SDK sync.
-import type { NpmClientBinding, NpmClientDefinition, NpmSdkExport } from "../../../schema/plugin-sdk";
+import type { NpmClientBinding, NpmClientDefinition, NpmSdkExport, PluginManifest } from "../../../schema/plugin-sdk";
 import type ts from "typescript";
 
 export interface NpmPackageMeta {
@@ -73,6 +73,10 @@ export interface CompiledNpmPlugin {
 }
 
 export interface NpmGenerateOptions {
+  /** Apply reviewed release metadata to both the authoring definition and default adapter. */
+  metadata?: Pick<PluginManifest, "scope" | "author" | "license" | "connections" | "permissions">;
+  /** Automatic project imports inspect declarations without evaluating upstream exports. */
+  staticOnly?: boolean;
   cacheRoot?: string;
   /** Package spec: `name`, `name@version`, or a local folder path (tests/offline). */
   pkg: string;
@@ -108,4 +112,19 @@ export interface NpmGenerateResult {
 export interface LoadedNpmPackage extends NpmPackageMeta {
   /** Temp dir holding the installed package tree. Caller must rmSync it. */
   tmpDir: string;
+}
+
+export type NpmAuthoringFilesNpmRecord = { npm: { spec: string } };
+
+export type GenerateFromNpmManifestNodeRecord = { id: string; command: string };
+
+export type RunStderrRecord = { stderr?: string };
+
+export type LoadNpmPackageNameRecord = { name: string };
+
+export interface NpmMemberTraversal {
+  type: ts.Type;
+  path: string[];
+  seen: Set<ts.Type>;
+  static: boolean;
 }

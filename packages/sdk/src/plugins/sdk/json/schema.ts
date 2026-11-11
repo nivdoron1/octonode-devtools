@@ -1,5 +1,5 @@
-// Generated from packages/plugin-runtime/src/json/schema.ts. Do not edit; run the Octonode SDK sync.
-import type { JsonSchema, ValidationError } from "../types";
+// Generated from packages/common/src/json/schema.ts. Do not edit; run the Octonode SDK sync.
+import type { JsonSchema, ValidationError } from "./types";
 
 /**
  * A deliberately tiny JSON Schema validator covering the common subset Octonode

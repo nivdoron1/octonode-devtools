@@ -1,5 +1,5 @@
 // Generated from packages/ui-extensions/src/contributions.types.ts. Do not edit; run the Octonode SDK sync.
-import type { APP_EXTENSION_TARGETS } from "./constants.js";
+import type { APP_EXTENSION_TARGETS } from "./constants/constants";
 
 export type AppExtensionTarget = (typeof APP_EXTENSION_TARGETS)[number];
 export type ExtensionContext = Readonly<{

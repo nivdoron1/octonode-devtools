@@ -1,4 +1,10 @@
 // Generated from packages/plugin-runtime/src/definitions/compiler/index.ts. Do not edit; run the Octonode SDK sync.
+import type {
+  CompileDefinitionImportsRecord,
+  CompileDefinitionPermissionsRecord,
+  CompileDefinitionLibraryEntryRecord,
+  CompileDefinitionResult,
+} from "./types";
 import * as ts from "typescript";
 import { existsSync, realpathSync } from "node:fs";
 import { dirname, isAbsolute, relative, resolve } from "node:path";
@@ -53,7 +59,7 @@ export function compileDefinition(
       ...extraFiles.map((file) => resolve(root, file)),
       ...(existsSync(entry) ? [entry] : []),
     ]),
-  ];
+  ].filter((file) => !relative(root, file).split(/[\\/]/).includes("octonode_plugins"));
   if (!existsSync(entry)) {
     for (const file of roots) {
       const text = ts.sys.readFile(file);
@@ -70,7 +76,12 @@ export function compileDefinition(
   const catalog = program.getSourceFile(resolve(root, NODES_FILENAME));
   if (catalog) generateNodeCatalog(root, roots, true);
   for (const file of program.getSourceFiles()) {
-    if (file.isDeclarationFile || file.fileName.includes("/node_modules/")) continue;
+    if (
+      file.isDeclarationFile ||
+      file.fileName.includes("/node_modules/") ||
+      relative(root, file.fileName).split(/[\\/]/).includes("octonode_plugins")
+    )
+      continue;
     if (
       !DEFINITION_FILES.includes(relative(root, file.fileName)) &&
       ts.preProcessFile(file.text, true, true).importedFiles.some((item) => DEFINITION_MODULES.includes(item.fileName))
@@ -81,7 +92,7 @@ export function compileDefinition(
   const source = program.getSourceFile(entry)!;
   const checker = program.getTypeChecker();
   const sdk = new Map<string, string>();
-  const imports = new Map<string, { module: string; name: string }>();
+  const imports = new Map<string, CompileDefinitionImportsRecord>();
   let definition: ts.ExportAssignment | undefined;
   for (const statement of source.statements) {
     if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier)) {
@@ -480,21 +491,21 @@ export function compileDefinition(
     };
   }
   if (nodes.some((node) => node.npm?.descriptor.client)) {
-    const permissions = (pluginMetadata.permissions ?? []) as Array<{ resource: string; access: string }>;
+    const permissions = (pluginMetadata.permissions ?? []) as Array<CompileDefinitionPermissionsRecord>;
     if (!permissions.some((permission) => permission.resource === "project_data"))
       pluginMetadata.permissions = [...permissions, { resource: "project_data", access: "read" }];
   }
-  let libraryEntry: { entry: string } | undefined;
+  let libraryEntry: CompileDefinitionLibraryEntryRecord | undefined;
   if (library !== undefined) {
     if (
       !library ||
       typeof library !== "object" ||
       Array.isArray(library) ||
       Object.keys(library).join() !== "entry" ||
-      typeof (library as { entry?: unknown }).entry !== "string"
+      typeof (library as CompileDefinitionResult).entry !== "string"
     )
       throw new Error("library must contain one literal entry path");
-    const path = (library as { entry: string }).entry;
+    const path = (library as CompileDefinitionLibraryEntryRecord).entry;
     if (
       !/^[a-zA-Z0-9_./-]+\.[cm]?ts$/.test(path) ||
       path.startsWith("/") ||
@@ -570,3 +581,11 @@ export function compileDefinition(
     );
   return { kind, nodes, manifest, assets: assets as string[], ...(libraryEntry ? { library: libraryEntry } : {}) };
 }
+
+export type {
+  GenerateNodeCatalogEntriesRecord,
+  CompileDefinitionImportsRecord,
+  CompileDefinitionPermissionsRecord,
+  CompileDefinitionLibraryEntryRecord,
+  CompileDefinitionResult,
+} from "./types";

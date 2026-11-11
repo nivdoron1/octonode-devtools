@@ -1,7 +1,7 @@
 // Generated from packages/schema/src/plugin/execution.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
 import { InvokeRequest } from "../ipc/envelope";
-import { PluginManifest } from "./plugin";
+import { PluginManifest, PluginPermission } from "./plugin";
 import { PLUGIN_EXECUTION_TIMEOUT_MS, PREPARED_RUNTIME_ARCHIVE } from "./execution.constants";
 
 export const PreparedPluginRuntime = z
@@ -16,13 +16,20 @@ export const PreparedPluginRuntime = z
   .strict();
 export type PreparedPluginRuntime = z.infer<typeof PreparedPluginRuntime>;
 
-export const PluginExecutionReference = z
-  .object({
-    installId: z.string().uuid(),
-    sha256: z.string().regex(/^sha256:[a-f0-9]{64}$/),
-    nodeId: z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i),
-  })
-  .strict();
+const executionIdentity = {
+  sha256: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  nodeId: z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i),
+};
+export const PluginExecutionReference = z.union([
+  z.object({ ...executionIdentity, installId: z.string().uuid() }).strict(),
+  z
+    .object({
+      ...executionIdentity,
+      workspaceArchiveSha256: z.string().regex(/^[a-f0-9]{64}$/),
+      grantId: z.string().uuid(),
+    })
+    .strict(),
+]);
 export type PluginExecutionReference = z.infer<typeof PluginExecutionReference>;
 
 export const PluginExecutionRequest = z
@@ -48,3 +55,9 @@ export const AuthorizedPluginRelease = z.object({
   archiveSha256: z.string().regex(/^[a-f0-9]{64}$/),
 });
 export type AuthorizedPluginRelease = z.infer<typeof AuthorizedPluginRelease>;
+
+export const WorkspacePluginExecutionGrant = AuthorizedPluginRelease.extend({
+  sha256: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  permissions: z.array(PluginPermission),
+});
+export type WorkspacePluginExecutionGrant = z.infer<typeof WorkspacePluginExecutionGrant>;

@@ -1,13 +1,9 @@
 // Generated from packages/schema/src/ipc/envelope.ts. Do not edit; run the Octonode SDK sync.
 import { z } from "zod";
 import { IconValue } from "../icons";
-
-/**
- * The IPC protocol version. Every envelope carries this in its `octonode`
- * field so the wire format can evolve without ambiguity. Bump only on a
- * breaking change to the envelope shape.
- */
-export const PROTOCOL_VERSION = "1" as const;
+import type { MakeDescribeRequestArgs, MakeInvokeRequestArgs } from "./types";
+import { PROTOCOL_VERSION } from "./constants";
+import { DiagnosticExplanation, RuntimeErrorIdentity, runtimeDiagnosticExplanation } from "../diagnostics";
 
 /**
  * A JSON Schema object, kept deliberately loose. It is the lowest common
@@ -75,13 +71,16 @@ export const RequestEnvelope = z.discriminatedUnion("type", [InvokeRequest, Desc
 export type RequestEnvelope = z.infer<typeof RequestEnvelope>;
 
 /** Errors are data, not just exceptions — they cross the process boundary as JSON. */
-export const NodeError = z.object({
-  code: ErrorCode,
-  message: z.string(),
-  retryable: z.boolean().default(false),
-  details: z.unknown().optional(),
-  stack: z.string().optional(),
-});
+export const NodeError = z
+  .object({
+    code: ErrorCode,
+    message: z.string(),
+    retryable: z.boolean().default(false),
+    details: z.unknown().optional(),
+    stack: z.string().optional(),
+    diagnostic: DiagnosticExplanation.optional(),
+  })
+  .merge(RuntimeErrorIdentity);
 export type NodeError = z.infer<typeof NodeError>;
 
 // ---- Invoke results ----
@@ -181,12 +180,7 @@ export type ManifestError = z.infer<typeof ManifestErr>;
 
 // ---- Constructors: the one blessed way to build envelopes, used by SDK + engine ----
 
-export function makeInvokeRequest(args: {
-  invocationId: string;
-  inputs: unknown;
-  node?: string;
-  context?: Partial<InvocationContext>;
-}): InvokeRequest {
+export function makeInvokeRequest(args: MakeInvokeRequestArgs): InvokeRequest {
   return InvokeRequest.parse({
     octonode: PROTOCOL_VERSION,
     type: "invoke",
@@ -197,7 +191,7 @@ export function makeInvokeRequest(args: {
   });
 }
 
-export function makeDescribeRequest(args: { invocationId: string; node?: string }): DescribeRequest {
+export function makeDescribeRequest(args: MakeDescribeRequestArgs): DescribeRequest {
   return DescribeRequest.parse({
     octonode: PROTOCOL_VERSION,
     type: "describe",
@@ -222,7 +216,7 @@ export function makeErrorResult(invocationId: string, error: NodeError): ErrorRe
     type: "result",
     invocationId,
     status: "error",
-    error: NodeError.parse(error),
+    error: NodeError.parse({ ...error, diagnostic: runtimeDiagnosticExplanation(error) }),
   };
 }
 
@@ -242,6 +236,6 @@ export function makeManifestError(invocationId: string, error: NodeError): Manif
     type: "manifest",
     invocationId,
     status: "error",
-    error: NodeError.parse(error),
+    error: NodeError.parse({ ...error, diagnostic: runtimeDiagnosticExplanation(error) }),
   };
 }

@@ -8,6 +8,7 @@ export type NodeCustomization = Partial<
     | "label"
     | "symbol"
     | "icon"
+    | "inheritPluginIcon"
     | "description"
     | "defaults"
     | "connections"

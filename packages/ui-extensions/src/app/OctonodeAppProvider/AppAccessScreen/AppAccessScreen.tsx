@@ -1,8 +1,14 @@
 // Generated from packages/ui-extensions/src/app/OctonodeAppProvider/AppAccessScreen/AppAccessScreen.tsx. Do not edit; run the Octonode SDK sync.
 import { useEffect, useState } from "react";
-import { locales } from "../../../locales/index.js";
-import { ACCESS_SCREEN_CSS, OCTONODE_LOGO } from "./constants.js";
-import type { AppAccessScreenProps } from "./AppAccessScreen.types.js";
+import { locales } from "../../../locales";
+import type { AppAccessScreenProps } from "./AppAccessScreen.types";
+import {
+  ACCESS_SCREEN_CSS,
+  APP_ACCESS_SCREEN_HREF_OCTONODES_STUDIO_URL,
+  APP_ACCESS_SCREEN_HREF_PLAYBOOK_OCTONODES_DOCS_APPS_URL,
+  APP_ACCESS_SCREEN_HREF_URL,
+  OCTONODE_LOGO,
+} from "./constants";
 
 export function AppAccessScreen({ status }: AppAccessScreenProps) {
   const [language, setLanguage] = useState<keyof typeof locales>("en");
@@ -17,13 +23,13 @@ export function AppAccessScreen({ status }: AppAccessScreenProps) {
     <div className={`octo-access octo-access-${status}`} lang={language}>
       <style>{ACCESS_SCREEN_CSS}</style>
       <header className="octo-access-header">
-        <a className="octo-access-brand" href="https://octonodes.com" target="_blank" rel="noopener noreferrer">
+        <a className="octo-access-brand" href={APP_ACCESS_SCREEN_HREF_URL} target="_blank" rel="noopener noreferrer">
           <img src={OCTONODE_LOGO} alt="" />
           octonode
         </a>
         <a
           className="octo-access-guide"
-          href="https://playbook.octonodes.com/docs/apps"
+          href={APP_ACCESS_SCREEN_HREF_PLAYBOOK_OCTONODES_DOCS_APPS_URL}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -54,7 +60,7 @@ export function AppAccessScreen({ status }: AppAccessScreenProps) {
                 {/* Native links keep this SDK usable without the host's design-system runtime. */}
                 <a
                   className="octo-access-primary"
-                  href="https://octonodes.com/studio"
+                  href={APP_ACCESS_SCREEN_HREF_OCTONODES_STUDIO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -63,7 +69,7 @@ export function AppAccessScreen({ status }: AppAccessScreenProps) {
                 </a>
                 <a
                   className="octo-access-secondary"
-                  href="https://playbook.octonodes.com/docs/apps"
+                  href={APP_ACCESS_SCREEN_HREF_PLAYBOOK_OCTONODES_DOCS_APPS_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -141,7 +147,7 @@ export function AppAccessScreen({ status }: AppAccessScreenProps) {
       </main>
       <footer className="octo-access-footer">
         <p>{t.footer}</p>
-        <a href="https://playbook.octonodes.com/docs/apps" target="_blank" rel="noopener noreferrer">
+        <a href={APP_ACCESS_SCREEN_HREF_PLAYBOOK_OCTONODES_DOCS_APPS_URL} target="_blank" rel="noopener noreferrer">
           {t.help}
         </a>
       </footer>

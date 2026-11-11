@@ -50,7 +50,7 @@ Bundled input schema (use the live tool schema if the deployed server differs):
 {
   "name": "project_shell_stop",
   "arguments": {
-    "id": "example-id",
+    "id": "00000000-0000-4000-8000-000000000000",
     "projectId": "example-project"
   }
 }

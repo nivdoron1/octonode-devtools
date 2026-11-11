@@ -45,11 +45,6 @@ export const PluginPublisherInput = z
   .object({ repositoryId: z.number().int().positive(), configPath: PluginConfigPath })
   .strict();
 export const PluginPublisherRepository = PluginPublisherInput.pick({ repositoryId: true });
-export const PluginPublisherAutomatic = z.object({
-  ok: z.boolean(),
-  connected: z.number(),
-  workflow: z.string(),
-});
 export const PluginPublisherConsent = PluginPublisherInput.extend({ sha256: z.string().regex(/^[a-f0-9]{64}$/) });
 export const PluginPublisherPreview = z.object({
   config: PluginReleaseConfig,

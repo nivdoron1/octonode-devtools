@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, RequestResult, ServerSentEventsResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteApiProjectsByProjectIdDataTablesByTableIdData, DeleteApiProjectsByProjectIdDataTablesByTableIdErrors, DeleteApiProjectsByProjectIdDataTablesByTableIdResponses, DeleteApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdData, DeleteApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdErrors, DeleteApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdResponses, DeleteApiProjectsByProjectIdFilesContentData, DeleteApiProjectsByProjectIdFilesContentErrors, DeleteApiProjectsByProjectIdFilesContentResponses, GetApiAppsRuntimeSessionData, GetApiAppsRuntimeSessionErrors, GetApiAppsRuntimeSessionResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberData, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewFileData, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewFileErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewFileResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewThreadsData, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewThreadsErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewThreadsResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberWorkflowDiffData, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberWorkflowDiffErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberWorkflowDiffResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsData, GetApiArchitecturesByArchitectureIdGithubPullRequestsErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsResponses, GetApiCapabilitiesData, GetApiCapabilitiesResponses, GetApiExecutionsByRunIdData, GetApiExecutionsByRunIdErrors, GetApiExecutionsByRunIdEventsData, GetApiExecutionsByRunIdEventsResponses, GetApiExecutionsByRunIdResponses, GetApiGithubJobsByIdData, GetApiGithubJobsByIdErrors, GetApiGithubJobsByIdResponses, GetApiGithubRepositoriesData, GetApiGithubRepositoriesErrors, GetApiGithubRepositoriesResponses, GetApiIdentityData, GetApiIdentityResponses, GetApiMarketplaceAnalyticsData, GetApiMarketplaceAnalyticsErrors, GetApiMarketplaceAnalyticsResponses, GetApiMarketplaceAppsData, GetApiMarketplaceAppsErrors, GetApiMarketplaceAppsResponses, GetApiMarketplaceData, GetApiMarketplaceErrors, GetApiMarketplacePluginsByIdData, GetApiMarketplacePluginsByIdErrors, GetApiMarketplacePluginsByIdResponses, GetApiMarketplaceResponses, GetApiMarketplaceToolkitsData, GetApiMarketplaceToolkitsErrors, GetApiMarketplaceToolkitsResponses, GetApiNativeNodesData, GetApiNativeNodesResponses, GetApiNodesByNodeIdSourceData, GetApiNodesByNodeIdSourceErrors, GetApiNodesByNodeIdSourceResponses, GetApiNodesData, GetApiNodesErrors, GetApiNodesResponses, GetApiPluginsByPluginIdData, GetApiPluginsByPluginIdErrors, GetApiPluginsByPluginIdResponses, GetApiPluginsData, GetApiPluginsNodesData, GetApiPluginsNodesErrors, GetApiPluginsNodesResponses, GetApiPluginsResponses, GetApiPluginsSearchData, GetApiPluginsSearchResponses, GetApiProfileData, GetApiProfileErrors, GetApiProfileResponses, GetApiProfilesByUserIdAvatarData, GetApiProfilesByUserIdAvatarErrors, GetApiProfilesByUserIdAvatarResponses, GetApiProfilesWorkspaceMembersData, GetApiProfilesWorkspaceMembersErrors, GetApiProfilesWorkspaceMembersResponses, GetApiProjectsByProjectIdData, GetApiProjectsByProjectIdDataTablesByTableIdData, GetApiProjectsByProjectIdDataTablesByTableIdErrors, GetApiProjectsByProjectIdDataTablesByTableIdResponses, GetApiProjectsByProjectIdDataTablesByTableIdRowsData, GetApiProjectsByProjectIdDataTablesByTableIdRowsErrors, GetApiProjectsByProjectIdDataTablesByTableIdRowsResponses, GetApiProjectsByProjectIdDataTableSchemaData, GetApiProjectsByProjectIdDataTableSchemaErrors, GetApiProjectsByProjectIdDataTableSchemaResponses, GetApiProjectsByProjectIdDataTablesData, GetApiProjectsByProjectIdDataTablesErrors, GetApiProjectsByProjectIdDataTablesResponses, GetApiProjectsByProjectIdErrors, GetApiProjectsByProjectIdFilesContentData, GetApiProjectsByProjectIdFilesContentErrors, GetApiProjectsByProjectIdFilesContentResponses, GetApiProjectsByProjectIdFilesData, GetApiProjectsByProjectIdFilesErrors, GetApiProjectsByProjectIdFilesResponses, GetApiProjectsByProjectIdInstructionsData, GetApiProjectsByProjectIdInstructionsErrors, GetApiProjectsByProjectIdInstructionsResponses, GetApiProjectsByProjectIdPackageExportsData, GetApiProjectsByProjectIdPackageExportsErrors, GetApiProjectsByProjectIdPackageExportsResponses, GetApiProjectsByProjectIdResponses, GetApiProjectsByProjectIdSourceIndexData, GetApiProjectsByProjectIdSourceIndexErrors, GetApiProjectsByProjectIdSourceIndexResponses, GetApiProjectsByProjectIdSourceSupportData, GetApiProjectsByProjectIdSourceSupportErrors, GetApiProjectsByProjectIdSourceSupportResponses, GetApiProjectsCloudData, GetApiProjectsCloudErrors, GetApiProjectsCloudResponses, GetApiProjectsSearchData, GetApiProjectsSearchErrors, GetApiProjectsSearchResponses, GetApiProjectsTrashData, GetApiProjectsTrashErrors, GetApiProjectsTrashResponses, GetApiRunsByRunIdData, GetApiRunsByRunIdErrors, GetApiRunsByRunIdResponses, GetApiRunsData, GetApiRunsResponses, GetApiSocialConversationsByIdMembersData, GetApiSocialConversationsByIdMembersErrors, GetApiSocialConversationsByIdMembersResponses, GetApiSocialConversationsByIdMessagesData, GetApiSocialConversationsByIdMessagesErrors, GetApiSocialConversationsByIdMessagesResponses, GetApiSocialConversationsData, GetApiSocialConversationsErrors, GetApiSocialConversationsResponses, GetApiSocialNotificationsData, GetApiSocialNotificationsErrors, GetApiSocialNotificationsResponses, GetApiStoreProjectsData, GetApiStoreProjectsErrors, GetApiStoreProjectsResponses, GetApiTemplatesData, GetApiTemplatesResponses, GetApiWorkflowsByWorkflowIdGraphData, GetApiWorkflowsByWorkflowIdGraphErrors, GetApiWorkflowsByWorkflowIdGraphResponses, GetApiWorkflowsByWorkflowIdNodeCatalogData, GetApiWorkflowsByWorkflowIdNodeCatalogErrors, GetApiWorkflowsByWorkflowIdNodeCatalogResponses, GetApiWorkflowsData, GetApiWorkflowsResponses, GetApiWorkspacesData, GetApiWorkspacesErrors, GetApiWorkspacesPermissionsData, GetApiWorkspacesPermissionsErrors, GetApiWorkspacesPermissionsResponses, GetApiWorkspacesResponses, PatchApiProjectsByProjectIdDataTablesByTableIdData, PatchApiProjectsByProjectIdDataTablesByTableIdErrors, PatchApiProjectsByProjectIdDataTablesByTableIdResponses, PatchApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdData, PatchApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdErrors, PatchApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdResponses, PatchApiProjectsByProjectIdFilesContentData, PatchApiProjectsByProjectIdFilesContentErrors, PatchApiProjectsByProjectIdFilesContentResponses, PostApiAppsRuntimeDataData, PostApiAppsRuntimeDataErrors, PostApiAppsRuntimeDataResponses, PostApiAppsRuntimeExecutionsData, PostApiAppsRuntimeExecutionsErrors, PostApiAppsRuntimeExecutionsResponses, PostApiExecutionsByRunIdCancelData, PostApiExecutionsByRunIdCancelErrors, PostApiExecutionsByRunIdCancelResponses, PostApiKnowledgeSearchData, PostApiKnowledgeSearchErrors, PostApiKnowledgeSearchResponses, PostApiNativeNodesByCatalogIdMaterializeData, PostApiNativeNodesByCatalogIdMaterializeErrors, PostApiNativeNodesByCatalogIdMaterializeResponses, PostApiPluginsByPluginIdNodesByNodeIdAddData, PostApiPluginsByPluginIdNodesByNodeIdAddErrors, PostApiPluginsByPluginIdNodesByNodeIdAddResponses, PostApiProjectsByProjectIdCompileData, PostApiProjectsByProjectIdCompileErrors, PostApiProjectsByProjectIdCompileResponses, PostApiProjectsByProjectIdDataTablesByTableIdRowsBulkData, PostApiProjectsByProjectIdDataTablesByTableIdRowsBulkErrors, PostApiProjectsByProjectIdDataTablesByTableIdRowsBulkResponses, PostApiProjectsByProjectIdDataTablesByTableIdRowsData, PostApiProjectsByProjectIdDataTablesByTableIdRowsErrors, PostApiProjectsByProjectIdDataTablesByTableIdRowsResponses, PostApiProjectsByProjectIdDataTableSchemaViewsByViewIdQueryData, PostApiProjectsByProjectIdDataTableSchemaViewsByViewIdQueryErrors, PostApiProjectsByProjectIdDataTableSchemaViewsByViewIdQueryResponses, PostApiProjectsByProjectIdDataTablesData, PostApiProjectsByProjectIdDataTablesErrors, PostApiProjectsByProjectIdDataTablesResponses, PostApiProjectsByProjectIdFilesContentData, PostApiProjectsByProjectIdFilesContentErrors, PostApiProjectsByProjectIdFilesContentResponses, PostApiRunsByRunIdCancelData, PostApiRunsByRunIdCancelErrors, PostApiRunsByRunIdCancelResponses, PostApiWorkflowsByWorkflowIdExecutionsData, PostApiWorkflowsByWorkflowIdExecutionsErrors, PostApiWorkflowsByWorkflowIdExecutionsResponses, PostApiWorkflowsByWorkflowIdRunData, PostApiWorkflowsByWorkflowIdRunResponses, PostApiWorkflowsByWorkflowIdTopologyData, PostApiWorkflowsByWorkflowIdTopologyErrors, PostApiWorkflowsByWorkflowIdTopologyResponses, PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsData, PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsErrors, PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsResponses, PostApiWorkflowsByWorkflowIdValidateConnectionData, PostApiWorkflowsByWorkflowIdValidateConnectionErrors, PostApiWorkflowsByWorkflowIdValidateConnectionResponses, PostApiWorkflowsData, PostApiWorkflowsErrors, PostApiWorkflowsResponses, PutApiNodesByNodeIdSourceData, PutApiNodesByNodeIdSourceErrors, PutApiNodesByNodeIdSourceResponses, PutApiNodesByNodeIdSourceSignatureData, PutApiNodesByNodeIdSourceSignatureErrors, PutApiNodesByNodeIdSourceSignatureResponses, PutApiProjectsByProjectIdFilesContentData, PutApiProjectsByProjectIdFilesContentErrors, PutApiProjectsByProjectIdFilesContentResponses } from './types.gen';
+import type { DeleteApiProjectsByProjectIdDataTablesByTableIdData, DeleteApiProjectsByProjectIdDataTablesByTableIdErrors, DeleteApiProjectsByProjectIdDataTablesByTableIdResponses, DeleteApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdData, DeleteApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdErrors, DeleteApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdResponses, DeleteApiProjectsByProjectIdFilesContentData, DeleteApiProjectsByProjectIdFilesContentErrors, DeleteApiProjectsByProjectIdFilesContentResponses, GetApiAppsRuntimeSessionData, GetApiAppsRuntimeSessionErrors, GetApiAppsRuntimeSessionResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberData, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewFileData, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewFileErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewFileResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewThreadsData, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewThreadsErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberReviewThreadsResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberWorkflowDiffData, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberWorkflowDiffErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsByNumberWorkflowDiffResponses, GetApiArchitecturesByArchitectureIdGithubPullRequestsData, GetApiArchitecturesByArchitectureIdGithubPullRequestsErrors, GetApiArchitecturesByArchitectureIdGithubPullRequestsResponses, GetApiCapabilitiesData, GetApiCapabilitiesResponses, GetApiDocsData, GetApiDocsResponses, GetApiExecutionsByRunIdData, GetApiExecutionsByRunIdErrors, GetApiExecutionsByRunIdEventsData, GetApiExecutionsByRunIdEventsResponses, GetApiExecutionsByRunIdResponses, GetApiGithubJobsByIdData, GetApiGithubJobsByIdErrors, GetApiGithubJobsByIdResponses, GetApiGithubRepositoriesData, GetApiGithubRepositoriesErrors, GetApiGithubRepositoriesResponses, GetApiIdentityData, GetApiIdentityResponses, GetApiMarketplaceAnalyticsData, GetApiMarketplaceAnalyticsErrors, GetApiMarketplaceAnalyticsResponses, GetApiMarketplaceAppsData, GetApiMarketplaceAppsErrors, GetApiMarketplaceAppsResponses, GetApiMarketplaceData, GetApiMarketplaceErrors, GetApiMarketplacePluginsByIdData, GetApiMarketplacePluginsByIdErrors, GetApiMarketplacePluginsByIdResponses, GetApiMarketplacePublicationsData, GetApiMarketplacePublicationsErrors, GetApiMarketplacePublicationsResponses, GetApiMarketplaceResponses, GetApiMarketplaceToolkitsData, GetApiMarketplaceToolkitsErrors, GetApiMarketplaceToolkitsResponses, GetApiNativeNodesData, GetApiNativeNodesResponses, GetApiNodesByNodeIdSourceData, GetApiNodesByNodeIdSourceErrors, GetApiNodesByNodeIdSourceResponses, GetApiNodesData, GetApiNodesErrors, GetApiNodesResponses, GetApiOpenapiJsonData, GetApiOpenapiJsonResponses, GetApiPluginsByPluginIdData, GetApiPluginsByPluginIdErrors, GetApiPluginsByPluginIdResponses, GetApiPluginsData, GetApiPluginsNodesData, GetApiPluginsNodesErrors, GetApiPluginsNodesResponses, GetApiPluginsResponses, GetApiPluginsSearchData, GetApiPluginsSearchResponses, GetApiProfileData, GetApiProfileErrors, GetApiProfileResponses, GetApiProfilesByUserIdAvatarData, GetApiProfilesByUserIdAvatarErrors, GetApiProfilesByUserIdAvatarResponses, GetApiProfilesWorkspaceMembersData, GetApiProfilesWorkspaceMembersErrors, GetApiProfilesWorkspaceMembersResponses, GetApiProjectsByProjectIdCatalogDocumentData, GetApiProjectsByProjectIdCatalogDocumentErrors, GetApiProjectsByProjectIdCatalogDocumentResponses, GetApiProjectsByProjectIdData, GetApiProjectsByProjectIdDataTablesByTableIdData, GetApiProjectsByProjectIdDataTablesByTableIdErrors, GetApiProjectsByProjectIdDataTablesByTableIdResponses, GetApiProjectsByProjectIdDataTablesByTableIdRowsData, GetApiProjectsByProjectIdDataTablesByTableIdRowsErrors, GetApiProjectsByProjectIdDataTablesByTableIdRowsResponses, GetApiProjectsByProjectIdDataTableSchemaData, GetApiProjectsByProjectIdDataTableSchemaErrors, GetApiProjectsByProjectIdDataTableSchemaResponses, GetApiProjectsByProjectIdDataTablesData, GetApiProjectsByProjectIdDataTablesErrors, GetApiProjectsByProjectIdDataTablesResponses, GetApiProjectsByProjectIdErrors, GetApiProjectsByProjectIdFilesContentData, GetApiProjectsByProjectIdFilesContentErrors, GetApiProjectsByProjectIdFilesContentResponses, GetApiProjectsByProjectIdFilesData, GetApiProjectsByProjectIdFilesErrors, GetApiProjectsByProjectIdFilesResponses, GetApiProjectsByProjectIdInstructionsData, GetApiProjectsByProjectIdInstructionsErrors, GetApiProjectsByProjectIdInstructionsResponses, GetApiProjectsByProjectIdPackageExportsData, GetApiProjectsByProjectIdPackageExportsErrors, GetApiProjectsByProjectIdPackageExportsResponses, GetApiProjectsByProjectIdResponses, GetApiProjectsByProjectIdSourceIndexData, GetApiProjectsByProjectIdSourceIndexErrors, GetApiProjectsByProjectIdSourceIndexResponses, GetApiProjectsByProjectIdSourceSupportData, GetApiProjectsByProjectIdSourceSupportErrors, GetApiProjectsByProjectIdSourceSupportResponses, GetApiProjectsCloudData, GetApiProjectsCloudErrors, GetApiProjectsCloudResponses, GetApiProjectsSearchData, GetApiProjectsSearchErrors, GetApiProjectsSearchResponses, GetApiProjectsTrashData, GetApiProjectsTrashErrors, GetApiProjectsTrashResponses, GetApiRunsByRunIdData, GetApiRunsByRunIdErrors, GetApiRunsByRunIdResponses, GetApiRunsData, GetApiRunsResponses, GetApiSocialConversationsByIdMembersData, GetApiSocialConversationsByIdMembersErrors, GetApiSocialConversationsByIdMembersResponses, GetApiSocialConversationsByIdMessagesData, GetApiSocialConversationsByIdMessagesErrors, GetApiSocialConversationsByIdMessagesResponses, GetApiSocialConversationsData, GetApiSocialConversationsErrors, GetApiSocialConversationsResponses, GetApiSocialNotificationsData, GetApiSocialNotificationsErrors, GetApiSocialNotificationsResponses, GetApiStoreProjectsData, GetApiStoreProjectsErrors, GetApiStoreProjectsResponses, GetApiTemplatesData, GetApiTemplatesResponses, GetApiWorkflowsByWorkflowIdNodeCatalogData, GetApiWorkflowsByWorkflowIdNodeCatalogErrors, GetApiWorkflowsByWorkflowIdNodeCatalogResponses, GetApiWorkflowsData, GetApiWorkflowsResponses, GetApiWorkspacesData, GetApiWorkspacesErrors, GetApiWorkspacesPermissionsData, GetApiWorkspacesPermissionsErrors, GetApiWorkspacesPermissionsResponses, GetApiWorkspacesResponses, PatchApiProjectsByProjectIdDataTablesByTableIdData, PatchApiProjectsByProjectIdDataTablesByTableIdErrors, PatchApiProjectsByProjectIdDataTablesByTableIdResponses, PatchApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdData, PatchApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdErrors, PatchApiProjectsByProjectIdDataTablesByTableIdRowsByRowIdResponses, PatchApiProjectsByProjectIdFilesContentData, PatchApiProjectsByProjectIdFilesContentErrors, PatchApiProjectsByProjectIdFilesContentResponses, PostApiAppsRuntimeDataData, PostApiAppsRuntimeDataErrors, PostApiAppsRuntimeDataResponses, PostApiAppsRuntimeExecutionsData, PostApiAppsRuntimeExecutionsErrors, PostApiAppsRuntimeExecutionsResponses, PostApiExecutionsByRunIdCancelData, PostApiExecutionsByRunIdCancelErrors, PostApiExecutionsByRunIdCancelResponses, PostApiKnowledgeSearchData, PostApiKnowledgeSearchErrors, PostApiKnowledgeSearchResponses, PostApiNativeNodesByCatalogIdMaterializeData, PostApiNativeNodesByCatalogIdMaterializeErrors, PostApiNativeNodesByCatalogIdMaterializeResponses, PostApiPluginsByPluginIdNodesByNodeIdAddData, PostApiPluginsByPluginIdNodesByNodeIdAddErrors, PostApiPluginsByPluginIdNodesByNodeIdAddResponses, PostApiProjectsByProjectIdCompileData, PostApiProjectsByProjectIdCompileErrors, PostApiProjectsByProjectIdCompileResponses, PostApiProjectsByProjectIdDataTablesByTableIdRowsBulkData, PostApiProjectsByProjectIdDataTablesByTableIdRowsBulkErrors, PostApiProjectsByProjectIdDataTablesByTableIdRowsBulkResponses, PostApiProjectsByProjectIdDataTablesByTableIdRowsData, PostApiProjectsByProjectIdDataTablesByTableIdRowsErrors, PostApiProjectsByProjectIdDataTablesByTableIdRowsResponses, PostApiProjectsByProjectIdDataTableSchemaViewsByViewIdQueryData, PostApiProjectsByProjectIdDataTableSchemaViewsByViewIdQueryErrors, PostApiProjectsByProjectIdDataTableSchemaViewsByViewIdQueryResponses, PostApiProjectsByProjectIdDataTablesData, PostApiProjectsByProjectIdDataTablesErrors, PostApiProjectsByProjectIdDataTablesResponses, PostApiProjectsByProjectIdFilesContentData, PostApiProjectsByProjectIdFilesContentErrors, PostApiProjectsByProjectIdFilesContentResponses, PostApiWfExecData, PostApiWfExecErrors, PostApiWfExecResponses, PostApiWorkflowsByWorkflowIdExecutionsData, PostApiWorkflowsByWorkflowIdExecutionsErrors, PostApiWorkflowsByWorkflowIdExecutionsResponses, PostApiWorkflowsByWorkflowIdTopologyData, PostApiWorkflowsByWorkflowIdTopologyErrors, PostApiWorkflowsByWorkflowIdTopologyResponses, PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsData, PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsErrors, PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsResponses, PostApiWorkflowsByWorkflowIdValidateConnectionData, PostApiWorkflowsByWorkflowIdValidateConnectionErrors, PostApiWorkflowsByWorkflowIdValidateConnectionResponses, PostApiWorkflowsData, PostApiWorkflowsErrors, PostApiWorkflowsResponses, PutApiNodesByNodeIdSourceData, PutApiNodesByNodeIdSourceErrors, PutApiNodesByNodeIdSourceResponses, PutApiNodesByNodeIdSourceSignatureData, PutApiNodesByNodeIdSourceSignatureErrors, PutApiNodesByNodeIdSourceSignatureResponses, PutApiProjectsByProjectIdFilesContentData, PutApiProjectsByProjectIdFilesContentErrors, PutApiProjectsByProjectIdFilesContentResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -43,6 +43,46 @@ class HeyApiRegistry<T> {
 
     set(value: T, key?: string): void {
         this.instances.set(key ?? this.defaultKey, value);
+    }
+}
+
+export class Api extends HeyApiClient {
+    /**
+     * Read the supported OpenAPI contract
+     */
+    public get<ThrowOnError extends boolean = true>(options?: Options<GetApiOpenapiJsonData, ThrowOnError>): RequestResult<GetApiOpenapiJsonResponses, unknown, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetApiOpenapiJsonResponses, unknown, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            url: '/api/openapi.json',
+            ...options
+        });
+    }
+}
+
+export class OpenapiJson extends HeyApiClient {
+    private _api?: Api;
+    get api(): Api {
+        return this._api ??= new Api({ client: this.client });
+    }
+}
+
+export class Api2 extends HeyApiClient {
+    /**
+     * Open the supported API documentation
+     */
+    public get<ThrowOnError extends boolean = true>(options?: Options<GetApiDocsData, ThrowOnError>): RequestResult<GetApiDocsResponses, unknown, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetApiDocsResponses, unknown, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            url: '/api/docs',
+            ...options
+        });
+    }
+}
+
+export class Docs extends HeyApiClient {
+    private _api?: Api2;
+    get api(): Api2 {
+        return this._api ??= new Api2({ client: this.client });
     }
 }
 
@@ -113,7 +153,7 @@ export class Runtime extends HeyApiClient {
     }
 }
 
-export class Api extends HeyApiClient {
+export class Api3 extends HeyApiClient {
     private _runtime?: Runtime;
     get runtime(): Runtime {
         return this._runtime ??= new Runtime({ client: this.client });
@@ -121,9 +161,9 @@ export class Api extends HeyApiClient {
 }
 
 export class Apps extends HeyApiClient {
-    private _api?: Api;
-    get api(): Api {
-        return this._api ??= new Api({ client: this.client });
+    private _api?: Api3;
+    get api(): Api3 {
+        return this._api ??= new Api3({ client: this.client });
     }
 }
 
@@ -136,6 +176,20 @@ export class Apps2 extends HeyApiClient {
             responseStyle: 'data',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/api/marketplace/apps',
+            ...options
+        });
+    }
+}
+
+export class Publications extends HeyApiClient {
+    /**
+     * List publication approvals and notifications
+     */
+    public get<ThrowOnError extends boolean = true>(options: Options<GetApiMarketplacePublicationsData, ThrowOnError>): RequestResult<GetApiMarketplacePublicationsResponses, GetApiMarketplacePublicationsErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetApiMarketplacePublicationsResponses, GetApiMarketplacePublicationsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/marketplace/publications',
             ...options
         });
     }
@@ -190,7 +244,7 @@ export class Toolkits extends HeyApiClient {
     }
 }
 
-export class Api2 extends HeyApiClient {
+export class Api4 extends HeyApiClient {
     /**
      * Search marketplace
      */
@@ -206,6 +260,11 @@ export class Api2 extends HeyApiClient {
     private _apps?: Apps2;
     get apps(): Apps2 {
         return this._apps ??= new Apps2({ client: this.client });
+    }
+
+    private _publications?: Publications;
+    get publications(): Publications {
+        return this._publications ??= new Publications({ client: this.client });
     }
 
     private _plugins?: Plugins;
@@ -225,13 +284,13 @@ export class Api2 extends HeyApiClient {
 }
 
 export class Marketplace extends HeyApiClient {
-    private _api?: Api2;
-    get api(): Api2 {
-        return this._api ??= new Api2({ client: this.client });
+    private _api?: Api4;
+    get api(): Api4 {
+        return this._api ??= new Api4({ client: this.client });
     }
 }
 
-export class Api3 extends HeyApiClient {
+export class Api5 extends HeyApiClient {
     /**
      * Get client feature availability for this deployment
      */
@@ -246,13 +305,13 @@ export class Api3 extends HeyApiClient {
 }
 
 export class Capabilities extends HeyApiClient {
-    private _api?: Api3;
-    get api(): Api3 {
-        return this._api ??= new Api3({ client: this.client });
+    private _api?: Api5;
+    get api(): Api5 {
+        return this._api ??= new Api5({ client: this.client });
     }
 }
 
-export class Api4 extends HeyApiClient {
+export class Api6 extends HeyApiClient {
     /**
      * Current identity
      */
@@ -267,23 +326,9 @@ export class Api4 extends HeyApiClient {
 }
 
 export class Identity extends HeyApiClient {
-    private _api?: Api4;
-    get api(): Api4 {
-        return this._api ??= new Api4({ client: this.client });
-    }
-}
-
-export class Cancel extends HeyApiClient {
-    /**
-     * Idempotently cancel an active workflow execution
-     */
-    public post<ThrowOnError extends boolean = true>(options: Options<PostApiRunsByRunIdCancelData, ThrowOnError>): RequestResult<PostApiRunsByRunIdCancelResponses, PostApiRunsByRunIdCancelErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).post<PostApiRunsByRunIdCancelResponses, PostApiRunsByRunIdCancelErrors, ThrowOnError, 'data'>({
-            responseStyle: 'data',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/runs/{runId}/cancel',
-            ...options
-        });
+    private _api?: Api6;
+    get api(): Api6 {
+        return this._api ??= new Api6({ client: this.client });
     }
 }
 
@@ -299,14 +344,9 @@ export class RunId extends HeyApiClient {
             ...options
         });
     }
-
-    private _cancel?: Cancel;
-    get cancel(): Cancel {
-        return this._cancel ??= new Cancel({ client: this.client });
-    }
 }
 
-export class Api5 extends HeyApiClient {
+export class Api7 extends HeyApiClient {
     /**
      * List persisted workflow executions
      */
@@ -326,13 +366,13 @@ export class Api5 extends HeyApiClient {
 }
 
 export class Runs extends HeyApiClient {
-    private _api?: Api5;
-    get api(): Api5 {
-        return this._api ??= new Api5({ client: this.client });
+    private _api?: Api7;
+    get api(): Api7 {
+        return this._api ??= new Api7({ client: this.client });
     }
 }
 
-export class Api6 extends HeyApiClient {
+export class Api8 extends HeyApiClient {
     /**
      * Get the caller profile in a workspace
      */
@@ -347,9 +387,9 @@ export class Api6 extends HeyApiClient {
 }
 
 export class Profile extends HeyApiClient {
-    private _api?: Api6;
-    get api(): Api6 {
-        return this._api ??= new Api6({ client: this.client });
+    private _api?: Api8;
+    get api(): Api8 {
+        return this._api ??= new Api8({ client: this.client });
     }
 }
 
@@ -388,7 +428,7 @@ export class WorkspaceMembers extends HeyApiClient {
     }
 }
 
-export class Api7 extends HeyApiClient {
+export class Api9 extends HeyApiClient {
     private _userId?: UserId;
     get userId(): UserId {
         return this._userId ??= new UserId({ client: this.client });
@@ -401,9 +441,9 @@ export class Api7 extends HeyApiClient {
 }
 
 export class Profiles extends HeyApiClient {
-    private _api?: Api7;
-    get api(): Api7 {
-        return this._api ??= new Api7({ client: this.client });
+    private _api?: Api9;
+    get api(): Api9 {
+        return this._api ??= new Api9({ client: this.client });
     }
 }
 
@@ -425,7 +465,7 @@ export class Search extends HeyApiClient {
     }
 }
 
-export class Api8 extends HeyApiClient {
+export class Api10 extends HeyApiClient {
     private _search?: Search;
     get search(): Search {
         return this._search ??= new Search({ client: this.client });
@@ -433,9 +473,9 @@ export class Api8 extends HeyApiClient {
 }
 
 export class Knowledge extends HeyApiClient {
-    private _api?: Api8;
-    get api(): Api8 {
-        return this._api ??= new Api8({ client: this.client });
+    private _api?: Api10;
+    get api(): Api10 {
+        return this._api ??= new Api10({ client: this.client });
     }
 }
 
@@ -512,7 +552,7 @@ export class Notifications extends HeyApiClient {
     }
 }
 
-export class Api9 extends HeyApiClient {
+export class Api11 extends HeyApiClient {
     private _conversations?: Conversations;
     get conversations(): Conversations {
         return this._conversations ??= new Conversations({ client: this.client });
@@ -525,9 +565,9 @@ export class Api9 extends HeyApiClient {
 }
 
 export class Social extends HeyApiClient {
-    private _api?: Api9;
-    get api(): Api9 {
-        return this._api ??= new Api9({ client: this.client });
+    private _api?: Api11;
+    get api(): Api11 {
+        return this._api ??= new Api11({ client: this.client });
     }
 }
 
@@ -566,7 +606,7 @@ export class Jobs extends HeyApiClient {
     }
 }
 
-export class Api10 extends HeyApiClient {
+export class Api12 extends HeyApiClient {
     private _repositories?: Repositories;
     get repositories(): Repositories {
         return this._repositories ??= new Repositories({ client: this.client });
@@ -579,9 +619,9 @@ export class Api10 extends HeyApiClient {
 }
 
 export class Github extends HeyApiClient {
-    private _api?: Api10;
-    get api(): Api10 {
-        return this._api ??= new Api10({ client: this.client });
+    private _api?: Api12;
+    get api(): Api12 {
+        return this._api ??= new Api12({ client: this.client });
     }
 }
 
@@ -689,7 +729,7 @@ export class ArchitectureId extends HeyApiClient {
     }
 }
 
-export class Api11 extends HeyApiClient {
+export class Api13 extends HeyApiClient {
     private _architectureId?: ArchitectureId;
     get architectureId(): ArchitectureId {
         return this._architectureId ??= new ArchitectureId({ client: this.client });
@@ -697,51 +737,30 @@ export class Api11 extends HeyApiClient {
 }
 
 export class Architectures extends HeyApiClient {
-    private _api?: Api11;
-    get api(): Api11 {
-        return this._api ??= new Api11({ client: this.client });
+    private _api?: Api13;
+    get api(): Api13 {
+        return this._api ??= new Api13({ client: this.client });
     }
 }
 
-export class Trash extends HeyApiClient {
+export class Document extends HeyApiClient {
     /**
-     * List archived projects and projects in 30-day trash
+     * Read the saved workflow document or its changes
      */
-    public get<ThrowOnError extends boolean = true>(options?: Options<GetApiProjectsTrashData, ThrowOnError>): RequestResult<GetApiProjectsTrashResponses, GetApiProjectsTrashErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<GetApiProjectsTrashResponses, GetApiProjectsTrashErrors, ThrowOnError, 'data'>({
+    public get<ThrowOnError extends boolean = true>(options: Options<GetApiProjectsByProjectIdCatalogDocumentData, ThrowOnError>): RequestResult<GetApiProjectsByProjectIdCatalogDocumentResponses, GetApiProjectsByProjectIdCatalogDocumentErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetApiProjectsByProjectIdCatalogDocumentResponses, GetApiProjectsByProjectIdCatalogDocumentErrors, ThrowOnError, 'data'>({
             responseStyle: 'data',
             security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/projects/trash',
+            url: '/api/projects/{projectId}/catalog/document',
             ...options
         });
     }
 }
 
-export class Search2 extends HeyApiClient {
-    /**
-     * Search and paginate workspace projects
-     */
-    public get<ThrowOnError extends boolean = true>(options?: Options<GetApiProjectsSearchData, ThrowOnError>): RequestResult<GetApiProjectsSearchResponses, GetApiProjectsSearchErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<GetApiProjectsSearchResponses, GetApiProjectsSearchErrors, ThrowOnError, 'data'>({
-            responseStyle: 'data',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/projects/search',
-            ...options
-        });
-    }
-}
-
-export class Cloud extends HeyApiClient {
-    /**
-     * List cloud projects not installed locally
-     */
-    public get<ThrowOnError extends boolean = true>(options?: Options<GetApiProjectsCloudData, ThrowOnError>): RequestResult<GetApiProjectsCloudResponses, GetApiProjectsCloudErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<GetApiProjectsCloudResponses, GetApiProjectsCloudErrors, ThrowOnError, 'data'>({
-            responseStyle: 'data',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/projects/cloud',
-            ...options
-        });
+export class Catalog extends HeyApiClient {
+    private _document?: Document;
+    get document(): Document {
+        return this._document ??= new Document({ client: this.client });
     }
 }
 
@@ -865,7 +884,11 @@ export class Compile extends HeyApiClient {
             responseStyle: 'data',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/api/projects/{projectId}/compile',
-            ...options
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
         });
     }
 }
@@ -1146,6 +1169,11 @@ export class ProjectId extends HeyApiClient {
         });
     }
 
+    private _catalog?: Catalog;
+    get catalog(): Catalog {
+        return this._catalog ??= new Catalog({ client: this.client });
+    }
+
     private _files?: Files;
     get files(): Files {
         return this._files ??= new Files({ client: this.client });
@@ -1187,7 +1215,49 @@ export class ProjectId extends HeyApiClient {
     }
 }
 
-export class Api12 extends HeyApiClient {
+export class Trash extends HeyApiClient {
+    /**
+     * List archived projects and projects in 30-day trash
+     */
+    public get<ThrowOnError extends boolean = true>(options?: Options<GetApiProjectsTrashData, ThrowOnError>): RequestResult<GetApiProjectsTrashResponses, GetApiProjectsTrashErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetApiProjectsTrashResponses, GetApiProjectsTrashErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/projects/trash',
+            ...options
+        });
+    }
+}
+
+export class Search2 extends HeyApiClient {
+    /**
+     * Search and paginate workspace projects
+     */
+    public get<ThrowOnError extends boolean = true>(options?: Options<GetApiProjectsSearchData, ThrowOnError>): RequestResult<GetApiProjectsSearchResponses, GetApiProjectsSearchErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetApiProjectsSearchResponses, GetApiProjectsSearchErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/projects/search',
+            ...options
+        });
+    }
+}
+
+export class Cloud extends HeyApiClient {
+    /**
+     * List cloud projects not installed locally
+     */
+    public get<ThrowOnError extends boolean = true>(options?: Options<GetApiProjectsCloudData, ThrowOnError>): RequestResult<GetApiProjectsCloudResponses, GetApiProjectsCloudErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetApiProjectsCloudResponses, GetApiProjectsCloudErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/projects/cloud',
+            ...options
+        });
+    }
+}
+
+export class Api14 extends HeyApiClient {
     /**
      * List projects
      */
@@ -1198,6 +1268,11 @@ export class Api12 extends HeyApiClient {
             url: '/api/store/projects',
             ...options
         });
+    }
+
+    private _projectId?: ProjectId;
+    get projectId(): ProjectId {
+        return this._projectId ??= new ProjectId({ client: this.client });
     }
 
     private _trash?: Trash;
@@ -1214,17 +1289,12 @@ export class Api12 extends HeyApiClient {
     get cloud(): Cloud {
         return this._cloud ??= new Cloud({ client: this.client });
     }
-
-    private _projectId?: ProjectId;
-    get projectId(): ProjectId {
-        return this._projectId ??= new ProjectId({ client: this.client });
-    }
 }
 
 export class Projects extends HeyApiClient {
-    private _api?: Api12;
-    get api(): Api12 {
-        return this._api ??= new Api12({ client: this.client });
+    private _api?: Api14;
+    get api(): Api14 {
+        return this._api ??= new Api14({ client: this.client });
     }
 }
 
@@ -1288,7 +1358,7 @@ export class NodeId extends HeyApiClient {
     }
 }
 
-export class Api13 extends HeyApiClient {
+export class Api15 extends HeyApiClient {
     /**
      * Search and paginate project nodes
      */
@@ -1308,9 +1378,9 @@ export class Api13 extends HeyApiClient {
 }
 
 export class Nodes extends HeyApiClient {
-    private _api?: Api13;
-    get api(): Api13 {
-        return this._api ??= new Api13({ client: this.client });
+    private _api?: Api15;
+    get api(): Api15 {
+        return this._api ??= new Api15({ client: this.client });
     }
 }
 
@@ -1378,38 +1448,6 @@ export class NodeCatalog extends HeyApiClient {
     }
 }
 
-export class Graph extends HeyApiClient {
-    /**
-     * Workflow graph (DAG)
-     */
-    public get<ThrowOnError extends boolean = true>(options: Options<GetApiWorkflowsByWorkflowIdGraphData, ThrowOnError>): RequestResult<GetApiWorkflowsByWorkflowIdGraphResponses, GetApiWorkflowsByWorkflowIdGraphErrors, ThrowOnError, 'data'> {
-        return (options.client ?? this.client).get<GetApiWorkflowsByWorkflowIdGraphResponses, GetApiWorkflowsByWorkflowIdGraphErrors, ThrowOnError, 'data'>({
-            responseStyle: 'data',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/workflows/{workflowId}/graph',
-            ...options
-        });
-    }
-}
-
-export class Run extends HeyApiClient {
-    /**
-     * Run a workflow (SSE)
-     */
-    public post<ThrowOnError extends boolean = true>(options: Options<PostApiWorkflowsByWorkflowIdRunData, ThrowOnError, unknown>): Promise<ServerSentEventsResult<PostApiWorkflowsByWorkflowIdRunResponses, unknown | void, ThrowOnError>> {
-        return (options.client ?? this.client).sse.post<PostApiWorkflowsByWorkflowIdRunResponses, unknown, ThrowOnError, 'data'>({
-            responseStyle: 'data',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/workflows/{workflowId}/run',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-}
-
 export class Topology extends HeyApiClient {
     /**
      * Save workflow draft
@@ -1462,16 +1500,6 @@ export class WorkflowId extends HeyApiClient {
         return this._nodeCatalog ??= new NodeCatalog({ client: this.client });
     }
 
-    private _graph?: Graph;
-    get graph(): Graph {
-        return this._graph ??= new Graph({ client: this.client });
-    }
-
-    private _run?: Run;
-    get run(): Run {
-        return this._run ??= new Run({ client: this.client });
-    }
-
     private _topology?: Topology;
     get topology(): Topology {
         return this._topology ??= new Topology({ client: this.client });
@@ -1483,7 +1511,7 @@ export class WorkflowId extends HeyApiClient {
     }
 }
 
-export class Api14 extends HeyApiClient {
+export class Api16 extends HeyApiClient {
     /**
      * List workflow summaries (searchable, sortable, paginated)
      */
@@ -1519,9 +1547,9 @@ export class Api14 extends HeyApiClient {
 }
 
 export class Workflows extends HeyApiClient {
-    private _api?: Api14;
-    get api(): Api14 {
-        return this._api ??= new Api14({ client: this.client });
+    private _api?: Api16;
+    get api(): Api16 {
+        return this._api ??= new Api16({ client: this.client });
     }
 }
 
@@ -1539,7 +1567,7 @@ export class Events2 extends HeyApiClient {
     }
 }
 
-export class Cancel2 extends HeyApiClient {
+export class Cancel extends HeyApiClient {
     /**
      * Cancel a queued or running execution
      */
@@ -1571,13 +1599,13 @@ export class RunId2 extends HeyApiClient {
         return this._events ??= new Events2({ client: this.client });
     }
 
-    private _cancel?: Cancel2;
-    get cancel(): Cancel2 {
-        return this._cancel ??= new Cancel2({ client: this.client });
+    private _cancel?: Cancel;
+    get cancel(): Cancel {
+        return this._cancel ??= new Cancel({ client: this.client });
     }
 }
 
-export class Api15 extends HeyApiClient {
+export class Api17 extends HeyApiClient {
     private _runId?: RunId2;
     get runId(): RunId2 {
         return this._runId ??= new RunId2({ client: this.client });
@@ -1585,9 +1613,41 @@ export class Api15 extends HeyApiClient {
 }
 
 export class Executions3 extends HeyApiClient {
-    private _api?: Api15;
-    get api(): Api15 {
-        return this._api ??= new Api15({ client: this.client });
+    private _api?: Api17;
+    get api(): Api17 {
+        return this._api ??= new Api17({ client: this.client });
+    }
+}
+
+export class Exec extends HeyApiClient {
+    /**
+     * Execute a workflow by UUID; returns the execution outcome as JSON
+     */
+    public post<ThrowOnError extends boolean = true>(options: Options<PostApiWfExecData, ThrowOnError>): RequestResult<PostApiWfExecResponses, PostApiWfExecErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<PostApiWfExecResponses, PostApiWfExecErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/wf/exec',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+}
+
+export class Api18 extends HeyApiClient {
+    private _exec?: Exec;
+    get exec(): Exec {
+        return this._exec ??= new Exec({ client: this.client });
+    }
+}
+
+export class Wf extends HeyApiClient {
+    private _api?: Api18;
+    get api(): Api18 {
+        return this._api ??= new Api18({ client: this.client });
     }
 }
 
@@ -1670,7 +1730,7 @@ export class PluginId extends HeyApiClient {
     }
 }
 
-export class Api16 extends HeyApiClient {
+export class Api19 extends HeyApiClient {
     /**
      * List installed plugins
      */
@@ -1700,13 +1760,13 @@ export class Api16 extends HeyApiClient {
 }
 
 export class Plugins2 extends HeyApiClient {
-    private _api?: Api16;
-    get api(): Api16 {
-        return this._api ??= new Api16({ client: this.client });
+    private _api?: Api19;
+    get api(): Api19 {
+        return this._api ??= new Api19({ client: this.client });
     }
 }
 
-export class Api17 extends HeyApiClient {
+export class Api20 extends HeyApiClient {
     /**
      * List workflow templates
      */
@@ -1721,9 +1781,9 @@ export class Api17 extends HeyApiClient {
 }
 
 export class Templates extends HeyApiClient {
-    private _api?: Api17;
-    get api(): Api17 {
-        return this._api ??= new Api17({ client: this.client });
+    private _api?: Api20;
+    get api(): Api20 {
+        return this._api ??= new Api20({ client: this.client });
     }
 }
 
@@ -1752,7 +1812,7 @@ export class CatalogId extends HeyApiClient {
     }
 }
 
-export class Api18 extends HeyApiClient {
+export class Api21 extends HeyApiClient {
     /**
      * List native nodes
      */
@@ -1772,9 +1832,9 @@ export class Api18 extends HeyApiClient {
 }
 
 export class NativeNodes extends HeyApiClient {
-    private _api?: Api18;
-    get api(): Api18 {
-        return this._api ??= new Api18({ client: this.client });
+    private _api?: Api21;
+    get api(): Api21 {
+        return this._api ??= new Api21({ client: this.client });
     }
 }
 
@@ -1792,7 +1852,7 @@ export class Permissions extends HeyApiClient {
     }
 }
 
-export class Api19 extends HeyApiClient {
+export class Api22 extends HeyApiClient {
     /**
      * List the user's workspaces, optionally with compact UI access for the selected workspace
      */
@@ -1812,9 +1872,9 @@ export class Api19 extends HeyApiClient {
 }
 
 export class Workspaces extends HeyApiClient {
-    private _api?: Api19;
-    get api(): Api19 {
-        return this._api ??= new Api19({ client: this.client });
+    private _api?: Api22;
+    get api(): Api22 {
+        return this._api ??= new Api22({ client: this.client });
     }
 }
 
@@ -1827,6 +1887,16 @@ export class OctonodeApi extends HeyApiClient {
     }) {
         super(args);
         OctonodeApi.__registry.set(this, args?.key);
+    }
+
+    private _openapiJson?: OpenapiJson;
+    get openapiJson(): OpenapiJson {
+        return this._openapiJson ??= new OpenapiJson({ client: this.client });
+    }
+
+    private _docs?: Docs;
+    get docs(): Docs {
+        return this._docs ??= new Docs({ client: this.client });
     }
 
     private _apps?: Apps;
@@ -1902,6 +1972,11 @@ export class OctonodeApi extends HeyApiClient {
     private _executions?: Executions3;
     get executions(): Executions3 {
         return this._executions ??= new Executions3({ client: this.client });
+    }
+
+    private _wf?: Wf;
+    get wf(): Wf {
+        return this._wf ??= new Wf({ client: this.client });
     }
 
     private _plugins?: Plugins2;

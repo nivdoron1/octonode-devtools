@@ -1,6 +1,6 @@
 // Generated from packages/ui-extensions/src/app/project.ts. Do not edit; run the Octonode SDK sync.
-import type { AppSession } from "../types.js";
-import type { AppContext, AppExecution, AppGrant, AppProject, AppRequest } from "./types.js";
+import type { AppSession } from "../types";
+import type { AppContextVerified, AppContext, AppExecution, AppProject, AppRequest } from "./types";
 
 function project(id: string, request: AppRequest): AppProject {
   return {
@@ -38,13 +38,7 @@ function project(id: string, request: AppRequest): AppProject {
 
 export function appContext(
   session: Pick<AppSession, "appId" | "installationId" | "workspace" | "projectId">,
-  verified: {
-    appId: string;
-    installationId: string;
-    userId: string;
-    workspace: AppContext["workspace"];
-    grants: AppGrant[];
-  },
+  verified: AppContextVerified,
   request: AppRequest,
 ): AppContext {
   if (

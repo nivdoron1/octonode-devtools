@@ -1,9 +1,19 @@
 // Generated from packages/schema/src/plugin/plugin.ts. Do not edit; run the Octonode SDK sync.
+import { PluginTypeView } from "./view";
+import { NpmSdkMember } from "./members";
+import { PluginContents } from "./contents";
 import { z } from "zod";
-import { JsonSchema } from "../ipc/envelope";
-import { IconValue } from "../icons";
+import { AppDefinition } from "../app/app";
 import { PLUGIN_SCHEMA_VERSION } from "../constants";
-import { AppDefinition } from "../app";
+import { IconValue } from "../icons";
+import { JsonSchema } from "../ipc/envelope";
+import {
+  PluginDependencyGroup,
+  PluginExecution,
+  PluginRuntimeRequirement,
+  PypiPackageName,
+  PypiVersion,
+} from "./runtime";
 
 /**
  * A plugin's distribution scope — who may discover and install it. `user` is
@@ -15,7 +25,6 @@ export type PluginScope = z.infer<typeof PluginScope>;
 
 export const PluginUiTarget = z.enum(["node.inspector.inputs"]);
 export type PluginUiTarget = z.infer<typeof PluginUiTarget>;
-export const PLUGIN_UI_BUNDLE_MAX_BYTES = 512 * 1024;
 
 const pluginUiEntry = z
   .string()
@@ -80,6 +89,7 @@ export type NpmClientBinding = z.infer<typeof NpmClientBinding>;
 
 export const PluginImplementationSource = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("plugin") }).strict(),
+  z.object({ kind: z.literal("pypi"), package: PypiPackageName, version: PypiVersion }).strict(),
   z
     .object({
       kind: z.literal("npm"),
@@ -120,6 +130,9 @@ export const NpmSdkExport = z
     name: z.string(),
     kind: z.enum(["type", "constant", "function", "client"]),
     type: z.string(),
+    members: z.array(NpmSdkMember).max(20000).optional(),
+    declaration: z.string().max(100_000).optional(),
+    typeView: PluginTypeView.optional(),
     schema: JsonSchema.optional(),
   })
   .strict();
@@ -134,12 +147,18 @@ export type NpmSdkExport = z.infer<typeof NpmSdkExport>;
 export const PluginNode = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i, "node id must be alphanumeric/dash/underscore"),
   /** The command the engine spawns, relative to the plugin folder. */
-  command: z.string(),
+  command: z.string().default(""),
   language: z.string().optional(),
+  sourceLanguage: z
+    .string()
+    .regex(/^[a-z][a-z0-9-]{0,63}$/)
+    .optional(),
+  execution: PluginExecution.optional(),
   label: z.string().min(1).max(240).optional(),
   symbol: z.string().min(1).max(16).optional(),
   description: z.string().optional(),
   icon: IconValue.optional(),
+  inheritPluginIcon: z.boolean().optional(),
   trigger: z.boolean().optional(),
   inputs: JsonSchema.optional(),
   outputs: JsonSchema.optional(),
@@ -246,7 +265,9 @@ export type PluginConnection = z.infer<typeof PluginConnection>;
 /** The shared plugin contract used by the SDK, generators, and marketplace. */
 export const PluginManifest = z
   .object({
-    schemaVersion: z.string().default(PLUGIN_SCHEMA_VERSION),
+    schemaVersion: z.enum(["1", "2"]).default(PLUGIN_SCHEMA_VERSION),
+    runtimeRequirements: z.record(z.string().regex(/^[a-z][a-z0-9-]{0,63}$/), PluginRuntimeRequirement).optional(),
+    dependencyGroups: z.record(z.string().regex(/^[a-z][a-z0-9-]{0,63}$/), PluginDependencyGroup).optional(),
     /** Stable plugin id; namespaces its nodes as `<id>/<nodeId>`. */
     id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/, "plugin id must be lowercase alphanumeric/dash"),
     name: z.string(),
@@ -264,16 +285,9 @@ export const PluginManifest = z
       .strict()
       .optional(),
     /** Source-level inventory shown alongside executable nodes in plugin overviews. */
-    contents: z
-      .object({
-        types: z.array(z.string().min(1).max(240)).max(1000),
-        services: z.array(z.string().min(1).max(240)).max(1000),
-        constants: z.array(z.string().min(1).max(240)).max(1000),
-        classes: z.array(z.string().min(1).max(240)).max(1000),
-      })
-      .strict()
-      .optional(),
+    contents: PluginContents.optional(),
     icon: IconValue.optional(),
+    inheritPluginIcon: z.boolean().optional(),
     author: z.string().optional(),
     contributors: z.array(z.string().trim().min(1).max(240)).max(100).optional(),
     repository: z
@@ -295,6 +309,41 @@ export const PluginManifest = z
     nodes: z.array(PluginNode).default([]),
   })
   .superRefine((manifest, ctx) => {
+    const issue = (path: (string | number)[], message: string) => ctx.addIssue({ code: "custom", path, message });
+    if (
+      manifest.schemaVersion === "1" &&
+      (manifest.runtimeRequirements ||
+        manifest.dependencyGroups ||
+        manifest.nodes.some((node) => node.execution || node.sourceLanguage))
+    )
+      issue(["schemaVersion"], "Runtime declarations require plugin schemaVersion 2");
+    if (manifest.app && (manifest.runtimeRequirements || manifest.dependencyGroups))
+      issue(["app"], "Apps cannot declare plugin runtimes or dependency groups");
+    for (const [name, requirement] of Object.entries(manifest.runtimeRequirements ?? {})) {
+      for (const group of requirement.dependencyGroups) {
+        const dependency = manifest.dependencyGroups?.[group];
+        if (!dependency) issue(["runtimeRequirements", name], `Unknown dependency group ${group}`);
+        else if (
+          (requirement.runtime === "node" && dependency.ecosystem !== "npm") ||
+          (requirement.runtime === "cpython" && dependency.ecosystem !== "pypi")
+        )
+          issue(["runtimeRequirements", name], "Dependency ecosystem does not match runtime");
+      }
+    }
+    for (const [name, group] of Object.entries(manifest.dependencyGroups ?? {})) {
+      if (new Set(group.packages.map((item) => item.name)).size !== group.packages.length)
+        issue(["dependencyGroups", name], "Package names must be unique within a dependency group");
+    }
+    const source = manifest.source;
+    if (
+      source?.kind === "pypi" &&
+      !Object.values(manifest.dependencyGroups ?? {}).some(
+        (group) =>
+          group.ecosystem === "pypi" &&
+          group.packages.some((pkg) => pkg.name === source.package && pkg.version === source.version),
+      )
+    )
+      issue(["source"], "PyPI source must match a declared dependency");
     if (
       manifest.app &&
       (manifest.nodes.length ||
@@ -313,7 +362,18 @@ export const PluginManifest = z
           "Self-hosted apps cannot include executable plugin nodes, libraries, dependencies, connections or plugin permissions",
       });
     const npm = manifest.integration?.npm;
-    const dependencies = manifest.integration?.npmDependencies ?? (npm ? [npm] : []);
+    const dependencies = [
+      ...(manifest.integration?.npmDependencies ?? (npm ? [npm] : [])),
+      ...Object.values(manifest.dependencyGroups ?? {}).flatMap((group) =>
+        group.ecosystem === "npm"
+          ? group.packages.map((pkg) => ({
+              package: pkg.name,
+              version: pkg.version,
+              spec: `${pkg.name}@${pkg.version}`,
+            }))
+          : [],
+      ),
+    ];
     if (new Set(dependencies.map((item) => item.package)).size !== dependencies.length)
       ctx.addIssue({
         code: "custom",
@@ -322,16 +382,43 @@ export const PluginManifest = z
       });
     if (
       (manifest.source?.kind === "plugin" && npm) ||
-      (manifest.source?.kind === "npm" &&
-        (npm?.package !== manifest.source.package || npm?.version !== manifest.source.version))
+      (source?.kind === "npm" &&
+        !dependencies.some((pkg) => pkg.package === source.package && pkg.version === source.version))
     )
-      ctx.addIssue({ code: "custom", path: ["source"], message: "source authority must match integration.npm" });
+      ctx.addIssue({
+        code: "custom",
+        path: ["source"],
+        message: "source authority must match a declared npm dependency",
+      });
     const ids = new Set<string>();
     manifest.nodes.forEach((node, index) => {
+      if (manifest.schemaVersion === "2") {
+        if (!node.execution || !manifest.runtimeRequirements?.[node.execution.runtimeRef])
+          issue(["nodes", index, "execution"], "Every v2 node requires a declared runtime");
+        if (!node.sourceLanguage || node.inputs === undefined || node.outputs === undefined)
+          issue(["nodes", index], "Every v2 node requires sourceLanguage and input/output schemas");
+        if (node.command || node.language)
+          issue(["nodes", index], "v2 nodes use execution and sourceLanguage instead of command and language");
+      } else if (!node.command.trim()) issue(["nodes", index, "command"], "Legacy nodes require a command");
       if (ids.has(node.id))
         ctx.addIssue({ code: "custom", path: ["nodes", index, "id"], message: "node IDs must be unique" });
       ids.add(node.id);
       const nodeSource = node.source;
+      if (
+        nodeSource?.kind === "pypi" &&
+        !Object.values(manifest.dependencyGroups ?? {}).some(
+          (group) =>
+            group.ecosystem === "pypi" &&
+            group.packages.some((pkg) => pkg.name === nodeSource.package && pkg.version === nodeSource.version),
+        )
+      )
+        issue(["nodes", index, "source"], "PyPI source must match a declared dependency");
+      if (
+        node.libraryExport &&
+        node.execution &&
+        manifest.runtimeRequirements?.[node.execution.runtimeRef]?.runtime !== "node"
+      )
+        issue(["nodes", index, "libraryExport"], "Only Node.js nodes can expose direct JavaScript library imports");
       const nodeNpm =
         nodeSource?.kind === "npm"
           ? dependencies.find((item) => item.package === nodeSource.package && item.version === nodeSource.version)

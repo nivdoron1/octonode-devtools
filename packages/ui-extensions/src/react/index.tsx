@@ -1,8 +1,8 @@
 // Generated from packages/ui-extensions/src/react/index.tsx. Do not edit; run the Octonode SDK sync.
 import { createElement, useEffect, useId, type ComponentType } from "react";
 import { createRoot } from "react-dom/client";
-import { UI_EXTENSION_API_VERSION } from "../constants.js";
-import { getAppSession } from "../index.js";
+import { UI_EXTENSION_API_VERSION } from "../constants/constants";
+import { getAppSession } from "..";
 import type {
   ButtonProps,
   InputFieldProps,
@@ -12,7 +12,7 @@ import type {
   UiExtensionDefinition,
   UiExtensionTarget,
   UiExtensionTree,
-} from "../types.js";
+} from "../types";
 
 export function defineExtension(target: UiExtensionTarget, component: ComponentType): UiExtensionDefinition {
   return { apiVersion: UI_EXTENSION_API_VERSION, target, component };
@@ -153,5 +153,5 @@ export function startExtension(extension: UiExtensionDefinition): void {
   queueMicrotask(publish);
 }
 
-export { useExtension } from "../hooks/general/useExtension.js";
-export type { UiExtensionDefinition } from "../types.js";
+export { useExtension } from "../hooks/general/useExtension";
+export type { UiExtensionDefinition } from "../types";

@@ -1,4 +1,5 @@
 // Generated from packages/plugin-runtime/src/definitions/compiler/catalog.ts. Do not edit; run the Octonode SDK sync.
+import type { GenerateNodeCatalogEntriesRecord } from "./types";
 import * as ts from "typescript";
 import { existsSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
@@ -37,7 +38,9 @@ export function generateNodeCatalog(root: string, files?: readonly string[], che
       const path = relative(root, file).replaceAll("\\", "/");
       return (
         !path.startsWith("../") &&
-        !path.split("/").some((part) => part === "node_modules" || part === "dist" || part.startsWith(".")) &&
+        !path
+          .split("/")
+          .some((part) => ["node_modules", "octonode_plugins", "dist"].includes(part) || part.startsWith(".")) &&
         !DEFINITION_FILES.includes(path) &&
         !/\.d\.[cm]?ts$/.test(path) &&
         /\.[cm]?ts$/.test(path)
@@ -54,7 +57,7 @@ export function generateNodeCatalog(root: string, files?: readonly string[], che
     skipLibCheck: true,
   });
   const checker = program.getTypeChecker();
-  const entries: { path: string; name: string }[] = [];
+  const entries: GenerateNodeCatalogEntriesRecord[] = [];
   for (const path of paths) {
     const source = program.getSourceFile(path);
     const module = source && checker.getSymbolAtLocation(source);

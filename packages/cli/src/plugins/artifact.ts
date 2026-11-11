@@ -1,4 +1,5 @@
 // Generated from engine plugin authoring. Do not edit.
+import type { VerifyBuildResult } from "./types";
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
@@ -64,7 +65,7 @@ export function loadManifest(directory: string): PluginManifest {
 }
 
 /** Publishing is data-only: no contributor modules or lifecycle scripts are executed. */
-export function verifyBuild(directory: string): { manifest: PluginManifest; files: string[] } {
+export function verifyBuild(directory: string): VerifyBuildResult {
   const manifest = loadManifest(directory);
   const files = pluginFiles(directory);
   if (!files.includes(BUILD_RECORD)) throw new Error("Missing build record; run octonodes plugin build first");
@@ -108,7 +109,15 @@ export function verifyBuild(directory: string): { manifest: PluginManifest; file
     }
     return { manifest, files };
   }
-  if (
+  if (manifest.schemaVersion === "2") {
+    if (record.runtime) throw new Error("v2 plugins cannot use the legacy prepared Node.js runtime");
+    const assets = new Set(expected);
+    for (const node of manifest.nodes) {
+      if (!node.execution || !assets.has(node.execution.entrypoint.path))
+        throw new Error(`Missing runtime entrypoint for ${node.id}`);
+    }
+    if (!manifest.nodes.length) throw new Error("A runtime plugin needs at least one node");
+  } else if (
     !expected.includes("dist/index.js") ||
     !manifest.nodes.length ||
     manifest.nodes.some(

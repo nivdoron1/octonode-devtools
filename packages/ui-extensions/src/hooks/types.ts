@@ -1,5 +1,5 @@
 // Generated from packages/ui-extensions/src/hooks/types.ts. Do not edit; run the Octonode SDK sync.
-import type { OctonodeAppContext } from "../app/OctonodeAppProvider/OctonodeAppProvider.types.js";
+import type { OctonodeAppContext } from "../app/OctonodeAppProvider/OctonodeAppProvider.types";
 
 export interface VerifiedHostedContext {
   token: string;

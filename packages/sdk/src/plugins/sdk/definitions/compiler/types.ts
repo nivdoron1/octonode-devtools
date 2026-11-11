@@ -21,3 +21,13 @@ export interface CompiledDefinition {
   assets: string[];
   library?: { entry: string };
 }
+
+export type GenerateNodeCatalogEntriesRecord = { path: string; name: string };
+
+export type CompileDefinitionImportsRecord = { module: string; name: string };
+
+export type CompileDefinitionPermissionsRecord = { resource: string; access: string };
+
+export type CompileDefinitionLibraryEntryRecord = { entry: string };
+
+export type CompileDefinitionResult = { entry?: unknown };

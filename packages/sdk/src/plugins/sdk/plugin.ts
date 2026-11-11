@@ -2,7 +2,8 @@
 import { env as PROCESS_ENV } from "node:process";
 import { PluginManifest } from "../schema/plugin-sdk";
 import { defineNode } from "./define/node";
-import { jsonSafetyError, NodeError, start } from "./runner";
+import { NodeError, start } from "./runner";
+import { jsonSafetyError } from "./json";
 import type { PluginDefinition, PluginHandlers, PluginOptions } from "./types";
 
 /** One definition owns discovery, presentation, ports, and the SDK runtime contract. */
