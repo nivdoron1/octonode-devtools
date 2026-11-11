@@ -1,4 +1,5 @@
 // Generated from engine plugin authoring. Do not edit.
+import type { BuildPluginsPreparedRecord } from "./types";
 import { NODE_BUILD_TARGET, NODE_ENGINE_RANGE } from "@octonodes/sdk/plugins";
 import {
   cpSync,
@@ -7,12 +8,13 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
   renameSync,
   rmSync,
   statSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { isBuiltin } from "node:module";
 import { build } from "esbuild";
 import { stringify } from "yaml";
@@ -39,14 +41,17 @@ function directory(root: string, path: string): string {
 }
 
 function assertBundledInputs(root: string, inputs: string[]): void {
-  const sdkRoot = dirname(require.resolve("@octonodes/sdk"));
+  const packageRoot = realpathSync(root);
+  const sdkRoot = realpathSync(dirname(require.resolve("@octonodes/sdk")));
   for (const input of inputs) {
     const path = resolve(root, input);
+    // esbuild can spell macOS /private/tmp paths as /tmp, including its synthetic entry.
+    const physical = existsSync(path) ? realpathSync(path) : join(realpathSync(dirname(path)), basename(path));
     const within = (directory: string) => {
-      const local = relative(directory, path);
+      const local = relative(directory, physical);
       return !isAbsolute(local) && !local.startsWith("..");
     };
-    if (within(root) || within(sdkRoot) || /[\\/]node_modules[\\/]/.test(path)) continue;
+    if (within(packageRoot) || within(sdkRoot) || /[\\/]node_modules[\\/]/.test(path)) continue;
     throw new Error("A bundled import escapes the selected package. Move shared implementations into a dependency.");
   }
 }
@@ -147,7 +152,7 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
     export const plugin = definePlugin(${JSON.stringify(manifestDefinition)}, {${workflow ? workflowNodes.map((node, index) => `${JSON.stringify(manifestDefinition.nodes[index].id)}: (inputs, context) => invokeWorkflow(${JSON.stringify(node.workflow!.key)}, inputs, context)`).join(",") : handlers}});`;
   const output = directory(root, "dist/plugins");
   const staging = mkdtempSync(join(output, ".build-"));
-  const prepared: Array<PluginBuild & { staged: string }> = [];
+  const prepared: Array<PluginBuild & BuildPluginsPreparedRecord> = [];
   try {
     // Inspect CommonJS bundles independently of the author's package module type.
     writeFileSync(join(staging, "package.json"), '{"type":"commonjs"}\n');

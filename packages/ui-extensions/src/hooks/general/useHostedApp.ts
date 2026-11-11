@@ -1,8 +1,8 @@
 // Generated from packages/ui-extensions/src/hooks/general/useHostedApp.ts. Do not edit; run the Octonode SDK sync.
 import { useEffect, useState } from "react";
-import { connectHostedApp } from "../../app/hosted.js";
-import type { HostedApp, HostedAppNavigationItem, HostedAppState } from "../../app/types.js";
-import type { HostedContextResponse, VerifiedHostedContext } from "../types.js";
+import { connectHostedApp } from "../../app/hosted";
+import type { HostedApp, HostedAppNavigationItem, HostedAppState } from "../../app/types";
+import type { HostedContextResponse, VerifiedHostedContext } from "../types";
 
 export function useHostedApp(navigation: HostedAppNavigationItem[]) {
   const [bridge, setBridge] = useState<HostedApp>();

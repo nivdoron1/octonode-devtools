@@ -1,9 +1,9 @@
 // Generated from packages/ui-extensions/src/app/OctonodeAppProvider/OctonodeAppProvider.tsx. Do not edit; run the Octonode SDK sync.
-import { useHostedApp } from "../../hooks/general/useHostedApp.js";
-import { AppAccessScreen } from "./AppAccessScreen/index.js";
-import { DEFAULT_NAVIGATION } from "./constants.js";
-import { Context } from "./context.js";
-import type { OctonodeAppProviderProps } from "./OctonodeAppProvider.types.js";
+import { useHostedApp } from "../../hooks/general/useHostedApp";
+import { AppAccessScreen } from "./AppAccessScreen";
+import { DEFAULT_NAVIGATION } from "./constants";
+import { Context } from "./context";
+import type { OctonodeAppProviderProps } from "./OctonodeAppProvider.types";
 
 /** Render app content only after the hosted backend verifies the workspace session. */
 export function OctonodeAppProvider({ children, navigation = DEFAULT_NAVIGATION }: OctonodeAppProviderProps) {

@@ -154,11 +154,11 @@ test("CLI consumes generated SSE operations as JSON Lines", async () => {
         process.execPath,
         [
           "packages/cli/dist/index.js",
-          "workflows", "api", "workflowId", "run", "post",
+          "executions", "api", "runId", "events", "get",
           "--base-url",
           `http://127.0.0.1:${address.port}`,
           "--input",
-          '{"path":{"workflowId":"daily"},"body":{}}',
+           '{"path":{"runId":"daily"}}',
         ],
         { env: { ...process.env, OCTONODE_TOKEN: "stream-token" } },
       );

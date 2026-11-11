@@ -10,7 +10,7 @@ Read one persisted workflow run.
 
 - Effect: **read**.
 - Scope: workspace plus selected project. Pass `projectId` explicitly for a multi-project connection; otherwise the connection default applies.
-- Backend request: `GET /api/runs/{runId}`. The MCP server fills the URL path, query, and body from the flat arguments below; do not send an HTTP request yourself.
+- Backend request: `GET /api/executions/{runId}`. The MCP server fills the URL path, query, and body from the flat arguments below; do not send an HTTP request yourself.
 - Result: the upstream response in `data`. Check MCP `isError` and JSON `ok`.
 
 ## Arguments

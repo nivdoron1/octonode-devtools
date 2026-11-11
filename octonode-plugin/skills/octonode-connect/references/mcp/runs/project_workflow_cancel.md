@@ -10,7 +10,7 @@ Idempotently cancel one active workflow run.
 
 - Effect: **write; destructive**.
 - Scope: workspace plus selected project. Pass `projectId` explicitly for a multi-project connection; otherwise the connection default applies.
-- Backend request: `POST /api/runs/{runId}/cancel`. The MCP server fills the URL path, query, and body from the flat arguments below; do not send an HTTP request yourself.
+- Backend request: `POST /api/executions/{runId}/cancel`. The MCP server fills the URL path, query, and body from the flat arguments below; do not send an HTTP request yourself.
 - Result: the upstream response in `data`. Check MCP `isError` and JSON `ok`.
 - Before calling: Identify the intended active run with `project_runs` or `project_run` before canceling it.
 

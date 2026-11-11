@@ -15,3 +15,7 @@ export const OCTONODE_LOGO =
   encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">\n  <title>Octonode</title>\n  <rect width="64" height="64" rx="16" fill="#181721"/>\n  <path d="M24 10h16l14 14v16L40 54H24L10 40V24Z" stroke="#FF765F" stroke-linejoin="round" stroke-width="3.5"/>\n  <path d="m21 24 11 8 11-8M32 32v13" stroke="#FF765F" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>\n  <g fill="#FF765F"><circle cx="21" cy="24" r="3"/><circle cx="43" cy="24" r="3"/><circle cx="32" cy="32" r="4"/><circle cx="32" cy="45" r="3"/></g>\n</svg>\n',
   );
+
+export const APP_ACCESS_SCREEN_HREF_URL = "https://octonodes.com";
+export const APP_ACCESS_SCREEN_HREF_PLAYBOOK_OCTONODES_DOCS_APPS_URL = "https://playbook.octonodes.com/docs/apps";
+export const APP_ACCESS_SCREEN_HREF_OCTONODES_STUDIO_URL = "https://octonodes.com/studio";

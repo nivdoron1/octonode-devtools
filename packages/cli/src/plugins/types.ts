@@ -28,3 +28,7 @@ export interface PluginReleaseUpdate {
   orgId?: string;
   teamId?: string;
 }
+
+export type VerifyBuildResult = { manifest: PluginManifest; files: string[] };
+
+export type BuildPluginsPreparedRecord = { staged: string };

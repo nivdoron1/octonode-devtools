@@ -1,7 +1,8 @@
 // Generated from packages/ui-extensions/src/types.ts. Do not edit; run the Octonode SDK sync.
+import type { ExtensionEnvironment } from "./contributions.types";
 import { type ComponentType, type ReactNode } from "react";
-import type { UI_EXTENSION_TARGETS } from "./constants.js";
-import { UI_EXTENSION_API_VERSION } from "./constants.js";
+import type { UI_EXTENSION_TARGETS } from "./constants/constants";
+import { UI_EXTENSION_API_VERSION } from "./constants/constants";
 
 export type UiExtensionTarget = (typeof UI_EXTENSION_TARGETS)[number];
 
@@ -67,3 +68,7 @@ export type TextFieldProps = {
   onChange: (value: string) => void;
   disabled?: boolean;
 };
+
+export type EnvironmentValueRecord = { __octonodeExtension?: ExtensionEnvironment };
+
+export type GetAppSessionSessionRecord = { __octonodeApp?: AppSession };

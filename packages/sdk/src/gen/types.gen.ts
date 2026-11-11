@@ -4,6 +4,40 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type GetApiOpenapiJsonData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/openapi.json';
+};
+
+export type GetApiOpenapiJsonResponses = {
+    /**
+     * OpenAPI document
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type GetApiOpenapiJsonResponse = GetApiOpenapiJsonResponses[keyof GetApiOpenapiJsonResponses];
+
+export type GetApiDocsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/docs';
+};
+
+export type GetApiDocsResponses = {
+    /**
+     * API reference
+     */
+    200: string;
+};
+
+export type GetApiDocsResponse = GetApiDocsResponses[keyof GetApiDocsResponses];
+
 export type PostApiAppsRuntimeExecutionsData = {
     body: {
         projectId: string;
@@ -83,6 +117,73 @@ export type PostApiAppsRuntimeExecutionsResponses = {
      * Success
      */
     202: {
+        workflowSave?: {
+            saved: true;
+            baseRevision: string;
+            revision: string;
+            corrections?: Array<{
+                op: 'set';
+                path: Array<string | number>;
+                value?: unknown;
+            } | {
+                op: 'remove';
+                path: Array<string | number>;
+            } | {
+                op: 'splice';
+                path: Array<string | number>;
+                start: number;
+                deleteCount: number;
+                values: Array<unknown>;
+            }>;
+            codeRevision?: string;
+            workflowDocumentDelta?: {
+                path: string;
+                baseRevision: string;
+                revision: string;
+                contentChanges: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+                changes: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+                resourceChanges?: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+            };
+        };
         requestHash: string;
         dispatchPending: boolean;
         runId: string;
@@ -110,6 +211,31 @@ export type PostApiAppsRuntimeExecutionsResponses = {
                         retryable?: boolean;
                         details?: unknown;
                         stack?: string;
+                        diagnostic?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        name?: string;
+                        systemCode?: string;
+                        causes?: Array<{
+                            name?: string;
+                            code?: string;
+                        }>;
                     };
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
@@ -130,6 +256,23 @@ export type PostApiAppsRuntimeExecutionsResponses = {
                 revision: string;
                 digest: string;
                 workflowJson: string;
+                input?: {
+                    source: {
+                        project: string;
+                        worktree: string | null;
+                        epoch: string;
+                        sequence: number;
+                        revision: string;
+                        baseline: string;
+                        fileCount: number;
+                        bytes: number;
+                        updatedAt: number;
+                        location: string;
+                    } | null;
+                    nodeVersion: string;
+                    platform: string;
+                    arch: string;
+                };
                 code: Array<{
                     path: string;
                     content: string;
@@ -363,6 +506,7 @@ export type GetApiMarketplaceAppsData = {
         workspace: string;
         offset?: number;
         q?: string;
+        installations?: 'true' | 'false';
         sort?: 'name' | 'updated';
         direction?: 'asc' | 'desc';
     };
@@ -429,7 +573,7 @@ export type GetApiMarketplaceAppsResponses = {
                 apiVersion: '1';
                 hosting: 'self-hosted';
                 applicationUrl: string;
-                icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
+                icon?: 'arrow-up-down' | 'asterisk' | 'binary' | 'bomb' | 'box' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'calendar-clock' | 'calendar-minus' | 'calendar-plus' | 'calendar-search' | 'camera' | 'case-lower' | 'case-upper' | 'chart-no-axes-column' | 'chart-no-axes-combined' | 'check-check' | 'chevron-left' | 'chevron-right' | 'chevrons-left' | 'chevrons-right' | 'circle-check' | 'circle-dashed' | 'circle-slash' | 'circle-x' | 'clock' | 'code' | 'copy-x' | 'corner-down-left' | 'database' | 'dices' | 'equal' | 'equal-not' | 'file-input' | 'file-output' | 'file-terminal' | 'file-text' | 'filter' | 'fingerprint' | 'flag' | 'flask' | 'folder-plus' | 'folder-search' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hash' | 'hook' | 'house' | 'info' | 'key-round' | 'list' | 'list-check' | 'list-checks' | 'list-end' | 'list-filter' | 'list-ordered' | 'list-restart' | 'list-start' | 'list-tree' | 'merge' | 'monitor' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'remove-formatting' | 'repeat' | 'repeat-2' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'search-check' | 'server-cog' | 'settings' | 'shapes' | 'shield-alert' | 'shield-check' | 'shuffle' | 'sigma' | 'space' | 'split' | 'terminal' | 'test-tube' | 'text-cursor' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
                 iconUrl?: string;
                 privacyUrl?: string;
                 supportUrl?: string;
@@ -445,7 +589,7 @@ export type GetApiMarketplaceAppsResponses = {
             } | {
                 apiVersion: '2';
                 hosting: 'extension-only';
-                icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
+                icon?: 'arrow-up-down' | 'asterisk' | 'binary' | 'bomb' | 'box' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'calendar-clock' | 'calendar-minus' | 'calendar-plus' | 'calendar-search' | 'camera' | 'case-lower' | 'case-upper' | 'chart-no-axes-column' | 'chart-no-axes-combined' | 'check-check' | 'chevron-left' | 'chevron-right' | 'chevrons-left' | 'chevrons-right' | 'circle-check' | 'circle-dashed' | 'circle-slash' | 'circle-x' | 'clock' | 'code' | 'copy-x' | 'corner-down-left' | 'database' | 'dices' | 'equal' | 'equal-not' | 'file-input' | 'file-output' | 'file-terminal' | 'file-text' | 'filter' | 'fingerprint' | 'flag' | 'flask' | 'folder-plus' | 'folder-search' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hash' | 'hook' | 'house' | 'info' | 'key-round' | 'list' | 'list-check' | 'list-checks' | 'list-end' | 'list-filter' | 'list-ordered' | 'list-restart' | 'list-start' | 'list-tree' | 'merge' | 'monitor' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'remove-formatting' | 'repeat' | 'repeat-2' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'search-check' | 'server-cog' | 'settings' | 'shapes' | 'shield-alert' | 'shield-check' | 'shuffle' | 'sigma' | 'space' | 'split' | 'terminal' | 'test-tube' | 'text-cursor' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
                 iconUrl?: string;
                 settings?: Array<{
                     id: string;
@@ -464,7 +608,7 @@ export type GetApiMarketplaceAppsResponses = {
             } | {
                 apiVersion: '3';
                 hosting: 'extension-only';
-                icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
+                icon?: 'arrow-up-down' | 'asterisk' | 'binary' | 'bomb' | 'box' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'calendar-clock' | 'calendar-minus' | 'calendar-plus' | 'calendar-search' | 'camera' | 'case-lower' | 'case-upper' | 'chart-no-axes-column' | 'chart-no-axes-combined' | 'check-check' | 'chevron-left' | 'chevron-right' | 'chevrons-left' | 'chevrons-right' | 'circle-check' | 'circle-dashed' | 'circle-slash' | 'circle-x' | 'clock' | 'code' | 'copy-x' | 'corner-down-left' | 'database' | 'dices' | 'equal' | 'equal-not' | 'file-input' | 'file-output' | 'file-terminal' | 'file-text' | 'filter' | 'fingerprint' | 'flag' | 'flask' | 'folder-plus' | 'folder-search' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hash' | 'hook' | 'house' | 'info' | 'key-round' | 'list' | 'list-check' | 'list-checks' | 'list-end' | 'list-filter' | 'list-ordered' | 'list-restart' | 'list-start' | 'list-tree' | 'merge' | 'monitor' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'remove-formatting' | 'repeat' | 'repeat-2' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'search-check' | 'server-cog' | 'settings' | 'shapes' | 'shield-alert' | 'shield-check' | 'shuffle' | 'sigma' | 'space' | 'split' | 'terminal' | 'test-tube' | 'text-cursor' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
                 iconUrl?: string;
                 settings?: Array<{
                     id: string;
@@ -478,7 +622,7 @@ export type GetApiMarketplaceAppsResponses = {
                     id: string;
                     target: 'app.page' | 'workspace.block' | 'shell.panel' | 'shell.dock' | 'project.tab' | 'project.overview.block' | 'workflow.tab' | 'workflow.inspector.block' | 'node.view' | 'node.inspector.tab' | 'node.inspector.block' | 'task.space.view' | 'task.details.tab' | 'task.details.block' | 'task.card.badge' | 'document.tab' | 'document.panel' | 'editor.panel' | 'git.diff.panel' | 'table.view' | 'execution.details.block' | 'app.settings.section' | 'project.settings.section' | 'project.action' | 'file.action' | 'editor.action' | 'editor.selection-action' | 'workflow.action' | 'workflow.canvas.action' | 'workflow.selection-action' | 'workflow.edge.action' | 'node.action' | 'task.space.action' | 'task.action' | 'document.action' | 'document.selection-action' | 'document.block.action' | 'document.slash-command' | 'document.review.action' | 'git.diff.action' | 'table.action' | 'execution.action';
                     title: string;
-                    icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
+                    icon?: 'arrow-up-down' | 'asterisk' | 'binary' | 'bomb' | 'box' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'calendar-clock' | 'calendar-minus' | 'calendar-plus' | 'calendar-search' | 'camera' | 'case-lower' | 'case-upper' | 'chart-no-axes-column' | 'chart-no-axes-combined' | 'check-check' | 'chevron-left' | 'chevron-right' | 'chevrons-left' | 'chevrons-right' | 'circle-check' | 'circle-dashed' | 'circle-slash' | 'circle-x' | 'clock' | 'code' | 'copy-x' | 'corner-down-left' | 'database' | 'dices' | 'equal' | 'equal-not' | 'file-input' | 'file-output' | 'file-terminal' | 'file-text' | 'filter' | 'fingerprint' | 'flag' | 'flask' | 'folder-plus' | 'folder-search' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hash' | 'hook' | 'house' | 'info' | 'key-round' | 'list' | 'list-check' | 'list-checks' | 'list-end' | 'list-filter' | 'list-ordered' | 'list-restart' | 'list-start' | 'list-tree' | 'merge' | 'monitor' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'remove-formatting' | 'repeat' | 'repeat-2' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'search-check' | 'server-cog' | 'settings' | 'shapes' | 'shield-alert' | 'shield-check' | 'shuffle' | 'sigma' | 'space' | 'split' | 'terminal' | 'test-tube' | 'text-cursor' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
                     path: string;
                     sha256: string;
                     when?: {
@@ -493,7 +637,7 @@ export type GetApiMarketplaceAppsResponses = {
                     id: string;
                     target: 'shell.navbar.action' | 'shell.navigation.item' | 'shell.command';
                     title: string;
-                    icon?: 'arrow-up-down' | 'binary' | 'bomb' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'camera' | 'clock' | 'code' | 'copy-x' | 'database' | 'dices' | 'filter' | 'flag' | 'flask' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hook' | 'list-filter' | 'merge' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'repeat' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'server-cog' | 'settings' | 'sigma' | 'split' | 'terminal' | 'test-tube' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
+                    icon?: 'arrow-up-down' | 'asterisk' | 'binary' | 'bomb' | 'box' | 'boxes' | 'braces' | 'calculator' | 'calendar' | 'calendar-clock' | 'calendar-minus' | 'calendar-plus' | 'calendar-search' | 'camera' | 'case-lower' | 'case-upper' | 'chart-no-axes-column' | 'chart-no-axes-combined' | 'check-check' | 'chevron-left' | 'chevron-right' | 'chevrons-left' | 'chevrons-right' | 'circle-check' | 'circle-dashed' | 'circle-slash' | 'circle-x' | 'clock' | 'code' | 'copy-x' | 'corner-down-left' | 'database' | 'dices' | 'equal' | 'equal-not' | 'file-input' | 'file-output' | 'file-terminal' | 'file-text' | 'filter' | 'fingerprint' | 'flag' | 'flask' | 'folder-plus' | 'folder-search' | 'function' | 'git-branch' | 'git-merge' | 'group' | 'hash' | 'hook' | 'house' | 'info' | 'key-round' | 'list' | 'list-check' | 'list-checks' | 'list-end' | 'list-filter' | 'list-ordered' | 'list-restart' | 'list-start' | 'list-tree' | 'merge' | 'monitor' | 'octagon-x' | 'package' | 'package-x' | 'pencil' | 'play' | 'regex' | 'remove-formatting' | 'repeat' | 'repeat-2' | 'replace' | 'ruler' | 'scan-eye' | 'scissors' | 'search' | 'search-check' | 'server-cog' | 'settings' | 'shapes' | 'shield-alert' | 'shield-check' | 'shuffle' | 'sigma' | 'space' | 'split' | 'terminal' | 'test-tube' | 'text-cursor' | 'text-cursor-input' | 'ticket' | 'truck' | 'type' | 'typescript' | 'ungroup' | 'variable' | 'wand' | 'wave' | 'webhook' | 'workflow' | 'x';
                     opens: string;
                 }>;
                 locales?: {
@@ -502,6 +646,7 @@ export type GetApiMarketplaceAppsResponses = {
                     };
                 };
             };
+            installed?: boolean;
         }>;
         total: number;
         offset: number;
@@ -525,6 +670,7 @@ export type GetApiCapabilitiesResponses = {
     200: {
         version: 2;
         mode: 'trusted-local' | 'configured-local-cloud' | 'hosted';
+        projectCatalog?: boolean;
         items: Array<{
             name: 'repository_registry' | 'design_architecture_embed' | 'workflow_agents' | 'community_authoring' | 'community_publishing' | 'workflow_templates';
             available: boolean;
@@ -606,6 +752,31 @@ export type GetApiRunsResponses = {
                             retryable?: boolean;
                             details?: unknown;
                             stack?: string;
+                            diagnostic?: {
+                                kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                                coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                                action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                                input?: string;
+                                expected?: string;
+                                provided?: string;
+                                targets: Array<{
+                                    workflowId: string;
+                                    workflowName: string;
+                                    nodeId?: string;
+                                    nodeName?: string;
+                                    port?: string;
+                                    revision?: string;
+                                    producerNodeId?: string;
+                                    producerName?: string;
+                                    outputPort?: string;
+                                }>;
+                            };
+                            name?: string;
+                            systemCode?: string;
+                            causes?: Array<{
+                                name?: string;
+                                code?: string;
+                            }>;
                         };
                         note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                     };
@@ -626,6 +797,23 @@ export type GetApiRunsResponses = {
                     revision: string;
                     digest: string;
                     workflowJson: string;
+                    input?: {
+                        source: {
+                            project: string;
+                            worktree: string | null;
+                            epoch: string;
+                            sequence: number;
+                            revision: string;
+                            baseline: string;
+                            fileCount: number;
+                            bytes: number;
+                            updatedAt: number;
+                            location: string;
+                        } | null;
+                        nodeVersion: string;
+                        platform: string;
+                        arch: string;
+                    };
                     code: Array<{
                         path: string;
                         content: string;
@@ -702,6 +890,31 @@ export type GetApiRunsByRunIdResponses = {
                         retryable?: boolean;
                         details?: unknown;
                         stack?: string;
+                        diagnostic?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        name?: string;
+                        systemCode?: string;
+                        causes?: Array<{
+                            name?: string;
+                            code?: string;
+                        }>;
                     };
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
@@ -722,6 +935,23 @@ export type GetApiRunsByRunIdResponses = {
                 revision: string;
                 digest: string;
                 workflowJson: string;
+                input?: {
+                    source: {
+                        project: string;
+                        worktree: string | null;
+                        epoch: string;
+                        sequence: number;
+                        revision: string;
+                        baseline: string;
+                        fileCount: number;
+                        bytes: number;
+                        updatedAt: number;
+                        location: string;
+                    } | null;
+                    nodeVersion: string;
+                    platform: string;
+                    arch: string;
+                };
                 code: Array<{
                     path: string;
                     content: string;
@@ -733,38 +963,6 @@ export type GetApiRunsByRunIdResponses = {
 };
 
 export type GetApiRunsByRunIdResponse = GetApiRunsByRunIdResponses[keyof GetApiRunsByRunIdResponses];
-
-export type PostApiRunsByRunIdCancelData = {
-    body?: never;
-    path: {
-        runId: string;
-    };
-    query?: never;
-    url: '/api/runs/{runId}/cancel';
-};
-
-export type PostApiRunsByRunIdCancelErrors = {
-    /**
-     * Error
-     */
-    400: {
-        error: string;
-    };
-};
-
-export type PostApiRunsByRunIdCancelError = PostApiRunsByRunIdCancelErrors[keyof PostApiRunsByRunIdCancelErrors];
-
-export type PostApiRunsByRunIdCancelResponses = {
-    /**
-     * Success
-     */
-    200: {
-        ok: true;
-        cancelled: boolean;
-    };
-};
-
-export type PostApiRunsByRunIdCancelResponse = PostApiRunsByRunIdCancelResponses[keyof PostApiRunsByRunIdCancelResponses];
 
 export type GetApiProfileData = {
     body?: never;
@@ -1093,7 +1291,7 @@ export type GetApiSocialConversationsByIdMessagesResponses = {
                 conversationId: string;
                 domain: 'chat' | 'assistant' | 'support';
                 name: string;
-                mime: 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif' | 'application/pdf' | 'text/plain' | 'text/markdown' | 'text/csv' | 'application/json' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.presentationml.presentation' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                mime: 'video/mp4' | 'video/webm' | 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif' | 'application/pdf' | 'text/plain' | 'text/markdown' | 'text/csv' | 'application/json' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.presentationml.presentation' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 size: number;
                 state: 'reserved' | 'uploading' | 'scanning' | 'ready' | 'attached' | 'rejected' | 'expired' | 'deleted';
                 version: number;
@@ -1838,10 +2036,417 @@ export type GetApiGithubJobsByIdResponses = {
 
 export type GetApiGithubJobsByIdResponse = GetApiGithubJobsByIdResponses[keyof GetApiGithubJobsByIdResponses];
 
+export type GetApiProjectsByProjectIdCatalogDocumentData = {
+    body?: never;
+    path: {
+        projectId: string;
+    };
+    query?: {
+        workspace?: string;
+        project?: string;
+        computer?: string;
+        view?: string;
+        generation?: string;
+        baseRevision?: string;
+    };
+    url: '/api/projects/{projectId}/catalog/document';
+};
+
+export type GetApiProjectsByProjectIdCatalogDocumentErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    404: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    409: {
+        error: string;
+    };
+};
+
+export type GetApiProjectsByProjectIdCatalogDocumentError = GetApiProjectsByProjectIdCatalogDocumentErrors[keyof GetApiProjectsByProjectIdCatalogDocumentErrors];
+
+export type GetApiProjectsByProjectIdCatalogDocumentResponses = {
+    /**
+     * Success
+     */
+    200: {
+        path: string;
+        content: string;
+        format: 'json' | 'yaml';
+        revision: string;
+        workflows: {
+            [key: string]: {
+                revision: string;
+                executionId?: string;
+                layout: {
+                    version?: number;
+                    positions?: {
+                        [key: string]: {
+                            x: number;
+                            y: number;
+                        };
+                    };
+                    stickyNotes?: Array<{
+                        id: string;
+                        position: {
+                            x: number;
+                            y: number;
+                        };
+                        size: {
+                            width: number;
+                            height: number;
+                        };
+                        text: string;
+                        color: string;
+                    }>;
+                    groups?: Array<{
+                        id: string;
+                        position: {
+                            x: number;
+                            y: number;
+                        };
+                        size: {
+                            width: number;
+                            height: number;
+                        };
+                        label?: string;
+                        nodeIds?: Array<string>;
+                    }>;
+                } | null;
+                presentation?: {
+                    revision: string;
+                    view?: string;
+                    detail?: {
+                        level?: 'files' | 'workflows' | 'steps';
+                        maxCallDepth?: number;
+                        maxDirectoryDepth?: number;
+                    };
+                    diagnostics: Array<string>;
+                };
+                revealed?: boolean;
+                summary?: {
+                    icon?: string;
+                    color?: string;
+                    style?: {
+                        density?: 'compact' | 'comfortable';
+                        radius?: 'sharp' | 'soft';
+                    };
+                    source?: {
+                        path: string;
+                        symbol: string;
+                        kind: 'module' | 'function';
+                        checksum: string;
+                    };
+                    label?: string;
+                    archived?: boolean;
+                    id: string;
+                    description?: string;
+                    nodeCount: number;
+                    edgeCount: number;
+                    scope?: 'user' | 'group' | 'org' | 'public';
+                    owner?: string;
+                    active?: boolean;
+                    tags?: Array<string>;
+                    folder?: string;
+                    createdAt?: number;
+                    updatedAt?: number;
+                };
+                nodes?: {
+                    [key: string]: {
+                        icon?: string;
+                        label?: string;
+                        symbol?: string;
+                        description?: string;
+                        color?: string;
+                        style?: {
+                            density?: 'compact' | 'comfortable';
+                            radius?: 'sharp' | 'soft';
+                        };
+                        renderer?: string;
+                        role?: 'entry' | 'step';
+                        hiddenReason?: string;
+                    };
+                };
+            };
+        };
+        resources?: {
+            index: {
+                revision: string;
+                files: Array<{
+                    runtime?: 'frontend';
+                    path: string;
+                    language: 'typescript' | 'javascript';
+                    bundleId: string;
+                    entryWorkflowId?: string;
+                    imports?: Array<{
+                        source: string;
+                        module: string;
+                        typeOnly: boolean;
+                        default?: string;
+                        namespace?: string;
+                        named: Array<{
+                            name: string;
+                            alias?: string;
+                            typeOnly: boolean;
+                        }>;
+                    }>;
+                    exports?: Array<{
+                        name: string;
+                        local?: string;
+                        module?: string;
+                        typeOnly: boolean;
+                    }>;
+                    symbols: Array<{
+                        id: string;
+                        name: string;
+                        kind: 'function' | 'workflow' | 'module-workflow' | 'type-alias' | 'interface' | 'enum' | 'constant' | 'variable' | 'class' | 'service';
+                        exported: boolean;
+                        declared?: boolean;
+                        location: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        declaration?: string;
+                        owner?: string;
+                        signature?: {
+                            params?: Array<{
+                                name: string;
+                                type?: string;
+                                optional?: boolean;
+                                rest?: boolean;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                readonly?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                            }>;
+                            returns?: string;
+                            typeText?: string;
+                            decorators?: Array<{
+                                name: string;
+                                text: string;
+                                arguments: Array<string>;
+                            }>;
+                            typeParameters?: Array<string>;
+                            extends?: string;
+                            implements?: Array<string>;
+                            abstract?: boolean;
+                            instances?: Array<string>;
+                            members?: Array<{
+                                name: string;
+                                kind: 'constructor' | 'method' | 'property' | 'getter' | 'setter' | 'accessor' | 'index-signature' | 'static-block';
+                                type?: string;
+                                returns?: string;
+                                parameters?: Array<{
+                                    name: string;
+                                    type?: string;
+                                    optional?: boolean;
+                                    rest?: boolean;
+                                    visibility?: 'public' | 'protected' | 'private' | '#private';
+                                    readonly?: boolean;
+                                    decorators?: Array<{
+                                        name: string;
+                                        text: string;
+                                        arguments: Array<string>;
+                                    }>;
+                                    initializer?: string;
+                                }>;
+                                typeParameters?: Array<string>;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                static?: boolean;
+                                readonly?: boolean;
+                                declare?: boolean;
+                                definite?: boolean;
+                                abstract?: boolean;
+                                optional?: boolean;
+                                override?: boolean;
+                                async?: boolean;
+                                generator?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                                workflowId?: string;
+                            }>;
+                        };
+                        constant?: {
+                            serializable: boolean;
+                            value?: unknown;
+                            declarationKind?: 'const';
+                            mutable?: boolean;
+                            expression?: string;
+                        };
+                        variable?: {
+                            declarationKind: 'let' | 'var';
+                            initializer?: string;
+                        };
+                        service?: {
+                            classSymbol?: string;
+                            methods: Array<string>;
+                            lifecycle: 'invocation' | 'workflow-run' | 'worker';
+                        };
+                        controlFlow?: Array<{
+                            id: string;
+                            kind: 'if' | 'switch' | 'for' | 'while' | 'do-while' | 'for-in' | 'for-of' | 'break' | 'continue' | 'label' | 'try' | 'catch' | 'finally' | 'return' | 'initializer' | 'assignment' | 'expression';
+                            path: Array<number>;
+                            parentId?: string;
+                            location: {
+                                path: string;
+                                start: number;
+                                end: number;
+                                line: number;
+                                column: number;
+                            };
+                            source: string;
+                        }>;
+                    }>;
+                    diagnostics: Array<{
+                        severity: 'error' | 'warning';
+                        code: string;
+                        message: string;
+                        location?: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        typescriptCode?: number;
+                        explanation?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        phase?: 'parse' | 'typecheck' | 'lint' | 'compile' | 'runtime' | 'analysis';
+                        related?: Array<{
+                            message: string;
+                            code?: string;
+                            path?: string;
+                            line?: number;
+                            column?: number;
+                            start?: number;
+                            end?: number;
+                            revision?: string;
+                        }>;
+                        messages?: Array<{
+                            message: string;
+                            code: string;
+                            depth: number;
+                            category?: number;
+                        }>;
+                        truncated?: boolean;
+                    }>;
+                }>;
+                references: Array<{
+                    from: string;
+                    to: string;
+                    kind: 'call' | 'type' | 'value' | 'construct' | 'method';
+                    location: {
+                        path: string;
+                        start: number;
+                        end: number;
+                        line: number;
+                        column: number;
+                    };
+                }>;
+            };
+            workflowIds: Array<string>;
+        };
+    } | {
+        path: string;
+        baseRevision: string;
+        revision: string;
+        contentChanges: Array<{
+            op: 'set';
+            path: Array<string | number>;
+            value?: unknown;
+        } | {
+            op: 'remove';
+            path: Array<string | number>;
+        } | {
+            op: 'splice';
+            path: Array<string | number>;
+            start: number;
+            deleteCount: number;
+            values: Array<unknown>;
+        }>;
+        changes: Array<{
+            op: 'set';
+            path: Array<string | number>;
+            value?: unknown;
+        } | {
+            op: 'remove';
+            path: Array<string | number>;
+        } | {
+            op: 'splice';
+            path: Array<string | number>;
+            start: number;
+            deleteCount: number;
+            values: Array<unknown>;
+        }>;
+        resourceChanges?: Array<{
+            op: 'set';
+            path: Array<string | number>;
+            value?: unknown;
+        } | {
+            op: 'remove';
+            path: Array<string | number>;
+        } | {
+            op: 'splice';
+            path: Array<string | number>;
+            start: number;
+            deleteCount: number;
+            values: Array<unknown>;
+        }>;
+    };
+};
+
+export type GetApiProjectsByProjectIdCatalogDocumentResponse = GetApiProjectsByProjectIdCatalogDocumentResponses[keyof GetApiProjectsByProjectIdCatalogDocumentResponses];
+
 export type GetApiProjectsTrashData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        state?: 'archived' | 'deleted';
+    };
     url: '/api/projects/trash';
 };
 
@@ -1849,8 +2454,21 @@ export type GetApiProjectsTrashErrors = {
     /**
      * Error
      */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
     403: {
         error: string;
+    };
+    /**
+     * Error
+     */
+    503: {
+        error: string;
+        code?: 'PROJECT_LIFECYCLE_RECONCILIATION_REQUIRED';
     };
 };
 
@@ -1876,6 +2494,7 @@ export type GetApiProjectsSearchData = {
     body?: never;
     path?: never;
     query?: {
+        global?: 'true';
         project?: string;
         summary?: 'true';
         workspace?: string;
@@ -2011,6 +2630,7 @@ export type GetApiProjectsByProjectIdFilesResponses = {
         path: string;
         size: number;
         mtime: number;
+        revision?: string;
     }>;
 };
 
@@ -2123,6 +2743,7 @@ export type GetApiProjectsByProjectIdFilesContentData = {
     };
     query: {
         path: string;
+        checkpoint?: 'true';
     };
     url: '/api/projects/{projectId}/files/content';
 };
@@ -2164,6 +2785,684 @@ export type GetApiProjectsByProjectIdFilesContentResponses = {
             [key: string]: boolean | number | Array<string>;
         };
         compilerError?: string;
+        checkpoint?: {
+            path: string;
+            revision: string;
+            contextRevision: string;
+            checkpointRevision: string;
+            parserRevision: string;
+            projection: {
+                graphs: {
+                    [key: string]: {
+                        references?: Array<{
+                            nodeId: string;
+                            label: string;
+                            plugin?: string;
+                            workflowId?: string;
+                            source?: {
+                                path: string;
+                                symbol: string;
+                                kind: 'module' | 'function';
+                            };
+                        }>;
+                        revealed?: boolean;
+                        presentation?: {
+                            revision: string;
+                            view?: string;
+                            detail?: {
+                                level?: 'files' | 'workflows' | 'steps';
+                                maxCallDepth?: number;
+                                maxDirectoryDepth?: number;
+                            };
+                            diagnostics: Array<string>;
+                        };
+                        triggers?: Array<{
+                            id: string;
+                            name: string;
+                            enabled?: boolean;
+                            kind: 'cron';
+                            provider: 'native' | 'external';
+                            expression: string;
+                            timezone: string;
+                            input?: {
+                                [key: string]: unknown;
+                            };
+                        } | {
+                            id: string;
+                            name: string;
+                            enabled?: boolean;
+                            kind: 'webhook';
+                            payloadPath?: string;
+                        }>;
+                        id: string;
+                        executionId?: string;
+                        revision: string;
+                        source?: {
+                            path: string;
+                            symbol: string;
+                            kind: 'module' | 'function';
+                            checksum: string;
+                        };
+                        inputs?: {
+                            [key: string]: unknown;
+                        };
+                        types?: {
+                            [key: string]: {
+                                [key: string]: unknown;
+                            };
+                        };
+                        nodes: Array<{
+                            flow?: {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'start';
+                                parameters: {
+                                    [key: string]: string;
+                                };
+                                output: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'literal';
+                                value?: unknown;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'read';
+                                slot: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'declare';
+                                slot: string;
+                                mutable: boolean;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'write';
+                                slot: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'property';
+                                key: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'object';
+                                keys: Array<string>;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'array';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'binary';
+                                operator: '+' | '-' | '*' | '/' | '%' | '===' | '!==' | '<' | '<=' | '>' | '>=';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'unary';
+                                operator: '!' | '-' | '+';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'error';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'log';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'throw';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'return';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'if';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'guard';
+                                recovery?: {
+                                    slot?: string;
+                                    body: Array<string>;
+                                };
+                                cleanup?: Array<string>;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'try';
+                                handler?: string;
+                                finalizer?: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'catch';
+                                slot?: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'finally';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'finish';
+                            };
+                            native?: string;
+                            plugin?: string;
+                            pluginVersion?: string;
+                            pluginUi?: {
+                                apiVersion: '1';
+                                renderers: {
+                                    [key: string]: {
+                                        label: string;
+                                        targets: {
+                                            'node.inspector.inputs'?: string;
+                                        };
+                                    };
+                                };
+                            };
+                            renderer?: string;
+                            hiddenReason?: string;
+                            color?: string;
+                            style?: {
+                                density?: 'compact' | 'comfortable';
+                                radius?: 'sharp' | 'soft';
+                            };
+                            workflowId?: string;
+                            recursion?: Array<{
+                                via: Array<string>;
+                                location: {
+                                    path: string;
+                                    start: number;
+                                    end: number;
+                                    line: number;
+                                    column: number;
+                                };
+                            }>;
+                            role?: 'entry' | 'step';
+                            symbol?: string;
+                            description?: string;
+                            id: string;
+                            language?: string;
+                            icon?: string;
+                            label?: string;
+                            inputs?: {
+                                [key: string]: unknown;
+                            };
+                            outputs?: {
+                                [key: string]: unknown;
+                            };
+                            sourceExpressions?: {
+                                [key: string]: string;
+                            };
+                            sourceScope?: boolean;
+                            sourceFallback?: 'expression' | 'statement' | 'function';
+                            hasSdkClient?: boolean;
+                            kind?: 'function' | 'class' | 'service' | 'const';
+                            setup?: {
+                                [key: string]: unknown;
+                            };
+                            provides?: Array<string>;
+                            sourceLocation?: {
+                                path: string;
+                                line: number;
+                                column: number;
+                            };
+                            serviceLifecycle?: 'invocation' | 'workflow-run' | 'worker';
+                            runtime?: {
+                                timeout_ms?: number;
+                                retries?: number;
+                                retry_backoff_ms?: number;
+                                concurrency?: number;
+                                async?: boolean;
+                            };
+                            command?: string;
+                            disabled?: boolean;
+                            position?: {
+                                x: number;
+                                y: number;
+                            };
+                            scope?: 'user' | 'group' | 'org' | 'public';
+                            owner?: string;
+                            expressions?: {
+                                [key: string]: string;
+                            };
+                            bindings?: {
+                                [key: string]: {
+                                    kind: 'literal';
+                                    value?: unknown;
+                                    attachments?: {
+                                        [key: string]: string;
+                                    };
+                                } | {
+                                    kind: 'symbol';
+                                    symbol: string;
+                                    value?: unknown;
+                                };
+                            };
+                        }>;
+                        edges: Array<{
+                            from: {
+                                node: string;
+                                output?: string;
+                            };
+                            to: {
+                                node: string;
+                                input?: string;
+                            };
+                            kind?: 'data' | 'dependency' | 'control';
+                        }>;
+                        promises?: Array<{
+                            node: string;
+                            mode: 'all' | 'allSettled' | 'race' | 'any' | 'reject' | 'settled' | 'then' | 'catch' | 'finally';
+                        }>;
+                        roots: Array<string>;
+                        terminals: Array<string>;
+                        stickyNotes?: Array<{
+                            id: string;
+                            position: {
+                                x: number;
+                                y: number;
+                            };
+                            size: {
+                                width: number;
+                                height: number;
+                            };
+                            text: string;
+                            color: string;
+                        }>;
+                        groups?: Array<{
+                            id: string;
+                            position: {
+                                x: number;
+                                y: number;
+                            };
+                            size: {
+                                width: number;
+                                height: number;
+                            };
+                            label?: string;
+                            nodeIds: Array<string>;
+                        }>;
+                    };
+                };
+                analysis: {
+                    runtime?: 'frontend';
+                    path: string;
+                    language: 'typescript' | 'javascript';
+                    bundleId: string;
+                    entryWorkflowId?: string;
+                    imports?: Array<{
+                        source: string;
+                        module: string;
+                        typeOnly: boolean;
+                        default?: string;
+                        namespace?: string;
+                        named: Array<{
+                            name: string;
+                            alias?: string;
+                            typeOnly: boolean;
+                        }>;
+                    }>;
+                    exports?: Array<{
+                        name: string;
+                        local?: string;
+                        module?: string;
+                        typeOnly: boolean;
+                    }>;
+                    symbols: Array<{
+                        id: string;
+                        name: string;
+                        kind: 'function' | 'workflow' | 'module-workflow' | 'type-alias' | 'interface' | 'enum' | 'constant' | 'variable' | 'class' | 'service';
+                        exported: boolean;
+                        declared?: boolean;
+                        location: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        declaration?: string;
+                        owner?: string;
+                        signature?: {
+                            params?: Array<{
+                                name: string;
+                                type?: string;
+                                optional?: boolean;
+                                rest?: boolean;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                readonly?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                            }>;
+                            returns?: string;
+                            typeText?: string;
+                            decorators?: Array<{
+                                name: string;
+                                text: string;
+                                arguments: Array<string>;
+                            }>;
+                            typeParameters?: Array<string>;
+                            extends?: string;
+                            implements?: Array<string>;
+                            abstract?: boolean;
+                            instances?: Array<string>;
+                            members?: Array<{
+                                name: string;
+                                kind: 'constructor' | 'method' | 'property' | 'getter' | 'setter' | 'accessor' | 'index-signature' | 'static-block';
+                                type?: string;
+                                returns?: string;
+                                parameters?: Array<{
+                                    name: string;
+                                    type?: string;
+                                    optional?: boolean;
+                                    rest?: boolean;
+                                    visibility?: 'public' | 'protected' | 'private' | '#private';
+                                    readonly?: boolean;
+                                    decorators?: Array<{
+                                        name: string;
+                                        text: string;
+                                        arguments: Array<string>;
+                                    }>;
+                                    initializer?: string;
+                                }>;
+                                typeParameters?: Array<string>;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                static?: boolean;
+                                readonly?: boolean;
+                                declare?: boolean;
+                                definite?: boolean;
+                                abstract?: boolean;
+                                optional?: boolean;
+                                override?: boolean;
+                                async?: boolean;
+                                generator?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                                workflowId?: string;
+                            }>;
+                        };
+                        constant?: {
+                            serializable: boolean;
+                            value?: unknown;
+                            declarationKind?: 'const';
+                            mutable?: boolean;
+                            expression?: string;
+                        };
+                        variable?: {
+                            declarationKind: 'let' | 'var';
+                            initializer?: string;
+                        };
+                        service?: {
+                            classSymbol?: string;
+                            methods: Array<string>;
+                            lifecycle: 'invocation' | 'workflow-run' | 'worker';
+                        };
+                        controlFlow?: Array<{
+                            id: string;
+                            kind: 'if' | 'switch' | 'for' | 'while' | 'do-while' | 'for-in' | 'for-of' | 'break' | 'continue' | 'label' | 'try' | 'catch' | 'finally' | 'return' | 'initializer' | 'assignment' | 'expression';
+                            path: Array<number>;
+                            parentId?: string;
+                            location: {
+                                path: string;
+                                start: number;
+                                end: number;
+                                line: number;
+                                column: number;
+                            };
+                            source: string;
+                        }>;
+                    }>;
+                    diagnostics: Array<{
+                        severity: 'error' | 'warning';
+                        code: string;
+                        message: string;
+                        location?: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        typescriptCode?: number;
+                        explanation?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        phase?: 'parse' | 'typecheck' | 'lint' | 'compile' | 'runtime' | 'analysis';
+                        related?: Array<{
+                            message: string;
+                            code?: string;
+                            path?: string;
+                            line?: number;
+                            column?: number;
+                            start?: number;
+                            end?: number;
+                            revision?: string;
+                        }>;
+                        messages?: Array<{
+                            message: string;
+                            code: string;
+                            depth: number;
+                            category?: number;
+                        }>;
+                        truncated?: boolean;
+                    }>;
+                    workflows: Array<{
+                        id: string;
+                        params: Array<string>;
+                        inputs?: {
+                            [key: string]: unknown;
+                        };
+                        nodes: Array<{
+                            instanceId: string;
+                            catalogId: string;
+                            disabled?: boolean;
+                            params?: {
+                                [key: string]: unknown;
+                            };
+                        }>;
+                        edges: Array<{
+                            from: {
+                                node: string;
+                                output?: string;
+                            };
+                            to: {
+                                node: string;
+                                input?: string;
+                            };
+                            kind?: 'data' | 'dependency' | 'control';
+                        }>;
+                        promises: Array<{
+                            node: string;
+                            mode: 'all' | 'allSettled' | 'race' | 'any' | 'reject' | 'settled' | 'then' | 'catch' | 'finally';
+                        }>;
+                        bindings: {
+                            [key: string]: {
+                                [key: string]: {
+                                    kind: 'literal';
+                                    value?: unknown;
+                                    attachments?: {
+                                        [key: string]: string;
+                                    };
+                                } | {
+                                    kind: 'symbol';
+                                    symbol: string;
+                                    value?: unknown;
+                                };
+                            };
+                        };
+                        returns?: {
+                            node: string;
+                            output?: string;
+                        };
+                        returnWrapped?: boolean;
+                        warnings: Array<string>;
+                    }>;
+                    references: Array<{
+                        from: string;
+                        to: string;
+                        kind: 'call' | 'type' | 'value' | 'construct' | 'method';
+                        location: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                    }>;
+                } | null;
+                types: {
+                    [key: string]: {
+                        [key: string]: unknown;
+                    };
+                };
+                document?: unknown;
+                diagnostics: Array<{
+                    severity: 'error' | 'warning';
+                    code: string;
+                    message: string;
+                    location?: {
+                        path: string;
+                        start: number;
+                        end: number;
+                        line: number;
+                        column: number;
+                    };
+                    typescriptCode?: number;
+                    explanation?: {
+                        kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                        coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                        action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                        input?: string;
+                        expected?: string;
+                        provided?: string;
+                        targets: Array<{
+                            workflowId: string;
+                            workflowName: string;
+                            nodeId?: string;
+                            nodeName?: string;
+                            port?: string;
+                            revision?: string;
+                            producerNodeId?: string;
+                            producerName?: string;
+                            outputPort?: string;
+                        }>;
+                    };
+                    phase?: 'parse' | 'typecheck' | 'lint' | 'compile' | 'runtime' | 'analysis';
+                    related?: Array<{
+                        message: string;
+                        code?: string;
+                        path?: string;
+                        line?: number;
+                        column?: number;
+                        start?: number;
+                        end?: number;
+                        revision?: string;
+                    }>;
+                    messages?: Array<{
+                        message: string;
+                        code: string;
+                        depth: number;
+                        category?: number;
+                    }>;
+                    truncated?: boolean;
+                }>;
+            };
+        };
+        workspaceRevision?: string;
+        writable?: boolean;
     };
 };
 
@@ -2225,6 +3524,684 @@ export type PatchApiProjectsByProjectIdFilesContentResponses = {
             [key: string]: boolean | number | Array<string>;
         };
         compilerError?: string;
+        checkpoint?: {
+            path: string;
+            revision: string;
+            contextRevision: string;
+            checkpointRevision: string;
+            parserRevision: string;
+            projection: {
+                graphs: {
+                    [key: string]: {
+                        references?: Array<{
+                            nodeId: string;
+                            label: string;
+                            plugin?: string;
+                            workflowId?: string;
+                            source?: {
+                                path: string;
+                                symbol: string;
+                                kind: 'module' | 'function';
+                            };
+                        }>;
+                        revealed?: boolean;
+                        presentation?: {
+                            revision: string;
+                            view?: string;
+                            detail?: {
+                                level?: 'files' | 'workflows' | 'steps';
+                                maxCallDepth?: number;
+                                maxDirectoryDepth?: number;
+                            };
+                            diagnostics: Array<string>;
+                        };
+                        triggers?: Array<{
+                            id: string;
+                            name: string;
+                            enabled?: boolean;
+                            kind: 'cron';
+                            provider: 'native' | 'external';
+                            expression: string;
+                            timezone: string;
+                            input?: {
+                                [key: string]: unknown;
+                            };
+                        } | {
+                            id: string;
+                            name: string;
+                            enabled?: boolean;
+                            kind: 'webhook';
+                            payloadPath?: string;
+                        }>;
+                        id: string;
+                        executionId?: string;
+                        revision: string;
+                        source?: {
+                            path: string;
+                            symbol: string;
+                            kind: 'module' | 'function';
+                            checksum: string;
+                        };
+                        inputs?: {
+                            [key: string]: unknown;
+                        };
+                        types?: {
+                            [key: string]: {
+                                [key: string]: unknown;
+                            };
+                        };
+                        nodes: Array<{
+                            flow?: {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'start';
+                                parameters: {
+                                    [key: string]: string;
+                                };
+                                output: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'literal';
+                                value?: unknown;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'read';
+                                slot: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'declare';
+                                slot: string;
+                                mutable: boolean;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'write';
+                                slot: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'property';
+                                key: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'object';
+                                keys: Array<string>;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'array';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'binary';
+                                operator: '+' | '-' | '*' | '/' | '%' | '===' | '!==' | '<' | '<=' | '>' | '>=';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'unary';
+                                operator: '!' | '-' | '+';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'error';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'log';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'throw';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'return';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'if';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'guard';
+                                recovery?: {
+                                    slot?: string;
+                                    body: Array<string>;
+                                };
+                                cleanup?: Array<string>;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'try';
+                                handler?: string;
+                                finalizer?: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'catch';
+                                slot?: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'finally';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'finish';
+                            };
+                            native?: string;
+                            plugin?: string;
+                            pluginVersion?: string;
+                            pluginUi?: {
+                                apiVersion: '1';
+                                renderers: {
+                                    [key: string]: {
+                                        label: string;
+                                        targets: {
+                                            'node.inspector.inputs'?: string;
+                                        };
+                                    };
+                                };
+                            };
+                            renderer?: string;
+                            hiddenReason?: string;
+                            color?: string;
+                            style?: {
+                                density?: 'compact' | 'comfortable';
+                                radius?: 'sharp' | 'soft';
+                            };
+                            workflowId?: string;
+                            recursion?: Array<{
+                                via: Array<string>;
+                                location: {
+                                    path: string;
+                                    start: number;
+                                    end: number;
+                                    line: number;
+                                    column: number;
+                                };
+                            }>;
+                            role?: 'entry' | 'step';
+                            symbol?: string;
+                            description?: string;
+                            id: string;
+                            language?: string;
+                            icon?: string;
+                            label?: string;
+                            inputs?: {
+                                [key: string]: unknown;
+                            };
+                            outputs?: {
+                                [key: string]: unknown;
+                            };
+                            sourceExpressions?: {
+                                [key: string]: string;
+                            };
+                            sourceScope?: boolean;
+                            sourceFallback?: 'expression' | 'statement' | 'function';
+                            hasSdkClient?: boolean;
+                            kind?: 'function' | 'class' | 'service' | 'const';
+                            setup?: {
+                                [key: string]: unknown;
+                            };
+                            provides?: Array<string>;
+                            sourceLocation?: {
+                                path: string;
+                                line: number;
+                                column: number;
+                            };
+                            serviceLifecycle?: 'invocation' | 'workflow-run' | 'worker';
+                            runtime?: {
+                                timeout_ms?: number;
+                                retries?: number;
+                                retry_backoff_ms?: number;
+                                concurrency?: number;
+                                async?: boolean;
+                            };
+                            command?: string;
+                            disabled?: boolean;
+                            position?: {
+                                x: number;
+                                y: number;
+                            };
+                            scope?: 'user' | 'group' | 'org' | 'public';
+                            owner?: string;
+                            expressions?: {
+                                [key: string]: string;
+                            };
+                            bindings?: {
+                                [key: string]: {
+                                    kind: 'literal';
+                                    value?: unknown;
+                                    attachments?: {
+                                        [key: string]: string;
+                                    };
+                                } | {
+                                    kind: 'symbol';
+                                    symbol: string;
+                                    value?: unknown;
+                                };
+                            };
+                        }>;
+                        edges: Array<{
+                            from: {
+                                node: string;
+                                output?: string;
+                            };
+                            to: {
+                                node: string;
+                                input?: string;
+                            };
+                            kind?: 'data' | 'dependency' | 'control';
+                        }>;
+                        promises?: Array<{
+                            node: string;
+                            mode: 'all' | 'allSettled' | 'race' | 'any' | 'reject' | 'settled' | 'then' | 'catch' | 'finally';
+                        }>;
+                        roots: Array<string>;
+                        terminals: Array<string>;
+                        stickyNotes?: Array<{
+                            id: string;
+                            position: {
+                                x: number;
+                                y: number;
+                            };
+                            size: {
+                                width: number;
+                                height: number;
+                            };
+                            text: string;
+                            color: string;
+                        }>;
+                        groups?: Array<{
+                            id: string;
+                            position: {
+                                x: number;
+                                y: number;
+                            };
+                            size: {
+                                width: number;
+                                height: number;
+                            };
+                            label?: string;
+                            nodeIds: Array<string>;
+                        }>;
+                    };
+                };
+                analysis: {
+                    runtime?: 'frontend';
+                    path: string;
+                    language: 'typescript' | 'javascript';
+                    bundleId: string;
+                    entryWorkflowId?: string;
+                    imports?: Array<{
+                        source: string;
+                        module: string;
+                        typeOnly: boolean;
+                        default?: string;
+                        namespace?: string;
+                        named: Array<{
+                            name: string;
+                            alias?: string;
+                            typeOnly: boolean;
+                        }>;
+                    }>;
+                    exports?: Array<{
+                        name: string;
+                        local?: string;
+                        module?: string;
+                        typeOnly: boolean;
+                    }>;
+                    symbols: Array<{
+                        id: string;
+                        name: string;
+                        kind: 'function' | 'workflow' | 'module-workflow' | 'type-alias' | 'interface' | 'enum' | 'constant' | 'variable' | 'class' | 'service';
+                        exported: boolean;
+                        declared?: boolean;
+                        location: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        declaration?: string;
+                        owner?: string;
+                        signature?: {
+                            params?: Array<{
+                                name: string;
+                                type?: string;
+                                optional?: boolean;
+                                rest?: boolean;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                readonly?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                            }>;
+                            returns?: string;
+                            typeText?: string;
+                            decorators?: Array<{
+                                name: string;
+                                text: string;
+                                arguments: Array<string>;
+                            }>;
+                            typeParameters?: Array<string>;
+                            extends?: string;
+                            implements?: Array<string>;
+                            abstract?: boolean;
+                            instances?: Array<string>;
+                            members?: Array<{
+                                name: string;
+                                kind: 'constructor' | 'method' | 'property' | 'getter' | 'setter' | 'accessor' | 'index-signature' | 'static-block';
+                                type?: string;
+                                returns?: string;
+                                parameters?: Array<{
+                                    name: string;
+                                    type?: string;
+                                    optional?: boolean;
+                                    rest?: boolean;
+                                    visibility?: 'public' | 'protected' | 'private' | '#private';
+                                    readonly?: boolean;
+                                    decorators?: Array<{
+                                        name: string;
+                                        text: string;
+                                        arguments: Array<string>;
+                                    }>;
+                                    initializer?: string;
+                                }>;
+                                typeParameters?: Array<string>;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                static?: boolean;
+                                readonly?: boolean;
+                                declare?: boolean;
+                                definite?: boolean;
+                                abstract?: boolean;
+                                optional?: boolean;
+                                override?: boolean;
+                                async?: boolean;
+                                generator?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                                workflowId?: string;
+                            }>;
+                        };
+                        constant?: {
+                            serializable: boolean;
+                            value?: unknown;
+                            declarationKind?: 'const';
+                            mutable?: boolean;
+                            expression?: string;
+                        };
+                        variable?: {
+                            declarationKind: 'let' | 'var';
+                            initializer?: string;
+                        };
+                        service?: {
+                            classSymbol?: string;
+                            methods: Array<string>;
+                            lifecycle: 'invocation' | 'workflow-run' | 'worker';
+                        };
+                        controlFlow?: Array<{
+                            id: string;
+                            kind: 'if' | 'switch' | 'for' | 'while' | 'do-while' | 'for-in' | 'for-of' | 'break' | 'continue' | 'label' | 'try' | 'catch' | 'finally' | 'return' | 'initializer' | 'assignment' | 'expression';
+                            path: Array<number>;
+                            parentId?: string;
+                            location: {
+                                path: string;
+                                start: number;
+                                end: number;
+                                line: number;
+                                column: number;
+                            };
+                            source: string;
+                        }>;
+                    }>;
+                    diagnostics: Array<{
+                        severity: 'error' | 'warning';
+                        code: string;
+                        message: string;
+                        location?: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        typescriptCode?: number;
+                        explanation?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        phase?: 'parse' | 'typecheck' | 'lint' | 'compile' | 'runtime' | 'analysis';
+                        related?: Array<{
+                            message: string;
+                            code?: string;
+                            path?: string;
+                            line?: number;
+                            column?: number;
+                            start?: number;
+                            end?: number;
+                            revision?: string;
+                        }>;
+                        messages?: Array<{
+                            message: string;
+                            code: string;
+                            depth: number;
+                            category?: number;
+                        }>;
+                        truncated?: boolean;
+                    }>;
+                    workflows: Array<{
+                        id: string;
+                        params: Array<string>;
+                        inputs?: {
+                            [key: string]: unknown;
+                        };
+                        nodes: Array<{
+                            instanceId: string;
+                            catalogId: string;
+                            disabled?: boolean;
+                            params?: {
+                                [key: string]: unknown;
+                            };
+                        }>;
+                        edges: Array<{
+                            from: {
+                                node: string;
+                                output?: string;
+                            };
+                            to: {
+                                node: string;
+                                input?: string;
+                            };
+                            kind?: 'data' | 'dependency' | 'control';
+                        }>;
+                        promises: Array<{
+                            node: string;
+                            mode: 'all' | 'allSettled' | 'race' | 'any' | 'reject' | 'settled' | 'then' | 'catch' | 'finally';
+                        }>;
+                        bindings: {
+                            [key: string]: {
+                                [key: string]: {
+                                    kind: 'literal';
+                                    value?: unknown;
+                                    attachments?: {
+                                        [key: string]: string;
+                                    };
+                                } | {
+                                    kind: 'symbol';
+                                    symbol: string;
+                                    value?: unknown;
+                                };
+                            };
+                        };
+                        returns?: {
+                            node: string;
+                            output?: string;
+                        };
+                        returnWrapped?: boolean;
+                        warnings: Array<string>;
+                    }>;
+                    references: Array<{
+                        from: string;
+                        to: string;
+                        kind: 'call' | 'type' | 'value' | 'construct' | 'method';
+                        location: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                    }>;
+                } | null;
+                types: {
+                    [key: string]: {
+                        [key: string]: unknown;
+                    };
+                };
+                document?: unknown;
+                diagnostics: Array<{
+                    severity: 'error' | 'warning';
+                    code: string;
+                    message: string;
+                    location?: {
+                        path: string;
+                        start: number;
+                        end: number;
+                        line: number;
+                        column: number;
+                    };
+                    typescriptCode?: number;
+                    explanation?: {
+                        kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                        coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                        action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                        input?: string;
+                        expected?: string;
+                        provided?: string;
+                        targets: Array<{
+                            workflowId: string;
+                            workflowName: string;
+                            nodeId?: string;
+                            nodeName?: string;
+                            port?: string;
+                            revision?: string;
+                            producerNodeId?: string;
+                            producerName?: string;
+                            outputPort?: string;
+                        }>;
+                    };
+                    phase?: 'parse' | 'typecheck' | 'lint' | 'compile' | 'runtime' | 'analysis';
+                    related?: Array<{
+                        message: string;
+                        code?: string;
+                        path?: string;
+                        line?: number;
+                        column?: number;
+                        start?: number;
+                        end?: number;
+                        revision?: string;
+                    }>;
+                    messages?: Array<{
+                        message: string;
+                        code: string;
+                        depth: number;
+                        category?: number;
+                    }>;
+                    truncated?: boolean;
+                }>;
+            };
+        };
+        workspaceRevision?: string;
+        writable?: boolean;
     };
 };
 
@@ -2279,6 +4256,684 @@ export type PostApiProjectsByProjectIdFilesContentResponses = {
             [key: string]: boolean | number | Array<string>;
         };
         compilerError?: string;
+        checkpoint?: {
+            path: string;
+            revision: string;
+            contextRevision: string;
+            checkpointRevision: string;
+            parserRevision: string;
+            projection: {
+                graphs: {
+                    [key: string]: {
+                        references?: Array<{
+                            nodeId: string;
+                            label: string;
+                            plugin?: string;
+                            workflowId?: string;
+                            source?: {
+                                path: string;
+                                symbol: string;
+                                kind: 'module' | 'function';
+                            };
+                        }>;
+                        revealed?: boolean;
+                        presentation?: {
+                            revision: string;
+                            view?: string;
+                            detail?: {
+                                level?: 'files' | 'workflows' | 'steps';
+                                maxCallDepth?: number;
+                                maxDirectoryDepth?: number;
+                            };
+                            diagnostics: Array<string>;
+                        };
+                        triggers?: Array<{
+                            id: string;
+                            name: string;
+                            enabled?: boolean;
+                            kind: 'cron';
+                            provider: 'native' | 'external';
+                            expression: string;
+                            timezone: string;
+                            input?: {
+                                [key: string]: unknown;
+                            };
+                        } | {
+                            id: string;
+                            name: string;
+                            enabled?: boolean;
+                            kind: 'webhook';
+                            payloadPath?: string;
+                        }>;
+                        id: string;
+                        executionId?: string;
+                        revision: string;
+                        source?: {
+                            path: string;
+                            symbol: string;
+                            kind: 'module' | 'function';
+                            checksum: string;
+                        };
+                        inputs?: {
+                            [key: string]: unknown;
+                        };
+                        types?: {
+                            [key: string]: {
+                                [key: string]: unknown;
+                            };
+                        };
+                        nodes: Array<{
+                            flow?: {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'start';
+                                parameters: {
+                                    [key: string]: string;
+                                };
+                                output: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'literal';
+                                value?: unknown;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'read';
+                                slot: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'declare';
+                                slot: string;
+                                mutable: boolean;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'write';
+                                slot: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'property';
+                                key: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'object';
+                                keys: Array<string>;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'array';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'binary';
+                                operator: '+' | '-' | '*' | '/' | '%' | '===' | '!==' | '<' | '<=' | '>' | '>=';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'unary';
+                                operator: '!' | '-' | '+';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'error';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'log';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'throw';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'return';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'if';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'guard';
+                                recovery?: {
+                                    slot?: string;
+                                    body: Array<string>;
+                                };
+                                cleanup?: Array<string>;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'try';
+                                handler?: string;
+                                finalizer?: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'catch';
+                                slot?: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'finally';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'finish';
+                            };
+                            native?: string;
+                            plugin?: string;
+                            pluginVersion?: string;
+                            pluginUi?: {
+                                apiVersion: '1';
+                                renderers: {
+                                    [key: string]: {
+                                        label: string;
+                                        targets: {
+                                            'node.inspector.inputs'?: string;
+                                        };
+                                    };
+                                };
+                            };
+                            renderer?: string;
+                            hiddenReason?: string;
+                            color?: string;
+                            style?: {
+                                density?: 'compact' | 'comfortable';
+                                radius?: 'sharp' | 'soft';
+                            };
+                            workflowId?: string;
+                            recursion?: Array<{
+                                via: Array<string>;
+                                location: {
+                                    path: string;
+                                    start: number;
+                                    end: number;
+                                    line: number;
+                                    column: number;
+                                };
+                            }>;
+                            role?: 'entry' | 'step';
+                            symbol?: string;
+                            description?: string;
+                            id: string;
+                            language?: string;
+                            icon?: string;
+                            label?: string;
+                            inputs?: {
+                                [key: string]: unknown;
+                            };
+                            outputs?: {
+                                [key: string]: unknown;
+                            };
+                            sourceExpressions?: {
+                                [key: string]: string;
+                            };
+                            sourceScope?: boolean;
+                            sourceFallback?: 'expression' | 'statement' | 'function';
+                            hasSdkClient?: boolean;
+                            kind?: 'function' | 'class' | 'service' | 'const';
+                            setup?: {
+                                [key: string]: unknown;
+                            };
+                            provides?: Array<string>;
+                            sourceLocation?: {
+                                path: string;
+                                line: number;
+                                column: number;
+                            };
+                            serviceLifecycle?: 'invocation' | 'workflow-run' | 'worker';
+                            runtime?: {
+                                timeout_ms?: number;
+                                retries?: number;
+                                retry_backoff_ms?: number;
+                                concurrency?: number;
+                                async?: boolean;
+                            };
+                            command?: string;
+                            disabled?: boolean;
+                            position?: {
+                                x: number;
+                                y: number;
+                            };
+                            scope?: 'user' | 'group' | 'org' | 'public';
+                            owner?: string;
+                            expressions?: {
+                                [key: string]: string;
+                            };
+                            bindings?: {
+                                [key: string]: {
+                                    kind: 'literal';
+                                    value?: unknown;
+                                    attachments?: {
+                                        [key: string]: string;
+                                    };
+                                } | {
+                                    kind: 'symbol';
+                                    symbol: string;
+                                    value?: unknown;
+                                };
+                            };
+                        }>;
+                        edges: Array<{
+                            from: {
+                                node: string;
+                                output?: string;
+                            };
+                            to: {
+                                node: string;
+                                input?: string;
+                            };
+                            kind?: 'data' | 'dependency' | 'control';
+                        }>;
+                        promises?: Array<{
+                            node: string;
+                            mode: 'all' | 'allSettled' | 'race' | 'any' | 'reject' | 'settled' | 'then' | 'catch' | 'finally';
+                        }>;
+                        roots: Array<string>;
+                        terminals: Array<string>;
+                        stickyNotes?: Array<{
+                            id: string;
+                            position: {
+                                x: number;
+                                y: number;
+                            };
+                            size: {
+                                width: number;
+                                height: number;
+                            };
+                            text: string;
+                            color: string;
+                        }>;
+                        groups?: Array<{
+                            id: string;
+                            position: {
+                                x: number;
+                                y: number;
+                            };
+                            size: {
+                                width: number;
+                                height: number;
+                            };
+                            label?: string;
+                            nodeIds: Array<string>;
+                        }>;
+                    };
+                };
+                analysis: {
+                    runtime?: 'frontend';
+                    path: string;
+                    language: 'typescript' | 'javascript';
+                    bundleId: string;
+                    entryWorkflowId?: string;
+                    imports?: Array<{
+                        source: string;
+                        module: string;
+                        typeOnly: boolean;
+                        default?: string;
+                        namespace?: string;
+                        named: Array<{
+                            name: string;
+                            alias?: string;
+                            typeOnly: boolean;
+                        }>;
+                    }>;
+                    exports?: Array<{
+                        name: string;
+                        local?: string;
+                        module?: string;
+                        typeOnly: boolean;
+                    }>;
+                    symbols: Array<{
+                        id: string;
+                        name: string;
+                        kind: 'function' | 'workflow' | 'module-workflow' | 'type-alias' | 'interface' | 'enum' | 'constant' | 'variable' | 'class' | 'service';
+                        exported: boolean;
+                        declared?: boolean;
+                        location: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        declaration?: string;
+                        owner?: string;
+                        signature?: {
+                            params?: Array<{
+                                name: string;
+                                type?: string;
+                                optional?: boolean;
+                                rest?: boolean;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                readonly?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                            }>;
+                            returns?: string;
+                            typeText?: string;
+                            decorators?: Array<{
+                                name: string;
+                                text: string;
+                                arguments: Array<string>;
+                            }>;
+                            typeParameters?: Array<string>;
+                            extends?: string;
+                            implements?: Array<string>;
+                            abstract?: boolean;
+                            instances?: Array<string>;
+                            members?: Array<{
+                                name: string;
+                                kind: 'constructor' | 'method' | 'property' | 'getter' | 'setter' | 'accessor' | 'index-signature' | 'static-block';
+                                type?: string;
+                                returns?: string;
+                                parameters?: Array<{
+                                    name: string;
+                                    type?: string;
+                                    optional?: boolean;
+                                    rest?: boolean;
+                                    visibility?: 'public' | 'protected' | 'private' | '#private';
+                                    readonly?: boolean;
+                                    decorators?: Array<{
+                                        name: string;
+                                        text: string;
+                                        arguments: Array<string>;
+                                    }>;
+                                    initializer?: string;
+                                }>;
+                                typeParameters?: Array<string>;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                static?: boolean;
+                                readonly?: boolean;
+                                declare?: boolean;
+                                definite?: boolean;
+                                abstract?: boolean;
+                                optional?: boolean;
+                                override?: boolean;
+                                async?: boolean;
+                                generator?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                                workflowId?: string;
+                            }>;
+                        };
+                        constant?: {
+                            serializable: boolean;
+                            value?: unknown;
+                            declarationKind?: 'const';
+                            mutable?: boolean;
+                            expression?: string;
+                        };
+                        variable?: {
+                            declarationKind: 'let' | 'var';
+                            initializer?: string;
+                        };
+                        service?: {
+                            classSymbol?: string;
+                            methods: Array<string>;
+                            lifecycle: 'invocation' | 'workflow-run' | 'worker';
+                        };
+                        controlFlow?: Array<{
+                            id: string;
+                            kind: 'if' | 'switch' | 'for' | 'while' | 'do-while' | 'for-in' | 'for-of' | 'break' | 'continue' | 'label' | 'try' | 'catch' | 'finally' | 'return' | 'initializer' | 'assignment' | 'expression';
+                            path: Array<number>;
+                            parentId?: string;
+                            location: {
+                                path: string;
+                                start: number;
+                                end: number;
+                                line: number;
+                                column: number;
+                            };
+                            source: string;
+                        }>;
+                    }>;
+                    diagnostics: Array<{
+                        severity: 'error' | 'warning';
+                        code: string;
+                        message: string;
+                        location?: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        typescriptCode?: number;
+                        explanation?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        phase?: 'parse' | 'typecheck' | 'lint' | 'compile' | 'runtime' | 'analysis';
+                        related?: Array<{
+                            message: string;
+                            code?: string;
+                            path?: string;
+                            line?: number;
+                            column?: number;
+                            start?: number;
+                            end?: number;
+                            revision?: string;
+                        }>;
+                        messages?: Array<{
+                            message: string;
+                            code: string;
+                            depth: number;
+                            category?: number;
+                        }>;
+                        truncated?: boolean;
+                    }>;
+                    workflows: Array<{
+                        id: string;
+                        params: Array<string>;
+                        inputs?: {
+                            [key: string]: unknown;
+                        };
+                        nodes: Array<{
+                            instanceId: string;
+                            catalogId: string;
+                            disabled?: boolean;
+                            params?: {
+                                [key: string]: unknown;
+                            };
+                        }>;
+                        edges: Array<{
+                            from: {
+                                node: string;
+                                output?: string;
+                            };
+                            to: {
+                                node: string;
+                                input?: string;
+                            };
+                            kind?: 'data' | 'dependency' | 'control';
+                        }>;
+                        promises: Array<{
+                            node: string;
+                            mode: 'all' | 'allSettled' | 'race' | 'any' | 'reject' | 'settled' | 'then' | 'catch' | 'finally';
+                        }>;
+                        bindings: {
+                            [key: string]: {
+                                [key: string]: {
+                                    kind: 'literal';
+                                    value?: unknown;
+                                    attachments?: {
+                                        [key: string]: string;
+                                    };
+                                } | {
+                                    kind: 'symbol';
+                                    symbol: string;
+                                    value?: unknown;
+                                };
+                            };
+                        };
+                        returns?: {
+                            node: string;
+                            output?: string;
+                        };
+                        returnWrapped?: boolean;
+                        warnings: Array<string>;
+                    }>;
+                    references: Array<{
+                        from: string;
+                        to: string;
+                        kind: 'call' | 'type' | 'value' | 'construct' | 'method';
+                        location: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                    }>;
+                } | null;
+                types: {
+                    [key: string]: {
+                        [key: string]: unknown;
+                    };
+                };
+                document?: unknown;
+                diagnostics: Array<{
+                    severity: 'error' | 'warning';
+                    code: string;
+                    message: string;
+                    location?: {
+                        path: string;
+                        start: number;
+                        end: number;
+                        line: number;
+                        column: number;
+                    };
+                    typescriptCode?: number;
+                    explanation?: {
+                        kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                        coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                        action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                        input?: string;
+                        expected?: string;
+                        provided?: string;
+                        targets: Array<{
+                            workflowId: string;
+                            workflowName: string;
+                            nodeId?: string;
+                            nodeName?: string;
+                            port?: string;
+                            revision?: string;
+                            producerNodeId?: string;
+                            producerName?: string;
+                            outputPort?: string;
+                        }>;
+                    };
+                    phase?: 'parse' | 'typecheck' | 'lint' | 'compile' | 'runtime' | 'analysis';
+                    related?: Array<{
+                        message: string;
+                        code?: string;
+                        path?: string;
+                        line?: number;
+                        column?: number;
+                        start?: number;
+                        end?: number;
+                        revision?: string;
+                    }>;
+                    messages?: Array<{
+                        message: string;
+                        code: string;
+                        depth: number;
+                        category?: number;
+                    }>;
+                    truncated?: boolean;
+                }>;
+            };
+        };
+        workspaceRevision?: string;
+        writable?: boolean;
     };
 };
 
@@ -2334,13 +4989,696 @@ export type PutApiProjectsByProjectIdFilesContentResponses = {
             [key: string]: boolean | number | Array<string>;
         };
         compilerError?: string;
+        checkpoint?: {
+            path: string;
+            revision: string;
+            contextRevision: string;
+            checkpointRevision: string;
+            parserRevision: string;
+            projection: {
+                graphs: {
+                    [key: string]: {
+                        references?: Array<{
+                            nodeId: string;
+                            label: string;
+                            plugin?: string;
+                            workflowId?: string;
+                            source?: {
+                                path: string;
+                                symbol: string;
+                                kind: 'module' | 'function';
+                            };
+                        }>;
+                        revealed?: boolean;
+                        presentation?: {
+                            revision: string;
+                            view?: string;
+                            detail?: {
+                                level?: 'files' | 'workflows' | 'steps';
+                                maxCallDepth?: number;
+                                maxDirectoryDepth?: number;
+                            };
+                            diagnostics: Array<string>;
+                        };
+                        triggers?: Array<{
+                            id: string;
+                            name: string;
+                            enabled?: boolean;
+                            kind: 'cron';
+                            provider: 'native' | 'external';
+                            expression: string;
+                            timezone: string;
+                            input?: {
+                                [key: string]: unknown;
+                            };
+                        } | {
+                            id: string;
+                            name: string;
+                            enabled?: boolean;
+                            kind: 'webhook';
+                            payloadPath?: string;
+                        }>;
+                        id: string;
+                        executionId?: string;
+                        revision: string;
+                        source?: {
+                            path: string;
+                            symbol: string;
+                            kind: 'module' | 'function';
+                            checksum: string;
+                        };
+                        inputs?: {
+                            [key: string]: unknown;
+                        };
+                        types?: {
+                            [key: string]: {
+                                [key: string]: unknown;
+                            };
+                        };
+                        nodes: Array<{
+                            flow?: {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'start';
+                                parameters: {
+                                    [key: string]: string;
+                                };
+                                output: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'literal';
+                                value?: unknown;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'read';
+                                slot: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'declare';
+                                slot: string;
+                                mutable: boolean;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'write';
+                                slot: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'property';
+                                key: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'object';
+                                keys: Array<string>;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'array';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'binary';
+                                operator: '+' | '-' | '*' | '/' | '%' | '===' | '!==' | '<' | '<=' | '>' | '>=';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'unary';
+                                operator: '!' | '-' | '+';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'error';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'log';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'throw';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'return';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'if';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'guard';
+                                recovery?: {
+                                    slot?: string;
+                                    body: Array<string>;
+                                };
+                                cleanup?: Array<string>;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'try';
+                                handler?: string;
+                                finalizer?: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'catch';
+                                slot?: string;
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'finally';
+                            } | {
+                                args?: Array<string>;
+                                body?: Array<string>;
+                                alternate?: Array<string>;
+                                owner?: string;
+                                path?: 'try' | 'catch' | 'finally';
+                                op: 'finish';
+                            };
+                            native?: string;
+                            plugin?: string;
+                            pluginVersion?: string;
+                            pluginUi?: {
+                                apiVersion: '1';
+                                renderers: {
+                                    [key: string]: {
+                                        label: string;
+                                        targets: {
+                                            'node.inspector.inputs'?: string;
+                                        };
+                                    };
+                                };
+                            };
+                            renderer?: string;
+                            hiddenReason?: string;
+                            color?: string;
+                            style?: {
+                                density?: 'compact' | 'comfortable';
+                                radius?: 'sharp' | 'soft';
+                            };
+                            workflowId?: string;
+                            recursion?: Array<{
+                                via: Array<string>;
+                                location: {
+                                    path: string;
+                                    start: number;
+                                    end: number;
+                                    line: number;
+                                    column: number;
+                                };
+                            }>;
+                            role?: 'entry' | 'step';
+                            symbol?: string;
+                            description?: string;
+                            id: string;
+                            language?: string;
+                            icon?: string;
+                            label?: string;
+                            inputs?: {
+                                [key: string]: unknown;
+                            };
+                            outputs?: {
+                                [key: string]: unknown;
+                            };
+                            sourceExpressions?: {
+                                [key: string]: string;
+                            };
+                            sourceScope?: boolean;
+                            sourceFallback?: 'expression' | 'statement' | 'function';
+                            hasSdkClient?: boolean;
+                            kind?: 'function' | 'class' | 'service' | 'const';
+                            setup?: {
+                                [key: string]: unknown;
+                            };
+                            provides?: Array<string>;
+                            sourceLocation?: {
+                                path: string;
+                                line: number;
+                                column: number;
+                            };
+                            serviceLifecycle?: 'invocation' | 'workflow-run' | 'worker';
+                            runtime?: {
+                                timeout_ms?: number;
+                                retries?: number;
+                                retry_backoff_ms?: number;
+                                concurrency?: number;
+                                async?: boolean;
+                            };
+                            command?: string;
+                            disabled?: boolean;
+                            position?: {
+                                x: number;
+                                y: number;
+                            };
+                            scope?: 'user' | 'group' | 'org' | 'public';
+                            owner?: string;
+                            expressions?: {
+                                [key: string]: string;
+                            };
+                            bindings?: {
+                                [key: string]: {
+                                    kind: 'literal';
+                                    value?: unknown;
+                                    attachments?: {
+                                        [key: string]: string;
+                                    };
+                                } | {
+                                    kind: 'symbol';
+                                    symbol: string;
+                                    value?: unknown;
+                                };
+                            };
+                        }>;
+                        edges: Array<{
+                            from: {
+                                node: string;
+                                output?: string;
+                            };
+                            to: {
+                                node: string;
+                                input?: string;
+                            };
+                            kind?: 'data' | 'dependency' | 'control';
+                        }>;
+                        promises?: Array<{
+                            node: string;
+                            mode: 'all' | 'allSettled' | 'race' | 'any' | 'reject' | 'settled' | 'then' | 'catch' | 'finally';
+                        }>;
+                        roots: Array<string>;
+                        terminals: Array<string>;
+                        stickyNotes?: Array<{
+                            id: string;
+                            position: {
+                                x: number;
+                                y: number;
+                            };
+                            size: {
+                                width: number;
+                                height: number;
+                            };
+                            text: string;
+                            color: string;
+                        }>;
+                        groups?: Array<{
+                            id: string;
+                            position: {
+                                x: number;
+                                y: number;
+                            };
+                            size: {
+                                width: number;
+                                height: number;
+                            };
+                            label?: string;
+                            nodeIds: Array<string>;
+                        }>;
+                    };
+                };
+                analysis: {
+                    runtime?: 'frontend';
+                    path: string;
+                    language: 'typescript' | 'javascript';
+                    bundleId: string;
+                    entryWorkflowId?: string;
+                    imports?: Array<{
+                        source: string;
+                        module: string;
+                        typeOnly: boolean;
+                        default?: string;
+                        namespace?: string;
+                        named: Array<{
+                            name: string;
+                            alias?: string;
+                            typeOnly: boolean;
+                        }>;
+                    }>;
+                    exports?: Array<{
+                        name: string;
+                        local?: string;
+                        module?: string;
+                        typeOnly: boolean;
+                    }>;
+                    symbols: Array<{
+                        id: string;
+                        name: string;
+                        kind: 'function' | 'workflow' | 'module-workflow' | 'type-alias' | 'interface' | 'enum' | 'constant' | 'variable' | 'class' | 'service';
+                        exported: boolean;
+                        declared?: boolean;
+                        location: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        declaration?: string;
+                        owner?: string;
+                        signature?: {
+                            params?: Array<{
+                                name: string;
+                                type?: string;
+                                optional?: boolean;
+                                rest?: boolean;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                readonly?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                            }>;
+                            returns?: string;
+                            typeText?: string;
+                            decorators?: Array<{
+                                name: string;
+                                text: string;
+                                arguments: Array<string>;
+                            }>;
+                            typeParameters?: Array<string>;
+                            extends?: string;
+                            implements?: Array<string>;
+                            abstract?: boolean;
+                            instances?: Array<string>;
+                            members?: Array<{
+                                name: string;
+                                kind: 'constructor' | 'method' | 'property' | 'getter' | 'setter' | 'accessor' | 'index-signature' | 'static-block';
+                                type?: string;
+                                returns?: string;
+                                parameters?: Array<{
+                                    name: string;
+                                    type?: string;
+                                    optional?: boolean;
+                                    rest?: boolean;
+                                    visibility?: 'public' | 'protected' | 'private' | '#private';
+                                    readonly?: boolean;
+                                    decorators?: Array<{
+                                        name: string;
+                                        text: string;
+                                        arguments: Array<string>;
+                                    }>;
+                                    initializer?: string;
+                                }>;
+                                typeParameters?: Array<string>;
+                                visibility?: 'public' | 'protected' | 'private' | '#private';
+                                static?: boolean;
+                                readonly?: boolean;
+                                declare?: boolean;
+                                definite?: boolean;
+                                abstract?: boolean;
+                                optional?: boolean;
+                                override?: boolean;
+                                async?: boolean;
+                                generator?: boolean;
+                                decorators?: Array<{
+                                    name: string;
+                                    text: string;
+                                    arguments: Array<string>;
+                                }>;
+                                initializer?: string;
+                                workflowId?: string;
+                            }>;
+                        };
+                        constant?: {
+                            serializable: boolean;
+                            value?: unknown;
+                            declarationKind?: 'const';
+                            mutable?: boolean;
+                            expression?: string;
+                        };
+                        variable?: {
+                            declarationKind: 'let' | 'var';
+                            initializer?: string;
+                        };
+                        service?: {
+                            classSymbol?: string;
+                            methods: Array<string>;
+                            lifecycle: 'invocation' | 'workflow-run' | 'worker';
+                        };
+                        controlFlow?: Array<{
+                            id: string;
+                            kind: 'if' | 'switch' | 'for' | 'while' | 'do-while' | 'for-in' | 'for-of' | 'break' | 'continue' | 'label' | 'try' | 'catch' | 'finally' | 'return' | 'initializer' | 'assignment' | 'expression';
+                            path: Array<number>;
+                            parentId?: string;
+                            location: {
+                                path: string;
+                                start: number;
+                                end: number;
+                                line: number;
+                                column: number;
+                            };
+                            source: string;
+                        }>;
+                    }>;
+                    diagnostics: Array<{
+                        severity: 'error' | 'warning';
+                        code: string;
+                        message: string;
+                        location?: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                        typescriptCode?: number;
+                        explanation?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        phase?: 'parse' | 'typecheck' | 'lint' | 'compile' | 'runtime' | 'analysis';
+                        related?: Array<{
+                            message: string;
+                            code?: string;
+                            path?: string;
+                            line?: number;
+                            column?: number;
+                            start?: number;
+                            end?: number;
+                            revision?: string;
+                        }>;
+                        messages?: Array<{
+                            message: string;
+                            code: string;
+                            depth: number;
+                            category?: number;
+                        }>;
+                        truncated?: boolean;
+                    }>;
+                    workflows: Array<{
+                        id: string;
+                        params: Array<string>;
+                        inputs?: {
+                            [key: string]: unknown;
+                        };
+                        nodes: Array<{
+                            instanceId: string;
+                            catalogId: string;
+                            disabled?: boolean;
+                            params?: {
+                                [key: string]: unknown;
+                            };
+                        }>;
+                        edges: Array<{
+                            from: {
+                                node: string;
+                                output?: string;
+                            };
+                            to: {
+                                node: string;
+                                input?: string;
+                            };
+                            kind?: 'data' | 'dependency' | 'control';
+                        }>;
+                        promises: Array<{
+                            node: string;
+                            mode: 'all' | 'allSettled' | 'race' | 'any' | 'reject' | 'settled' | 'then' | 'catch' | 'finally';
+                        }>;
+                        bindings: {
+                            [key: string]: {
+                                [key: string]: {
+                                    kind: 'literal';
+                                    value?: unknown;
+                                    attachments?: {
+                                        [key: string]: string;
+                                    };
+                                } | {
+                                    kind: 'symbol';
+                                    symbol: string;
+                                    value?: unknown;
+                                };
+                            };
+                        };
+                        returns?: {
+                            node: string;
+                            output?: string;
+                        };
+                        returnWrapped?: boolean;
+                        warnings: Array<string>;
+                    }>;
+                    references: Array<{
+                        from: string;
+                        to: string;
+                        kind: 'call' | 'type' | 'value' | 'construct' | 'method';
+                        location: {
+                            path: string;
+                            start: number;
+                            end: number;
+                            line: number;
+                            column: number;
+                        };
+                    }>;
+                } | null;
+                types: {
+                    [key: string]: {
+                        [key: string]: unknown;
+                    };
+                };
+                document?: unknown;
+                diagnostics: Array<{
+                    severity: 'error' | 'warning';
+                    code: string;
+                    message: string;
+                    location?: {
+                        path: string;
+                        start: number;
+                        end: number;
+                        line: number;
+                        column: number;
+                    };
+                    typescriptCode?: number;
+                    explanation?: {
+                        kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                        coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                        action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                        input?: string;
+                        expected?: string;
+                        provided?: string;
+                        targets: Array<{
+                            workflowId: string;
+                            workflowName: string;
+                            nodeId?: string;
+                            nodeName?: string;
+                            port?: string;
+                            revision?: string;
+                            producerNodeId?: string;
+                            producerName?: string;
+                            outputPort?: string;
+                        }>;
+                    };
+                    phase?: 'parse' | 'typecheck' | 'lint' | 'compile' | 'runtime' | 'analysis';
+                    related?: Array<{
+                        message: string;
+                        code?: string;
+                        path?: string;
+                        line?: number;
+                        column?: number;
+                        start?: number;
+                        end?: number;
+                        revision?: string;
+                    }>;
+                    messages?: Array<{
+                        message: string;
+                        code: string;
+                        depth: number;
+                        category?: number;
+                    }>;
+                    truncated?: boolean;
+                }>;
+            };
+        };
+        workspaceRevision?: string;
+        writable?: boolean;
     };
 };
 
 export type PutApiProjectsByProjectIdFilesContentResponse = PutApiProjectsByProjectIdFilesContentResponses[keyof PutApiProjectsByProjectIdFilesContentResponses];
 
 export type PostApiProjectsByProjectIdCompileData = {
-    body?: never;
+    body: {
+        savedWorkflow?: {
+            workflowId: string;
+            revision: string;
+        };
+    };
     path: {
         projectId: string;
     };
@@ -2353,6 +5691,12 @@ export type PostApiProjectsByProjectIdCompileErrors = {
      * Error
      */
     400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    409: {
         error: string;
     };
 };
@@ -2476,6 +5820,7 @@ export type GetApiProjectsByProjectIdSourceIndexResponses = {
                 name: string;
                 kind: 'function' | 'workflow' | 'module-workflow' | 'type-alias' | 'interface' | 'enum' | 'constant' | 'variable' | 'class' | 'service';
                 exported: boolean;
+                declared?: boolean;
                 location: {
                     path: string;
                     start: number;
@@ -2569,7 +5914,7 @@ export type GetApiProjectsByProjectIdSourceIndexResponses = {
                 };
                 controlFlow?: Array<{
                     id: string;
-                    kind: 'if' | 'switch' | 'for' | 'while' | 'do-while' | 'for-in' | 'for-of' | 'break' | 'continue' | 'label' | 'try' | 'catch' | 'finally';
+                    kind: 'if' | 'switch' | 'for' | 'while' | 'do-while' | 'for-in' | 'for-of' | 'break' | 'continue' | 'label' | 'try' | 'catch' | 'finally' | 'return' | 'initializer' | 'assignment' | 'expression';
                     path: Array<number>;
                     parentId?: string;
                     location: {
@@ -3490,7 +6835,7 @@ export type PostApiProjectsByProjectIdDataTablesByTableIdRowsBulkData = {
                 [key: string]: unknown;
             };
             expectedVersion?: number;
-            operation: 'update';
+            operation: 'update' | 'merge';
             rowId: string;
         } | {
             operation: 'delete';
@@ -3842,6 +7187,73 @@ export type PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsResponses = {
      * Success
      */
     202: {
+        workflowSave?: {
+            saved: true;
+            baseRevision: string;
+            revision: string;
+            corrections?: Array<{
+                op: 'set';
+                path: Array<string | number>;
+                value?: unknown;
+            } | {
+                op: 'remove';
+                path: Array<string | number>;
+            } | {
+                op: 'splice';
+                path: Array<string | number>;
+                start: number;
+                deleteCount: number;
+                values: Array<unknown>;
+            }>;
+            codeRevision?: string;
+            workflowDocumentDelta?: {
+                path: string;
+                baseRevision: string;
+                revision: string;
+                contentChanges: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+                changes: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+                resourceChanges?: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+            };
+        };
         requestHash: string;
         dispatchPending: boolean;
         runId: string;
@@ -3869,6 +7281,31 @@ export type PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsResponses = {
                         retryable?: boolean;
                         details?: unknown;
                         stack?: string;
+                        diagnostic?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        name?: string;
+                        systemCode?: string;
+                        causes?: Array<{
+                            name?: string;
+                            code?: string;
+                        }>;
                     };
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
@@ -3889,6 +7326,23 @@ export type PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsResponses = {
                 revision: string;
                 digest: string;
                 workflowJson: string;
+                input?: {
+                    source: {
+                        project: string;
+                        worktree: string | null;
+                        epoch: string;
+                        sequence: number;
+                        revision: string;
+                        baseline: string;
+                        fileCount: number;
+                        bytes: number;
+                        updatedAt: number;
+                        location: string;
+                    } | null;
+                    nodeVersion: string;
+                    platform: string;
+                    arch: string;
+                };
                 code: Array<{
                     path: string;
                     content: string;
@@ -3905,6 +7359,60 @@ export type PostApiWorkflowsByWorkflowIdTriggersByTriggerIdEventsResponse = Post
 export type PostApiWorkflowsByWorkflowIdExecutionsData = {
     body: {
         idempotencyKey: string;
+        edits?: {
+            baseRevision: string;
+            baseGraphDigest: string;
+            changes: Array<{
+                op: 'set';
+                path: Array<string | number>;
+                value?: unknown;
+            } | {
+                op: 'remove';
+                path: Array<string | number>;
+            } | {
+                op: 'splice';
+                path: Array<string | number>;
+                start: number;
+                deleteCount: number;
+                values: Array<unknown>;
+            }>;
+            operations?: Array<{
+                type: 'add';
+                id: string;
+                catalogId: string;
+                params?: {
+                    [key: string]: unknown;
+                };
+            } | {
+                type: 'update';
+                id: string;
+                patch: {
+                    runtime?: {
+                        timeout_ms?: number;
+                        retries?: number;
+                        retry_backoff_ms?: number;
+                        concurrency?: number;
+                        async?: boolean;
+                    } | null;
+                    presentation?: {
+                        icon?: string;
+                        label?: string;
+                        color?: string;
+                        renderer?: string;
+                        position?: {
+                            x: number;
+                            y: number;
+                        };
+                    } | null;
+                    disabled?: boolean | null;
+                };
+            } | {
+                type: 'duplicate';
+                id: string;
+                sourceId: string;
+            }>;
+        };
+        view?: string;
         baseRevision?: string;
         env?: string;
         input?: {
@@ -3981,6 +7489,73 @@ export type PostApiWorkflowsByWorkflowIdExecutionsResponses = {
      * Success
      */
     202: {
+        workflowSave?: {
+            saved: true;
+            baseRevision: string;
+            revision: string;
+            corrections?: Array<{
+                op: 'set';
+                path: Array<string | number>;
+                value?: unknown;
+            } | {
+                op: 'remove';
+                path: Array<string | number>;
+            } | {
+                op: 'splice';
+                path: Array<string | number>;
+                start: number;
+                deleteCount: number;
+                values: Array<unknown>;
+            }>;
+            codeRevision?: string;
+            workflowDocumentDelta?: {
+                path: string;
+                baseRevision: string;
+                revision: string;
+                contentChanges: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+                changes: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+                resourceChanges?: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+            };
+        };
         requestHash: string;
         dispatchPending: boolean;
         runId: string;
@@ -4008,6 +7583,31 @@ export type PostApiWorkflowsByWorkflowIdExecutionsResponses = {
                         retryable?: boolean;
                         details?: unknown;
                         stack?: string;
+                        diagnostic?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        name?: string;
+                        systemCode?: string;
+                        causes?: Array<{
+                            name?: string;
+                            code?: string;
+                        }>;
                     };
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
@@ -4028,6 +7628,23 @@ export type PostApiWorkflowsByWorkflowIdExecutionsResponses = {
                 revision: string;
                 digest: string;
                 workflowJson: string;
+                input?: {
+                    source: {
+                        project: string;
+                        worktree: string | null;
+                        epoch: string;
+                        sequence: number;
+                        revision: string;
+                        baseline: string;
+                        fileCount: number;
+                        bytes: number;
+                        updatedAt: number;
+                        location: string;
+                    } | null;
+                    nodeVersion: string;
+                    platform: string;
+                    arch: string;
+                };
                 code: Array<{
                     path: string;
                     content: string;
@@ -4046,7 +7663,11 @@ export type GetApiExecutionsByRunIdData = {
     path: {
         runId: string;
     };
-    query?: never;
+    query?: {
+        project?: string;
+        workspace?: string;
+        view?: string;
+    };
     url: '/api/executions/{runId}';
 };
 
@@ -4066,6 +7687,73 @@ export type GetApiExecutionsByRunIdResponses = {
      * Success
      */
     200: {
+        workflowSave?: {
+            saved: true;
+            baseRevision: string;
+            revision: string;
+            corrections?: Array<{
+                op: 'set';
+                path: Array<string | number>;
+                value?: unknown;
+            } | {
+                op: 'remove';
+                path: Array<string | number>;
+            } | {
+                op: 'splice';
+                path: Array<string | number>;
+                start: number;
+                deleteCount: number;
+                values: Array<unknown>;
+            }>;
+            codeRevision?: string;
+            workflowDocumentDelta?: {
+                path: string;
+                baseRevision: string;
+                revision: string;
+                contentChanges: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+                changes: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+                resourceChanges?: Array<{
+                    op: 'set';
+                    path: Array<string | number>;
+                    value?: unknown;
+                } | {
+                    op: 'remove';
+                    path: Array<string | number>;
+                } | {
+                    op: 'splice';
+                    path: Array<string | number>;
+                    start: number;
+                    deleteCount: number;
+                    values: Array<unknown>;
+                }>;
+            };
+        };
         requestHash: string;
         dispatchPending: boolean;
         runId: string;
@@ -4093,6 +7781,31 @@ export type GetApiExecutionsByRunIdResponses = {
                         retryable?: boolean;
                         details?: unknown;
                         stack?: string;
+                        diagnostic?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        name?: string;
+                        systemCode?: string;
+                        causes?: Array<{
+                            name?: string;
+                            code?: string;
+                        }>;
                     };
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
@@ -4113,6 +7826,23 @@ export type GetApiExecutionsByRunIdResponses = {
                 revision: string;
                 digest: string;
                 workflowJson: string;
+                input?: {
+                    source: {
+                        project: string;
+                        worktree: string | null;
+                        epoch: string;
+                        sequence: number;
+                        revision: string;
+                        baseline: string;
+                        fileCount: number;
+                        bytes: number;
+                        updatedAt: number;
+                        location: string;
+                    } | null;
+                    nodeVersion: string;
+                    platform: string;
+                    arch: string;
+                };
                 code: Array<{
                     path: string;
                     content: string;
@@ -4175,6 +7905,109 @@ export type PostApiExecutionsByRunIdCancelResponses = {
 };
 
 export type PostApiExecutionsByRunIdCancelResponse = PostApiExecutionsByRunIdCancelResponses[keyof PostApiExecutionsByRunIdCancelResponses];
+
+export type PostApiWfExecData = {
+    body: {
+        [key: string]: unknown;
+    };
+    headers?: {
+        'idempotency-key'?: string;
+    };
+    path?: never;
+    query: {
+        id: string;
+        project?: string;
+        workspace?: string;
+        env?: string;
+    };
+    url: '/api/wf/exec';
+};
+
+export type PostApiWfExecErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    401: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    402: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    404: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    409: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    413: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    429: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    503: {
+        error: string;
+    };
+};
+
+export type PostApiWfExecError = PostApiWfExecErrors[keyof PostApiWfExecErrors];
+
+export type PostApiWfExecResponses = {
+    /**
+     * Success
+     */
+    200: {
+        runId: string;
+        workflowId: string;
+        status: 'ok' | 'error' | 'partial';
+        outputs: {
+            [key: string]: unknown;
+        };
+        durationMs: number;
+        error?: string;
+        warnings?: Array<string>;
+    };
+    /**
+     * Success
+     */
+    202: {
+        runId: string;
+        workflowId: string;
+        status: 'queued' | 'running';
+    };
+};
+
+export type PostApiWfExecResponse = PostApiWfExecResponses[keyof PostApiWfExecResponses];
 
 export type GetApiWorkflowsData = {
     body?: never;
@@ -4311,6 +8144,8 @@ export type GetApiWorkflowsByWorkflowIdNodeCatalogData = {
         view?: string;
         snapshot?: 'true';
         nativeRevision?: string;
+        includeNative?: 'true' | 'false';
+        localNativeCount?: number;
         q?: string;
         offset?: number;
         limit?: number;
@@ -4334,6 +8169,7 @@ export type GetApiWorkflowsByWorkflowIdNodeCatalogResponses = {
      * Success
      */
     200: {
+        nativeOffset?: number;
         nativeRevision?: string;
         revision?: string;
         complete?: boolean;
@@ -4369,240 +8205,60 @@ export type GetApiWorkflowsByWorkflowIdNodeCatalogResponses = {
 
 export type GetApiWorkflowsByWorkflowIdNodeCatalogResponse = GetApiWorkflowsByWorkflowIdNodeCatalogResponses[keyof GetApiWorkflowsByWorkflowIdNodeCatalogResponses];
 
-export type GetApiWorkflowsByWorkflowIdGraphData = {
-    body?: never;
-    path: {
-        workflowId: string;
-    };
-    query?: {
-        project?: string;
-        workspace?: string;
-        view?: string;
-    };
-    url: '/api/workflows/{workflowId}/graph';
-};
-
-export type GetApiWorkflowsByWorkflowIdGraphErrors = {
-    /**
-     * Error
-     */
-    404: {
-        error: string;
-    };
-};
-
-export type GetApiWorkflowsByWorkflowIdGraphError = GetApiWorkflowsByWorkflowIdGraphErrors[keyof GetApiWorkflowsByWorkflowIdGraphErrors];
-
-export type GetApiWorkflowsByWorkflowIdGraphResponses = {
-    /**
-     * Success
-     */
-    200: {
-        revealed?: boolean;
-        presentation?: {
-            revision: string;
-            view?: string;
-            detail?: {
-                level?: 'files' | 'workflows' | 'steps';
-                maxCallDepth?: number;
-                maxDirectoryDepth?: number;
-            };
-            diagnostics: Array<string>;
-        };
-        triggers?: Array<{
+export type PostApiWorkflowsByWorkflowIdTopologyData = {
+    body: {
+        baseRevision: string;
+        baseGraphDigest: string;
+        changes: Array<{
+            op: 'set';
+            path: Array<string | number>;
+            value?: unknown;
+        } | {
+            op: 'remove';
+            path: Array<string | number>;
+        } | {
+            op: 'splice';
+            path: Array<string | number>;
+            start: number;
+            deleteCount: number;
+            values: Array<unknown>;
+        }>;
+        operations?: Array<{
+            type: 'add';
             id: string;
-            name: string;
-            enabled?: boolean;
-            kind: 'cron';
-            provider: 'native' | 'external';
-            expression: string;
-            timezone: string;
-            input?: {
+            catalogId: string;
+            params?: {
                 [key: string]: unknown;
             };
         } | {
+            type: 'update';
             id: string;
-            name: string;
-            enabled?: boolean;
-            kind: 'webhook';
-            payloadPath?: string;
-        }>;
-        id: string;
-        executionId?: string;
-        revision: string;
-        source?: {
-            path: string;
-            symbol: string;
-            kind: 'module' | 'function';
-            checksum: string;
-        };
-        inputs?: {
-            [key: string]: unknown;
-        };
-        types?: {
-            [key: string]: {
-                [key: string]: unknown;
-            };
-        };
-        nodes: Array<{
-            plugin?: string;
-            pluginVersion?: string;
-            pluginUi?: {
-                apiVersion: '1';
-                renderers: {
-                    [key: string]: {
-                        label: string;
-                        targets: {
-                            [key: string]: string;
-                        };
+            patch: {
+                runtime?: {
+                    timeout_ms?: number;
+                    retries?: number;
+                    retry_backoff_ms?: number;
+                    concurrency?: number;
+                    async?: boolean;
+                } | null;
+                presentation?: {
+                    icon?: string;
+                    label?: string;
+                    color?: string;
+                    renderer?: string;
+                    position?: {
+                        x: number;
+                        y: number;
                     };
-                };
+                } | null;
+                disabled?: boolean | null;
             };
-            renderer?: string;
-            hiddenReason?: string;
-            color?: string;
-            style?: {
-                density?: 'compact' | 'comfortable';
-                radius?: 'sharp' | 'soft';
-            };
-            workflowId?: string;
-            recursion?: Array<{
-                via: Array<string>;
-                location: {
-                    path: string;
-                    start: number;
-                    end: number;
-                    line: number;
-                    column: number;
-                };
-            }>;
-            role?: 'entry' | 'step';
-            symbol?: string;
-            description?: string;
+        } | {
+            type: 'duplicate';
             id: string;
-            language?: string;
-            icon?: string;
-            label?: string;
-            inputs?: {
-                [key: string]: unknown;
-            };
-            outputs?: {
-                [key: string]: unknown;
-            };
-            sourceExpressions?: {
-                [key: string]: string;
-            };
-            sourceScope?: boolean;
-            hasSdkClient?: boolean;
-            kind?: 'function' | 'class' | 'service' | 'const';
-            setup?: {
-                [key: string]: unknown;
-            };
-            provides?: Array<string>;
-            sourceLocation?: {
-                path: string;
-                line: number;
-                column: number;
-            };
-            serviceLifecycle?: 'invocation' | 'workflow-run' | 'worker';
-            runtime?: {
-                timeout_ms?: number;
-                retries?: number;
-                retry_backoff_ms?: number;
-                concurrency?: number;
-                async?: boolean;
-            };
-            command?: string;
-            disabled?: boolean;
-            position?: {
-                x: number;
-                y: number;
-            };
-            scope?: 'user' | 'group' | 'org' | 'public';
-            owner?: string;
-            expressions?: {
-                [key: string]: string;
-            };
-            bindings?: {
-                [key: string]: {
-                    kind: 'literal';
-                    value?: unknown;
-                } | {
-                    kind: 'symbol';
-                    symbol: string;
-                    value?: unknown;
-                };
-            };
+            sourceId: string;
         }>;
-        edges: Array<{
-            from: {
-                node: string;
-                output?: string;
-            };
-            to: {
-                node: string;
-                input?: string;
-            };
-            kind?: 'data' | 'dependency' | 'control';
-        }>;
-        promises?: Array<{
-            node: string;
-            mode: 'all' | 'allSettled' | 'race' | 'any' | 'reject' | 'settled' | 'then' | 'catch' | 'finally';
-        }>;
-        roots: Array<string>;
-        terminals: Array<string>;
-        stickyNotes?: Array<{
-            id: string;
-            position: {
-                x: number;
-                y: number;
-            };
-            size: {
-                width: number;
-                height: number;
-            };
-            text: string;
-            color: string;
-        }>;
-        groups?: Array<{
-            id: string;
-            position: {
-                x: number;
-                y: number;
-            };
-            size: {
-                width: number;
-                height: number;
-            };
-            label?: string;
-            nodeIds: Array<string>;
-        }>;
-    };
-};
-
-export type GetApiWorkflowsByWorkflowIdGraphResponse = GetApiWorkflowsByWorkflowIdGraphResponses[keyof GetApiWorkflowsByWorkflowIdGraphResponses];
-
-export type PostApiWorkflowsByWorkflowIdRunData = {
-    body: {
-        env?: string;
-        input?: unknown;
-    };
-    path: {
-        workflowId: string;
-    };
-    query?: never;
-    url: '/api/workflows/{workflowId}/run';
-};
-
-export type PostApiWorkflowsByWorkflowIdRunResponses = {
-    /**
-     * SSE stream
-     */
-    200: unknown;
-};
-
-export type PostApiWorkflowsByWorkflowIdTopologyData = {
-    body: {
+    } | {
         baseRevision: string;
         entry?: string;
         edges: Array<{
@@ -4627,6 +8283,9 @@ export type PostApiWorkflowsByWorkflowIdTopologyData = {
                 [key: string]: {
                     kind: 'literal';
                     value?: unknown;
+                    attachments?: {
+                        [key: string]: string;
+                    };
                 } | {
                     kind: 'symbol';
                     symbol: string;
@@ -4670,7 +8329,11 @@ export type PostApiWorkflowsByWorkflowIdTopologyData = {
     path: {
         workflowId: string;
     };
-    query?: never;
+    query?: {
+        project?: string;
+        workspace?: string;
+        view?: string;
+    };
     url: '/api/workflows/{workflowId}/topology';
 };
 
@@ -4700,6 +8363,17 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
         conflict: true;
         error: string;
         graph: {
+            references?: Array<{
+                nodeId: string;
+                label: string;
+                plugin?: string;
+                workflowId?: string;
+                source?: {
+                    path: string;
+                    symbol: string;
+                    kind: 'module' | 'function';
+                };
+            }>;
             revealed?: boolean;
             presentation?: {
                 revision: string;
@@ -4747,6 +8421,169 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
                 };
             };
             nodes: Array<{
+                flow?: {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'start';
+                    parameters: {
+                        [key: string]: string;
+                    };
+                    output: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'literal';
+                    value?: unknown;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'read';
+                    slot: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'declare';
+                    slot: string;
+                    mutable: boolean;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'write';
+                    slot: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'property';
+                    key: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'object';
+                    keys: Array<string>;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'array';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'binary';
+                    operator: '+' | '-' | '*' | '/' | '%' | '===' | '!==' | '<' | '<=' | '>' | '>=';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'unary';
+                    operator: '!' | '-' | '+';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'error';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'log';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'throw';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'return';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'if';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'guard';
+                    recovery?: {
+                        slot?: string;
+                        body: Array<string>;
+                    };
+                    cleanup?: Array<string>;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'try';
+                    handler?: string;
+                    finalizer?: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'catch';
+                    slot?: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'finally';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'finish';
+                };
+                native?: string;
                 plugin?: string;
                 pluginVersion?: string;
                 pluginUi?: {
@@ -4755,7 +8592,7 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
                         [key: string]: {
                             label: string;
                             targets: {
-                                [key: string]: string;
+                                'node.inspector.inputs'?: string;
                             };
                         };
                     };
@@ -4795,6 +8632,7 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
                     [key: string]: string;
                 };
                 sourceScope?: boolean;
+                sourceFallback?: 'expression' | 'statement' | 'function';
                 hasSdkClient?: boolean;
                 kind?: 'function' | 'class' | 'service' | 'const';
                 setup?: {
@@ -4829,6 +8667,9 @@ export type PostApiWorkflowsByWorkflowIdTopologyErrors = {
                     [key: string]: {
                         kind: 'literal';
                         value?: unknown;
+                        attachments?: {
+                            [key: string]: string;
+                        };
                     } | {
                         kind: 'symbol';
                         symbol: string;
@@ -4891,7 +8732,84 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
      * Success
      */
     200: {
+        saved: true;
+        baseRevision: string;
+        revision: string;
+        corrections?: Array<{
+            op: 'set';
+            path: Array<string | number>;
+            value?: unknown;
+        } | {
+            op: 'remove';
+            path: Array<string | number>;
+        } | {
+            op: 'splice';
+            path: Array<string | number>;
+            start: number;
+            deleteCount: number;
+            values: Array<unknown>;
+        }>;
+        codeRevision?: string;
+        workflowDocumentDelta?: {
+            path: string;
+            baseRevision: string;
+            revision: string;
+            contentChanges: Array<{
+                op: 'set';
+                path: Array<string | number>;
+                value?: unknown;
+            } | {
+                op: 'remove';
+                path: Array<string | number>;
+            } | {
+                op: 'splice';
+                path: Array<string | number>;
+                start: number;
+                deleteCount: number;
+                values: Array<unknown>;
+            }>;
+            changes: Array<{
+                op: 'set';
+                path: Array<string | number>;
+                value?: unknown;
+            } | {
+                op: 'remove';
+                path: Array<string | number>;
+            } | {
+                op: 'splice';
+                path: Array<string | number>;
+                start: number;
+                deleteCount: number;
+                values: Array<unknown>;
+            }>;
+            resourceChanges?: Array<{
+                op: 'set';
+                path: Array<string | number>;
+                value?: unknown;
+            } | {
+                op: 'remove';
+                path: Array<string | number>;
+            } | {
+                op: 'splice';
+                path: Array<string | number>;
+                start: number;
+                deleteCount: number;
+                values: Array<unknown>;
+            }>;
+        };
+    } | {
         graph: {
+            references?: Array<{
+                nodeId: string;
+                label: string;
+                plugin?: string;
+                workflowId?: string;
+                source?: {
+                    path: string;
+                    symbol: string;
+                    kind: 'module' | 'function';
+                };
+            }>;
             revealed?: boolean;
             presentation?: {
                 revision: string;
@@ -4939,6 +8857,169 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
                 };
             };
             nodes: Array<{
+                flow?: {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'start';
+                    parameters: {
+                        [key: string]: string;
+                    };
+                    output: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'literal';
+                    value?: unknown;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'read';
+                    slot: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'declare';
+                    slot: string;
+                    mutable: boolean;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'write';
+                    slot: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'property';
+                    key: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'object';
+                    keys: Array<string>;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'array';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'binary';
+                    operator: '+' | '-' | '*' | '/' | '%' | '===' | '!==' | '<' | '<=' | '>' | '>=';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'unary';
+                    operator: '!' | '-' | '+';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'error';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'log';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'throw';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'return';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'if';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'guard';
+                    recovery?: {
+                        slot?: string;
+                        body: Array<string>;
+                    };
+                    cleanup?: Array<string>;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'try';
+                    handler?: string;
+                    finalizer?: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'catch';
+                    slot?: string;
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'finally';
+                } | {
+                    args?: Array<string>;
+                    body?: Array<string>;
+                    alternate?: Array<string>;
+                    owner?: string;
+                    path?: 'try' | 'catch' | 'finally';
+                    op: 'finish';
+                };
+                native?: string;
                 plugin?: string;
                 pluginVersion?: string;
                 pluginUi?: {
@@ -4947,7 +9028,7 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
                         [key: string]: {
                             label: string;
                             targets: {
-                                [key: string]: string;
+                                'node.inspector.inputs'?: string;
                             };
                         };
                     };
@@ -4987,6 +9068,7 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
                     [key: string]: string;
                 };
                 sourceScope?: boolean;
+                sourceFallback?: 'expression' | 'statement' | 'function';
                 hasSdkClient?: boolean;
                 kind?: 'function' | 'class' | 'service' | 'const';
                 setup?: {
@@ -5021,6 +9103,9 @@ export type PostApiWorkflowsByWorkflowIdTopologyResponses = {
                     [key: string]: {
                         kind: 'literal';
                         value?: unknown;
+                        attachments?: {
+                            [key: string]: string;
+                        };
                     } | {
                         kind: 'symbol';
                         symbol: string;
@@ -5129,6 +9214,90 @@ export type PostApiWorkflowsByWorkflowIdValidateConnectionResponses = {
 
 export type PostApiWorkflowsByWorkflowIdValidateConnectionResponse = PostApiWorkflowsByWorkflowIdValidateConnectionResponses[keyof PostApiWorkflowsByWorkflowIdValidateConnectionResponses];
 
+export type GetApiMarketplacePublicationsData = {
+    body?: never;
+    path?: never;
+    query: {
+        scope: string;
+        status?: 'pending' | 'published' | 'rejected' | 'cancelled';
+        countOnly?: 'true' | 'false';
+        product?: 'plugin' | 'app';
+        mine?: 'true' | 'false';
+        search?: string;
+        sort?: 'recent' | 'oldest' | 'name' | 'name_desc';
+        offset?: number;
+    };
+    url: '/api/marketplace/publications';
+};
+
+export type GetApiMarketplacePublicationsErrors = {
+    /**
+     * Error
+     */
+    400: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    401: {
+        error: string;
+    };
+    /**
+     * Error
+     */
+    403: {
+        error: string;
+    };
+};
+
+export type GetApiMarketplacePublicationsError = GetApiMarketplacePublicationsErrors[keyof GetApiMarketplacePublicationsErrors];
+
+export type GetApiMarketplacePublicationsResponses = {
+    /**
+     * Success
+     */
+    200: {
+        items: Array<{
+            id: string;
+            product: 'plugin' | 'app';
+            productId: string;
+            name: string;
+            slug: string;
+            version: string;
+            workspace: {
+                kind: 'user' | 'team' | 'org' | 'public';
+                id: string;
+            };
+            distribution: 'user' | 'team' | 'org' | 'public';
+            submittedBy: string;
+            status: 'pending' | 'published' | 'rejected' | 'cancelled';
+            revision: number;
+            createdAt: string;
+            updatedAt: string;
+            steps: Array<{
+                ordinal: number;
+                scope: {
+                    kind: 'user' | 'team' | 'org' | 'public';
+                    id: string;
+                };
+                status: 'pending' | 'approved' | 'bypassed' | 'rejected';
+                decidedBy: string | null;
+                reason: string | null;
+                decidedAt: string | null;
+            }>;
+        }>;
+        total: number;
+        pending: number;
+        unread: number;
+        throughSequence: number;
+        offset: number;
+        limit: number;
+    };
+};
+
+export type GetApiMarketplacePublicationsResponse = GetApiMarketplacePublicationsResponses[keyof GetApiMarketplacePublicationsResponses];
+
 export type GetApiMarketplaceData = {
     body?: never;
     path?: never;
@@ -5185,6 +9354,7 @@ export type GetApiMarketplaceResponses = {
             category?: string;
             tags: Array<string>;
             nodes?: Array<{
+                catalogId?: string;
                 id: string;
                 sourceLanguage?: string;
                 execution?: {
@@ -5211,9 +9381,14 @@ export type GetApiMarketplaceResponses = {
                 implementation?: {
                     module: string;
                     export: string;
+                    methodPath?: Array<string>;
                     parameters: Array<string>;
+                    rest?: string;
+                    outputStreams?: Array<Array<string>>;
                 };
+                client?: string;
                 icon?: string;
+                inheritPluginIcon?: boolean;
                 label?: string;
                 symbol?: string;
                 description?: string;
@@ -5264,6 +9439,22 @@ export type GetApiMarketplacePluginsByIdData = {
         id: string;
     };
     query?: {
+        exports?: 'page';
+        exportArchiveSha256?: string;
+        exportKind?: 'class' | 'service' | 'value' | 'type';
+        exportQ?: string;
+        exportSort?: 'name' | 'id';
+        exportDirection?: 'asc' | 'desc';
+        exportOffset?: number;
+        exportLimit?: number;
+        exportId?: string;
+        exportMembers?: 'page';
+        memberParentId?: string;
+        memberQ?: string;
+        memberKind?: 'constructor' | 'method' | 'property';
+        memberOffset?: number;
+        memberLimit?: number;
+        exportSignature?: 'available' | 'missing';
         nodes?: 'none' | 'page';
         kind?: 'action' | 'trigger';
         sort?: 'name' | 'id';
@@ -5295,6 +9486,7 @@ export type GetApiMarketplacePluginsByIdResponses = {
      * Success
      */
     200: {
+        catalogId?: string;
         installedAt?: number | null;
         id: string;
         name: string;
@@ -5311,6 +9503,7 @@ export type GetApiMarketplacePluginsByIdResponses = {
         category?: string;
         tags: Array<string>;
         nodes: Array<{
+            catalogId?: string;
             id: string;
             sourceLanguage?: string;
             execution?: {
@@ -5337,9 +9530,14 @@ export type GetApiMarketplacePluginsByIdResponses = {
             implementation?: {
                 module: string;
                 export: string;
+                methodPath?: Array<string>;
                 parameters: Array<string>;
+                rest?: string;
+                outputStreams?: Array<Array<string>>;
             };
+            client?: string;
             icon?: string;
+            inheritPluginIcon?: boolean;
             label?: string;
             symbol?: string;
             description?: string;
@@ -5368,6 +9566,134 @@ export type GetApiMarketplacePluginsByIdResponses = {
             trigger?: boolean;
             env?: Array<string>;
         }>;
+        exportPage?: {
+            items: Array<{
+                id: string;
+                name: string;
+                kind: 'node' | 'class' | 'service' | 'value' | 'type';
+                signature?: string;
+                declaration?: string;
+                typeView?: {
+                    kind: 'interface' | 'type' | 'enum';
+                    fields: Array<{
+                        path: Array<string>;
+                        typeName: string;
+                        optional?: boolean;
+                        typeId?: string;
+                    }>;
+                };
+                declarationKind?: 'interface' | 'type' | 'enum';
+                memberCount?: number;
+            }>;
+            total: number;
+            offset: number;
+            limit: number;
+            selected?: {
+                id: string;
+                name: string;
+                kind: 'node' | 'class' | 'service' | 'value' | 'type';
+                signature?: string;
+                declaration?: string;
+                typeView?: {
+                    kind: 'interface' | 'type' | 'enum';
+                    fields: Array<{
+                        path: Array<string>;
+                        typeName: string;
+                        optional?: boolean;
+                        typeId?: string;
+                    }>;
+                };
+                declarationKind?: 'interface' | 'type' | 'enum';
+                memberCount?: number;
+            };
+            members?: {
+                items: Array<{
+                    id: string;
+                    exportId: string;
+                    parentId?: string;
+                    name: string;
+                    kind: 'constructor' | 'method' | 'property';
+                    overload: number;
+                    parameters: Array<{
+                        id: string;
+                        name: string;
+                        typeName: string;
+                        typeId?: string;
+                        optional: boolean;
+                        rest: boolean;
+                    }>;
+                    typeName: string;
+                    typeId?: string;
+                    optional: boolean;
+                    static: boolean;
+                    memberCount?: number;
+                }>;
+                total: number;
+                offset: number;
+                limit: number;
+            };
+        };
+        sdkExports?: Array<{
+            name: string;
+            kind: 'type' | 'constant' | 'function' | 'client';
+            type: string;
+            members?: Array<{
+                path: Array<string>;
+                kind: 'constructor' | 'method' | 'property';
+                overload?: number;
+                parameters: Array<{
+                    typeName: string;
+                    namedType?: boolean;
+                    name: string;
+                    optional: boolean;
+                    rest: boolean;
+                }>;
+                typeName: string;
+                namedType?: boolean;
+                optional?: boolean;
+                static?: boolean;
+            }>;
+            declaration?: string;
+            typeView?: {
+                kind: 'interface' | 'type' | 'enum';
+                fields: Array<{
+                    path: Array<string>;
+                    typeName: string;
+                    optional?: boolean;
+                    typeId?: string;
+                }>;
+            };
+            schema?: {
+                [key: string]: unknown;
+            };
+        }>;
+        clients?: {
+            [key: string]: {
+                module: string;
+                export: string;
+                construction: 'call' | 'new';
+                overload?: number;
+                async: boolean;
+                parameters: Array<{
+                    name: string;
+                    required: boolean;
+                    rest: boolean;
+                    schema: {
+                        [key: string]: unknown;
+                    };
+                }>;
+                inputs: {
+                    [key: string]: unknown;
+                };
+                label?: string;
+                fields?: {
+                    [key: string]: {
+                        label: string;
+                        secret?: boolean;
+                    };
+                };
+            };
+        };
         nextVersionOffset?: number | null;
         library?: {
             format: 1;
@@ -5450,6 +9776,7 @@ export type GetApiPluginsResponses = {
      * Success
      */
     200: Array<{
+        catalogId?: string;
         installedAt?: number | null;
         id: string;
         name: string;
@@ -5466,6 +9793,7 @@ export type GetApiPluginsResponses = {
         category?: string;
         tags: Array<string>;
         nodes?: Array<{
+            catalogId?: string;
             id: string;
             sourceLanguage?: string;
             execution?: {
@@ -5492,9 +9820,14 @@ export type GetApiPluginsResponses = {
             implementation?: {
                 module: string;
                 export: string;
+                methodPath?: Array<string>;
                 parameters: Array<string>;
+                rest?: string;
+                outputStreams?: Array<Array<string>>;
             };
+            client?: string;
             icon?: string;
+            inheritPluginIcon?: boolean;
             label?: string;
             symbol?: string;
             description?: string;
@@ -5553,6 +9886,7 @@ export type GetApiPluginsSearchResponses = {
             categories: Array<string>;
         };
         items: Array<{
+            catalogId?: string;
             installedAt?: number | null;
             id: string;
             name: string;
@@ -5569,6 +9903,7 @@ export type GetApiPluginsSearchResponses = {
             category?: string;
             tags: Array<string>;
             nodes?: Array<{
+                catalogId?: string;
                 id: string;
                 sourceLanguage?: string;
                 execution?: {
@@ -5595,9 +9930,14 @@ export type GetApiPluginsSearchResponses = {
                 implementation?: {
                     module: string;
                     export: string;
+                    methodPath?: Array<string>;
                     parameters: Array<string>;
+                    rest?: string;
+                    outputStreams?: Array<Array<string>>;
                 };
+                client?: string;
                 icon?: string;
+                inheritPluginIcon?: boolean;
                 label?: string;
                 symbol?: string;
                 description?: string;
@@ -5661,6 +10001,7 @@ export type GetApiPluginsNodesResponses = {
      */
     200: {
         items: Array<{
+            catalogId?: string;
             id: string;
             sourceLanguage?: string;
             execution?: {
@@ -5687,9 +10028,14 @@ export type GetApiPluginsNodesResponses = {
             implementation?: {
                 module: string;
                 export: string;
+                methodPath?: Array<string>;
                 parameters: Array<string>;
+                rest?: string;
+                outputStreams?: Array<Array<string>>;
             };
+            client?: string;
             icon?: string;
+            inheritPluginIcon?: boolean;
             label?: string;
             symbol?: string;
             description?: string;
@@ -5732,6 +10078,22 @@ export type GetApiPluginsByPluginIdData = {
         pluginId: string;
     };
     query?: {
+        exports?: 'page';
+        exportArchiveSha256?: string;
+        exportKind?: 'class' | 'service' | 'value' | 'type';
+        exportQ?: string;
+        exportSort?: 'name' | 'id';
+        exportDirection?: 'asc' | 'desc';
+        exportOffset?: number;
+        exportLimit?: number;
+        exportId?: string;
+        exportMembers?: 'page';
+        memberParentId?: string;
+        memberQ?: string;
+        memberKind?: 'constructor' | 'method' | 'property';
+        memberOffset?: number;
+        memberLimit?: number;
+        exportSignature?: 'available' | 'missing';
         nodes?: 'none' | 'page';
         kind?: 'action' | 'trigger';
         sort?: 'name' | 'id';
@@ -5760,6 +10122,7 @@ export type GetApiPluginsByPluginIdResponses = {
      * Success
      */
     200: {
+        catalogId?: string;
         installedAt?: number | null;
         id: string;
         name: string;
@@ -5776,6 +10139,7 @@ export type GetApiPluginsByPluginIdResponses = {
         category?: string;
         tags: Array<string>;
         nodes: Array<{
+            catalogId?: string;
             id: string;
             sourceLanguage?: string;
             execution?: {
@@ -5802,9 +10166,14 @@ export type GetApiPluginsByPluginIdResponses = {
             implementation?: {
                 module: string;
                 export: string;
+                methodPath?: Array<string>;
                 parameters: Array<string>;
+                rest?: string;
+                outputStreams?: Array<Array<string>>;
             };
+            client?: string;
             icon?: string;
+            inheritPluginIcon?: boolean;
             label?: string;
             symbol?: string;
             description?: string;
@@ -5834,6 +10203,134 @@ export type GetApiPluginsByPluginIdResponses = {
             trigger?: boolean;
             env?: Array<string>;
         }>;
+        exportPage?: {
+            items: Array<{
+                id: string;
+                name: string;
+                kind: 'node' | 'class' | 'service' | 'value' | 'type';
+                signature?: string;
+                declaration?: string;
+                typeView?: {
+                    kind: 'interface' | 'type' | 'enum';
+                    fields: Array<{
+                        path: Array<string>;
+                        typeName: string;
+                        optional?: boolean;
+                        typeId?: string;
+                    }>;
+                };
+                declarationKind?: 'interface' | 'type' | 'enum';
+                memberCount?: number;
+            }>;
+            total: number;
+            offset: number;
+            limit: number;
+            selected?: {
+                id: string;
+                name: string;
+                kind: 'node' | 'class' | 'service' | 'value' | 'type';
+                signature?: string;
+                declaration?: string;
+                typeView?: {
+                    kind: 'interface' | 'type' | 'enum';
+                    fields: Array<{
+                        path: Array<string>;
+                        typeName: string;
+                        optional?: boolean;
+                        typeId?: string;
+                    }>;
+                };
+                declarationKind?: 'interface' | 'type' | 'enum';
+                memberCount?: number;
+            };
+            members?: {
+                items: Array<{
+                    id: string;
+                    exportId: string;
+                    parentId?: string;
+                    name: string;
+                    kind: 'constructor' | 'method' | 'property';
+                    overload: number;
+                    parameters: Array<{
+                        id: string;
+                        name: string;
+                        typeName: string;
+                        typeId?: string;
+                        optional: boolean;
+                        rest: boolean;
+                    }>;
+                    typeName: string;
+                    typeId?: string;
+                    optional: boolean;
+                    static: boolean;
+                    memberCount?: number;
+                }>;
+                total: number;
+                offset: number;
+                limit: number;
+            };
+        };
+        sdkExports?: Array<{
+            name: string;
+            kind: 'type' | 'constant' | 'function' | 'client';
+            type: string;
+            members?: Array<{
+                path: Array<string>;
+                kind: 'constructor' | 'method' | 'property';
+                overload?: number;
+                parameters: Array<{
+                    typeName: string;
+                    namedType?: boolean;
+                    name: string;
+                    optional: boolean;
+                    rest: boolean;
+                }>;
+                typeName: string;
+                namedType?: boolean;
+                optional?: boolean;
+                static?: boolean;
+            }>;
+            declaration?: string;
+            typeView?: {
+                kind: 'interface' | 'type' | 'enum';
+                fields: Array<{
+                    path: Array<string>;
+                    typeName: string;
+                    optional?: boolean;
+                    typeId?: string;
+                }>;
+            };
+            schema?: {
+                [key: string]: unknown;
+            };
+        }>;
+        clients?: {
+            [key: string]: {
+                module: string;
+                export: string;
+                construction: 'call' | 'new';
+                overload?: number;
+                async: boolean;
+                parameters: Array<{
+                    name: string;
+                    required: boolean;
+                    rest: boolean;
+                    schema: {
+                        [key: string]: unknown;
+                    };
+                }>;
+                inputs: {
+                    [key: string]: unknown;
+                };
+                label?: string;
+                fields?: {
+                    [key: string]: {
+                        label: string;
+                        secret?: boolean;
+                    };
+                };
+            };
+        };
         library?: {
             format: 1;
             entry: 'library/index.js';
@@ -5927,6 +10424,169 @@ export type PostApiPluginsByPluginIdNodesByNodeIdAddResponses = {
     200: {
         instanceId: string;
         node: {
+            flow?: {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'start';
+                parameters: {
+                    [key: string]: string;
+                };
+                output: string;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'literal';
+                value?: unknown;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'read';
+                slot: string;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'declare';
+                slot: string;
+                mutable: boolean;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'write';
+                slot: string;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'property';
+                key: string;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'object';
+                keys: Array<string>;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'array';
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'binary';
+                operator: '+' | '-' | '*' | '/' | '%' | '===' | '!==' | '<' | '<=' | '>' | '>=';
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'unary';
+                operator: '!' | '-' | '+';
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'error';
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'log';
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'throw';
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'return';
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'if';
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'guard';
+                recovery?: {
+                    slot?: string;
+                    body: Array<string>;
+                };
+                cleanup?: Array<string>;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'try';
+                handler?: string;
+                finalizer?: string;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'catch';
+                slot?: string;
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'finally';
+            } | {
+                args?: Array<string>;
+                body?: Array<string>;
+                alternate?: Array<string>;
+                owner?: string;
+                path?: 'try' | 'catch' | 'finally';
+                op: 'finish';
+            };
+            native?: string;
             plugin?: string;
             pluginVersion?: string;
             pluginUi?: {
@@ -5935,7 +10595,7 @@ export type PostApiPluginsByPluginIdNodesByNodeIdAddResponses = {
                     [key: string]: {
                         label: string;
                         targets: {
-                            [key: string]: string;
+                            'node.inspector.inputs'?: string;
                         };
                     };
                 };
@@ -5975,6 +10635,7 @@ export type PostApiPluginsByPluginIdNodesByNodeIdAddResponses = {
                 [key: string]: string;
             };
             sourceScope?: boolean;
+            sourceFallback?: 'expression' | 'statement' | 'function';
             hasSdkClient?: boolean;
             kind?: 'function' | 'class' | 'service' | 'const';
             setup?: {
@@ -6009,6 +10670,9 @@ export type PostApiPluginsByPluginIdNodesByNodeIdAddResponses = {
                 [key: string]: {
                     kind: 'literal';
                     value?: unknown;
+                    attachments?: {
+                        [key: string]: string;
+                    };
                 } | {
                     kind: 'symbol';
                     symbol: string;
@@ -6377,12 +11041,14 @@ export type GetApiWorkspacesResponses = {
                 invite: boolean;
                 editPermissions: boolean;
             };
+            submitPlugin?: boolean;
             publishPlugin?: boolean;
             teams: Array<{
                 kind: 'team';
                 id: string;
                 name: string;
                 role: string;
+                submitPlugin?: boolean;
                 publishPlugin?: boolean;
             }>;
         }>;
@@ -6405,6 +11071,8 @@ export type GetApiWorkspacesResponses = {
                 runWorkflow?: boolean;
                 readData?: boolean;
                 editData?: boolean;
+                readVariables?: boolean;
+                editVariables?: boolean;
                 readTasks?: boolean;
                 runAssistant?: boolean;
                 configureAssistant?: boolean;
@@ -6421,6 +11089,7 @@ export type GetApiWorkspacesResponses = {
                 readBilling?: boolean;
                 searchWorkspace?: boolean;
                 manageProjectKeys?: boolean;
+                manageIntegrations?: boolean;
             };
         } | null;
     };
@@ -6451,6 +11120,7 @@ export type GetApiWorkspacesPermissionsResponses = {
      * Success
      */
     200: {
+        userId?: string | null;
         role: string;
         actions: Array<string>;
         permissions: {
@@ -6461,6 +11131,7 @@ export type GetApiWorkspacesPermissionsResponses = {
             computerId: string;
             checkoutId: string;
         };
+        deniedFeatures?: Array<string>;
         capabilities: {
             collaboration: boolean;
         };

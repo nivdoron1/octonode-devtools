@@ -1,5 +1,11 @@
 // Generated from packages/ui-extensions/src/app/types.ts. Do not edit; run the Octonode SDK sync.
-import type { AppSession } from "../types.js";
+import type { AppSession } from "../types";
+import type {
+  GetApiAppsRuntimeSessionResponse,
+  PostApiAppsRuntimeDataData,
+  PostApiAppsRuntimeExecutionsData,
+  PostApiAppsRuntimeExecutionsResponse,
+} from "./gen";
 
 export type HostedAppState = {
   embedded: boolean;
@@ -18,23 +24,9 @@ export type HostedApp = {
   dispose(): void;
 };
 
-export type AppGrant = {
-  action: "projects:read" | "data:read" | "data:write" | "workflows:run" | "read:project" | "write:project";
-  projectId: string;
-};
+export type AppGrant = GetApiAppsRuntimeSessionResponse["grants"][number];
 
-export type AppExecution = {
-  requestHash: string;
-  dispatchPending: boolean;
-  runId: string;
-  workflowId: string;
-  status: "queued" | "running" | "succeeded" | "failed" | "cancelled" | "interrupted";
-  submittedAt: number;
-  startedAt?: number;
-  finishedAt?: number;
-  result?: unknown;
-  error?: string;
-};
+export type AppExecution = PostApiAppsRuntimeExecutionsResponse;
 
 export type AppProject = {
   id: string;
@@ -87,4 +79,16 @@ export type AppBridgeResponse = {
   error?: string;
 };
 
-export type AppRequest = <T>(operation: Exclude<AppBridgeRequest["operation"], "host">, body?: unknown) => Promise<T>;
+export type AppRequestBody = PostApiAppsRuntimeDataData["body"] | PostApiAppsRuntimeExecutionsData["body"];
+
+export type AppRequest = <T>(
+  operation: Exclude<AppBridgeRequest["operation"], "host">,
+  body?: AppRequestBody,
+) => Promise<T>;
+
+export type AppContextVerified = Pick<
+  GetApiAppsRuntimeSessionResponse,
+  "appId" | "installationId" | "userId" | "workspace" | "grants"
+>;
+
+export type ConnectAppServerOptions = { appId: string; baseUrl: string; projectId?: string };

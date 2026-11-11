@@ -1,6 +1,6 @@
 // Generated from packages/ui-extensions/src/app/OctonodeAppProvider/OctonodeAppProvider.types.ts. Do not edit; run the Octonode SDK sync.
 import type { ReactNode } from "react";
-import type { AppContext, HostedApp, HostedAppNavigationItem, HostedAppState } from "../types.js";
+import type { AppContext, HostedApp, HostedAppNavigationItem, HostedAppState } from "../types";
 
 export type OctonodeAppProviderProps = {
   children: ReactNode;

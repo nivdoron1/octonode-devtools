@@ -8,7 +8,7 @@ import type {
   ServiceDefinition,
   ServiceMethodSpec,
   SetupNodeDefinition,
-} from "../types.js";
+} from "../types";
 
 /**
  * Declare a node: package its handler, id, and the JSON Schema for its I/O. The

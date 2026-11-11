@@ -220,9 +220,6 @@ const run = await project.wf.run("sync-products", { source: "app" });
 
 A developer-hosted backend can use the same project API after verifying the browser's app bearer. Configure the API URL and your own registered app ID on the server; never accept either from an incoming request.
 
-The server helper supports Node 20.19+, 22.12+, or newer (`^20.19.0 || >=22.12.0`).
-Your backend code and dependencies must also support the selected runtime.
-
 ```ts
 import { connectAppServer } from "@octonodes/ui-extensions/app/server";
 

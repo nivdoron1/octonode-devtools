@@ -10,15 +10,15 @@ Read one workflow graph and revision.
 
 - Effect: **read**.
 - Scope: workspace plus selected project. Pass `projectId` explicitly for a multi-project connection; otherwise the connection default applies.
-- Backend request: `GET /api/workflows/{workflowId}/graph`. The MCP server fills the URL path, query, and body from the flat arguments below; do not send an HTTP request yourself.
+- Backend request: `GET /api/projects/{projectId}/catalog/document`. The MCP server fills the URL path, query, and body from the flat arguments below; do not send an HTTP request yourself.
 - Result: the upstream response in `data`. Check MCP `isError` and JSON `ok`.
 
 ## Arguments
 
 | Name | Requirement | Routed to | Type and constraints |
 | --- | --- | --- | --- |
-| `projectId` | optional | project scope | string; Project target; required for architecture-scoped sessions. |
-| `workflowId` | required | URL path | string |
+| `projectId` | optional | URL path | string; Project target; required for architecture-scoped sessions. |
+| `workflowId` | required | tool argument | string |
 
 Bundled input schema (use the live tool schema if the deployed server differs):
 

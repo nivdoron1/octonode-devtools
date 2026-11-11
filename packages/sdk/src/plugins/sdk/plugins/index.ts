@@ -2,7 +2,7 @@
 export { defineNode } from "./define/node";
 export { definePlugin, startPlugin } from "../plugin";
 export { runNode, processRequest, NodeError } from "../runner";
-export { validate } from "../json/schema";
+export { validate } from "../json";
 export type { JsonSchema, ValidationError } from "../types";
 export type { PluginDefinition, PluginOptions, PluginHandlers } from "../types";
 export type { PluginNodeOptions, SchemaValue } from "./types";
@@ -31,4 +31,4 @@ export {
 
 export type { PluginScope } from "../../schema/plugin-sdk";
 
-export { NODE_ENGINE_RANGE, NODE_BUILD_TARGET } from "../constants.js";
+export { NODE_ENGINE_RANGE, NODE_BUILD_TARGET } from "../constants";

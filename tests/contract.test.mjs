@@ -40,7 +40,7 @@ test("every generated CLI operation forwards its public HTTP contract", async ()
     for (const [path, methods] of Object.entries(document.paths)) {
       for (const [method, operation] of Object.entries(methods)) {
         if (!operation.operationId) continue;
-        const segments = path.split("/").filter(Boolean).map((segment) => segment.replace(/[{}]/g, "").replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()));
+        const segments = path.split("/").filter(Boolean).map((segment) => segment.replace(/[{}]/g, "").replace(/[-.]([a-z])/g, (_, letter) => letter.toUpperCase()));
         const [, resource, ...rest] = segments;
         // The documented store route is exposed under the projects API namespace.
         const command = resource === "store" && rest[0] === "projects"

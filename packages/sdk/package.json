@@ -1,6 +1,6 @@
 {
   "name": "@octonodes/sdk",
-  "version": "0.2.40",
+  "version": "0.2.41",
   "description": "Octonode API client and code-first plugin SDK.",
   "license": "MIT",
   "repository": {
@@ -50,7 +50,7 @@
   },
   "scripts": {
     "gen": "openapi-ts && node ../../scripts/generated/format.mjs",
-    "prepack": "tsc -b"
+    "prepack": "node ../../scripts/typescript/build.mjs -b"
   },
   "dependencies": {
     "typescript": "5.9.3",
