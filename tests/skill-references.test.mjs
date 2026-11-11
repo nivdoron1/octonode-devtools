@@ -1,23 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { test } from "node:test";
-import { referenceRoot, renderReferences } from "../scripts/gen-mcp-skill-reference.mjs";
-
-test("skill MCP references stay exact with hosted registrations", () => {
-  const expected = renderReferences();
-  function list(directory, prefix = "") {
-    return readdirSync(directory).flatMap((name) => {
-      const file = new URL(name, directory);
-      return statSync(file).isDirectory()
-        ? list(new URL(`${name}/`, directory), `${prefix}${name}/`)
-        : [`${prefix}${name}`];
-    });
-  }
-  assert.deepEqual(list(referenceRoot).sort(), [...expected.keys()].sort());
-  for (const [name, content] of expected) {
-    assert.equal(readFileSync(new URL(name, referenceRoot), "utf8"), content, `Run yarn gen:mcp-skills: ${name}`);
-  }
-});
 
 test("bundled skill Markdown links resolve inside the skill bundle", () => {
   const root = new URL("../octonode-plugin/skills/", import.meta.url);

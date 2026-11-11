@@ -88,12 +88,11 @@ and
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | [`@octonodes/sdk`](packages/sdk/README.md)                     | A TypeScript or JavaScript application needs typed Octonode API calls.                |
 | [`@octonodes/cli`](packages/cli/README.md)                     | A developer, script, or CI job needs the same API from a terminal.                    |
-| [`@octonodes/mcp`](packages/mcp/README.md)                     | An MCP client needs remote Octonode tools hosted on Cloudflare Workers.               |
 | [`@octonodes/ui-extensions`](packages/ui-extensions/README.md) | Plugin inspector layouts and installed app launchers, panels, tabs, views, and actions. |
 
 The three npm consumer packages are `@octonodes/sdk`, `@octonodes/cli`, and
-`@octonodes/ui-extensions`. `@octonodes/mcp` is the hosted Worker, not a package
-to install with npm. The main repository's `@octonode/*` workspaces are internal
+`@octonodes/ui-extensions`. Remote MCP tools are served by the hosted endpoint
+`https://mcp.octonode.dev/mcp`; its service is not part of this repository. The main repository's `@octonode/*` workspaces are internal
 engine packages and are not interchangeable with the public SDK.
 
 Only compiled `dist` files, packaged CLI runtime files, package metadata, and package README files are published. Source,

@@ -1,6 +1,5 @@
 node_modules/
 .yarn/install-state.gz
-.wrangler/
 dist/
 *.tsbuildinfo
 *.log

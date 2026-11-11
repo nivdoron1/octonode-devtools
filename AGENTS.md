@@ -1,17 +1,11 @@
 # AGENTS.md
 
-## Hosted MCP synchronization
+## Hosted services
 
-When the generated SDK or `packages/sdk/openapi.json` adds, removes, or changes an operation that
-belongs in the hosted MCP surface, update the MCP registration in the same change:
+This public repository ships client tooling only: the SDK, CLI, UI extensions, installers, and the
+AI-client plugin bundle. Cloudflare Workers and other hosted services, including the MCP server at
+`https://mcp.octonode.dev/mcp`, live in the private Octonode repository. Do not add Worker or
+deployment configuration here.
 
-1. Add or update its canonical definition in `packages/mcp/src/constants.ts`, including the tool
-   name, description, input schema, HTTP method/path, query/body mapping, scope, and risk metadata.
-2. Keep all registration inside `registerMcp` in `packages/mcp/src/register-mcp.ts`; do not register
-   tools directly in the Worker entrypoint.
-3. Update `tests/mcp.test.mjs` so the expected hosted tool list and request forwarding stay exact.
-4. Run `yarn gen`, `yarn build`, and `yarn test`. Also run
-   `yarn workspace @octonodes/mcp deploy:check` when the MCP package changes.
-
-Keep shared declarations in `types.ts`, shared constants in `constants.ts`, and the Worker routing
-only in `index.ts`.
+`octonode-plugin/skills/octonode-connect/references/mcp/` is generated from the hosted MCP
+registrations by the Octonode SDK sync workflow. Do not edit it by hand.

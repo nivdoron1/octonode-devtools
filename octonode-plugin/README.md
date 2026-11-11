@@ -11,7 +11,7 @@ One agent plugin with shared skills for Claude Code, Codex, Cursor, and Agent Pl
 `plugin.json` is the portable manifest; `.codex-plugin/plugin.json` and
 `.claude-plugin/plugin.json` provide host compatibility. Every host reads the same `skills/` directory.
 This bundle contains instructions. The CLI performs local plugin operations; the hosted MCP server
-in `packages/mcp` performs live project operations. No additional runtime ships here.
+at `https://mcp.octonode.dev/mcp` performs live project operations. No additional runtime ships here.
 
 Each `SKILL.md` is a router. Detailed procedures live in that skill's `references/` directory.
 Shared [MCP calling rules](skills/octonode-connect/references/mcp-calling.md) and the
@@ -20,8 +20,8 @@ and are linked from the authoring and management routers. Read only the referenc
 Copy all three skill folders together, preserving their names and reference files, so sibling links work.
 
 The MCP index leads to short category routers; each tool has its own reference page with input
-schema, example call, scope, risk, and argument routing. They are generated from `packages/mcp/src/constants.ts` by
-`yarn gen:mcp-skills` (also included in `yarn gen`). `yarn test` checks reference drift and local links.
+schema, example call, scope, risk, and argument routing. They are generated from the hosted MCP registrations by the
+Octonode SDK sync; do not edit them here. `yarn test` checks local links.
 
 ## Load the skills
 

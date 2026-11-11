@@ -7,13 +7,10 @@
     "packages/*"
   ],
   "scripts": {
-    "gen": "yarn workspace @octonodes/sdk gen && yarn gen:mcp-skills",
-    "gen:mcp-skills": "node scripts/gen-mcp-skill-reference.mjs",
+    "gen": "yarn workspace @octonodes/sdk gen",
     "build": "tsc -b",
     "test": "node --test tests/*.test.mjs",
     "check": "yarn gen && yarn build && yarn test",
-    "mcp:dev": "yarn workspace @octonodes/mcp dev",
-    "mcp:deploy": "yarn workspace @octonodes/mcp deploy",
     "test:pack": "node -e \"require('node:fs').mkdirSync('artifacts/runtime', { recursive: true })\" && yarn workspace @octonodes/sdk pack --out ../../artifacts/runtime/sdk.tgz && yarn workspace @octonodes/ui-extensions pack --out ../../artifacts/runtime/ui-extensions.tgz && yarn workspace @octonodes/cli pack --out ../../artifacts/runtime/cli.tgz",
     "test:install": "node scripts/runtime/installation.mjs",
     "test:runtime": "node scripts/runtime/test.mjs",
