@@ -1,6 +1,6 @@
 # Hosted MCP operation index
 
-Generated from `packages/mcp/src/constants.ts`; run `yarn gen:mcp-skills` after changing registrations.
+Generated from the hosted MCP registrations by the Octonode SDK sync. Do not edit these files directly.
 
 Read the [shared calling contract](../mcp-calling.md), then open one category router and one operation page.
 
