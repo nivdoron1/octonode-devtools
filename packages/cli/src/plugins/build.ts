@@ -84,6 +84,10 @@ export async function buildPlugins(entry?: string, root = process.cwd()): Promis
       throw new Error("Self-hosted app assets must be deployed by the developer, not packaged");
     return [buildApp(manifestDefinition, directory(root, "dist/plugins"), root)];
   }
+  if (!manifestDefinition.nodes.length && manifestDefinition.serviceDiscovery) {
+    if (definition.assets.length) throw new Error("Discovery-only plugins cannot include packaged assets");
+    return [buildApp(manifestDefinition, directory(root, "dist/plugins"), root)];
+  }
   const workflowNodes = definition.nodes.filter((node) => node.workflow);
   if (workflowNodes.length && workflowNodes.length !== definition.nodes.length)
     throw new Error("Keep exported workflows in their own plugin package");

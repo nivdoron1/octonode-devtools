@@ -6,7 +6,7 @@ import { BUILD_RECORD } from "./constants";
 import { fileHash, safePath, pluginFiles, verifyBuild } from "./artifact";
 import type { PluginBuild } from "./types";
 
-/** Package declared static browser assets; apps never include a backend runtime. */
+/** Package the manifest and any declared app extensions. */
 export function buildApp(manifest: PluginManifest, output: string, root: string): PluginBuild {
   const stage = mkdtempSync(join(output, ".app-"));
   const artifact = join(stage, "artifact");
