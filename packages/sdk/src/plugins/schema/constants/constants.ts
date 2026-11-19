@@ -2,6 +2,8 @@
 export const PLUGIN_SCHEMA_VERSION = "1" as const;
 export const PLUGIN_DEFAULT_LICENSE = "MIT" as const;
 export const PROJECT_JOB_PROTOCOL = "octonode.project-job.v1";
+/** Set to `pending` on a Compile answer whose workspace backup still runs as a separate job step. */
+export const PROJECT_JOB_PROTECTION_HEADER = "x-octonode-protection";
 export const COMMUNITY_MEDIA_IMAGE_BYTES = 8 * 1024 * 1024;
 export const COMMUNITY_MEDIA_VIDEO_BYTES = 20 * 1024 * 1024;
 export const COMMUNITY_MEDIA_BODY_BYTES = Math.ceil(COMMUNITY_MEDIA_VIDEO_BYTES / 3) * 4 + 4096;
@@ -423,3 +425,7 @@ export const ICON_NAMES = [
 ] as const;
 
 export const GITLAB_PATH_URL = "https://gitlab.com/";
+
+/** The largest native catalog page; generated platform operations are never sent all at once. */
+export const NATIVE_CATALOG_QUERY_LIMIT = 1000;
+export const NATIVE_CATALOG_DEFAULT_LIMIT = 100;

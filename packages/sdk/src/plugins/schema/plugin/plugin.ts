@@ -2,6 +2,7 @@
 import { PluginTypeView } from "./view";
 import { NpmSdkMember } from "./members";
 import { PluginContents } from "./contents";
+import { PluginServiceDiscoveryRule } from "./discovery";
 import { z } from "zod";
 import { AppDefinition } from "../app/app";
 import { PLUGIN_SCHEMA_VERSION } from "../constants";
@@ -273,7 +274,7 @@ export const PluginManifest = z
     name: z.string(),
     version: z.string(),
     description: z.string().optional(),
-    /** Implementation authority; absent on legacy artifacts. */
+    /** Implementation authority; absent on hand-written and OpenAPI-generated plugins. */
     source: PluginImplementationSource.optional(),
     library: z
       .object({
@@ -286,6 +287,7 @@ export const PluginManifest = z
       .optional(),
     /** Source-level inventory shown alongside executable nodes in plugin overviews. */
     contents: PluginContents.optional(),
+    serviceDiscovery: z.array(PluginServiceDiscoveryRule).min(1).max(64).optional(),
     icon: IconValue.optional(),
     inheritPluginIcon: z.boolean().optional(),
     author: z.string().optional(),
@@ -399,7 +401,7 @@ export const PluginManifest = z
           issue(["nodes", index], "Every v2 node requires sourceLanguage and input/output schemas");
         if (node.command || node.language)
           issue(["nodes", index], "v2 nodes use execution and sourceLanguage instead of command and language");
-      } else if (!node.command.trim()) issue(["nodes", index, "command"], "Legacy nodes require a command");
+      } else if (!node.command.trim()) issue(["nodes", index, "command"], "Schema v1 nodes require a command");
       if (ids.has(node.id))
         ctx.addIssue({ code: "custom", path: ["nodes", index, "id"], message: "node IDs must be unique" });
       ids.add(node.id);

@@ -51,7 +51,7 @@ export const SelfHostedAppExtension = z
   .strict();
 export type SelfHostedAppExtension = z.infer<typeof SelfHostedAppExtension>;
 
-/** Legacy releases retain their original validation and serialized defaults. */
+/** Self-hosted (apiVersion 1) apps keep their own validation and serialized defaults. */
 export const SelfHostedApp = z
   .object({
     apiVersion: z.literal("1"),

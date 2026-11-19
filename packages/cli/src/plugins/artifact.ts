@@ -110,7 +110,7 @@ export function verifyBuild(directory: string): VerifyBuildResult {
     return { manifest, files };
   }
   if (manifest.schemaVersion === "2") {
-    if (record.runtime) throw new Error("v2 plugins cannot use the legacy prepared Node.js runtime");
+    if (record.runtime) throw new Error("v2 plugins cannot use the v1 prepared Node.js runtime");
     const assets = new Set(expected);
     for (const node of manifest.nodes) {
       if (!node.execution || !assets.has(node.execution.entrypoint.path))

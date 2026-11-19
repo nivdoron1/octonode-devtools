@@ -207,6 +207,59 @@ export type PostApiAppsRuntimeExecutionsResponses = {
                     note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
                 };
             };
+            visits?: Array<{
+                node: string;
+                phase: 'statement' | 'condition' | 'update' | 'exit';
+                iterations: Array<{
+                    loop: string;
+                    iteration: number;
+                }>;
+                id: string;
+                invocationId: string;
+                sequence: number;
+                record: {
+                    status: 'ok' | 'error' | 'skipped';
+                    attempts: number;
+                    durationMs: number;
+                    command?: string;
+                    inputs?: unknown;
+                    outputs?: unknown;
+                    error?: {
+                        code: string;
+                        message: string;
+                        retryable?: boolean;
+                        details?: unknown;
+                        stack?: string;
+                        diagnostic?: {
+                            kind: 'typeMismatch' | 'missingInput' | 'missingMember' | 'unsupported' | 'unavailable' | 'codeIssue' | 'syntax' | 'arguments' | 'nullability' | 'generics' | 'classes' | 'modules' | 'declarations' | 'configuration' | 'controlFlow' | 'async' | 'jsx' | 'unused' | 'deprecated' | 'lint' | 'unsafeOperation' | 'validation' | 'serialization' | 'timeout' | 'cancelled' | 'permission' | 'network' | 'resource' | 'runtimeError' | 'missingReference' | 'range' | 'decorators' | 'operators' | 'informational' | 'improvement';
+                            coverage?: 'specific' | 'family' | 'fallback' | 'internal';
+                            action?: 'reviewSource' | 'reviewTypes' | 'reviewInput' | 'reviewOutput' | 'reviewImports' | 'reviewSettings' | 'reviewAsync' | 'checkDependencies' | 'checkPermissions' | 'checkService' | 'reviewNode' | 'checkResources';
+                            input?: string;
+                            expected?: string;
+                            provided?: string;
+                            targets: Array<{
+                                workflowId: string;
+                                workflowName: string;
+                                nodeId?: string;
+                                nodeName?: string;
+                                port?: string;
+                                revision?: string;
+                                producerNodeId?: string;
+                                producerName?: string;
+                                outputPort?: string;
+                            }>;
+                        };
+                        name?: string;
+                        systemCode?: string;
+                        causes?: Array<{
+                            name?: string;
+                            code?: string;
+                        }>;
+                    };
+                    note?: 'disabled' | 'pinned' | 'upstream-of-from-node';
+                };
+                completion?: 'normal' | 'break' | 'continue' | 'return' | 'throw';
+            }>;
             outputs: {
                 [key: string]: unknown;
             };

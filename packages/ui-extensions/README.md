@@ -112,7 +112,7 @@ See `examples/workspace-notice-app` and `docs/plugins.md` in the engine reposito
 
 This is also the SDK selected for Octonode's developer-authored app extensions. The engine owns its source in `packages/ui-extensions`; `scripts/sync/plugin/sdk.mjs` synchronizes the public package into `octonode-devtools`. Do not create a second app UI SDK.
 
-Legacy self-hosted app targets are `app.page` and `workspace.block`. Register an app in Partner → Apps, publish its HTTPS application URL and extension bundle digests, then install it from Studio → App marketplace. Plugin marketplace remains dedicated to executable node plugins.
+Self-hosted app targets are `app.page` and `workspace.block`. Register an app in Partner → Apps, publish its HTTPS application URL and extension bundle digests, then install it from Studio → App marketplace. Plugin marketplace remains dedicated to executable node plugins.
 
 App controls use the same host design system: `NodeForm`, `Section`, `Button`, and `TextField`. `InputField` is only for node inspectors. Bundle your entry as a browser IIFE, including React and this SDK, and call `startExtension`:
 
@@ -201,7 +201,7 @@ action changes clear it. See the [development guide](https://playbook.octonodes.
 
 The hosted page's HTML and static assets must be loadable before the iframe session handoff. Keep private workspace content behind the provider and private backend routes behind bearer verification. App backends can use `POST /api/apps/runtime/data` for consented project/table/row operations, and `POST /api/apps/runtime/executions` on the cloud gateway for workflow execution. Neither credential works as a general Octonode login. See the engine’s `docs/plugins.md` for request examples.
 
-For legacy self-hosted v1 apps, developers host app backends and versioned extension assets themselves. Octonode-managed app hosting is reserved for a future paid service. App release metadata pins extension URLs and SHA-256 digests; publishing metadata does not deploy a backend.
+For self-hosted v1 apps, developers host app backends and versioned extension assets themselves. Octonode-managed app hosting is reserved for a future paid service. App release metadata pins extension URLs and SHA-256 digests; publishing metadata does not deploy a backend.
 
 ## Project and workflow access
 

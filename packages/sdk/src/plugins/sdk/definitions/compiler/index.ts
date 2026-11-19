@@ -273,6 +273,9 @@ export function compileDefinition(
         parameters: [],
         customization: {
           description: npm.descriptor.description,
+          label: npm.descriptor.generic
+            ? "Call package export"
+            : (npm.descriptor.methodPath?.at(-1) ?? npm.descriptor.exportName),
           ...(npm.descriptor.client ? { client: npm.descriptor.exportName } : {}),
           ...customization,
         },

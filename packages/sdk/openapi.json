@@ -945,6 +945,288 @@
                             ]
                           }
                         },
+                        "visits": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "node": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "phase": {
+                                "type": "string",
+                                "enum": [
+                                  "statement",
+                                  "condition",
+                                  "update",
+                                  "exit"
+                                ]
+                              },
+                              "iterations": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "loop": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "iteration": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "loop",
+                                    "iteration"
+                                  ]
+                                },
+                                "maxItems": 64
+                              },
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "invocationId": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "sequence": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "record": {
+                                "type": "object",
+                                "properties": {
+                                  "status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "ok",
+                                      "error",
+                                      "skipped"
+                                    ]
+                                  },
+                                  "attempts": {
+                                    "type": "number"
+                                  },
+                                  "durationMs": {
+                                    "type": "number"
+                                  },
+                                  "command": {
+                                    "type": "string"
+                                  },
+                                  "inputs": {},
+                                  "outputs": {},
+                                  "error": {
+                                    "type": "object",
+                                    "properties": {
+                                      "code": {
+                                        "type": "string"
+                                      },
+                                      "message": {
+                                        "type": "string"
+                                      },
+                                      "retryable": {
+                                        "type": "boolean"
+                                      },
+                                      "details": {},
+                                      "stack": {
+                                        "type": "string"
+                                      },
+                                      "diagnostic": {
+                                        "type": "object",
+                                        "properties": {
+                                          "kind": {
+                                            "type": "string",
+                                            "enum": [
+                                              "typeMismatch",
+                                              "missingInput",
+                                              "missingMember",
+                                              "unsupported",
+                                              "unavailable",
+                                              "codeIssue",
+                                              "syntax",
+                                              "arguments",
+                                              "nullability",
+                                              "generics",
+                                              "classes",
+                                              "modules",
+                                              "declarations",
+                                              "configuration",
+                                              "controlFlow",
+                                              "async",
+                                              "jsx",
+                                              "unused",
+                                              "deprecated",
+                                              "lint",
+                                              "unsafeOperation",
+                                              "validation",
+                                              "serialization",
+                                              "timeout",
+                                              "cancelled",
+                                              "permission",
+                                              "network",
+                                              "resource",
+                                              "runtimeError",
+                                              "missingReference",
+                                              "range",
+                                              "decorators",
+                                              "operators",
+                                              "informational",
+                                              "improvement"
+                                            ]
+                                          },
+                                          "coverage": {
+                                            "type": "string",
+                                            "enum": [
+                                              "specific",
+                                              "family",
+                                              "fallback",
+                                              "internal"
+                                            ]
+                                          },
+                                          "action": {
+                                            "type": "string",
+                                            "enum": [
+                                              "reviewSource",
+                                              "reviewTypes",
+                                              "reviewInput",
+                                              "reviewOutput",
+                                              "reviewImports",
+                                              "reviewSettings",
+                                              "reviewAsync",
+                                              "checkDependencies",
+                                              "checkPermissions",
+                                              "checkService",
+                                              "reviewNode",
+                                              "checkResources"
+                                            ]
+                                          },
+                                          "input": {
+                                            "type": "string"
+                                          },
+                                          "expected": {
+                                            "type": "string"
+                                          },
+                                          "provided": {
+                                            "type": "string"
+                                          },
+                                          "targets": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "object",
+                                              "properties": {
+                                                "workflowId": {
+                                                  "type": "string"
+                                                },
+                                                "workflowName": {
+                                                  "type": "string"
+                                                },
+                                                "nodeId": {
+                                                  "type": "string"
+                                                },
+                                                "nodeName": {
+                                                  "type": "string"
+                                                },
+                                                "port": {
+                                                  "type": "string"
+                                                },
+                                                "revision": {
+                                                  "type": "string"
+                                                },
+                                                "producerNodeId": {
+                                                  "type": "string"
+                                                },
+                                                "producerName": {
+                                                  "type": "string"
+                                                },
+                                                "outputPort": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "workflowId",
+                                                "workflowName"
+                                              ]
+                                            },
+                                            "maxItems": 100
+                                          }
+                                        },
+                                        "required": [
+                                          "kind",
+                                          "targets"
+                                        ]
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "systemCode": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "name": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            },
+                                            "code": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            }
+                                          }
+                                        },
+                                        "maxItems": 8
+                                      }
+                                    },
+                                    "required": [
+                                      "code",
+                                      "message"
+                                    ]
+                                  },
+                                  "note": {
+                                    "type": "string",
+                                    "enum": [
+                                      "disabled",
+                                      "pinned",
+                                      "upstream-of-from-node"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "status",
+                                  "attempts",
+                                  "durationMs"
+                                ]
+                              },
+                              "completion": {
+                                "type": "string",
+                                "enum": [
+                                  "normal",
+                                  "break",
+                                  "continue",
+                                  "return",
+                                  "throw"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "node",
+                              "phase",
+                              "iterations",
+                              "id",
+                              "invocationId",
+                              "sequence",
+                              "record"
+                            ]
+                          },
+                          "maxItems": 10000
+                        },
                         "outputs": {
                           "type": "object",
                           "additionalProperties": {}
@@ -3792,6 +4074,288 @@
                                   ]
                                 }
                               },
+                              "visits": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "node": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "phase": {
+                                      "type": "string",
+                                      "enum": [
+                                        "statement",
+                                        "condition",
+                                        "update",
+                                        "exit"
+                                      ]
+                                    },
+                                    "iterations": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "loop": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          },
+                                          "iteration": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          }
+                                        },
+                                        "required": [
+                                          "loop",
+                                          "iteration"
+                                        ]
+                                      },
+                                      "maxItems": 64
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "invocationId": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    },
+                                    "sequence": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    },
+                                    "record": {
+                                      "type": "object",
+                                      "properties": {
+                                        "status": {
+                                          "type": "string",
+                                          "enum": [
+                                            "ok",
+                                            "error",
+                                            "skipped"
+                                          ]
+                                        },
+                                        "attempts": {
+                                          "type": "number"
+                                        },
+                                        "durationMs": {
+                                          "type": "number"
+                                        },
+                                        "command": {
+                                          "type": "string"
+                                        },
+                                        "inputs": {},
+                                        "outputs": {},
+                                        "error": {
+                                          "type": "object",
+                                          "properties": {
+                                            "code": {
+                                              "type": "string"
+                                            },
+                                            "message": {
+                                              "type": "string"
+                                            },
+                                            "retryable": {
+                                              "type": "boolean"
+                                            },
+                                            "details": {},
+                                            "stack": {
+                                              "type": "string"
+                                            },
+                                            "diagnostic": {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "typeMismatch",
+                                                    "missingInput",
+                                                    "missingMember",
+                                                    "unsupported",
+                                                    "unavailable",
+                                                    "codeIssue",
+                                                    "syntax",
+                                                    "arguments",
+                                                    "nullability",
+                                                    "generics",
+                                                    "classes",
+                                                    "modules",
+                                                    "declarations",
+                                                    "configuration",
+                                                    "controlFlow",
+                                                    "async",
+                                                    "jsx",
+                                                    "unused",
+                                                    "deprecated",
+                                                    "lint",
+                                                    "unsafeOperation",
+                                                    "validation",
+                                                    "serialization",
+                                                    "timeout",
+                                                    "cancelled",
+                                                    "permission",
+                                                    "network",
+                                                    "resource",
+                                                    "runtimeError",
+                                                    "missingReference",
+                                                    "range",
+                                                    "decorators",
+                                                    "operators",
+                                                    "informational",
+                                                    "improvement"
+                                                  ]
+                                                },
+                                                "coverage": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "specific",
+                                                    "family",
+                                                    "fallback",
+                                                    "internal"
+                                                  ]
+                                                },
+                                                "action": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "reviewSource",
+                                                    "reviewTypes",
+                                                    "reviewInput",
+                                                    "reviewOutput",
+                                                    "reviewImports",
+                                                    "reviewSettings",
+                                                    "reviewAsync",
+                                                    "checkDependencies",
+                                                    "checkPermissions",
+                                                    "checkService",
+                                                    "reviewNode",
+                                                    "checkResources"
+                                                  ]
+                                                },
+                                                "input": {
+                                                  "type": "string"
+                                                },
+                                                "expected": {
+                                                  "type": "string"
+                                                },
+                                                "provided": {
+                                                  "type": "string"
+                                                },
+                                                "targets": {
+                                                  "type": "array",
+                                                  "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "workflowId": {
+                                                        "type": "string"
+                                                      },
+                                                      "workflowName": {
+                                                        "type": "string"
+                                                      },
+                                                      "nodeId": {
+                                                        "type": "string"
+                                                      },
+                                                      "nodeName": {
+                                                        "type": "string"
+                                                      },
+                                                      "port": {
+                                                        "type": "string"
+                                                      },
+                                                      "revision": {
+                                                        "type": "string"
+                                                      },
+                                                      "producerNodeId": {
+                                                        "type": "string"
+                                                      },
+                                                      "producerName": {
+                                                        "type": "string"
+                                                      },
+                                                      "outputPort": {
+                                                        "type": "string"
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "workflowId",
+                                                      "workflowName"
+                                                    ]
+                                                  },
+                                                  "maxItems": 100
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "targets"
+                                              ]
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            },
+                                            "systemCode": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            },
+                                            "causes": {
+                                              "type": "array",
+                                              "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "name": {
+                                                    "type": "string",
+                                                    "maxLength": 200
+                                                  },
+                                                  "code": {
+                                                    "type": "string",
+                                                    "maxLength": 200
+                                                  }
+                                                }
+                                              },
+                                              "maxItems": 8
+                                            }
+                                          },
+                                          "required": [
+                                            "code",
+                                            "message"
+                                          ]
+                                        },
+                                        "note": {
+                                          "type": "string",
+                                          "enum": [
+                                            "disabled",
+                                            "pinned",
+                                            "upstream-of-from-node"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "status",
+                                        "attempts",
+                                        "durationMs"
+                                      ]
+                                    },
+                                    "completion": {
+                                      "type": "string",
+                                      "enum": [
+                                        "normal",
+                                        "break",
+                                        "continue",
+                                        "return",
+                                        "throw"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "node",
+                                    "phase",
+                                    "iterations",
+                                    "id",
+                                    "invocationId",
+                                    "sequence",
+                                    "record"
+                                  ]
+                                },
+                                "maxItems": 10000
+                              },
                               "outputs": {
                                 "type": "object",
                                 "additionalProperties": {}
@@ -4413,6 +4977,288 @@
                               "durationMs"
                             ]
                           }
+                        },
+                        "visits": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "node": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "phase": {
+                                "type": "string",
+                                "enum": [
+                                  "statement",
+                                  "condition",
+                                  "update",
+                                  "exit"
+                                ]
+                              },
+                              "iterations": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "loop": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "iteration": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "loop",
+                                    "iteration"
+                                  ]
+                                },
+                                "maxItems": 64
+                              },
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "invocationId": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "sequence": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "record": {
+                                "type": "object",
+                                "properties": {
+                                  "status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "ok",
+                                      "error",
+                                      "skipped"
+                                    ]
+                                  },
+                                  "attempts": {
+                                    "type": "number"
+                                  },
+                                  "durationMs": {
+                                    "type": "number"
+                                  },
+                                  "command": {
+                                    "type": "string"
+                                  },
+                                  "inputs": {},
+                                  "outputs": {},
+                                  "error": {
+                                    "type": "object",
+                                    "properties": {
+                                      "code": {
+                                        "type": "string"
+                                      },
+                                      "message": {
+                                        "type": "string"
+                                      },
+                                      "retryable": {
+                                        "type": "boolean"
+                                      },
+                                      "details": {},
+                                      "stack": {
+                                        "type": "string"
+                                      },
+                                      "diagnostic": {
+                                        "type": "object",
+                                        "properties": {
+                                          "kind": {
+                                            "type": "string",
+                                            "enum": [
+                                              "typeMismatch",
+                                              "missingInput",
+                                              "missingMember",
+                                              "unsupported",
+                                              "unavailable",
+                                              "codeIssue",
+                                              "syntax",
+                                              "arguments",
+                                              "nullability",
+                                              "generics",
+                                              "classes",
+                                              "modules",
+                                              "declarations",
+                                              "configuration",
+                                              "controlFlow",
+                                              "async",
+                                              "jsx",
+                                              "unused",
+                                              "deprecated",
+                                              "lint",
+                                              "unsafeOperation",
+                                              "validation",
+                                              "serialization",
+                                              "timeout",
+                                              "cancelled",
+                                              "permission",
+                                              "network",
+                                              "resource",
+                                              "runtimeError",
+                                              "missingReference",
+                                              "range",
+                                              "decorators",
+                                              "operators",
+                                              "informational",
+                                              "improvement"
+                                            ]
+                                          },
+                                          "coverage": {
+                                            "type": "string",
+                                            "enum": [
+                                              "specific",
+                                              "family",
+                                              "fallback",
+                                              "internal"
+                                            ]
+                                          },
+                                          "action": {
+                                            "type": "string",
+                                            "enum": [
+                                              "reviewSource",
+                                              "reviewTypes",
+                                              "reviewInput",
+                                              "reviewOutput",
+                                              "reviewImports",
+                                              "reviewSettings",
+                                              "reviewAsync",
+                                              "checkDependencies",
+                                              "checkPermissions",
+                                              "checkService",
+                                              "reviewNode",
+                                              "checkResources"
+                                            ]
+                                          },
+                                          "input": {
+                                            "type": "string"
+                                          },
+                                          "expected": {
+                                            "type": "string"
+                                          },
+                                          "provided": {
+                                            "type": "string"
+                                          },
+                                          "targets": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "object",
+                                              "properties": {
+                                                "workflowId": {
+                                                  "type": "string"
+                                                },
+                                                "workflowName": {
+                                                  "type": "string"
+                                                },
+                                                "nodeId": {
+                                                  "type": "string"
+                                                },
+                                                "nodeName": {
+                                                  "type": "string"
+                                                },
+                                                "port": {
+                                                  "type": "string"
+                                                },
+                                                "revision": {
+                                                  "type": "string"
+                                                },
+                                                "producerNodeId": {
+                                                  "type": "string"
+                                                },
+                                                "producerName": {
+                                                  "type": "string"
+                                                },
+                                                "outputPort": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "workflowId",
+                                                "workflowName"
+                                              ]
+                                            },
+                                            "maxItems": 100
+                                          }
+                                        },
+                                        "required": [
+                                          "kind",
+                                          "targets"
+                                        ]
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "systemCode": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "name": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            },
+                                            "code": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            }
+                                          }
+                                        },
+                                        "maxItems": 8
+                                      }
+                                    },
+                                    "required": [
+                                      "code",
+                                      "message"
+                                    ]
+                                  },
+                                  "note": {
+                                    "type": "string",
+                                    "enum": [
+                                      "disabled",
+                                      "pinned",
+                                      "upstream-of-from-node"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "status",
+                                  "attempts",
+                                  "durationMs"
+                                ]
+                              },
+                              "completion": {
+                                "type": "string",
+                                "enum": [
+                                  "normal",
+                                  "break",
+                                  "continue",
+                                  "return",
+                                  "throw"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "node",
+                              "phase",
+                              "iterations",
+                              "id",
+                              "invocationId",
+                              "sequence",
+                              "record"
+                            ]
+                          },
+                          "maxItems": 10000
                         },
                         "outputs": {
                           "type": "object",
@@ -9301,6 +10147,9 @@
                                                 "returns": {
                                                   "type": "string"
                                                 },
+                                                "async": {
+                                                  "type": "boolean"
+                                                },
                                                 "typeText": {
                                                   "type": "string"
                                                 },
@@ -10724,13 +11573,6 @@
                               "type": "string"
                             }
                           },
-                          "readOnly": {
-                            "type": "boolean",
-                            "const": true
-                          },
-                          "legacyLanguage": {
-                            "type": "string"
-                          },
                           "local": {
                             "type": "boolean",
                             "const": false
@@ -10965,13 +11807,6 @@
                         "items": {
                           "type": "string"
                         }
-                      },
-                      "readOnly": {
-                        "type": "boolean",
-                        "const": true
-                      },
-                      "legacyLanguage": {
-                        "type": "string"
                       },
                       "local": {
                         "type": "boolean",
@@ -11561,6 +12396,10 @@
                                     ]
                                   },
                                   "inputs": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
+                                  "outputs": {
                                     "type": "object",
                                     "additionalProperties": {}
                                   },
@@ -12819,8 +13658,109 @@
                                             "type": "string"
                                           }
                                         },
+                                        "sourceValueModes": {
+                                          "type": "object",
+                                          "additionalProperties": {
+                                            "type": "string",
+                                            "enum": [
+                                              "direct",
+                                              "conditional",
+                                              "expression"
+                                            ]
+                                          }
+                                        },
                                         "sourceScope": {
                                           "type": "boolean"
+                                        },
+                                        "sourceExecution": {
+                                          "type": "object",
+                                          "properties": {
+                                            "key": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "entry": {
+                                              "type": "boolean"
+                                            },
+                                            "output": {
+                                              "type": "boolean"
+                                            },
+                                            "owner": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "key"
+                                          ]
+                                        },
+                                        "sourceOperand": {
+                                          "type": "object",
+                                          "properties": {
+                                            "owner": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "port": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "display": {
+                                              "type": "boolean"
+                                            },
+                                            "text": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "owner",
+                                            "port"
+                                          ]
+                                        },
+                                        "sourceParams": {
+                                          "type": "object",
+                                          "additionalProperties": {}
+                                        },
+                                        "sourceVariable": {
+                                          "type": "object",
+                                          "properties": {
+                                            "binding": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "operation": {
+                                              "type": "string",
+                                              "enum": [
+                                                "declare",
+                                                "=",
+                                                "+=",
+                                                "-=",
+                                                "*=",
+                                                "/=",
+                                                "%=",
+                                                "**=",
+                                                "<<=",
+                                                ">>=",
+                                                ">>>=",
+                                                "&=",
+                                                "|=",
+                                                "^=",
+                                                "&&=",
+                                                "||=",
+                                                "??=",
+                                                "++",
+                                                "--"
+                                              ]
+                                            }
+                                          },
+                                          "required": [
+                                            "binding",
+                                            "name",
+                                            "operation"
+                                          ]
                                         },
                                         "sourceFallback": {
                                           "type": "string",
@@ -13438,6 +14378,9 @@
                                           },
                                           "returns": {
                                             "type": "string"
+                                          },
+                                          "async": {
+                                            "type": "boolean"
                                           },
                                           "typeText": {
                                             "type": "string"
@@ -14106,6 +15049,10 @@
                                         }
                                       },
                                       "inputs": {
+                                        "type": "object",
+                                        "additionalProperties": {}
+                                      },
+                                      "outputs": {
                                         "type": "object",
                                         "additionalProperties": {}
                                       },
@@ -15066,6 +16013,10 @@
                                     "type": "object",
                                     "additionalProperties": {}
                                   },
+                                  "outputs": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
                                   "types": {
                                     "type": "object",
                                     "additionalProperties": {
@@ -16321,8 +17272,109 @@
                                             "type": "string"
                                           }
                                         },
+                                        "sourceValueModes": {
+                                          "type": "object",
+                                          "additionalProperties": {
+                                            "type": "string",
+                                            "enum": [
+                                              "direct",
+                                              "conditional",
+                                              "expression"
+                                            ]
+                                          }
+                                        },
                                         "sourceScope": {
                                           "type": "boolean"
+                                        },
+                                        "sourceExecution": {
+                                          "type": "object",
+                                          "properties": {
+                                            "key": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "entry": {
+                                              "type": "boolean"
+                                            },
+                                            "output": {
+                                              "type": "boolean"
+                                            },
+                                            "owner": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "key"
+                                          ]
+                                        },
+                                        "sourceOperand": {
+                                          "type": "object",
+                                          "properties": {
+                                            "owner": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "port": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "display": {
+                                              "type": "boolean"
+                                            },
+                                            "text": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "owner",
+                                            "port"
+                                          ]
+                                        },
+                                        "sourceParams": {
+                                          "type": "object",
+                                          "additionalProperties": {}
+                                        },
+                                        "sourceVariable": {
+                                          "type": "object",
+                                          "properties": {
+                                            "binding": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "operation": {
+                                              "type": "string",
+                                              "enum": [
+                                                "declare",
+                                                "=",
+                                                "+=",
+                                                "-=",
+                                                "*=",
+                                                "/=",
+                                                "%=",
+                                                "**=",
+                                                "<<=",
+                                                ">>=",
+                                                ">>>=",
+                                                "&=",
+                                                "|=",
+                                                "^=",
+                                                "&&=",
+                                                "||=",
+                                                "??=",
+                                                "++",
+                                                "--"
+                                              ]
+                                            }
+                                          },
+                                          "required": [
+                                            "binding",
+                                            "name",
+                                            "operation"
+                                          ]
                                         },
                                         "sourceFallback": {
                                           "type": "string",
@@ -16940,6 +17992,9 @@
                                           },
                                           "returns": {
                                             "type": "string"
+                                          },
+                                          "async": {
+                                            "type": "boolean"
                                           },
                                           "typeText": {
                                             "type": "string"
@@ -17608,6 +18663,10 @@
                                         }
                                       },
                                       "inputs": {
+                                        "type": "object",
+                                        "additionalProperties": {}
+                                      },
+                                      "outputs": {
                                         "type": "object",
                                         "additionalProperties": {}
                                       },
@@ -18572,6 +19631,10 @@
                                     "type": "object",
                                     "additionalProperties": {}
                                   },
+                                  "outputs": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
                                   "types": {
                                     "type": "object",
                                     "additionalProperties": {
@@ -19827,8 +20890,109 @@
                                             "type": "string"
                                           }
                                         },
+                                        "sourceValueModes": {
+                                          "type": "object",
+                                          "additionalProperties": {
+                                            "type": "string",
+                                            "enum": [
+                                              "direct",
+                                              "conditional",
+                                              "expression"
+                                            ]
+                                          }
+                                        },
                                         "sourceScope": {
                                           "type": "boolean"
+                                        },
+                                        "sourceExecution": {
+                                          "type": "object",
+                                          "properties": {
+                                            "key": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "entry": {
+                                              "type": "boolean"
+                                            },
+                                            "output": {
+                                              "type": "boolean"
+                                            },
+                                            "owner": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "key"
+                                          ]
+                                        },
+                                        "sourceOperand": {
+                                          "type": "object",
+                                          "properties": {
+                                            "owner": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "port": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "display": {
+                                              "type": "boolean"
+                                            },
+                                            "text": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "owner",
+                                            "port"
+                                          ]
+                                        },
+                                        "sourceParams": {
+                                          "type": "object",
+                                          "additionalProperties": {}
+                                        },
+                                        "sourceVariable": {
+                                          "type": "object",
+                                          "properties": {
+                                            "binding": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "operation": {
+                                              "type": "string",
+                                              "enum": [
+                                                "declare",
+                                                "=",
+                                                "+=",
+                                                "-=",
+                                                "*=",
+                                                "/=",
+                                                "%=",
+                                                "**=",
+                                                "<<=",
+                                                ">>=",
+                                                ">>>=",
+                                                "&=",
+                                                "|=",
+                                                "^=",
+                                                "&&=",
+                                                "||=",
+                                                "??=",
+                                                "++",
+                                                "--"
+                                              ]
+                                            }
+                                          },
+                                          "required": [
+                                            "binding",
+                                            "name",
+                                            "operation"
+                                          ]
                                         },
                                         "sourceFallback": {
                                           "type": "string",
@@ -20446,6 +21610,9 @@
                                           },
                                           "returns": {
                                             "type": "string"
+                                          },
+                                          "async": {
+                                            "type": "boolean"
                                           },
                                           "typeText": {
                                             "type": "string"
@@ -21114,6 +22281,10 @@
                                         }
                                       },
                                       "inputs": {
+                                        "type": "object",
+                                        "additionalProperties": {}
+                                      },
+                                      "outputs": {
                                         "type": "object",
                                         "additionalProperties": {}
                                       },
@@ -22084,6 +23255,10 @@
                                     "type": "object",
                                     "additionalProperties": {}
                                   },
+                                  "outputs": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
                                   "types": {
                                     "type": "object",
                                     "additionalProperties": {
@@ -23339,8 +24514,109 @@
                                             "type": "string"
                                           }
                                         },
+                                        "sourceValueModes": {
+                                          "type": "object",
+                                          "additionalProperties": {
+                                            "type": "string",
+                                            "enum": [
+                                              "direct",
+                                              "conditional",
+                                              "expression"
+                                            ]
+                                          }
+                                        },
                                         "sourceScope": {
                                           "type": "boolean"
+                                        },
+                                        "sourceExecution": {
+                                          "type": "object",
+                                          "properties": {
+                                            "key": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "entry": {
+                                              "type": "boolean"
+                                            },
+                                            "output": {
+                                              "type": "boolean"
+                                            },
+                                            "owner": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "key"
+                                          ]
+                                        },
+                                        "sourceOperand": {
+                                          "type": "object",
+                                          "properties": {
+                                            "owner": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "port": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "display": {
+                                              "type": "boolean"
+                                            },
+                                            "text": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "owner",
+                                            "port"
+                                          ]
+                                        },
+                                        "sourceParams": {
+                                          "type": "object",
+                                          "additionalProperties": {}
+                                        },
+                                        "sourceVariable": {
+                                          "type": "object",
+                                          "properties": {
+                                            "binding": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "operation": {
+                                              "type": "string",
+                                              "enum": [
+                                                "declare",
+                                                "=",
+                                                "+=",
+                                                "-=",
+                                                "*=",
+                                                "/=",
+                                                "%=",
+                                                "**=",
+                                                "<<=",
+                                                ">>=",
+                                                ">>>=",
+                                                "&=",
+                                                "|=",
+                                                "^=",
+                                                "&&=",
+                                                "||=",
+                                                "??=",
+                                                "++",
+                                                "--"
+                                              ]
+                                            }
+                                          },
+                                          "required": [
+                                            "binding",
+                                            "name",
+                                            "operation"
+                                          ]
                                         },
                                         "sourceFallback": {
                                           "type": "string",
@@ -23958,6 +25234,9 @@
                                           },
                                           "returns": {
                                             "type": "string"
+                                          },
+                                          "async": {
+                                            "type": "boolean"
                                           },
                                           "typeText": {
                                             "type": "string"
@@ -24626,6 +25905,10 @@
                                         }
                                       },
                                       "inputs": {
+                                        "type": "object",
+                                        "additionalProperties": {}
+                                      },
+                                      "outputs": {
                                         "type": "object",
                                         "additionalProperties": {}
                                       },
@@ -25692,6 +26975,69 @@
                           },
                           "declaration": {
                             "type": "string"
+                          },
+                          "parameters": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                },
+                                "optional": {
+                                  "type": "boolean"
+                                },
+                                "rest": {
+                                  "type": "boolean"
+                                },
+                                "visibility": {
+                                  "type": "string",
+                                  "enum": [
+                                    "public",
+                                    "protected",
+                                    "private",
+                                    "#private"
+                                  ]
+                                },
+                                "readonly": {
+                                  "type": "boolean"
+                                },
+                                "decorators": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "text": {
+                                        "type": "string"
+                                      },
+                                      "arguments": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "required": [
+                                      "name",
+                                      "text",
+                                      "arguments"
+                                    ]
+                                  }
+                                },
+                                "initializer": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "name"
+                              ]
+                            }
                           }
                         },
                         "required": [
@@ -25978,6 +27324,9 @@
                                     },
                                     "returns": {
                                       "type": "string"
+                                    },
+                                    "async": {
+                                      "type": "boolean"
                                     },
                                     "typeText": {
                                       "type": "string"
@@ -30784,6 +32133,288 @@
                             ]
                           }
                         },
+                        "visits": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "node": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "phase": {
+                                "type": "string",
+                                "enum": [
+                                  "statement",
+                                  "condition",
+                                  "update",
+                                  "exit"
+                                ]
+                              },
+                              "iterations": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "loop": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "iteration": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "loop",
+                                    "iteration"
+                                  ]
+                                },
+                                "maxItems": 64
+                              },
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "invocationId": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "sequence": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "record": {
+                                "type": "object",
+                                "properties": {
+                                  "status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "ok",
+                                      "error",
+                                      "skipped"
+                                    ]
+                                  },
+                                  "attempts": {
+                                    "type": "number"
+                                  },
+                                  "durationMs": {
+                                    "type": "number"
+                                  },
+                                  "command": {
+                                    "type": "string"
+                                  },
+                                  "inputs": {},
+                                  "outputs": {},
+                                  "error": {
+                                    "type": "object",
+                                    "properties": {
+                                      "code": {
+                                        "type": "string"
+                                      },
+                                      "message": {
+                                        "type": "string"
+                                      },
+                                      "retryable": {
+                                        "type": "boolean"
+                                      },
+                                      "details": {},
+                                      "stack": {
+                                        "type": "string"
+                                      },
+                                      "diagnostic": {
+                                        "type": "object",
+                                        "properties": {
+                                          "kind": {
+                                            "type": "string",
+                                            "enum": [
+                                              "typeMismatch",
+                                              "missingInput",
+                                              "missingMember",
+                                              "unsupported",
+                                              "unavailable",
+                                              "codeIssue",
+                                              "syntax",
+                                              "arguments",
+                                              "nullability",
+                                              "generics",
+                                              "classes",
+                                              "modules",
+                                              "declarations",
+                                              "configuration",
+                                              "controlFlow",
+                                              "async",
+                                              "jsx",
+                                              "unused",
+                                              "deprecated",
+                                              "lint",
+                                              "unsafeOperation",
+                                              "validation",
+                                              "serialization",
+                                              "timeout",
+                                              "cancelled",
+                                              "permission",
+                                              "network",
+                                              "resource",
+                                              "runtimeError",
+                                              "missingReference",
+                                              "range",
+                                              "decorators",
+                                              "operators",
+                                              "informational",
+                                              "improvement"
+                                            ]
+                                          },
+                                          "coverage": {
+                                            "type": "string",
+                                            "enum": [
+                                              "specific",
+                                              "family",
+                                              "fallback",
+                                              "internal"
+                                            ]
+                                          },
+                                          "action": {
+                                            "type": "string",
+                                            "enum": [
+                                              "reviewSource",
+                                              "reviewTypes",
+                                              "reviewInput",
+                                              "reviewOutput",
+                                              "reviewImports",
+                                              "reviewSettings",
+                                              "reviewAsync",
+                                              "checkDependencies",
+                                              "checkPermissions",
+                                              "checkService",
+                                              "reviewNode",
+                                              "checkResources"
+                                            ]
+                                          },
+                                          "input": {
+                                            "type": "string"
+                                          },
+                                          "expected": {
+                                            "type": "string"
+                                          },
+                                          "provided": {
+                                            "type": "string"
+                                          },
+                                          "targets": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "object",
+                                              "properties": {
+                                                "workflowId": {
+                                                  "type": "string"
+                                                },
+                                                "workflowName": {
+                                                  "type": "string"
+                                                },
+                                                "nodeId": {
+                                                  "type": "string"
+                                                },
+                                                "nodeName": {
+                                                  "type": "string"
+                                                },
+                                                "port": {
+                                                  "type": "string"
+                                                },
+                                                "revision": {
+                                                  "type": "string"
+                                                },
+                                                "producerNodeId": {
+                                                  "type": "string"
+                                                },
+                                                "producerName": {
+                                                  "type": "string"
+                                                },
+                                                "outputPort": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "workflowId",
+                                                "workflowName"
+                                              ]
+                                            },
+                                            "maxItems": 100
+                                          }
+                                        },
+                                        "required": [
+                                          "kind",
+                                          "targets"
+                                        ]
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "systemCode": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "name": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            },
+                                            "code": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            }
+                                          }
+                                        },
+                                        "maxItems": 8
+                                      }
+                                    },
+                                    "required": [
+                                      "code",
+                                      "message"
+                                    ]
+                                  },
+                                  "note": {
+                                    "type": "string",
+                                    "enum": [
+                                      "disabled",
+                                      "pinned",
+                                      "upstream-of-from-node"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "status",
+                                  "attempts",
+                                  "durationMs"
+                                ]
+                              },
+                              "completion": {
+                                "type": "string",
+                                "enum": [
+                                  "normal",
+                                  "break",
+                                  "continue",
+                                  "return",
+                                  "throw"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "node",
+                              "phase",
+                              "iterations",
+                              "id",
+                              "invocationId",
+                              "sequence",
+                              "record"
+                            ]
+                          },
+                          "maxItems": 10000
+                        },
                         "outputs": {
                           "type": "object",
                           "additionalProperties": {}
@@ -31956,6 +33587,288 @@
                               "durationMs"
                             ]
                           }
+                        },
+                        "visits": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "node": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "phase": {
+                                "type": "string",
+                                "enum": [
+                                  "statement",
+                                  "condition",
+                                  "update",
+                                  "exit"
+                                ]
+                              },
+                              "iterations": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "loop": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "iteration": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "loop",
+                                    "iteration"
+                                  ]
+                                },
+                                "maxItems": 64
+                              },
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "invocationId": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "sequence": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "record": {
+                                "type": "object",
+                                "properties": {
+                                  "status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "ok",
+                                      "error",
+                                      "skipped"
+                                    ]
+                                  },
+                                  "attempts": {
+                                    "type": "number"
+                                  },
+                                  "durationMs": {
+                                    "type": "number"
+                                  },
+                                  "command": {
+                                    "type": "string"
+                                  },
+                                  "inputs": {},
+                                  "outputs": {},
+                                  "error": {
+                                    "type": "object",
+                                    "properties": {
+                                      "code": {
+                                        "type": "string"
+                                      },
+                                      "message": {
+                                        "type": "string"
+                                      },
+                                      "retryable": {
+                                        "type": "boolean"
+                                      },
+                                      "details": {},
+                                      "stack": {
+                                        "type": "string"
+                                      },
+                                      "diagnostic": {
+                                        "type": "object",
+                                        "properties": {
+                                          "kind": {
+                                            "type": "string",
+                                            "enum": [
+                                              "typeMismatch",
+                                              "missingInput",
+                                              "missingMember",
+                                              "unsupported",
+                                              "unavailable",
+                                              "codeIssue",
+                                              "syntax",
+                                              "arguments",
+                                              "nullability",
+                                              "generics",
+                                              "classes",
+                                              "modules",
+                                              "declarations",
+                                              "configuration",
+                                              "controlFlow",
+                                              "async",
+                                              "jsx",
+                                              "unused",
+                                              "deprecated",
+                                              "lint",
+                                              "unsafeOperation",
+                                              "validation",
+                                              "serialization",
+                                              "timeout",
+                                              "cancelled",
+                                              "permission",
+                                              "network",
+                                              "resource",
+                                              "runtimeError",
+                                              "missingReference",
+                                              "range",
+                                              "decorators",
+                                              "operators",
+                                              "informational",
+                                              "improvement"
+                                            ]
+                                          },
+                                          "coverage": {
+                                            "type": "string",
+                                            "enum": [
+                                              "specific",
+                                              "family",
+                                              "fallback",
+                                              "internal"
+                                            ]
+                                          },
+                                          "action": {
+                                            "type": "string",
+                                            "enum": [
+                                              "reviewSource",
+                                              "reviewTypes",
+                                              "reviewInput",
+                                              "reviewOutput",
+                                              "reviewImports",
+                                              "reviewSettings",
+                                              "reviewAsync",
+                                              "checkDependencies",
+                                              "checkPermissions",
+                                              "checkService",
+                                              "reviewNode",
+                                              "checkResources"
+                                            ]
+                                          },
+                                          "input": {
+                                            "type": "string"
+                                          },
+                                          "expected": {
+                                            "type": "string"
+                                          },
+                                          "provided": {
+                                            "type": "string"
+                                          },
+                                          "targets": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "object",
+                                              "properties": {
+                                                "workflowId": {
+                                                  "type": "string"
+                                                },
+                                                "workflowName": {
+                                                  "type": "string"
+                                                },
+                                                "nodeId": {
+                                                  "type": "string"
+                                                },
+                                                "nodeName": {
+                                                  "type": "string"
+                                                },
+                                                "port": {
+                                                  "type": "string"
+                                                },
+                                                "revision": {
+                                                  "type": "string"
+                                                },
+                                                "producerNodeId": {
+                                                  "type": "string"
+                                                },
+                                                "producerName": {
+                                                  "type": "string"
+                                                },
+                                                "outputPort": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "workflowId",
+                                                "workflowName"
+                                              ]
+                                            },
+                                            "maxItems": 100
+                                          }
+                                        },
+                                        "required": [
+                                          "kind",
+                                          "targets"
+                                        ]
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "systemCode": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "name": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            },
+                                            "code": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            }
+                                          }
+                                        },
+                                        "maxItems": 8
+                                      }
+                                    },
+                                    "required": [
+                                      "code",
+                                      "message"
+                                    ]
+                                  },
+                                  "note": {
+                                    "type": "string",
+                                    "enum": [
+                                      "disabled",
+                                      "pinned",
+                                      "upstream-of-from-node"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "status",
+                                  "attempts",
+                                  "durationMs"
+                                ]
+                              },
+                              "completion": {
+                                "type": "string",
+                                "enum": [
+                                  "normal",
+                                  "break",
+                                  "continue",
+                                  "return",
+                                  "throw"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "node",
+                              "phase",
+                              "iterations",
+                              "id",
+                              "invocationId",
+                              "sequence",
+                              "record"
+                            ]
+                          },
+                          "maxItems": 10000
                         },
                         "outputs": {
                           "type": "object",
@@ -33467,6 +35380,288 @@
                               "durationMs"
                             ]
                           }
+                        },
+                        "visits": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "node": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "phase": {
+                                "type": "string",
+                                "enum": [
+                                  "statement",
+                                  "condition",
+                                  "update",
+                                  "exit"
+                                ]
+                              },
+                              "iterations": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "loop": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "iteration": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "loop",
+                                    "iteration"
+                                  ]
+                                },
+                                "maxItems": 64
+                              },
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "invocationId": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "sequence": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "record": {
+                                "type": "object",
+                                "properties": {
+                                  "status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "ok",
+                                      "error",
+                                      "skipped"
+                                    ]
+                                  },
+                                  "attempts": {
+                                    "type": "number"
+                                  },
+                                  "durationMs": {
+                                    "type": "number"
+                                  },
+                                  "command": {
+                                    "type": "string"
+                                  },
+                                  "inputs": {},
+                                  "outputs": {},
+                                  "error": {
+                                    "type": "object",
+                                    "properties": {
+                                      "code": {
+                                        "type": "string"
+                                      },
+                                      "message": {
+                                        "type": "string"
+                                      },
+                                      "retryable": {
+                                        "type": "boolean"
+                                      },
+                                      "details": {},
+                                      "stack": {
+                                        "type": "string"
+                                      },
+                                      "diagnostic": {
+                                        "type": "object",
+                                        "properties": {
+                                          "kind": {
+                                            "type": "string",
+                                            "enum": [
+                                              "typeMismatch",
+                                              "missingInput",
+                                              "missingMember",
+                                              "unsupported",
+                                              "unavailable",
+                                              "codeIssue",
+                                              "syntax",
+                                              "arguments",
+                                              "nullability",
+                                              "generics",
+                                              "classes",
+                                              "modules",
+                                              "declarations",
+                                              "configuration",
+                                              "controlFlow",
+                                              "async",
+                                              "jsx",
+                                              "unused",
+                                              "deprecated",
+                                              "lint",
+                                              "unsafeOperation",
+                                              "validation",
+                                              "serialization",
+                                              "timeout",
+                                              "cancelled",
+                                              "permission",
+                                              "network",
+                                              "resource",
+                                              "runtimeError",
+                                              "missingReference",
+                                              "range",
+                                              "decorators",
+                                              "operators",
+                                              "informational",
+                                              "improvement"
+                                            ]
+                                          },
+                                          "coverage": {
+                                            "type": "string",
+                                            "enum": [
+                                              "specific",
+                                              "family",
+                                              "fallback",
+                                              "internal"
+                                            ]
+                                          },
+                                          "action": {
+                                            "type": "string",
+                                            "enum": [
+                                              "reviewSource",
+                                              "reviewTypes",
+                                              "reviewInput",
+                                              "reviewOutput",
+                                              "reviewImports",
+                                              "reviewSettings",
+                                              "reviewAsync",
+                                              "checkDependencies",
+                                              "checkPermissions",
+                                              "checkService",
+                                              "reviewNode",
+                                              "checkResources"
+                                            ]
+                                          },
+                                          "input": {
+                                            "type": "string"
+                                          },
+                                          "expected": {
+                                            "type": "string"
+                                          },
+                                          "provided": {
+                                            "type": "string"
+                                          },
+                                          "targets": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "object",
+                                              "properties": {
+                                                "workflowId": {
+                                                  "type": "string"
+                                                },
+                                                "workflowName": {
+                                                  "type": "string"
+                                                },
+                                                "nodeId": {
+                                                  "type": "string"
+                                                },
+                                                "nodeName": {
+                                                  "type": "string"
+                                                },
+                                                "port": {
+                                                  "type": "string"
+                                                },
+                                                "revision": {
+                                                  "type": "string"
+                                                },
+                                                "producerNodeId": {
+                                                  "type": "string"
+                                                },
+                                                "producerName": {
+                                                  "type": "string"
+                                                },
+                                                "outputPort": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "workflowId",
+                                                "workflowName"
+                                              ]
+                                            },
+                                            "maxItems": 100
+                                          }
+                                        },
+                                        "required": [
+                                          "kind",
+                                          "targets"
+                                        ]
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "systemCode": {
+                                        "type": "string",
+                                        "maxLength": 200
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "name": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            },
+                                            "code": {
+                                              "type": "string",
+                                              "maxLength": 200
+                                            }
+                                          }
+                                        },
+                                        "maxItems": 8
+                                      }
+                                    },
+                                    "required": [
+                                      "code",
+                                      "message"
+                                    ]
+                                  },
+                                  "note": {
+                                    "type": "string",
+                                    "enum": [
+                                      "disabled",
+                                      "pinned",
+                                      "upstream-of-from-node"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "status",
+                                  "attempts",
+                                  "durationMs"
+                                ]
+                              },
+                              "completion": {
+                                "type": "string",
+                                "enum": [
+                                  "normal",
+                                  "break",
+                                  "continue",
+                                  "return",
+                                  "throw"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "node",
+                              "phase",
+                              "iterations",
+                              "id",
+                              "invocationId",
+                              "sequence",
+                              "record"
+                            ]
+                          },
+                          "maxItems": 10000
                         },
                         "outputs": {
                           "type": "object",
@@ -35612,6 +37807,10 @@
                               "type": "object",
                               "additionalProperties": {}
                             },
+                            "outputs": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
                             "types": {
                               "type": "object",
                               "additionalProperties": {
@@ -36867,8 +39066,109 @@
                                       "type": "string"
                                     }
                                   },
+                                  "sourceValueModes": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                      "type": "string",
+                                      "enum": [
+                                        "direct",
+                                        "conditional",
+                                        "expression"
+                                      ]
+                                    }
+                                  },
                                   "sourceScope": {
                                     "type": "boolean"
+                                  },
+                                  "sourceExecution": {
+                                    "type": "object",
+                                    "properties": {
+                                      "key": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "entry": {
+                                        "type": "boolean"
+                                      },
+                                      "output": {
+                                        "type": "boolean"
+                                      },
+                                      "owner": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "key"
+                                    ]
+                                  },
+                                  "sourceOperand": {
+                                    "type": "object",
+                                    "properties": {
+                                      "owner": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "port": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "display": {
+                                        "type": "boolean"
+                                      },
+                                      "text": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "owner",
+                                      "port"
+                                    ]
+                                  },
+                                  "sourceParams": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
+                                  "sourceVariable": {
+                                    "type": "object",
+                                    "properties": {
+                                      "binding": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "operation": {
+                                        "type": "string",
+                                        "enum": [
+                                          "declare",
+                                          "=",
+                                          "+=",
+                                          "-=",
+                                          "*=",
+                                          "/=",
+                                          "%=",
+                                          "**=",
+                                          "<<=",
+                                          ">>=",
+                                          ">>>=",
+                                          "&=",
+                                          "|=",
+                                          "^=",
+                                          "&&=",
+                                          "||=",
+                                          "??=",
+                                          "++",
+                                          "--"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "binding",
+                                      "name",
+                                      "operation"
+                                    ]
                                   },
                                   "sourceFallback": {
                                     "type": "string",
@@ -37555,6 +39855,10 @@
                           ]
                         },
                         "inputs": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "outputs": {
                           "type": "object",
                           "additionalProperties": {}
                         },
@@ -38813,8 +41117,109 @@
                                   "type": "string"
                                 }
                               },
+                              "sourceValueModes": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "enum": [
+                                    "direct",
+                                    "conditional",
+                                    "expression"
+                                  ]
+                                }
+                              },
                               "sourceScope": {
                                 "type": "boolean"
+                              },
+                              "sourceExecution": {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "entry": {
+                                    "type": "boolean"
+                                  },
+                                  "output": {
+                                    "type": "boolean"
+                                  },
+                                  "owner": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key"
+                                ]
+                              },
+                              "sourceOperand": {
+                                "type": "object",
+                                "properties": {
+                                  "owner": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "port": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "display": {
+                                    "type": "boolean"
+                                  },
+                                  "text": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "owner",
+                                  "port"
+                                ]
+                              },
+                              "sourceParams": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "sourceVariable": {
+                                "type": "object",
+                                "properties": {
+                                  "binding": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "operation": {
+                                    "type": "string",
+                                    "enum": [
+                                      "declare",
+                                      "=",
+                                      "+=",
+                                      "-=",
+                                      "*=",
+                                      "/=",
+                                      "%=",
+                                      "**=",
+                                      "<<=",
+                                      ">>=",
+                                      ">>>=",
+                                      "&=",
+                                      "|=",
+                                      "^=",
+                                      "&&=",
+                                      "||=",
+                                      "??=",
+                                      "++",
+                                      "--"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "binding",
+                                  "name",
+                                  "operation"
+                                ]
                               },
                               "sourceFallback": {
                                 "type": "string",
@@ -46374,8 +48779,109 @@
                             "type": "string"
                           }
                         },
+                        "sourceValueModes": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "enum": [
+                              "direct",
+                              "conditional",
+                              "expression"
+                            ]
+                          }
+                        },
                         "sourceScope": {
                           "type": "boolean"
+                        },
+                        "sourceExecution": {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "entry": {
+                              "type": "boolean"
+                            },
+                            "output": {
+                              "type": "boolean"
+                            },
+                            "owner": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "key"
+                          ]
+                        },
+                        "sourceOperand": {
+                          "type": "object",
+                          "properties": {
+                            "owner": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "port": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "display": {
+                              "type": "boolean"
+                            },
+                            "text": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "owner",
+                            "port"
+                          ]
+                        },
+                        "sourceParams": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "sourceVariable": {
+                          "type": "object",
+                          "properties": {
+                            "binding": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "operation": {
+                              "type": "string",
+                              "enum": [
+                                "declare",
+                                "=",
+                                "+=",
+                                "-=",
+                                "*=",
+                                "/=",
+                                "%=",
+                                "**=",
+                                "<<=",
+                                ">>=",
+                                ">>>=",
+                                "&=",
+                                "|=",
+                                "^=",
+                                "&&=",
+                                "||=",
+                                "??=",
+                                "++",
+                                "--"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "binding",
+                            "name",
+                            "operation"
+                          ]
                         },
                         "sourceFallback": {
                           "type": "string",
@@ -47151,7 +49657,7 @@
     "/api/native-nodes": {
       "get": {
         "operationId": "getApiNativeNodes",
-        "summary": "List native nodes",
+        "summary": "Search and paginate native nodes, or read them by id",
         "tags": [
           "Native"
         ],
@@ -47161,72 +49667,183 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "label": {
-                        "type": "string"
-                      },
-                      "symbol": {
-                        "type": "string"
-                      },
-                      "category": {
-                        "type": "string",
-                        "enum": [
-                          "math",
-                          "flow",
-                          "data",
-                          "text",
-                          "logic",
-                          "datetime",
-                          "code",
-                          "console",
-                          "integration"
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "symbol": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string",
+                            "enum": [
+                              "math",
+                              "flow",
+                              "data",
+                              "text",
+                              "logic",
+                              "datetime",
+                              "code",
+                              "console",
+                              "integration"
+                            ]
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "icon": {
+                            "type": "string"
+                          },
+                          "params": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          },
+                          "defaultParams": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          },
+                          "inputs": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          },
+                          "outputs": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "label",
+                          "category",
+                          "description",
+                          "icon",
+                          "inputs",
+                          "outputs"
                         ]
-                      },
-                      "description": {
-                        "type": "string"
-                      },
-                      "icon": {
-                        "type": "string"
-                      },
-                      "params": {
-                        "type": "object",
-                        "additionalProperties": {}
-                      },
-                      "defaultParams": {
-                        "type": "object",
-                        "additionalProperties": {}
-                      },
-                      "inputs": {
-                        "type": "object",
-                        "additionalProperties": {}
-                      },
-                      "outputs": {
-                        "type": "object",
-                        "additionalProperties": {}
                       }
                     },
-                    "required": [
-                      "id",
-                      "label",
-                      "category",
-                      "description",
-                      "icon",
-                      "inputs",
-                      "outputs"
-                    ]
-                  }
+                    "total": {
+                      "type": "number"
+                    },
+                    "offset": {
+                      "type": "number"
+                    },
+                    "limit": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "total",
+                    "offset",
+                    "limit"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
                 }
               }
             }
           }
         },
-        "x-octonode-visibility": "public"
+        "x-octonode-visibility": "public",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          {
+            "in": "query",
+            "name": "ids",
+            "schema": {
+              "type": "string",
+              "maxLength": 100000
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 1000
+            }
+          },
+          {
+            "in": "query",
+            "name": "customized",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "global",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            }
+          }
+        ]
       }
     },
     "/api/native-nodes/{catalogId}/materialize": {
@@ -47330,6 +49947,69 @@
                             "line",
                             "column",
                             "content"
+                          ]
+                        },
+                        "sourceExecution": {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "entry": {
+                              "type": "boolean"
+                            },
+                            "output": {
+                              "type": "boolean"
+                            },
+                            "owner": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "key"
+                          ]
+                        },
+                        "sourceVariable": {
+                          "type": "object",
+                          "properties": {
+                            "binding": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "operation": {
+                              "type": "string",
+                              "enum": [
+                                "declare",
+                                "=",
+                                "+=",
+                                "-=",
+                                "*=",
+                                "/=",
+                                "%=",
+                                "**=",
+                                "<<=",
+                                ">>=",
+                                ">>>=",
+                                "&=",
+                                "|=",
+                                "^=",
+                                "&&=",
+                                "||=",
+                                "??=",
+                                "++",
+                                "--"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "binding",
+                            "name",
+                            "operation"
                           ]
                         },
                         "recursion": {

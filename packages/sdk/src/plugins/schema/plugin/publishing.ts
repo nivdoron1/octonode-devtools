@@ -41,18 +41,12 @@ export type PluginReleaseConfig = z.infer<typeof PluginReleaseConfig>;
 export const pluginReleaseScope = (config: PluginReleaseConfig) =>
   config.scope === "team" ? ("group" as const) : config.scope === "organization" ? ("org" as const) : config.scope;
 
-export const PluginPublisherInput = z
-  .object({ repositoryId: z.number().int().positive(), configPath: PluginConfigPath })
-  .strict();
-export const PluginPublisherRepository = PluginPublisherInput.pick({ repositoryId: true });
-export const PluginPublisherConsent = PluginPublisherInput.extend({ sha256: z.string().regex(/^[a-f0-9]{64}$/) });
-export const PluginPublisherPreview = z.object({
+export const PluginPublisherRepository = z.object({ repositoryId: z.number().int().positive() }).strict();
+export const PluginPublisherConnection = z.object({
   config: PluginReleaseConfig,
   sha256: z.string(),
   repository: z.string(),
   branch: z.string(),
-});
-export const PluginPublisherConnection = PluginPublisherPreview.extend({
   id: z.string().uuid(),
   repositoryId: z.number(),
   configPath: PluginConfigPath,

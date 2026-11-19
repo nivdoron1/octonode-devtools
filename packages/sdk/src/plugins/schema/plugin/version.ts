@@ -10,7 +10,7 @@ export const PluginVersion = z
     "Use a semantic version such as 1.2.3 or 2.0.0-beta.1",
   );
 
-/** Legacy invalid versions sort below SemVer; build metadata never affects precedence. */
+/** Non-SemVer strings sort below SemVer so the order is total; build metadata never affects precedence. */
 export function comparePluginVersions(left: string, right: string): number {
   const validLeft = PluginVersion.safeParse(left).success;
   const validRight = PluginVersion.safeParse(right).success;

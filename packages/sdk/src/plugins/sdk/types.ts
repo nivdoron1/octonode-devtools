@@ -1,15 +1,7 @@
 // Generated from packages/plugin-runtime/src/types.ts. Do not edit; run the Octonode SDK sync.
-import type {
-  InvocationContext,
-  IconValue,
-  PluginManifest,
-  PluginManifestInput,
-  PluginNode,
-  OkResult,
-  ErrorResult,
-  ManifestResult,
-  ManifestError,
-} from "../schema/plugin-sdk";
+import type { InvocationContext, OkResult, ErrorResult, ManifestResult, ManifestError } from "../schema/plugin-sdk";
+import type { IconValue } from "../schema/plugin-sdk";
+import type { PluginManifest, PluginManifestInput, PluginNode } from "../schema/plugin-sdk";
 
 export type JsonSchema = Record<string, unknown>;
 
