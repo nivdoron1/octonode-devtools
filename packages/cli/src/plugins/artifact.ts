@@ -109,6 +109,23 @@ export function verifyBuild(directory: string): VerifyBuildResult {
     }
     return { manifest, files };
   }
+  if (!manifest.nodes.length && manifest.serviceDiscovery) {
+    if (
+      record.runtime ||
+      record.ui?.length ||
+      manifest.library ||
+      manifest.runtimeRequirements ||
+      manifest.dependencyGroups ||
+      manifest.permissions.length ||
+      Object.keys(manifest.connections ?? {}).length ||
+      Object.keys(manifest.clients ?? {}).length ||
+      manifest.sdkExports?.length ||
+      expected.length !== 1 ||
+      expected[0] !== "octonode.json"
+    )
+      throw new Error("Discovery-only plugin artifacts must contain manifest metadata only");
+    return { manifest, files };
+  }
   if (manifest.schemaVersion === "2") {
     if (record.runtime) throw new Error("v2 plugins cannot use the v1 prepared Node.js runtime");
     const assets = new Set(expected);
