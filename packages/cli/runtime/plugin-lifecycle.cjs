@@ -35,9 +35,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/semver/internal/constants.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/constants.js
 var require_constants = __commonJS({
-  "node_modules/semver/internal/constants.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/constants.js"(exports2, module2) {
     "use strict";
     var SEMVER_SPEC_VERSION = "2.0.0";
     var MAX_LENGTH = 256;
@@ -67,9 +67,9 @@ var require_constants = __commonJS({
   }
 });
 
-// node_modules/semver/internal/debug.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/debug.js
 var require_debug = __commonJS({
-  "node_modules/semver/internal/debug.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/debug.js"(exports2, module2) {
     "use strict";
     var debug = typeof process === "object" && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? (...args) => console.error("SEMVER", ...args) : () => {
     };
@@ -77,9 +77,9 @@ var require_debug = __commonJS({
   }
 });
 
-// node_modules/semver/internal/re.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/re.js
 var require_re = __commonJS({
-  "node_modules/semver/internal/re.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/re.js"(exports2, module2) {
     "use strict";
     var {
       MAX_SAFE_COMPONENT_LENGTH,
@@ -165,9 +165,9 @@ var require_re = __commonJS({
   }
 });
 
-// node_modules/semver/internal/parse-options.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/parse-options.js
 var require_parse_options = __commonJS({
-  "node_modules/semver/internal/parse-options.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/parse-options.js"(exports2, module2) {
     "use strict";
     var looseOption = Object.freeze({ loose: true });
     var emptyOpts = Object.freeze({});
@@ -184,9 +184,9 @@ var require_parse_options = __commonJS({
   }
 });
 
-// node_modules/semver/internal/identifiers.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/identifiers.js
 var require_identifiers = __commonJS({
-  "node_modules/semver/internal/identifiers.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/identifiers.js"(exports2, module2) {
     "use strict";
     var numeric = /^[0-9]+$/;
     var compareIdentifiers = (a, b2) => {
@@ -209,17 +209,17 @@ var require_identifiers = __commonJS({
   }
 });
 
-// node_modules/semver/classes/semver.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/classes/semver.js
 var require_semver = __commonJS({
-  "node_modules/semver/classes/semver.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/classes/semver.js"(exports2, module2) {
     "use strict";
     var debug = require_debug();
     var { MAX_LENGTH, MAX_SAFE_INTEGER } = require_constants();
     var { safeRe: re, t } = require_re();
     var parseOptions = require_parse_options();
     var { compareIdentifiers } = require_identifiers();
-    var isPrereleaseIdentifier = (prerelease, identifier5) => {
-      const identifiers = identifier5.split(".");
+    var isPrereleaseIdentifier = (prerelease, identifier6) => {
+      const identifiers = identifier6.split(".");
       if (identifiers.length > prerelease.length) {
         return false;
       }
@@ -384,15 +384,15 @@ var require_semver = __commonJS({
       }
       // preminor will bump the version up to the next minor release, and immediately
       // down to pre-release. premajor and prepatch work the same way.
-      inc(release2, identifier5, identifierBase) {
+      inc(release2, identifier6, identifierBase) {
         if (release2.startsWith("pre")) {
-          if (!identifier5 && identifierBase === false) {
+          if (!identifier6 && identifierBase === false) {
             throw new Error("invalid increment argument: identifier is empty");
           }
-          if (identifier5) {
-            const match = `-${identifier5}`.match(this.options.loose ? re[t.PRERELEASELOOSE] : re[t.PRERELEASE]);
-            if (!match || match[1] !== identifier5) {
-              throw new Error(`invalid identifier: ${identifier5}`);
+          if (identifier6) {
+            const match = `-${identifier6}`.match(this.options.loose ? re[t.PRERELEASELOOSE] : re[t.PRERELEASE]);
+            if (!match || match[1] !== identifier6) {
+              throw new Error(`invalid identifier: ${identifier6}`);
             }
           }
         }
@@ -402,26 +402,26 @@ var require_semver = __commonJS({
             this.patch = 0;
             this.minor = 0;
             this.major++;
-            this.inc("pre", identifier5, identifierBase);
+            this.inc("pre", identifier6, identifierBase);
             break;
           case "preminor":
             this.prerelease.length = 0;
             this.patch = 0;
             this.minor++;
-            this.inc("pre", identifier5, identifierBase);
+            this.inc("pre", identifier6, identifierBase);
             break;
           case "prepatch":
             this.prerelease.length = 0;
-            this.inc("patch", identifier5, identifierBase);
-            this.inc("pre", identifier5, identifierBase);
+            this.inc("patch", identifier6, identifierBase);
+            this.inc("pre", identifier6, identifierBase);
             break;
           // If the input is a non-prerelease version, this acts the same as
           // prepatch.
           case "prerelease":
             if (this.prerelease.length === 0) {
-              this.inc("patch", identifier5, identifierBase);
+              this.inc("patch", identifier6, identifierBase);
             }
-            this.inc("pre", identifier5, identifierBase);
+            this.inc("pre", identifier6, identifierBase);
             break;
           case "release":
             if (this.prerelease.length === 0) {
@@ -465,19 +465,19 @@ var require_semver = __commonJS({
                 }
               }
               if (i === -1) {
-                if (identifier5 === this.prerelease.join(".") && identifierBase === false) {
+                if (identifier6 === this.prerelease.join(".") && identifierBase === false) {
                   throw new Error("invalid increment argument: identifier already exists");
                 }
                 this.prerelease.push(base2);
               }
             }
-            if (identifier5) {
-              let prerelease = [identifier5, base2];
+            if (identifier6) {
+              let prerelease = [identifier6, base2];
               if (identifierBase === false) {
-                prerelease = [identifier5];
+                prerelease = [identifier6];
               }
-              if (isPrereleaseIdentifier(this.prerelease, identifier5)) {
-                const prereleaseBase = this.prerelease[identifier5.split(".").length];
+              if (isPrereleaseIdentifier(this.prerelease, identifier6)) {
+                const prereleaseBase = this.prerelease[identifier6.split(".").length];
                 if (isNaN(prereleaseBase)) {
                   this.prerelease = prerelease;
                 }
@@ -501,12 +501,12 @@ var require_semver = __commonJS({
   }
 });
 
-// node_modules/semver/functions/parse.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/parse.js
 var require_parse = __commonJS({
-  "node_modules/semver/functions/parse.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/parse.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
-    var parse2 = (version, options, throwErrors = false) => {
+    var parse3 = (version, options, throwErrors = false) => {
       if (version instanceof SemVer) {
         return version;
       }
@@ -519,52 +519,52 @@ var require_parse = __commonJS({
         throw er;
       }
     };
-    module2.exports = parse2;
+    module2.exports = parse3;
   }
 });
 
-// node_modules/semver/functions/valid.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/valid.js
 var require_valid = __commonJS({
-  "node_modules/semver/functions/valid.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/valid.js"(exports2, module2) {
     "use strict";
-    var parse2 = require_parse();
-    var valid3 = (version, options) => {
-      const v2 = parse2(version, options);
+    var parse3 = require_parse();
+    var valid4 = (version, options) => {
+      const v2 = parse3(version, options);
       return v2 ? v2.version : null;
     };
-    module2.exports = valid3;
+    module2.exports = valid4;
   }
 });
 
-// node_modules/semver/functions/clean.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/clean.js
 var require_clean = __commonJS({
-  "node_modules/semver/functions/clean.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/clean.js"(exports2, module2) {
     "use strict";
-    var parse2 = require_parse();
+    var parse3 = require_parse();
     var clean = (version, options) => {
-      const s = parse2(version.trim().replace(/^[=v]+/, ""), options);
+      const s = parse3(version.trim().replace(/^[=v]+/, ""), options);
       return s ? s.version : null;
     };
     module2.exports = clean;
   }
 });
 
-// node_modules/semver/functions/inc.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/inc.js
 var require_inc = __commonJS({
-  "node_modules/semver/functions/inc.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/inc.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
-    var inc = (version, release2, options, identifier5, identifierBase) => {
+    var inc = (version, release2, options, identifier6, identifierBase) => {
       if (typeof options === "string") {
-        identifierBase = identifier5;
-        identifier5 = options;
+        identifierBase = identifier6;
+        identifier6 = options;
         options = void 0;
       }
       try {
         return new SemVer(
           version instanceof SemVer ? version.version : version,
           options
-        ).inc(release2, identifier5, identifierBase).version;
+        ).inc(release2, identifier6, identifierBase).version;
       } catch (er) {
         return null;
       }
@@ -573,14 +573,14 @@ var require_inc = __commonJS({
   }
 });
 
-// node_modules/semver/functions/diff.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/diff.js
 var require_diff = __commonJS({
-  "node_modules/semver/functions/diff.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/diff.js"(exports2, module2) {
     "use strict";
-    var parse2 = require_parse();
+    var parse3 = require_parse();
     var diff = (version1, version2) => {
-      const v1 = parse2(version1, null, true);
-      const v2 = parse2(version2, null, true);
+      const v1 = parse3(version1, null, true);
+      const v2 = parse3(version2, null, true);
       const comparison = v1.compare(v2);
       if (comparison === 0) {
         return null;
@@ -617,9 +617,9 @@ var require_diff = __commonJS({
   }
 });
 
-// node_modules/semver/functions/major.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/major.js
 var require_major = __commonJS({
-  "node_modules/semver/functions/major.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/major.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var major = (a, loose) => new SemVer(a, loose).major;
@@ -627,9 +627,9 @@ var require_major = __commonJS({
   }
 });
 
-// node_modules/semver/functions/minor.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/minor.js
 var require_minor = __commonJS({
-  "node_modules/semver/functions/minor.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/minor.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var minor = (a, loose) => new SemVer(a, loose).minor;
@@ -637,9 +637,9 @@ var require_minor = __commonJS({
   }
 });
 
-// node_modules/semver/functions/patch.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/patch.js
 var require_patch = __commonJS({
-  "node_modules/semver/functions/patch.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/patch.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var patch = (a, loose) => new SemVer(a, loose).patch;
@@ -647,22 +647,22 @@ var require_patch = __commonJS({
   }
 });
 
-// node_modules/semver/functions/prerelease.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/prerelease.js
 var require_prerelease = __commonJS({
-  "node_modules/semver/functions/prerelease.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/prerelease.js"(exports2, module2) {
     "use strict";
-    var parse2 = require_parse();
+    var parse3 = require_parse();
     var prerelease = (version, options) => {
-      const parsed = parse2(version, options);
+      const parsed = parse3(version, options);
       return parsed && parsed.prerelease.length ? parsed.prerelease : null;
     };
     module2.exports = prerelease;
   }
 });
 
-// node_modules/semver/functions/compare.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/compare.js
 var require_compare = __commonJS({
-  "node_modules/semver/functions/compare.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/compare.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var compare = (a, b2, loose) => new SemVer(a, loose).compare(new SemVer(b2, loose));
@@ -670,9 +670,9 @@ var require_compare = __commonJS({
   }
 });
 
-// node_modules/semver/functions/rcompare.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/rcompare.js
 var require_rcompare = __commonJS({
-  "node_modules/semver/functions/rcompare.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/rcompare.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var rcompare = (a, b2, loose) => compare(b2, a, loose);
@@ -680,9 +680,9 @@ var require_rcompare = __commonJS({
   }
 });
 
-// node_modules/semver/functions/compare-loose.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/compare-loose.js
 var require_compare_loose = __commonJS({
-  "node_modules/semver/functions/compare-loose.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/compare-loose.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var compareLoose = (a, b2) => compare(a, b2, true);
@@ -690,9 +690,9 @@ var require_compare_loose = __commonJS({
   }
 });
 
-// node_modules/semver/functions/compare-build.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/compare-build.js
 var require_compare_build = __commonJS({
-  "node_modules/semver/functions/compare-build.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/compare-build.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var compareBuild = (a, b2, loose) => {
@@ -704,9 +704,9 @@ var require_compare_build = __commonJS({
   }
 });
 
-// node_modules/semver/functions/sort.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/sort.js
 var require_sort = __commonJS({
-  "node_modules/semver/functions/sort.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/sort.js"(exports2, module2) {
     "use strict";
     var compareBuild = require_compare_build();
     var sort = (list3, loose) => list3.sort((a, b2) => compareBuild(a, b2, loose));
@@ -714,9 +714,9 @@ var require_sort = __commonJS({
   }
 });
 
-// node_modules/semver/functions/rsort.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/rsort.js
 var require_rsort = __commonJS({
-  "node_modules/semver/functions/rsort.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/rsort.js"(exports2, module2) {
     "use strict";
     var compareBuild = require_compare_build();
     var rsort = (list3, loose) => list3.sort((a, b2) => compareBuild(b2, a, loose));
@@ -724,9 +724,9 @@ var require_rsort = __commonJS({
   }
 });
 
-// node_modules/semver/functions/gt.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/gt.js
 var require_gt = __commonJS({
-  "node_modules/semver/functions/gt.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/gt.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var gt = (a, b2, loose) => compare(a, b2, loose) > 0;
@@ -734,9 +734,9 @@ var require_gt = __commonJS({
   }
 });
 
-// node_modules/semver/functions/lt.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/lt.js
 var require_lt = __commonJS({
-  "node_modules/semver/functions/lt.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/lt.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var lt = (a, b2, loose) => compare(a, b2, loose) < 0;
@@ -744,9 +744,9 @@ var require_lt = __commonJS({
   }
 });
 
-// node_modules/semver/functions/eq.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/eq.js
 var require_eq = __commonJS({
-  "node_modules/semver/functions/eq.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/eq.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var eq = (a, b2, loose) => compare(a, b2, loose) === 0;
@@ -754,9 +754,9 @@ var require_eq = __commonJS({
   }
 });
 
-// node_modules/semver/functions/neq.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/neq.js
 var require_neq = __commonJS({
-  "node_modules/semver/functions/neq.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/neq.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var neq = (a, b2, loose) => compare(a, b2, loose) !== 0;
@@ -764,9 +764,9 @@ var require_neq = __commonJS({
   }
 });
 
-// node_modules/semver/functions/gte.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/gte.js
 var require_gte = __commonJS({
-  "node_modules/semver/functions/gte.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/gte.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var gte = (a, b2, loose) => compare(a, b2, loose) >= 0;
@@ -774,9 +774,9 @@ var require_gte = __commonJS({
   }
 });
 
-// node_modules/semver/functions/lte.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/lte.js
 var require_lte = __commonJS({
-  "node_modules/semver/functions/lte.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/lte.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var lte = (a, b2, loose) => compare(a, b2, loose) <= 0;
@@ -784,9 +784,9 @@ var require_lte = __commonJS({
   }
 });
 
-// node_modules/semver/functions/cmp.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/cmp.js
 var require_cmp = __commonJS({
-  "node_modules/semver/functions/cmp.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/cmp.js"(exports2, module2) {
     "use strict";
     var eq = require_eq();
     var neq = require_neq();
@@ -834,12 +834,12 @@ var require_cmp = __commonJS({
   }
 });
 
-// node_modules/semver/functions/coerce.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/coerce.js
 var require_coerce = __commonJS({
-  "node_modules/semver/functions/coerce.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/coerce.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
-    var parse2 = require_parse();
+    var parse3 = require_parse();
     var { safeRe: re, t } = require_re();
     var coerce = (version, options) => {
       if (version instanceof SemVer) {
@@ -874,21 +874,21 @@ var require_coerce = __commonJS({
       const patch = match[4] || "0";
       const prerelease = options.includePrerelease && match[5] ? `-${match[5]}` : "";
       const build4 = options.includePrerelease && match[6] ? `+${match[6]}` : "";
-      return parse2(`${major}.${minor}.${patch}${prerelease}${build4}`, options);
+      return parse3(`${major}.${minor}.${patch}${prerelease}${build4}`, options);
     };
     module2.exports = coerce;
   }
 });
 
-// node_modules/semver/functions/truncate.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/truncate.js
 var require_truncate = __commonJS({
-  "node_modules/semver/functions/truncate.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/truncate.js"(exports2, module2) {
     "use strict";
-    var parse2 = require_parse();
-    var constants2 = require_constants();
+    var parse3 = require_parse();
+    var constants3 = require_constants();
     var SemVer = require_semver();
     var truncate = (version, truncation, options) => {
-      if (!constants2.RELEASE_TYPES.includes(truncation)) {
+      if (!constants3.RELEASE_TYPES.includes(truncation)) {
         return null;
       }
       const clonedVersion = cloneInputVersion(version, options);
@@ -896,7 +896,7 @@ var require_truncate = __commonJS({
     };
     var cloneInputVersion = (version, options) => {
       const versionStringToParse = version instanceof SemVer ? version.version : version;
-      return parse2(versionStringToParse, options);
+      return parse3(versionStringToParse, options);
     };
     var doTruncation = (version, truncation) => {
       if (isPrerelease(truncation)) {
@@ -921,9 +921,9 @@ var require_truncate = __commonJS({
   }
 });
 
-// node_modules/semver/internal/lrucache.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/lrucache.js
 var require_lrucache = __commonJS({
-  "node_modules/semver/internal/lrucache.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/internal/lrucache.js"(exports2, module2) {
     "use strict";
     var LRUCache = class {
       constructor() {
@@ -959,9 +959,9 @@ var require_lrucache = __commonJS({
   }
 });
 
-// node_modules/semver/classes/range.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/classes/range.js
 var require_range = __commonJS({
-  "node_modules/semver/classes/range.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/classes/range.js"(exports2, module2) {
     "use strict";
     var SPACE_CHARACTERS = /\s+/g;
     var Range = class _Range {
@@ -1154,16 +1154,16 @@ var require_range = __commonJS({
     };
     var replaceTilde = (comp, options) => {
       const r = options.loose ? re[t.TILDELOOSE] : re[t.TILDE];
-      const z125 = options.includePrerelease ? "-0" : "";
+      const z129 = options.includePrerelease ? "-0" : "";
       return comp.replace(r, (_2, M, m2, p2, pr) => {
         debug("tilde", comp, _2, M, m2, p2, pr);
         let ret;
         if (isX(M)) {
           ret = "";
         } else if (isX(m2)) {
-          ret = `>=${M}.0.0${z125} <${+M + 1}.0.0-0`;
+          ret = `>=${M}.0.0${z129} <${+M + 1}.0.0-0`;
         } else if (isX(p2)) {
-          ret = `>=${M}.${m2}.0${z125} <${M}.${+m2 + 1}.0-0`;
+          ret = `>=${M}.${m2}.0${z129} <${M}.${+m2 + 1}.0-0`;
         } else if (pr) {
           debug("replaceTilde pr", pr);
           ret = `>=${M}.${m2}.${p2}-${pr} <${M}.${+m2 + 1}.0-0`;
@@ -1180,19 +1180,19 @@ var require_range = __commonJS({
     var replaceCaret = (comp, options) => {
       debug("caret", comp, options);
       const r = options.loose ? re[t.CARETLOOSE] : re[t.CARET];
-      const z125 = options.includePrerelease ? "-0" : "";
+      const z129 = options.includePrerelease ? "-0" : "";
       return comp.replace(r, (_2, M, m2, p2, pr) => {
         debug("caret", comp, _2, M, m2, p2, pr);
         let ret;
         if (isX(M)) {
           ret = "";
         } else if (isX(m2)) {
-          ret = `>=${M}.0.0${z125} <${+M + 1}.0.0-0`;
+          ret = `>=${M}.0.0${z129} <${+M + 1}.0.0-0`;
         } else if (isX(p2)) {
           if (M === "0") {
-            ret = `>=${M}.${m2}.0${z125} <${M}.${+m2 + 1}.0-0`;
+            ret = `>=${M}.${m2}.0${z129} <${M}.${+m2 + 1}.0-0`;
           } else {
-            ret = `>=${M}.${m2}.0${z125} <${+M + 1}.0.0-0`;
+            ret = `>=${M}.${m2}.0${z129} <${+M + 1}.0.0-0`;
           }
         } else if (pr) {
           debug("replaceCaret pr", pr);
@@ -1344,9 +1344,9 @@ var require_range = __commonJS({
   }
 });
 
-// node_modules/semver/classes/comparator.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/classes/comparator.js
 var require_comparator = __commonJS({
-  "node_modules/semver/classes/comparator.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/classes/comparator.js"(exports2, module2) {
     "use strict";
     var ANY = /* @__PURE__ */ Symbol("SemVer ANY");
     var Comparator = class _Comparator {
@@ -1457,12 +1457,12 @@ var require_comparator = __commonJS({
   }
 });
 
-// node_modules/semver/functions/satisfies.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/satisfies.js
 var require_satisfies = __commonJS({
-  "node_modules/semver/functions/satisfies.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/functions/satisfies.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
-    var satisfies5 = (version, range, options) => {
+    var satisfies6 = (version, range, options) => {
       try {
         range = new Range(range, options);
       } catch (er) {
@@ -1470,13 +1470,13 @@ var require_satisfies = __commonJS({
       }
       return range.test(version);
     };
-    module2.exports = satisfies5;
+    module2.exports = satisfies6;
   }
 });
 
-// node_modules/semver/ranges/to-comparators.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/to-comparators.js
 var require_to_comparators = __commonJS({
-  "node_modules/semver/ranges/to-comparators.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/to-comparators.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var toComparators = (range, options) => new Range(range, options).set.map((comp) => comp.map((c) => c.value).join(" ").trim().split(" "));
@@ -1484,9 +1484,9 @@ var require_to_comparators = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/max-satisfying.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/max-satisfying.js
 var require_max_satisfying = __commonJS({
-  "node_modules/semver/ranges/max-satisfying.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/max-satisfying.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Range = require_range();
@@ -1513,9 +1513,9 @@ var require_max_satisfying = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/min-satisfying.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/min-satisfying.js
 var require_min_satisfying = __commonJS({
-  "node_modules/semver/ranges/min-satisfying.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/min-satisfying.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Range = require_range();
@@ -1542,9 +1542,9 @@ var require_min_satisfying = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/min-version.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/min-version.js
 var require_min_version = __commonJS({
-  "node_modules/semver/ranges/min-version.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/min-version.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Range = require_range();
@@ -1601,9 +1601,9 @@ var require_min_version = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/valid.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/valid.js
 var require_valid2 = __commonJS({
-  "node_modules/semver/ranges/valid.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/valid.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var validRange3 = (range, options) => {
@@ -1617,15 +1617,15 @@ var require_valid2 = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/outside.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/outside.js
 var require_outside = __commonJS({
-  "node_modules/semver/ranges/outside.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/outside.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Comparator = require_comparator();
     var { ANY } = Comparator;
     var Range = require_range();
-    var satisfies5 = require_satisfies();
+    var satisfies6 = require_satisfies();
     var gt = require_gt();
     var lt = require_lt();
     var lte = require_lte();
@@ -1652,7 +1652,7 @@ var require_outside = __commonJS({
         default:
           throw new TypeError('Must provide a hilo val of "<" or ">"');
       }
-      if (satisfies5(version, range, options)) {
+      if (satisfies6(version, range, options)) {
         return false;
       }
       for (let i = 0; i < range.set.length; ++i) {
@@ -1686,9 +1686,9 @@ var require_outside = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/gtr.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/gtr.js
 var require_gtr = __commonJS({
-  "node_modules/semver/ranges/gtr.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/gtr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
     var gtr = (version, range, options) => outside(version, range, ">", options);
@@ -1696,9 +1696,9 @@ var require_gtr = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/ltr.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/ltr.js
 var require_ltr = __commonJS({
-  "node_modules/semver/ranges/ltr.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/ltr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
     var ltr = (version, range, options) => outside(version, range, "<", options);
@@ -1706,9 +1706,9 @@ var require_ltr = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/intersects.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/intersects.js
 var require_intersects = __commonJS({
-  "node_modules/semver/ranges/intersects.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/intersects.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var intersects2 = (r1, r2, options) => {
@@ -1720,11 +1720,11 @@ var require_intersects = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/simplify.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/simplify.js
 var require_simplify = __commonJS({
-  "node_modules/semver/ranges/simplify.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/simplify.js"(exports2, module2) {
     "use strict";
-    var satisfies5 = require_satisfies();
+    var satisfies6 = require_satisfies();
     var compare = require_compare();
     module2.exports = (versions, range, options) => {
       const set = [];
@@ -1732,7 +1732,7 @@ var require_simplify = __commonJS({
       let prev = null;
       const v2 = versions.sort((a, b2) => compare(a, b2, options));
       for (const version of v2) {
-        const included = satisfies5(version, range, options);
+        const included = satisfies6(version, range, options);
         if (included) {
           prev = version;
           if (!first) {
@@ -1770,14 +1770,14 @@ var require_simplify = __commonJS({
   }
 });
 
-// node_modules/semver/ranges/subset.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/subset.js
 var require_subset = __commonJS({
-  "node_modules/semver/ranges/subset.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/ranges/subset.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var Comparator = require_comparator();
     var { ANY } = Comparator;
-    var satisfies5 = require_satisfies();
+    var satisfies6 = require_satisfies();
     var compare = require_compare();
     var subset = (sub, dom, options = {}) => {
       if (sub === dom) {
@@ -1846,14 +1846,14 @@ var require_subset = __commonJS({
         }
       }
       for (const eq of eqSet) {
-        if (gt && !satisfies5(eq, String(gt), options)) {
+        if (gt && !satisfies6(eq, String(gt), options)) {
           return null;
         }
-        if (lt && !satisfies5(eq, String(lt), options)) {
+        if (lt && !satisfies6(eq, String(lt), options)) {
           return null;
         }
         for (const c of dom) {
-          if (!satisfies5(eq, String(c), options)) {
+          if (!satisfies6(eq, String(c), options)) {
             return false;
           }
         }
@@ -1932,16 +1932,16 @@ var require_subset = __commonJS({
   }
 });
 
-// node_modules/semver/index.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/index.js
 var require_semver2 = __commonJS({
-  "node_modules/semver/index.js"(exports2, module2) {
+  "../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/semver/index.js"(exports2, module2) {
     "use strict";
     var internalRe = require_re();
-    var constants2 = require_constants();
+    var constants3 = require_constants();
     var SemVer = require_semver();
     var identifiers = require_identifiers();
-    var parse2 = require_parse();
-    var valid3 = require_valid();
+    var parse3 = require_parse();
+    var valid4 = require_valid();
     var clean = require_clean();
     var inc = require_inc();
     var diff = require_diff();
@@ -1966,7 +1966,7 @@ var require_semver2 = __commonJS({
     var truncate = require_truncate();
     var Comparator = require_comparator();
     var Range = require_range();
-    var satisfies5 = require_satisfies();
+    var satisfies6 = require_satisfies();
     var toComparators = require_to_comparators();
     var maxSatisfying = require_max_satisfying();
     var minSatisfying = require_min_satisfying();
@@ -1979,8 +1979,8 @@ var require_semver2 = __commonJS({
     var simplifyRange = require_simplify();
     var subset = require_subset();
     module2.exports = {
-      parse: parse2,
-      valid: valid3,
+      parse: parse3,
+      valid: valid4,
       clean,
       inc,
       diff,
@@ -2005,7 +2005,7 @@ var require_semver2 = __commonJS({
       truncate,
       Comparator,
       Range,
-      satisfies: satisfies5,
+      satisfies: satisfies6,
       toComparators,
       maxSatisfying,
       minSatisfying,
@@ -2021,8 +2021,8 @@ var require_semver2 = __commonJS({
       re: internalRe.re,
       src: internalRe.src,
       tokens: internalRe.t,
-      SEMVER_SPEC_VERSION: constants2.SEMVER_SPEC_VERSION,
-      RELEASE_TYPES: constants2.RELEASE_TYPES,
+      SEMVER_SPEC_VERSION: constants3.SEMVER_SPEC_VERSION,
+      RELEASE_TYPES: constants3.RELEASE_TYPES,
       compareIdentifiers: identifiers.compareIdentifiers,
       rcompareIdentifiers: identifiers.rcompareIdentifiers
     };
@@ -2046,13 +2046,13 @@ __export(index_exports, {
 module.exports = __toCommonJS(index_exports);
 
 // packages/plugin/src/consumer/lifecycle.ts
-var import_node_fs24 = require("node:fs");
-var import_node_path24 = require("node:path");
+var import_node_fs25 = require("node:fs");
+var import_node_path25 = require("node:path");
 
 // packages/plugin/src/lifecycle.ts
-var import_node_fs12 = require("node:fs");
-var import_node_path12 = require("node:path");
-var import_semver4 = __toESM(require_semver2());
+var import_node_fs13 = require("node:fs");
+var import_node_path13 = require("node:path");
+var import_semver6 = __toESM(require_semver2());
 
 // packages/plugin/src/store.ts
 var import_node_fs3 = require("node:fs");
@@ -2783,6 +2783,7 @@ var ICON_NAMES = [
   "x"
 ];
 var GITLAB_PATH_URL = "https://gitlab.com/";
+var NATIVE_CATALOG_QUERY_LIMIT = 1e3;
 
 // packages/schema/src/assistant/models/models.ts
 var import_zod2 = require("zod");
@@ -3843,7 +3844,7 @@ function createApiPath(path3, rules = {}) {
   const pattern = new RegExp(`^${source2}$`);
   const prefix = new RegExp(`^${source2}(?:/|$)`);
   const parameters = (captures) => Object.fromEntries(names.map((name, index) => [name, decodeURIComponent(captures[index + 1])]));
-  const valid3 = (params) => names.every((name) => {
+  const valid4 = (params) => names.every((name) => {
     const key = name, rule = rules[key], value = params[key];
     return !rule || !(rule.pattern && !new RegExp(rule.pattern).test(value)) && !(rule.format === "uuid" && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)) && !(rule.enum && !rule.enum.some((item) => String(item) === value)) && !(rule.type === "integer" && !/^-?\d+$/.test(value)) && !(rule.type === "number" && (!value.trim() || !Number.isFinite(Number(value)))) && !(rule.minimum !== void 0 && Number(value) < rule.minimum) && !(rule.maximum !== void 0 && Number(value) > rule.maximum) && !(rule.minLength !== void 0 && value.length < rule.minLength) && !(rule.maxLength !== void 0 && value.length > rule.maxLength);
   });
@@ -3869,11 +3870,11 @@ function createApiPath(path3, rules = {}) {
     },
     valid: (pathname) => {
       const captures = pattern.exec(pathname), params = captures && parameters(captures);
-      return params && valid3(params) ? params : void 0;
+      return params && valid4(params) ? params : void 0;
     },
     validPrefix: (pathname) => {
       const captures = prefix.exec(pathname), params = captures && parameters(captures);
-      return params && valid3(params) ? { params, tail: pathname.slice(captures[0].length) } : void 0;
+      return params && valid4(params) ? { params, tail: pathname.slice(captures[0].length) } : void 0;
     }
   };
 }
@@ -3929,6 +3930,7 @@ var API_OPERATIONS = {
   deleteApiVariablesByScopeByKey: { "method": "DELETE", "path": "/api/variables/{scope}/{key}", "resource": "variables", "projectNodeJob": false },
   deleteApiWorkflowsByWorkflowId: { "method": "DELETE", "path": "/api/workflows/{workflowId}", "resource": "workflows", "projectNodeJob": false },
   deleteApiWorkflowsByWorkflowIdEvaluationsByEvaluationId: { "method": "DELETE", "path": "/api/workflows/{workflowId}/evaluations/{evaluationId}", "resource": "workflows", "projectNodeJob": false },
+  deleteApiWorkflowsByWorkflowIdService: { "method": "DELETE", "path": "/api/workflows/{workflowId}/service", "resource": "workflows", "projectNodeJob": false },
   deleteApiWorkItemsByItemIdAttachmentsByAttachmentId: { "method": "DELETE", "path": "/api/work-items/{itemId}/attachments/{attachmentId}", "resource": "work-items", "projectNodeJob": false },
   deleteApiWorkItemsByItemIdLinks: { "method": "DELETE", "path": "/api/work-items/{itemId}/links", "resource": "work-items", "projectNodeJob": false },
   deleteApiWorkspaceAdminInvitesByInviteId: { "method": "DELETE", "path": "/api/workspace-admin/invites/{inviteId}", "resource": "workspace-admin", "projectNodeJob": false },
@@ -4247,9 +4249,11 @@ var API_OPERATIONS = {
   getApiWorkflowsByWorkflowIdEvaluationsRun: { "method": "GET", "path": "/api/workflows/{workflowId}/evaluations/run", "resource": "workflows", "projectNodeJob": false },
   getApiWorkflowsByWorkflowIdNodeCatalog: { "method": "GET", "path": "/api/workflows/{workflowId}/node-catalog", "resource": "workflows", "projectNodeJob": false },
   getApiWorkflowsByWorkflowIdOrchestrationSource: { "method": "GET", "path": "/api/workflows/{workflowId}/orchestration/source", "resource": "workflows", "projectNodeJob": false },
+  getApiWorkflowsByWorkflowIdService: { "method": "GET", "path": "/api/workflows/{workflowId}/service", "resource": "workflows", "projectNodeJob": false },
   getApiWorkflowsByWorkflowIdTestWorkflows: { "method": "GET", "path": "/api/workflows/{workflowId}/test-workflows", "resource": "workflows", "projectNodeJob": false },
   getApiWorkflowsByWorkflowIdTestWorkflowsGraph: { "method": "GET", "path": "/api/workflows/{workflowId}/test-workflows/graph", "resource": "workflows", "projectNodeJob": false },
   getApiWorkflowsByWorkflowIdTriggers: { "method": "GET", "path": "/api/workflows/{workflowId}/triggers", "resource": "workflows", "projectNodeJob": false },
+  getApiWorkflowsServices: { "method": "GET", "path": "/api/workflows/services", "resource": "workflows", "projectNodeJob": false },
   getApiWorkItems: { "method": "GET", "path": "/api/work-items", "resource": "work-items", "projectNodeJob": false },
   getApiWorkItemsByItemId: { "method": "GET", "path": "/api/work-items/{itemId}", "resource": "work-items", "projectNodeJob": false },
   getApiWorkItemsByItemIdActivity: { "method": "GET", "path": "/api/work-items/{itemId}/activity", "resource": "work-items", "projectNodeJob": false },
@@ -4276,7 +4280,6 @@ var API_OPERATIONS = {
   headApiProjectsByProjectIdPreviewByPort: { "method": "HEAD", "path": "/api/projects/{projectId}/preview/{port}", "resource": "projects", "projectNodeJob": false },
   optionsApiProjectsByProjectIdPreviewByPort: { "method": "OPTIONS", "path": "/api/projects/{projectId}/preview/{port}", "resource": "projects", "projectNodeJob": false },
   patchApiBillingHierarchy: { "method": "PATCH", "path": "/api/billing/hierarchy", "resource": "billing", "projectNodeJob": false },
-  patchApiBillingSeats: { "method": "PATCH", "path": "/api/billing/seats", "resource": "billing", "projectNodeJob": false },
   patchApiBillingUsageLimitsByMeter: { "method": "PATCH", "path": "/api/billing/usage-limits/{meter}", "resource": "billing", "projectNodeJob": false },
   patchApiCommunityPublicationsById: { "method": "PATCH", "path": "/api/community/publications/{id}", "resource": "community", "projectNodeJob": false },
   patchApiMarketplacePublisherAppDevelopmentByDevelopmentId: { "method": "PATCH", "path": "/api/marketplace/publisher/app-development/{developmentId}", "resource": "marketplace", "projectNodeJob": false },
@@ -4360,7 +4363,6 @@ var API_OPERATIONS = {
   postApiGithubInstallationsComplete: { "method": "POST", "path": "/api/github/installations/complete", "resource": "github", "projectNodeJob": false },
   postApiGithubJobsByIdRetry: { "method": "POST", "path": "/api/github/jobs/{id}/retry", "resource": "github", "projectNodeJob": false },
   postApiGithubPluginPublishersApply: { "method": "POST", "path": "/api/github/plugin-publishers/apply", "resource": "github", "projectNodeJob": false },
-  postApiGithubPluginPublishersPreview: { "method": "POST", "path": "/api/github/plugin-publishers/preview", "resource": "github", "projectNodeJob": false },
   postApiGithubPluginPublishersReview: { "method": "POST", "path": "/api/github/plugin-publishers/review", "resource": "github", "projectNodeJob": false },
   postApiGithubSync: { "method": "POST", "path": "/api/github/sync", "resource": "github", "projectNodeJob": false },
   postApiGithubSyncAuto: { "method": "POST", "path": "/api/github/sync/auto", "resource": "github", "projectNodeJob": false },
@@ -4420,7 +4422,6 @@ var API_OPERATIONS = {
   postApiPluginsPublish: { "method": "POST", "path": "/api/plugins/publish", "resource": "plugins", "projectNodeJob": false },
   postApiPrivatePluginLibraryDetach: { "method": "POST", "path": "/api/private/plugin-library/detach", "resource": "private", "projectNodeJob": true },
   postApiPrivatePluginLibraryFromNpm: { "method": "POST", "path": "/api/private/plugin-library/from-npm", "resource": "private", "projectNodeJob": true },
-  postApiPrivatePluginLibraryMigrate: { "method": "POST", "path": "/api/private/plugin-library/migrate", "resource": "private", "projectNodeJob": true },
   postApiPrivateProjectCatalogCleanup: { "method": "POST", "path": "/api/private/project-catalog/cleanup", "resource": "private", "projectNodeJob": true },
   postApiPrivateProjectCatalogErasure: { "method": "POST", "path": "/api/private/project-catalog/erasure", "resource": "private", "projectNodeJob": false },
   postApiPrivateProjectCatalogReconcile: { "method": "POST", "path": "/api/private/project-catalog/reconcile", "resource": "private", "projectNodeJob": true },
@@ -4433,7 +4434,6 @@ var API_OPERATIONS = {
   postApiProjects: { "method": "POST", "path": "/api/projects", "resource": "projects", "projectNodeJob": false },
   postApiProjectsByProjectIdAnalysis: { "method": "POST", "path": "/api/projects/{projectId}/analysis", "resource": "projects", "projectNodeJob": false },
   postApiProjectsByProjectIdAnalyticsDashboards: { "method": "POST", "path": "/api/projects/{projectId}/analytics/dashboards", "resource": "projects", "projectNodeJob": false },
-  postApiProjectsByProjectIdClaude: { "method": "POST", "path": "/api/projects/{projectId}/claude", "resource": "projects", "projectNodeJob": false },
   postApiProjectsByProjectIdCommands: { "method": "POST", "path": "/api/projects/{projectId}/commands", "resource": "projects", "projectNodeJob": false },
   postApiProjectsByProjectIdCommandsByCommandIdStop: { "method": "POST", "path": "/api/projects/{projectId}/commands/{commandId}/stop", "resource": "projects", "projectNodeJob": false },
   postApiProjectsByProjectIdCommandsClaude: { "method": "POST", "path": "/api/projects/{projectId}/commands/claude", "resource": "projects", "projectNodeJob": false },
@@ -4483,8 +4483,6 @@ var API_OPERATIONS = {
   postApiProjectsByProjectIdTestWorkflowsRunAll: { "method": "POST", "path": "/api/projects/{projectId}/test-workflows/run-all", "resource": "projects", "projectNodeJob": false },
   postApiProjectsCloudInstall: { "method": "POST", "path": "/api/projects/cloud/install", "resource": "projects", "projectNodeJob": false },
   postApiRealtimeProjectionsTicket: { "method": "POST", "path": "/api/realtime/projections/ticket", "resource": "realtime", "projectNodeJob": false },
-  postApiRegistryMigrationsApply: { "method": "POST", "path": "/api/registry/migrations/apply", "resource": "registry", "projectNodeJob": false },
-  postApiRegistryMigrationsDryRun: { "method": "POST", "path": "/api/registry/migrations/dry-run", "resource": "registry", "projectNodeJob": false },
   postApiRemoteHosts: { "method": "POST", "path": "/api/remote-hosts", "resource": "remote-hosts", "projectNodeJob": false },
   postApiRemoteHostsByHostIdDevice: { "method": "POST", "path": "/api/remote-hosts/{hostId}/device", "resource": "remote-hosts", "projectNodeJob": false },
   postApiRemoteHostsByHostIdPreviews: { "method": "POST", "path": "/api/remote-hosts/{hostId}/previews", "resource": "remote-hosts", "projectNodeJob": false },
@@ -4567,6 +4565,8 @@ var API_OPERATIONS = {
   postApiWorkflowsByWorkflowIdMeta: { "method": "POST", "path": "/api/workflows/{workflowId}/meta", "resource": "workflows", "projectNodeJob": false },
   postApiWorkflowsByWorkflowIdNodesByNodeIdExpression: { "method": "POST", "path": "/api/workflows/{workflowId}/nodes/{nodeId}/expression", "resource": "workflows", "projectNodeJob": false },
   postApiWorkflowsByWorkflowIdOrchestration: { "method": "POST", "path": "/api/workflows/{workflowId}/orchestration", "resource": "workflows", "projectNodeJob": false },
+  postApiWorkflowsByWorkflowIdService: { "method": "POST", "path": "/api/workflows/{workflowId}/service", "resource": "workflows", "projectNodeJob": false },
+  postApiWorkflowsByWorkflowIdServiceRequest: { "method": "POST", "path": "/api/workflows/{workflowId}/service/request", "resource": "workflows", "projectNodeJob": false },
   postApiWorkflowsByWorkflowIdTestWorkflowsRun: { "method": "POST", "path": "/api/workflows/{workflowId}/test-workflows/run", "resource": "workflows", "projectNodeJob": false },
   postApiWorkflowsByWorkflowIdTestWorkflowsRunAll: { "method": "POST", "path": "/api/workflows/{workflowId}/test-workflows/run-all", "resource": "workflows", "projectNodeJob": false },
   postApiWorkflowsByWorkflowIdTopology: { "method": "POST", "path": "/api/workflows/{workflowId}/topology", "resource": "workflows", "projectNodeJob": false },
@@ -4595,7 +4595,6 @@ var API_OPERATIONS = {
   putApiAssistantSessionsByIdConfig: { "method": "PUT", "path": "/api/assistant/sessions/{id}/config", "resource": "assistant", "projectNodeJob": false },
   putApiCustomization: { "method": "PUT", "path": "/api/customization", "resource": "customization", "projectNodeJob": false },
   putApiDesignDocumentsByDocumentId: { "method": "PUT", "path": "/api/design-documents/{documentId}", "resource": "design-documents", "projectNodeJob": false },
-  putApiGithubPluginPublishers: { "method": "PUT", "path": "/api/github/plugin-publishers", "resource": "github", "projectNodeJob": false },
   putApiGitlabRepositories: { "method": "PUT", "path": "/api/gitlab/repositories", "resource": "gitlab", "projectNodeJob": false },
   putApiMarketplacePublicationsRead: { "method": "PUT", "path": "/api/marketplace/publications/read", "resource": "marketplace", "projectNodeJob": false },
   putApiMarketplacePublisherAppsByAppIdDraft: { "method": "PUT", "path": "/api/marketplace/publisher/apps/{appId}/draft", "resource": "marketplace", "projectNodeJob": false },
@@ -4639,6 +4638,7 @@ var API_OPERATIONS = {
   putApiSupportTicketsByIdRead: { "method": "PUT", "path": "/api/support/tickets/{id}/read", "resource": "support", "projectNodeJob": false },
   putApiWorkflowsByWorkflowIdEvaluationsByEvaluationId: { "method": "PUT", "path": "/api/workflows/{workflowId}/evaluations/{evaluationId}", "resource": "workflows", "projectNodeJob": false },
   putApiWorkflowsByWorkflowIdOrchestrationSource: { "method": "PUT", "path": "/api/workflows/{workflowId}/orchestration/source", "resource": "workflows", "projectNodeJob": false },
+  putApiWorkflowsByWorkflowIdOutput: { "method": "PUT", "path": "/api/workflows/{workflowId}/output", "resource": "workflows", "projectNodeJob": false },
   putApiWorkflowsByWorkflowIdTestWorkflows: { "method": "PUT", "path": "/api/workflows/{workflowId}/test-workflows", "resource": "workflows", "projectNodeJob": false },
   putApiWorkflowsByWorkflowIdTriggers: { "method": "PUT", "path": "/api/workflows/{workflowId}/triggers", "resource": "workflows", "projectNodeJob": false },
   putApiWorkItemsByItemIdLinks: { "method": "PUT", "path": "/api/work-items/{itemId}/links", "resource": "work-items", "projectNodeJob": false },
@@ -4721,7 +4721,6 @@ var API_PATHS = {
   apiBillingHierarchy: createApiPath("/api/billing/hierarchy", {}),
   apiBillingPortal: createApiPath("/api/billing/portal", {}),
   apiBillingPublicCatalog: createApiPath("/api/billing/public-catalog", {}),
-  apiBillingSeats: createApiPath("/api/billing/seats", {}),
   apiBillingSummary: createApiPath("/api/billing/summary", {}),
   apiBillingUsageLimits: createApiPath("/api/billing/usage-limits", {}),
   apiBillingUsageLimitsByMeter: createApiPath("/api/billing/usage-limits/{meter}", { "meter": { "type": "string" } }),
@@ -4792,7 +4791,6 @@ var API_PATHS = {
   apiGithubPluginPublishersApply: createApiPath("/api/github/plugin-publishers/apply", {}),
   apiGithubPluginPublishersBuild: createApiPath("/api/github/plugin-publishers/build", {}),
   apiGithubPluginPublishersBuilds: createApiPath("/api/github/plugin-publishers/builds", {}),
-  apiGithubPluginPublishersPreview: createApiPath("/api/github/plugin-publishers/preview", {}),
   apiGithubPluginPublishersRepositories: createApiPath("/api/github/plugin-publishers/repositories", {}),
   apiGithubPluginPublishersReview: createApiPath("/api/github/plugin-publishers/review", {}),
   apiGithubPluginPublishersById: createApiPath("/api/github/plugin-publishers/{id}", { "id": { "type": "string", "format": "uuid" } }),
@@ -4930,7 +4928,6 @@ var API_PATHS = {
   apiPrivatePluginLibrary: createApiPath("/api/private/plugin-library", {}),
   apiPrivatePluginLibraryDetach: createApiPath("/api/private/plugin-library/detach", {}),
   apiPrivatePluginLibraryFromNpm: createApiPath("/api/private/plugin-library/from-npm", {}),
-  apiPrivatePluginLibraryMigrate: createApiPath("/api/private/plugin-library/migrate", {}),
   apiPrivatePluginMetadata: createApiPath("/api/private/plugin-metadata", {}),
   apiPrivateProjectCatalog: createApiPath("/api/private/project-catalog", {}),
   apiPrivateProjectCatalogCleanup: createApiPath("/api/private/project-catalog/cleanup", {}),
@@ -4974,7 +4971,6 @@ var API_PATHS = {
   apiProjectsByProjectIdCatalogContent: createApiPath("/api/projects/{projectId}/catalog/content", { "projectId": { "type": "string" } }),
   apiProjectsByProjectIdCatalogDocument: createApiPath("/api/projects/{projectId}/catalog/document", { "projectId": { "type": "string" } }),
   apiProjectsByProjectIdCatalogFiles: createApiPath("/api/projects/{projectId}/catalog/files", { "projectId": { "type": "string" } }),
-  apiProjectsByProjectIdClaude: createApiPath("/api/projects/{projectId}/claude", { "projectId": { "type": "string" } }),
   apiProjectsByProjectIdCommands: createApiPath("/api/projects/{projectId}/commands", { "projectId": { "type": "string" } }),
   apiProjectsByProjectIdCommandsClaude: createApiPath("/api/projects/{projectId}/commands/claude", { "projectId": { "type": "string", "pattern": "^[a-zA-Z0-9._-]+$", "minLength": 1, "maxLength": 128 } }),
   apiProjectsByProjectIdCommandsByCommandId: createApiPath("/api/projects/{projectId}/commands/{commandId}", { "projectId": { "type": "string" }, "commandId": { "type": "string" } }),
@@ -5068,10 +5064,6 @@ var API_PATHS = {
   apiRealtime: createApiPath("/api/realtime", {}),
   apiRealtimeProjections: createApiPath("/api/realtime/projections", {}),
   apiRealtimeProjectionsTicket: createApiPath("/api/realtime/projections/ticket", {}),
-  apiRegistry: createApiPath("/api/registry", {}),
-  apiRegistryMigrations: createApiPath("/api/registry/migrations", {}),
-  apiRegistryMigrationsApply: createApiPath("/api/registry/migrations/apply", {}),
-  apiRegistryMigrationsDryRun: createApiPath("/api/registry/migrations/dry-run", {}),
   apiRemoteHosts: createApiPath("/api/remote-hosts", {}),
   apiRemoteHostsRecovery: createApiPath("/api/remote-hosts/recovery", {}),
   apiRemoteHostsByHostId: createApiPath("/api/remote-hosts/{hostId}", { "hostId": { "type": "string" } }),
@@ -5298,6 +5290,7 @@ var API_PATHS = {
   apiWorkItemsByItemIdMove: createApiPath("/api/work-items/{itemId}/move", { "itemId": { "type": "string", "format": "uuid" } }),
   apiWorkItemsByItemIdTree: createApiPath("/api/work-items/{itemId}/tree", { "itemId": { "type": "string", "format": "uuid" } }),
   apiWorkflows: createApiPath("/api/workflows", {}),
+  apiWorkflowsServices: createApiPath("/api/workflows/services", {}),
   apiWorkflowsByWorkflowId: createApiPath("/api/workflows/{workflowId}", { "workflowId": { "type": "string", "minLength": 1 } }),
   apiWorkflowsByWorkflowIdEvaluations: createApiPath("/api/workflows/{workflowId}/evaluations", { "workflowId": { "type": "string" } }),
   apiWorkflowsByWorkflowIdEvaluationsRun: createApiPath("/api/workflows/{workflowId}/evaluations/run", { "workflowId": { "type": "string" } }),
@@ -5310,6 +5303,9 @@ var API_PATHS = {
   apiWorkflowsByWorkflowIdNodesByNodeIdExpression: createApiPath("/api/workflows/{workflowId}/nodes/{nodeId}/expression", { "workflowId": { "type": "string" }, "nodeId": { "type": "string" } }),
   apiWorkflowsByWorkflowIdOrchestration: createApiPath("/api/workflows/{workflowId}/orchestration", { "workflowId": { "type": "string" } }),
   apiWorkflowsByWorkflowIdOrchestrationSource: createApiPath("/api/workflows/{workflowId}/orchestration/source", { "workflowId": { "type": "string" } }),
+  apiWorkflowsByWorkflowIdOutput: createApiPath("/api/workflows/{workflowId}/output", { "workflowId": { "type": "string" } }),
+  apiWorkflowsByWorkflowIdService: createApiPath("/api/workflows/{workflowId}/service", { "workflowId": { "type": "string", "minLength": 1, "maxLength": 256 } }),
+  apiWorkflowsByWorkflowIdServiceRequest: createApiPath("/api/workflows/{workflowId}/service/request", { "workflowId": { "type": "string", "minLength": 1, "maxLength": 256 } }),
   apiWorkflowsByWorkflowIdTestWorkflows: createApiPath("/api/workflows/{workflowId}/test-workflows", { "workflowId": { "type": "string" } }),
   apiWorkflowsByWorkflowIdTestWorkflowsGraph: createApiPath("/api/workflows/{workflowId}/test-workflows/graph", { "workflowId": { "type": "string" } }),
   apiWorkflowsByWorkflowIdTestWorkflowsRun: createApiPath("/api/workflows/{workflowId}/test-workflows/run", { "workflowId": { "type": "string" } }),
@@ -5922,7 +5918,6 @@ var agentServiceRunRequestSchema = import_zod11.z.object({
     ctx.addIssue({ code: import_zod11.z.ZodIssueCode.custom, message: "agent principal project must match the request" });
   }
 });
-var claudeSandboxRequestSchema = import_zod11.z.object({ prompt: import_zod11.z.string().trim().min(1).max(8e3), settings: assistantSettingsSchema.optional() }).strict();
 
 // packages/schema/src/agent/dependencies.ts
 var import_zod12 = require("zod");
@@ -5934,7 +5929,6 @@ var workflowEnvironment = (variables = {}) => {
     Object.entries(variables).filter((entry) => typeof entry[1] === "string")
   );
   delete environment.OCTONODE_CLOUD_INTERNAL_TOKEN;
-  delete environment.OCTONODE_CHAT_SERVICE_TOKEN;
   delete environment.OCTONODE_API_TOKEN;
   delete environment.OPENAI_API_KEY;
   return environment;
@@ -6044,7 +6038,6 @@ var API_PATHS2 = (
     apiBillingHierarchy: "/api/billing/hierarchy",
     apiBillingPortal: "/api/billing/portal",
     apiBillingPublicCatalog: "/api/billing/public-catalog",
-    apiBillingSeats: "/api/billing/seats",
     apiBillingSummary: "/api/billing/summary",
     apiBillingUsageLimits: "/api/billing/usage-limits",
     apiBillingUsageLimitsByMeter: "/api/billing/usage-limits/{meter}",
@@ -6115,7 +6108,6 @@ var API_PATHS2 = (
     apiGithubPluginPublishersApply: "/api/github/plugin-publishers/apply",
     apiGithubPluginPublishersBuild: "/api/github/plugin-publishers/build",
     apiGithubPluginPublishersBuilds: "/api/github/plugin-publishers/builds",
-    apiGithubPluginPublishersPreview: "/api/github/plugin-publishers/preview",
     apiGithubPluginPublishersRepositories: "/api/github/plugin-publishers/repositories",
     apiGithubPluginPublishersReview: "/api/github/plugin-publishers/review",
     apiGithubPluginPublishersById: "/api/github/plugin-publishers/{id}",
@@ -6253,7 +6245,6 @@ var API_PATHS2 = (
     apiPrivatePluginLibrary: "/api/private/plugin-library",
     apiPrivatePluginLibraryDetach: "/api/private/plugin-library/detach",
     apiPrivatePluginLibraryFromNpm: "/api/private/plugin-library/from-npm",
-    apiPrivatePluginLibraryMigrate: "/api/private/plugin-library/migrate",
     apiPrivatePluginMetadata: "/api/private/plugin-metadata",
     apiPrivateProjectCatalog: "/api/private/project-catalog",
     apiPrivateProjectCatalogCleanup: "/api/private/project-catalog/cleanup",
@@ -6297,7 +6288,6 @@ var API_PATHS2 = (
     apiProjectsByProjectIdCatalogContent: "/api/projects/{projectId}/catalog/content",
     apiProjectsByProjectIdCatalogDocument: "/api/projects/{projectId}/catalog/document",
     apiProjectsByProjectIdCatalogFiles: "/api/projects/{projectId}/catalog/files",
-    apiProjectsByProjectIdClaude: "/api/projects/{projectId}/claude",
     apiProjectsByProjectIdCommands: "/api/projects/{projectId}/commands",
     apiProjectsByProjectIdCommandsClaude: "/api/projects/{projectId}/commands/claude",
     apiProjectsByProjectIdCommandsByCommandId: "/api/projects/{projectId}/commands/{commandId}",
@@ -6391,10 +6381,6 @@ var API_PATHS2 = (
     apiRealtime: "/api/realtime",
     apiRealtimeProjections: "/api/realtime/projections",
     apiRealtimeProjectionsTicket: "/api/realtime/projections/ticket",
-    apiRegistry: "/api/registry",
-    apiRegistryMigrations: "/api/registry/migrations",
-    apiRegistryMigrationsApply: "/api/registry/migrations/apply",
-    apiRegistryMigrationsDryRun: "/api/registry/migrations/dry-run",
     apiRemoteHosts: "/api/remote-hosts",
     apiRemoteHostsRecovery: "/api/remote-hosts/recovery",
     apiRemoteHostsByHostId: "/api/remote-hosts/{hostId}",
@@ -6621,6 +6607,7 @@ var API_PATHS2 = (
     apiWorkItemsByItemIdMove: "/api/work-items/{itemId}/move",
     apiWorkItemsByItemIdTree: "/api/work-items/{itemId}/tree",
     apiWorkflows: "/api/workflows",
+    apiWorkflowsServices: "/api/workflows/services",
     apiWorkflowsByWorkflowId: "/api/workflows/{workflowId}",
     apiWorkflowsByWorkflowIdEvaluations: "/api/workflows/{workflowId}/evaluations",
     apiWorkflowsByWorkflowIdEvaluationsRun: "/api/workflows/{workflowId}/evaluations/run",
@@ -6633,6 +6620,9 @@ var API_PATHS2 = (
     apiWorkflowsByWorkflowIdNodesByNodeIdExpression: "/api/workflows/{workflowId}/nodes/{nodeId}/expression",
     apiWorkflowsByWorkflowIdOrchestration: "/api/workflows/{workflowId}/orchestration",
     apiWorkflowsByWorkflowIdOrchestrationSource: "/api/workflows/{workflowId}/orchestration/source",
+    apiWorkflowsByWorkflowIdOutput: "/api/workflows/{workflowId}/output",
+    apiWorkflowsByWorkflowIdService: "/api/workflows/{workflowId}/service",
+    apiWorkflowsByWorkflowIdServiceRequest: "/api/workflows/{workflowId}/service/request",
     apiWorkflowsByWorkflowIdTestWorkflows: "/api/workflows/{workflowId}/test-workflows",
     apiWorkflowsByWorkflowIdTestWorkflowsGraph: "/api/workflows/{workflowId}/test-workflows/graph",
     apiWorkflowsByWorkflowIdTestWorkflowsRun: "/api/workflows/{workflowId}/test-workflows/run",
@@ -7362,10 +7352,10 @@ var DATA_TABLE_MAX_SQL_LENGTH = 16384;
 var DATA_TABLE_MAX_COLUMNS = 64;
 
 // packages/schema/src/data/tables.ts
-var import_zod43 = require("zod");
+var import_zod45 = require("zod");
 
 // packages/schema/src/store.ts
-var import_zod42 = require("zod");
+var import_zod44 = require("zod");
 
 // packages/schema/src/workflow/layout.ts
 var import_zod22 = require("zod");
@@ -7394,7 +7384,7 @@ var WorkflowLayout = import_zod22.z.object({
 });
 
 // packages/schema/src/octonode/config.ts
-var import_zod41 = require("zod");
+var import_zod43 = require("zod");
 
 // packages/schema/src/icons.ts
 var import_zod23 = require("zod");
@@ -7637,7 +7627,7 @@ var ManifestErr = import_zod25.z.object({
 var ManifestEnvelope = import_zod25.z.discriminatedUnion("status", [ManifestOk, ManifestErr]);
 
 // packages/schema/src/plugin/clients.ts
-var import_zod34 = require("zod");
+var import_zod35 = require("zod");
 
 // packages/schema/src/plugin/view.ts
 var import_zod26 = require("zod");
@@ -7708,26 +7698,45 @@ var PluginContents = import_zod28.z.object({
   classes: import_zod28.z.array(import_zod28.z.string().min(1).max(240)).max(1e4)
 }).strict();
 
+// packages/schema/src/plugin/discovery.ts
+var import_zod29 = require("zod");
+var identifier = import_zod29.z.string().regex(/^[$A-Z_a-z][$\w]*$/).max(128);
+var imported = import_zod29.z.object({
+  module: import_zod29.z.string().regex(/^(?:node:|@)?[a-zA-Z0-9_-][a-zA-Z0-9_./-]*$/).max(256),
+  export: identifier,
+  member: identifier.optional()
+}).strict();
+var call = import_zod29.z.union([imported, import_zod29.z.object({ factory: imported, member: identifier }).strict()]);
+var argument = import_zod29.z.object({
+  argument: import_zod29.z.number().int().min(0).max(31),
+  property: identifier.optional()
+}).strict();
+var PluginServiceMethod = import_zod29.z.enum(["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "ALL"]);
+var PluginServiceDiscoveryRule = import_zod29.z.discriminatedUnion("kind", [
+  import_zod29.z.object({ kind: import_zod29.z.literal("listener"), call }).strict(),
+  import_zod29.z.object({ kind: import_zod29.z.literal("route"), call, method: import_zod29.z.union([PluginServiceMethod, argument]), path: argument }).strict()
+]);
+
 // packages/schema/src/plugin/plugin.ts
-var import_zod33 = require("zod");
+var import_zod34 = require("zod");
 
 // packages/schema/src/app/app.ts
-var import_zod31 = require("zod");
+var import_zod32 = require("zod");
 
 // packages/schema/src/app/contributions/contributions.ts
-var import_zod30 = require("zod");
+var import_zod31 = require("zod");
 
 // packages/schema/src/personal/layout.ts
-var import_zod29 = require("zod");
-var PersonalLayoutItems = import_zod29.z.array(
-  import_zod29.z.object({
-    id: import_zod29.z.string().min(1).max(240).refine((id2) => !["__proto__", "__all__"].includes(id2)),
-    label: import_zod29.z.string().trim().min(1).max(240).optional(),
-    pinned: import_zod29.z.boolean().optional()
+var import_zod30 = require("zod");
+var PersonalLayoutItems = import_zod30.z.array(
+  import_zod30.z.object({
+    id: import_zod30.z.string().min(1).max(240).refine((id2) => !["__proto__", "__all__"].includes(id2)),
+    label: import_zod30.z.string().trim().min(1).max(240).optional(),
+    pinned: import_zod30.z.boolean().optional()
   }).strict()
 ).max(100).refine((items) => new Set(items.map((item) => item.id)).size === items.length, "Layout IDs must be unique");
-var SettingsLayout = import_zod29.z.record(
-  import_zod29.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100),
+var SettingsLayout = import_zod30.z.record(
+  import_zod30.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100),
   PersonalLayoutItems
 ).refine((value) => Object.keys(value).length <= 64, "At most 64 layout groups");
 
@@ -7781,98 +7790,98 @@ var APP_ACTION_TARGETS = [
 var APP_LAUNCHER_TARGETS = ["shell.navbar.action", "shell.navigation.item", "shell.command"];
 
 // packages/schema/src/app/contributions/contributions.ts
-var AppViewTarget = import_zod30.z.enum(APP_VIEW_TARGETS);
-var AppActionTarget = import_zod30.z.enum(APP_ACTION_TARGETS);
-var AppContributionTarget = import_zod30.z.enum([...APP_VIEW_TARGETS, ...APP_ACTION_TARGETS]);
-var appContributionId = import_zod30.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100);
-var appContributionTitle = import_zod30.z.string().trim().min(1).max(240);
-var appContributionWhen = import_zod30.z.object({
-  hasProject: import_zod30.z.boolean().optional(),
-  hasSelection: import_zod30.z.boolean().optional(),
-  readOnly: import_zod30.z.boolean().optional(),
-  nodeKind: import_zod30.z.string().min(1).max(240).optional(),
-  documentFormat: import_zod30.z.enum(["markdown", "html", "latex"]).optional()
+var AppViewTarget = import_zod31.z.enum(APP_VIEW_TARGETS);
+var AppActionTarget = import_zod31.z.enum(APP_ACTION_TARGETS);
+var AppContributionTarget = import_zod31.z.enum([...APP_VIEW_TARGETS, ...APP_ACTION_TARGETS]);
+var appContributionId = import_zod31.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100);
+var appContributionTitle = import_zod31.z.string().trim().min(1).max(240);
+var appContributionWhen = import_zod31.z.object({
+  hasProject: import_zod31.z.boolean().optional(),
+  hasSelection: import_zod31.z.boolean().optional(),
+  readOnly: import_zod31.z.boolean().optional(),
+  nodeKind: import_zod31.z.string().min(1).max(240).optional(),
+  documentFormat: import_zod31.z.enum(["markdown", "html", "latex"]).optional()
 }).strict();
-var appLauncherSchema = import_zod30.z.object({
+var appLauncherSchema = import_zod31.z.object({
   id: appContributionId,
-  target: import_zod30.z.enum(APP_LAUNCHER_TARGETS),
+  target: import_zod31.z.enum(APP_LAUNCHER_TARGETS),
   title: appContributionTitle,
   icon: IconName.optional(),
   opens: appContributionId
 }).strict();
-var appContributionSchema = import_zod30.z.object({
+var appContributionSchema = import_zod31.z.object({
   id: appContributionId,
   target: AppContributionTarget,
   title: appContributionTitle,
   icon: IconName.optional(),
-  path: import_zod30.z.string().regex(/^extensions\/[a-z0-9][a-z0-9-]*\.js$/).max(150),
-  sha256: import_zod30.z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  path: import_zod31.z.string().regex(/^extensions\/[a-z0-9][a-z0-9-]*\.js$/).max(150),
+  sha256: import_zod31.z.string().regex(/^sha256:[a-f0-9]{64}$/),
   when: appContributionWhen.optional()
 }).strict();
-var appContributionContextSchema = import_zod30.z.object({
-  projectId: import_zod30.z.string().min(1).max(128).optional(),
-  worktreeId: import_zod30.z.string().min(1).max(240).optional(),
-  workflowId: import_zod30.z.string().min(1).max(240).optional(),
-  nodeId: import_zod30.z.string().min(1).max(240).optional(),
-  nodeKind: import_zod30.z.string().min(1).max(240).optional(),
-  edgeId: import_zod30.z.string().min(1).max(500).optional(),
-  executionId: import_zod30.z.string().min(1).max(128).optional(),
-  taskSpaceId: import_zod30.z.string().min(1).max(128).optional(),
-  itemId: import_zod30.z.string().min(1).max(128).optional(),
-  documentId: import_zod30.z.string().min(1).max(128).optional(),
-  documentFormat: import_zod30.z.enum(["markdown", "html", "latex"]).optional(),
-  tableId: import_zod30.z.string().min(1).max(128).optional(),
-  rowId: import_zod30.z.string().min(1).max(128).optional(),
-  filePath: import_zod30.z.string().min(1).max(1024).optional(),
-  revision: import_zod30.z.union([import_zod30.z.string().max(240), import_zod30.z.number().int().nonnegative()]).optional(),
-  draftRevision: import_zod30.z.number().int().nonnegative().optional(),
-  selection: import_zod30.z.object({ start: import_zod30.z.number().int().nonnegative(), end: import_zod30.z.number().int().nonnegative() }).strict().refine((value) => value.end >= value.start).optional(),
-  selectedIds: import_zod30.z.array(import_zod30.z.string().min(1).max(500)).max(100).optional(),
-  canvas: import_zod30.z.object({ x: import_zod30.z.number().finite(), y: import_zod30.z.number().finite() }).strict().optional(),
-  readOnly: import_zod30.z.boolean().default(true),
-  tasks: import_zod30.z.array(
-    import_zod30.z.object({
-      itemId: import_zod30.z.string().min(1).max(128),
-      taskSpaceId: import_zod30.z.string().min(1).max(128),
-      revision: import_zod30.z.number().int().nonnegative()
+var appContributionContextSchema = import_zod31.z.object({
+  projectId: import_zod31.z.string().min(1).max(128).optional(),
+  worktreeId: import_zod31.z.string().min(1).max(240).optional(),
+  workflowId: import_zod31.z.string().min(1).max(240).optional(),
+  nodeId: import_zod31.z.string().min(1).max(240).optional(),
+  nodeKind: import_zod31.z.string().min(1).max(240).optional(),
+  edgeId: import_zod31.z.string().min(1).max(500).optional(),
+  executionId: import_zod31.z.string().min(1).max(128).optional(),
+  taskSpaceId: import_zod31.z.string().min(1).max(128).optional(),
+  itemId: import_zod31.z.string().min(1).max(128).optional(),
+  documentId: import_zod31.z.string().min(1).max(128).optional(),
+  documentFormat: import_zod31.z.enum(["markdown", "html", "latex"]).optional(),
+  tableId: import_zod31.z.string().min(1).max(128).optional(),
+  rowId: import_zod31.z.string().min(1).max(128).optional(),
+  filePath: import_zod31.z.string().min(1).max(1024).optional(),
+  revision: import_zod31.z.union([import_zod31.z.string().max(240), import_zod31.z.number().int().nonnegative()]).optional(),
+  draftRevision: import_zod31.z.number().int().nonnegative().optional(),
+  selection: import_zod31.z.object({ start: import_zod31.z.number().int().nonnegative(), end: import_zod31.z.number().int().nonnegative() }).strict().refine((value) => value.end >= value.start).optional(),
+  selectedIds: import_zod31.z.array(import_zod31.z.string().min(1).max(500)).max(100).optional(),
+  canvas: import_zod31.z.object({ x: import_zod31.z.number().finite(), y: import_zod31.z.number().finite() }).strict().optional(),
+  readOnly: import_zod31.z.boolean().default(true),
+  tasks: import_zod31.z.array(
+    import_zod31.z.object({
+      itemId: import_zod31.z.string().min(1).max(128),
+      taskSpaceId: import_zod31.z.string().min(1).max(128),
+      revision: import_zod31.z.number().int().nonnegative()
     }).strict()
   ).max(100).optional(),
-  nodes: import_zod30.z.array(
-    import_zod30.z.object({
-      id: import_zod30.z.string().min(1).max(240),
-      kind: import_zod30.z.string().max(240).optional(),
-      label: import_zod30.z.string().max(240).optional()
+  nodes: import_zod31.z.array(
+    import_zod31.z.object({
+      id: import_zod31.z.string().min(1).max(240),
+      kind: import_zod31.z.string().max(240).optional(),
+      label: import_zod31.z.string().max(240).optional()
     }).strict()
   ).max(100).optional()
 }).strict();
-var appHostRequestSchema = import_zod30.z.discriminatedUnion("command", [
-  import_zod30.z.object({ command: import_zod30.z.literal("panel.open"), id: appContributionId }).strict(),
-  import_zod30.z.object({ command: import_zod30.z.literal("assistant.open"), suggestion: import_zod30.z.string().max(8e3).optional() }).strict(),
-  import_zod30.z.object({ command: import_zod30.z.literal("layout.list") }).strict(),
-  import_zod30.z.object({
-    command: import_zod30.z.literal("layout.undo"),
-    scope: import_zod30.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100),
-    revision: import_zod30.z.string().min(1).max(240)
+var appHostRequestSchema = import_zod31.z.discriminatedUnion("command", [
+  import_zod31.z.object({ command: import_zod31.z.literal("panel.open"), id: appContributionId }).strict(),
+  import_zod31.z.object({ command: import_zod31.z.literal("assistant.open"), suggestion: import_zod31.z.string().max(8e3).optional() }).strict(),
+  import_zod31.z.object({ command: import_zod31.z.literal("layout.list") }).strict(),
+  import_zod31.z.object({
+    command: import_zod31.z.literal("layout.undo"),
+    scope: import_zod31.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100),
+    revision: import_zod31.z.string().min(1).max(240)
   }).strict(),
-  import_zod30.z.object({
-    command: import_zod30.z.literal("layout.update"),
-    scope: import_zod30.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100),
-    revision: import_zod30.z.string().min(1).max(240),
+  import_zod31.z.object({
+    command: import_zod31.z.literal("layout.update"),
+    scope: import_zod31.z.string().regex(/^[a-z][a-z0-9.-]*$/).max(100),
+    revision: import_zod31.z.string().min(1).max(240),
     items: PersonalLayoutItems
   }).strict(),
-  import_zod30.z.object({
-    command: import_zod30.z.literal("edit.propose"),
-    resource: import_zod30.z.enum(["file", "document"]),
-    baseRevision: import_zod30.z.string().min(1).max(240),
-    draftRevision: import_zod30.z.number().int().nonnegative(),
-    content: import_zod30.z.string().max(12e3),
-    mode: import_zod30.z.enum(["append", "replace", "replace-selection"])
+  import_zod31.z.object({
+    command: import_zod31.z.literal("edit.propose"),
+    resource: import_zod31.z.enum(["file", "document"]),
+    baseRevision: import_zod31.z.string().min(1).max(240),
+    draftRevision: import_zod31.z.number().int().nonnegative(),
+    content: import_zod31.z.string().max(12e3),
+    mode: import_zod31.z.enum(["append", "replace", "replace-selection"])
   }).strict()
 ]);
 
 // packages/schema/src/app/app.ts
-var AppAction = import_zod31.z.enum(APP_ACTIONS);
-var appUrl = import_zod31.z.string().max(2048).url().refine((value) => {
+var AppAction = import_zod32.z.enum(APP_ACTIONS);
+var appUrl = import_zod32.z.string().max(2048).url().refine((value) => {
   try {
     const url = new URL(value);
     return value === value.trim() && /^https:\/\//i.test(value) && !/[\p{Cc}\s\\?#]/u.test(value) && url.protocol === "https:" && !url.username && !url.password && !url.search && !url.hash && url.hostname.includes(".") && !url.hostname.endsWith(".") && !url.hostname.includes(":") && !/^\d+\.\d+\.\d+\.\d+$/.test(url.hostname) && !/\.(localhost|local|internal)$/.test(url.hostname);
@@ -7880,24 +7889,24 @@ var appUrl = import_zod31.z.string().max(2048).url().refine((value) => {
     return false;
   }
 }, "App URLs must use public HTTPS hostnames without credentials, query strings or fragments");
-var SelfHostedAppExtension = import_zod31.z.object({
-  id: import_zod31.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
-  target: import_zod31.z.enum(["app.page", "workspace.block"]),
+var SelfHostedAppExtension = import_zod32.z.object({
+  id: import_zod32.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
+  target: import_zod32.z.enum(["app.page", "workspace.block"]),
   url: appUrl,
-  sha256: import_zod31.z.string().regex(/^sha256:[a-f0-9]{64}$/)
+  sha256: import_zod32.z.string().regex(/^sha256:[a-f0-9]{64}$/)
 }).strict();
-var SelfHostedApp = import_zod31.z.object({
-  apiVersion: import_zod31.z.literal("1"),
-  hosting: import_zod31.z.literal("self-hosted"),
+var SelfHostedApp = import_zod32.z.object({
+  apiVersion: import_zod32.z.literal("1"),
+  hosting: import_zod32.z.literal("self-hosted"),
   applicationUrl: appUrl,
   icon: IconName.optional(),
   iconUrl: appUrl.optional(),
   privacyUrl: appUrl.optional(),
   supportUrl: appUrl.optional(),
-  redirectUrls: import_zod31.z.array(appUrl).min(1).max(10),
+  redirectUrls: import_zod32.z.array(appUrl).min(1).max(10),
   webhookUrl: appUrl.optional(),
-  requestedActions: import_zod31.z.array(AppAction).max(APP_ACTIONS.length).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
-  extensions: import_zod31.z.array(SelfHostedAppExtension).max(32).default([])
+  requestedActions: import_zod32.z.array(AppAction).max(APP_ACTIONS.length).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
+  extensions: import_zod32.z.array(SelfHostedAppExtension).max(32).default([])
 }).strict().superRefine((app, ctx) => {
   if (!URL.canParse(app.applicationUrl)) return;
   const origin = new URL(app.applicationUrl).origin;
@@ -7919,26 +7928,26 @@ var SelfHostedApp = import_zod31.z.object({
   if (new Set(app.extensions.map((extension) => extension.id)).size !== app.extensions.length)
     ctx.addIssue({ code: "custom", path: ["extensions"], message: "App extension IDs must be unique" });
 });
-var extensionOnlyAppSchema = import_zod31.z.object({
-  apiVersion: import_zod31.z.literal("2"),
-  hosting: import_zod31.z.literal("extension-only"),
+var extensionOnlyAppSchema = import_zod32.z.object({
+  apiVersion: import_zod32.z.literal("2"),
+  hosting: import_zod32.z.literal("extension-only"),
   icon: IconName.optional(),
   iconUrl: appUrl.optional(),
-  settings: import_zod31.z.array(
-    import_zod31.z.object({
-      id: import_zod31.z.string().regex(/^[a-z][a-zA-Z0-9_]*$/).max(100),
-      label: import_zod31.z.string().trim().min(1).max(240),
-      defaultValue: import_zod31.z.string().max(4e3).default("")
+  settings: import_zod32.z.array(
+    import_zod32.z.object({
+      id: import_zod32.z.string().regex(/^[a-z][a-zA-Z0-9_]*$/).max(100),
+      label: import_zod32.z.string().trim().min(1).max(240),
+      defaultValue: import_zod32.z.string().max(4e3).default("")
     }).strict()
   ).max(32).default([]),
   privacyUrl: appUrl.optional(),
   supportUrl: appUrl.optional(),
-  requestedActions: import_zod31.z.array(AppAction).max(0).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
-  extensions: import_zod31.z.array(
-    import_zod31.z.object({
+  requestedActions: import_zod32.z.array(AppAction).max(0).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
+  extensions: import_zod32.z.array(
+    import_zod32.z.object({
       id: SelfHostedAppExtension.shape.id,
       target: SelfHostedAppExtension.shape.target,
-      path: import_zod31.z.string().regex(/^extensions\/[a-z0-9][a-z0-9-]*\.js$/).max(150),
+      path: import_zod32.z.string().regex(/^extensions\/[a-z0-9][a-z0-9-]*\.js$/).max(150),
       sha256: SelfHostedAppExtension.shape.sha256
     }).strict()
   ).min(1).max(32)
@@ -7952,11 +7961,11 @@ var ExtensionOnlyApp = extensionOnlyAppSchema.superRefine((app, ctx) => {
   }
 });
 var ContributionApp = extensionOnlyAppSchema.extend({
-  apiVersion: import_zod31.z.literal("3"),
-  requestedActions: import_zod31.z.array(AppAction).max(APP_ACTIONS.length).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
-  extensions: import_zod31.z.array(appContributionSchema).min(1).max(32),
-  launchers: import_zod31.z.array(appLauncherSchema).max(32).default([]),
-  locales: import_zod31.z.record(import_zod31.z.string().regex(/^(en|de|es|fr|ja)$/), import_zod31.z.record(import_zod31.z.string().max(100), import_zod31.z.string().max(4e3))).default({})
+  apiVersion: import_zod32.z.literal("3"),
+  requestedActions: import_zod32.z.array(AppAction).max(APP_ACTIONS.length).default([]).refine((actions) => new Set(actions).size === actions.length, "App actions must be unique"),
+  extensions: import_zod32.z.array(appContributionSchema).min(1).max(32),
+  launchers: import_zod32.z.array(appLauncherSchema).max(32).default([]),
+  locales: import_zod32.z.record(import_zod32.z.string().regex(/^(en|de|es|fr|ja)$/), import_zod32.z.record(import_zod32.z.string().max(100), import_zod32.z.string().max(4e3))).default({})
 }).strict().superRefine((app, ctx) => {
   const ids = [...app.extensions, ...app.launchers].map((item) => item.id);
   if (new Set(ids).size !== ids.length)
@@ -7989,198 +7998,198 @@ var ContributionApp = extensionOnlyAppSchema.extend({
     if (Object.keys(dictionary ?? {}).length > 200)
       ctx.addIssue({ code: "custom", path: ["locales", language], message: "At most 200 translations per language" });
 });
-var AppDefinition = import_zod31.z.union([SelfHostedApp, ExtensionOnlyApp, ContributionApp]);
-var appTunnelRegistrationSchema = import_zod31.z.object({
-  upstream: import_zod31.z.string().url().max(2048),
-  previewToken: import_zod31.z.string().regex(/^[A-Za-z0-9_-]{43}$/),
-  workspace: import_zod31.z.object({ kind: import_zod31.z.enum(["user", "team", "org"]), id: import_zod31.z.string().min(1).max(128) }).strict().optional()
+var AppDefinition = import_zod32.z.union([SelfHostedApp, ExtensionOnlyApp, ContributionApp]);
+var appTunnelRegistrationSchema = import_zod32.z.object({
+  upstream: import_zod32.z.string().url().max(2048),
+  previewToken: import_zod32.z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+  workspace: import_zod32.z.object({ kind: import_zod32.z.enum(["user", "team", "org"]), id: import_zod32.z.string().min(1).max(128) }).strict().optional()
 }).strict();
 
 // packages/schema/src/plugin/runtime.ts
-var import_zod32 = require("zod");
-var identifier = import_zod32.z.string().regex(/^[a-z][a-z0-9-]{0,63}$/);
-var packageName = import_zod32.z.string().regex(/^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/i);
+var import_zod33 = require("zod");
+var identifier2 = import_zod33.z.string().regex(/^[a-z][a-z0-9-]{0,63}$/);
+var packageName = import_zod33.z.string().regex(/^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/i);
 var PypiPackageName = packageName.transform((name) => name.toLowerCase().replace(/[-_.]+/g, "-"));
-var PypiVersion = import_zod32.z.string().min(1).max(128).regex(/^[0-9][a-zA-Z0-9.!+_-]*$/);
-var PluginRuntimeRequirement = import_zod32.z.object({
-  runtime: identifier,
-  versionConstraint: import_zod32.z.string().min(1).max(120),
-  adapterApi: import_zod32.z.literal("1"),
-  dependencyGroups: import_zod32.z.array(identifier).max(100).default([])
+var PypiVersion = import_zod33.z.string().min(1).max(128).regex(/^[0-9][a-zA-Z0-9.!+_-]*$/);
+var PluginRuntimeRequirement = import_zod33.z.object({
+  runtime: identifier2,
+  versionConstraint: import_zod33.z.string().min(1).max(120),
+  adapterApi: import_zod33.z.literal("1"),
+  dependencyGroups: import_zod33.z.array(identifier2).max(100).default([])
 }).strict();
-var PluginDependencyGroup = import_zod32.z.discriminatedUnion("ecosystem", [
-  import_zod32.z.object({
-    ecosystem: import_zod32.z.literal("pypi"),
-    packages: import_zod32.z.array(
-      import_zod32.z.object({
+var PluginDependencyGroup = import_zod33.z.discriminatedUnion("ecosystem", [
+  import_zod33.z.object({
+    ecosystem: import_zod33.z.literal("pypi"),
+    packages: import_zod33.z.array(
+      import_zod33.z.object({
         name: PypiPackageName,
         version: PypiVersion
       }).strict()
     ).min(1).max(100)
   }).strict(),
-  import_zod32.z.object({
-    ecosystem: import_zod32.z.literal("npm"),
-    packages: import_zod32.z.array(
-      import_zod32.z.object({
-        name: import_zod32.z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/),
-        version: import_zod32.z.string().regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/)
+  import_zod33.z.object({
+    ecosystem: import_zod33.z.literal("npm"),
+    packages: import_zod33.z.array(
+      import_zod33.z.object({
+        name: import_zod33.z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/),
+        version: import_zod33.z.string().regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/)
       }).strict()
     ).min(1).max(100)
   }).strict()
 ]);
-var PluginExecution = import_zod32.z.object({
-  runtimeRef: identifier,
-  entrypoint: import_zod32.z.object({
-    kind: import_zod32.z.literal("file"),
-    path: import_zod32.z.string().min(1).max(1024).refine(
+var PluginExecution = import_zod33.z.object({
+  runtimeRef: identifier2,
+  entrypoint: import_zod33.z.object({
+    kind: import_zod33.z.literal("file"),
+    path: import_zod33.z.string().min(1).max(1024).refine(
       (path3) => !path3.includes("\\") && !path3.includes(":") && !path3.includes("\0") && path3.split("/").every((part) => !!part && part !== "." && part !== ".."),
       "Entrypoints must be safe relative file paths"
     )
   }).strict(),
-  args: import_zod32.z.array(
-    import_zod32.z.string().max(4096).refine((arg) => !arg.includes("\0"))
+  args: import_zod33.z.array(
+    import_zod33.z.string().max(4096).refine((arg) => !arg.includes("\0"))
   ).max(100).default([]),
   /** Original SDK identity survives project aliases and canvas instance IDs. */
-  invokeAs: import_zod32.z.string().min(1).max(300).optional()
+  invokeAs: import_zod33.z.string().min(1).max(300).optional()
 }).strict();
-var PluginRuntimePlan = import_zod32.z.object({
-  fingerprint: import_zod32.z.string().regex(/^[a-f0-9]{64}$/),
-  ready: import_zod32.z.boolean(),
-  canPrepare: import_zod32.z.boolean(),
-  runtimes: import_zod32.z.array(
-    import_zod32.z.object({
-      runtime: import_zod32.z.string(),
-      required: import_zod32.z.string(),
-      version: import_zod32.z.string().optional(),
-      status: import_zod32.z.enum(["ready", "setup", "blocked"]),
-      message: import_zod32.z.string()
+var PluginRuntimePlan = import_zod33.z.object({
+  fingerprint: import_zod33.z.string().regex(/^[a-f0-9]{64}$/),
+  ready: import_zod33.z.boolean(),
+  canPrepare: import_zod33.z.boolean(),
+  runtimes: import_zod33.z.array(
+    import_zod33.z.object({
+      runtime: import_zod33.z.string(),
+      required: import_zod33.z.string(),
+      version: import_zod33.z.string().optional(),
+      status: import_zod33.z.enum(["ready", "setup", "blocked"]),
+      message: import_zod33.z.string()
     })
   ),
-  packages: import_zod32.z.array(import_zod32.z.object({ ecosystem: import_zod32.z.enum(["npm", "pypi"]), name: import_zod32.z.string(), version: import_zod32.z.string() })),
-  files: import_zod32.z.array(import_zod32.z.string())
+  packages: import_zod33.z.array(import_zod33.z.object({ ecosystem: import_zod33.z.enum(["npm", "pypi"]), name: import_zod33.z.string(), version: import_zod33.z.string() })),
+  files: import_zod33.z.array(import_zod33.z.string())
 });
-var PluginArtifactTarget = import_zod32.z.object({
-  sourceLanguage: identifier,
-  runtime: identifier,
-  runtimeVersion: import_zod32.z.string().regex(/^\d+\.\d+\.\d+$/),
-  platform: import_zod32.z.enum(["portable", "linux", "darwin", "win32"]),
-  arch: identifier,
-  abi: identifier,
-  libc: import_zod32.z.enum(["glibc", "musl", "none"]).optional(),
-  archiveSha256: import_zod32.z.string().regex(/^[a-f0-9]{64}$/)
+var PluginArtifactTarget = import_zod33.z.object({
+  sourceLanguage: identifier2,
+  runtime: identifier2,
+  runtimeVersion: import_zod33.z.string().regex(/^\d+\.\d+\.\d+$/),
+  platform: import_zod33.z.enum(["portable", "linux", "darwin", "win32"]),
+  arch: identifier2,
+  abi: identifier2,
+  libc: import_zod33.z.enum(["glibc", "musl", "none"]).optional(),
+  archiveSha256: import_zod33.z.string().regex(/^[a-f0-9]{64}$/)
 }).strict().refine(
   (target) => target.platform !== "linux" || target.libc === "glibc" || target.libc === "musl",
   "Linux artifacts require their libc family"
 );
 
 // packages/schema/src/plugin/plugin.ts
-var PluginScope = import_zod33.z.enum(["user", "group", "org", "public"]);
-var PluginUiTarget = import_zod33.z.enum(["node.inspector.inputs"]);
-var pluginUiEntry = import_zod33.z.string().min(1).max(1024).refine(
+var PluginScope = import_zod34.z.enum(["user", "group", "org", "public"]);
+var PluginUiTarget = import_zod34.z.enum(["node.inspector.inputs"]);
+var pluginUiEntry = import_zod34.z.string().min(1).max(1024).refine(
   (value) => !value.startsWith("/") && !value.includes("\\") && !value.split("/").includes("..") && /\.[cm]?[jt]sx?$/.test(value),
   "UI entries must be relative JavaScript/TypeScript module paths"
 );
-var PluginNodeUi = import_zod33.z.object({
-  apiVersion: import_zod33.z.literal("1"),
-  renderers: import_zod33.z.record(
-    import_zod33.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i, "renderer id must be alphanumeric/dash/underscore"),
-    import_zod33.z.object({
-      label: import_zod33.z.string().min(1).max(240),
-      targets: import_zod33.z.record(PluginUiTarget, pluginUiEntry)
+var PluginNodeUi = import_zod34.z.object({
+  apiVersion: import_zod34.z.literal("1"),
+  renderers: import_zod34.z.record(
+    import_zod34.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i, "renderer id must be alphanumeric/dash/underscore"),
+    import_zod34.z.object({
+      label: import_zod34.z.string().min(1).max(240),
+      targets: import_zod34.z.record(PluginUiTarget, pluginUiEntry)
     }).strict()
   ).refine((renderers) => Object.keys(renderers).length > 0, "UI needs at least one renderer")
 }).strict();
-var NpmClientBinding = import_zod33.z.object({
-  module: import_zod33.z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+(?:\/[a-zA-Z0-9~._-]+)*$/).refine((value) => !value.split("/").some((part) => part === "." || part === ".."), "Unsafe npm module path"),
-  export: import_zod33.z.string().regex(/^[$A-Z_a-z][$\w]*$/),
-  options: import_zod33.z.record(import_zod33.z.unknown()).optional(),
-  env: import_zod33.z.record(
-    import_zod33.z.string().regex(/^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*$/).refine(
+var NpmClientBinding = import_zod34.z.object({
+  module: import_zod34.z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+(?:\/[a-zA-Z0-9~._-]+)*$/).refine((value) => !value.split("/").some((part) => part === "." || part === ".."), "Unsafe npm module path"),
+  export: import_zod34.z.string().regex(/^[$A-Z_a-z][$\w]*$/),
+  options: import_zod34.z.record(import_zod34.z.unknown()).optional(),
+  env: import_zod34.z.record(
+    import_zod34.z.string().regex(/^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*$/).refine(
       (path3) => !path3.split(".").some((key) => ["__proto__", "prototype", "constructor"].includes(key)),
       "Unsafe option path"
     ),
-    import_zod33.z.string().regex(/^[A-Z_][A-Z0-9_]*$/)
+    import_zod34.z.string().regex(/^[A-Z_][A-Z0-9_]*$/)
   ).optional()
 }).strict();
-var PluginImplementationSource = import_zod33.z.discriminatedUnion("kind", [
-  import_zod33.z.object({ kind: import_zod33.z.literal("plugin") }).strict(),
-  import_zod33.z.object({ kind: import_zod33.z.literal("pypi"), package: PypiPackageName, version: PypiVersion }).strict(),
-  import_zod33.z.object({
-    kind: import_zod33.z.literal("npm"),
-    package: import_zod33.z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/),
-    version: import_zod33.z.string().regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/)
+var PluginImplementationSource = import_zod34.z.discriminatedUnion("kind", [
+  import_zod34.z.object({ kind: import_zod34.z.literal("plugin") }).strict(),
+  import_zod34.z.object({ kind: import_zod34.z.literal("pypi"), package: PypiPackageName, version: PypiVersion }).strict(),
+  import_zod34.z.object({
+    kind: import_zod34.z.literal("npm"),
+    package: import_zod34.z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/),
+    version: import_zod34.z.string().regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/)
   }).strict()
 ]);
-var PluginNpmDependency = import_zod33.z.object({ package: import_zod33.z.string(), version: import_zod33.z.string(), spec: import_zod33.z.string() }).strict();
-var NpmClientDefinition = import_zod33.z.object({
+var PluginNpmDependency = import_zod34.z.object({ package: import_zod34.z.string(), version: import_zod34.z.string(), spec: import_zod34.z.string() }).strict();
+var NpmClientDefinition = import_zod34.z.object({
   module: NpmClientBinding.shape.module,
   export: NpmClientBinding.shape.export,
-  construction: import_zod33.z.enum(["call", "new"]),
-  overload: import_zod33.z.number().int().nonnegative().optional(),
-  async: import_zod33.z.boolean(),
-  parameters: import_zod33.z.array(
-    import_zod33.z.object({
-      name: import_zod33.z.string().regex(/^[A-Za-z_$][\w$]*$/),
-      required: import_zod33.z.boolean(),
-      rest: import_zod33.z.boolean(),
+  construction: import_zod34.z.enum(["call", "new"]),
+  overload: import_zod34.z.number().int().nonnegative().optional(),
+  async: import_zod34.z.boolean(),
+  parameters: import_zod34.z.array(
+    import_zod34.z.object({
+      name: import_zod34.z.string().regex(/^[A-Za-z_$][\w$]*$/),
+      required: import_zod34.z.boolean(),
+      rest: import_zod34.z.boolean(),
       schema: JsonSchema
     })
   ),
   inputs: JsonSchema,
-  label: import_zod33.z.string().optional(),
-  fields: import_zod33.z.record(import_zod33.z.object({ label: import_zod33.z.string(), secret: import_zod33.z.boolean().optional() })).optional()
+  label: import_zod34.z.string().optional(),
+  fields: import_zod34.z.record(import_zod34.z.object({ label: import_zod34.z.string(), secret: import_zod34.z.boolean().optional() })).optional()
 }).strict();
-var NpmSdkExport = import_zod33.z.object({
-  name: import_zod33.z.string(),
-  kind: import_zod33.z.enum(["type", "constant", "function", "client"]),
-  type: import_zod33.z.string(),
-  members: import_zod33.z.array(NpmSdkMember).max(2e4).optional(),
-  declaration: import_zod33.z.string().max(1e5).optional(),
+var NpmSdkExport = import_zod34.z.object({
+  name: import_zod34.z.string(),
+  kind: import_zod34.z.enum(["type", "constant", "function", "client"]),
+  type: import_zod34.z.string(),
+  members: import_zod34.z.array(NpmSdkMember).max(2e4).optional(),
+  declaration: import_zod34.z.string().max(1e5).optional(),
   typeView: PluginTypeView.optional(),
   schema: JsonSchema.optional()
 }).strict();
-var PluginNode = import_zod33.z.object({
-  id: import_zod33.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i, "node id must be alphanumeric/dash/underscore"),
+var PluginNode = import_zod34.z.object({
+  id: import_zod34.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i, "node id must be alphanumeric/dash/underscore"),
   /** The command the engine spawns, relative to the plugin folder. */
-  command: import_zod33.z.string().default(""),
-  language: import_zod33.z.string().optional(),
-  sourceLanguage: import_zod33.z.string().regex(/^[a-z][a-z0-9-]{0,63}$/).optional(),
+  command: import_zod34.z.string().default(""),
+  language: import_zod34.z.string().optional(),
+  sourceLanguage: import_zod34.z.string().regex(/^[a-z][a-z0-9-]{0,63}$/).optional(),
   execution: PluginExecution.optional(),
-  label: import_zod33.z.string().min(1).max(240).optional(),
-  symbol: import_zod33.z.string().min(1).max(16).optional(),
-  description: import_zod33.z.string().optional(),
+  label: import_zod34.z.string().min(1).max(240).optional(),
+  symbol: import_zod34.z.string().min(1).max(16).optional(),
+  description: import_zod34.z.string().optional(),
   icon: IconValue.optional(),
-  inheritPluginIcon: import_zod33.z.boolean().optional(),
-  trigger: import_zod33.z.boolean().optional(),
+  inheritPluginIcon: import_zod34.z.boolean().optional(),
+  trigger: import_zod34.z.boolean().optional(),
   inputs: JsonSchema.optional(),
   outputs: JsonSchema.optional(),
   /** Names of environment variables / secrets this node expects to be injected. */
-  env: import_zod33.z.array(import_zod33.z.string()).optional(),
-  connections: import_zod33.z.array(import_zod33.z.string().min(1)).optional(),
-  defaults: import_zod33.z.record(import_zod33.z.unknown()).optional(),
-  client: import_zod33.z.string().optional(),
-  bindings: import_zod33.z.record(import_zod33.z.string().regex(/^[A-Za-z_$][\w$]*$/), NpmClientBinding).optional(),
+  env: import_zod34.z.array(import_zod34.z.string()).optional(),
+  connections: import_zod34.z.array(import_zod34.z.string().min(1)).optional(),
+  defaults: import_zod34.z.record(import_zod34.z.unknown()).optional(),
+  client: import_zod34.z.string().optional(),
+  bindings: import_zod34.z.record(import_zod34.z.string().regex(/^[A-Za-z_$][\w$]*$/), NpmClientBinding).optional(),
   ui: PluginNodeUi.optional(),
   source: PluginImplementationSource.optional(),
   /** Explicit mapping to the library export; workflow adapters keep their own argument convention. */
-  libraryExport: import_zod33.z.string().regex(/^[$A-Z_a-z][$\w]*$/).optional(),
+  libraryExport: import_zod34.z.string().regex(/^[$A-Z_a-z][$\w]*$/).optional(),
   /** Compiler-owned original import identity, never a presentation override. */
-  implementation: import_zod33.z.object({
-    module: import_zod33.z.string(),
-    export: import_zod33.z.string(),
-    methodPath: import_zod33.z.array(
-      import_zod33.z.string().regex(/^[$A-Z_a-z][$\w]*$/).refine((part) => !["__proto__", "prototype", "constructor"].includes(part))
+  implementation: import_zod34.z.object({
+    module: import_zod34.z.string(),
+    export: import_zod34.z.string(),
+    methodPath: import_zod34.z.array(
+      import_zod34.z.string().regex(/^[$A-Z_a-z][$\w]*$/).refine((part) => !["__proto__", "prototype", "constructor"].includes(part))
     ).min(1).max(8).optional(),
-    parameters: import_zod33.z.array(import_zod33.z.string()),
-    rest: import_zod33.z.string().optional(),
-    outputStreams: import_zod33.z.array(import_zod33.z.array(import_zod33.z.string().refine((part) => !["__proto__", "prototype", "constructor"].includes(part))).max(8)).max(16).optional()
+    parameters: import_zod34.z.array(import_zod34.z.string()),
+    rest: import_zod34.z.string().optional(),
+    outputStreams: import_zod34.z.array(import_zod34.z.array(import_zod34.z.string().refine((part) => !["__proto__", "prototype", "constructor"].includes(part))).max(8)).max(16).optional()
   }).strict().optional()
 });
-var PluginPermission = import_zod33.z.object({
-  resource: import_zod33.z.enum(["project_data", "secrets", "network"]),
-  access: import_zod33.z.enum(["read", "write", "outbound"])
+var PluginPermission = import_zod34.z.object({
+  resource: import_zod34.z.enum(["project_data", "secrets", "network"]),
+  access: import_zod34.z.enum(["read", "write", "outbound"])
 });
-var PluginCategory = import_zod33.z.enum([
+var PluginCategory = import_zod34.z.enum([
   "ai",
   "api",
   "communication",
@@ -8193,66 +8202,67 @@ var PluginCategory = import_zod33.z.enum([
   "utilities",
   "other"
 ]);
-var PluginLicense = import_zod33.z.enum(["MIT", "Apache-2.0"]);
-var PluginIntegration = import_zod33.z.object({
+var PluginLicense = import_zod34.z.enum(["MIT", "Apache-2.0"]);
+var PluginIntegration = import_zod34.z.object({
   // Keep historical/custom categories readable; creation selectors use PluginCategory.
-  category: import_zod33.z.string().optional(),
-  tags: import_zod33.z.array(import_zod33.z.string()).default([]),
+  category: import_zod34.z.string().optional(),
+  tags: import_zod34.z.array(import_zod34.z.string()).default([]),
   /** Secrets/env the integration needs to authenticate (e.g. ["JIRA_TOKEN"]). */
-  auth: import_zod33.z.array(import_zod33.z.string()).optional(),
+  auth: import_zod34.z.array(import_zod34.z.string()).optional(),
   /** Original npm dependency used by generated npm nodes. */
   npm: PluginNpmDependency.optional(),
-  npmDependencies: import_zod33.z.array(PluginNpmDependency).optional()
+  npmDependencies: import_zod34.z.array(PluginNpmDependency).optional()
 });
-var PluginConnection = import_zod33.z.object({
-  label: import_zod33.z.string().min(1).max(240),
-  description: import_zod33.z.string().max(4e3).optional(),
-  fields: import_zod33.z.record(
-    import_zod33.z.string().regex(/^[A-Z_][A-Z0-9_]*$/, "credential fields must be environment variable names"),
-    import_zod33.z.object({
-      label: import_zod33.z.string().min(1).max(240),
-      description: import_zod33.z.string().max(4e3).optional(),
-      secret: import_zod33.z.boolean().default(true),
-      required: import_zod33.z.boolean().default(true)
+var PluginConnection = import_zod34.z.object({
+  label: import_zod34.z.string().min(1).max(240),
+  description: import_zod34.z.string().max(4e3).optional(),
+  fields: import_zod34.z.record(
+    import_zod34.z.string().regex(/^[A-Z_][A-Z0-9_]*$/, "credential fields must be environment variable names"),
+    import_zod34.z.object({
+      label: import_zod34.z.string().min(1).max(240),
+      description: import_zod34.z.string().max(4e3).optional(),
+      secret: import_zod34.z.boolean().default(true),
+      required: import_zod34.z.boolean().default(true)
     }).strict()
   )
 }).strict();
-var PluginManifest = import_zod33.z.object({
-  schemaVersion: import_zod33.z.enum(["1", "2"]).default(PLUGIN_SCHEMA_VERSION),
-  runtimeRequirements: import_zod33.z.record(import_zod33.z.string().regex(/^[a-z][a-z0-9-]{0,63}$/), PluginRuntimeRequirement).optional(),
-  dependencyGroups: import_zod33.z.record(import_zod33.z.string().regex(/^[a-z][a-z0-9-]{0,63}$/), PluginDependencyGroup).optional(),
+var PluginManifest = import_zod34.z.object({
+  schemaVersion: import_zod34.z.enum(["1", "2"]).default(PLUGIN_SCHEMA_VERSION),
+  runtimeRequirements: import_zod34.z.record(import_zod34.z.string().regex(/^[a-z][a-z0-9-]{0,63}$/), PluginRuntimeRequirement).optional(),
+  dependencyGroups: import_zod34.z.record(import_zod34.z.string().regex(/^[a-z][a-z0-9-]{0,63}$/), PluginDependencyGroup).optional(),
   /** Stable plugin id; namespaces its nodes as `<id>/<nodeId>`. */
-  id: import_zod33.z.string().regex(/^[a-z0-9][a-z0-9-]*$/, "plugin id must be lowercase alphanumeric/dash"),
-  name: import_zod33.z.string(),
-  version: import_zod33.z.string(),
-  description: import_zod33.z.string().optional(),
-  /** Implementation authority; absent on legacy artifacts. */
+  id: import_zod34.z.string().regex(/^[a-z0-9][a-z0-9-]*$/, "plugin id must be lowercase alphanumeric/dash"),
+  name: import_zod34.z.string(),
+  version: import_zod34.z.string(),
+  description: import_zod34.z.string().optional(),
+  /** Implementation authority; absent on hand-written and OpenAPI-generated plugins. */
   source: PluginImplementationSource.optional(),
-  library: import_zod33.z.object({
-    format: import_zod33.z.literal(1),
-    entry: import_zod33.z.literal("library/index.js"),
-    types: import_zod33.z.literal("library/index.d.ts"),
-    exports: import_zod33.z.array(import_zod33.z.string().regex(/^[$A-Z_a-z][$\w]*$/)).min(1)
+  library: import_zod34.z.object({
+    format: import_zod34.z.literal(1),
+    entry: import_zod34.z.literal("library/index.js"),
+    types: import_zod34.z.literal("library/index.d.ts"),
+    exports: import_zod34.z.array(import_zod34.z.string().regex(/^[$A-Z_a-z][$\w]*$/)).min(1)
   }).strict().optional(),
   /** Source-level inventory shown alongside executable nodes in plugin overviews. */
   contents: PluginContents.optional(),
+  serviceDiscovery: import_zod34.z.array(PluginServiceDiscoveryRule).min(1).max(64).optional(),
   icon: IconValue.optional(),
-  inheritPluginIcon: import_zod33.z.boolean().optional(),
-  author: import_zod33.z.string().optional(),
-  contributors: import_zod33.z.array(import_zod33.z.string().trim().min(1).max(240)).max(100).optional(),
-  repository: import_zod33.z.string().url().regex(/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/).optional(),
-  homepage: import_zod33.z.string().optional(),
-  license: import_zod33.z.string().optional(),
+  inheritPluginIcon: import_zod34.z.boolean().optional(),
+  author: import_zod34.z.string().optional(),
+  contributors: import_zod34.z.array(import_zod34.z.string().trim().min(1).max(240)).max(100).optional(),
+  repository: import_zod34.z.string().url().regex(/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/).optional(),
+  homepage: import_zod34.z.string().optional(),
+  license: import_zod34.z.string().optional(),
   /** Distribution tiers this plugin may be discovered/installed from. Private by default. */
-  scope: import_zod33.z.array(PluginScope).default(["user"]),
+  scope: import_zod34.z.array(PluginScope).default(["user"]),
   /** Coarse runtime capabilities the plugin requests; consented to at install. */
-  permissions: import_zod33.z.array(PluginPermission).default([]),
+  permissions: import_zod34.z.array(PluginPermission).default([]),
   app: AppDefinition.optional(),
   integration: PluginIntegration.optional(),
-  connections: import_zod33.z.record(import_zod33.z.string().regex(/^[a-z0-9][a-z0-9-]*$/), PluginConnection).optional(),
-  clients: import_zod33.z.record(NpmClientDefinition).optional(),
-  sdkExports: import_zod33.z.array(NpmSdkExport).optional(),
-  nodes: import_zod33.z.array(PluginNode).default([])
+  connections: import_zod34.z.record(import_zod34.z.string().regex(/^[a-z0-9][a-z0-9-]*$/), PluginConnection).optional(),
+  clients: import_zod34.z.record(NpmClientDefinition).optional(),
+  sdkExports: import_zod34.z.array(NpmSdkExport).optional(),
+  nodes: import_zod34.z.array(PluginNode).default([])
 }).superRefine((manifest2, ctx) => {
   const issue = (path3, message) => ctx.addIssue({ code: "custom", path: path3, message });
   if (manifest2.schemaVersion === "1" && (manifest2.runtimeRequirements || manifest2.dependencyGroups || manifest2.nodes.some((node) => node.execution || node.sourceLanguage)))
@@ -8314,7 +8324,7 @@ var PluginManifest = import_zod33.z.object({
         issue(["nodes", index], "Every v2 node requires sourceLanguage and input/output schemas");
       if (node.command || node.language)
         issue(["nodes", index], "v2 nodes use execution and sourceLanguage instead of command and language");
-    } else if (!node.command.trim()) issue(["nodes", index, "command"], "Legacy nodes require a command");
+    } else if (!node.command.trim()) issue(["nodes", index, "command"], "Schema v1 nodes require a command");
     if (ids.has(node.id))
       ctx.addIssue({ code: "custom", path: ["nodes", index, "id"], message: "node IDs must be unique" });
     ids.add(node.id);
@@ -8383,109 +8393,189 @@ var PluginManifest = import_zod33.z.object({
 });
 
 // packages/schema/src/plugin/clients.ts
-var identifier2 = import_zod34.z.string().regex(/^[A-Za-z_$][\w$]*$/);
-var ProjectClientReference = import_zod34.z.object({ path: import_zod34.z.string().min(1), export: identifier2 }).strict();
-var ClientValue = import_zod34.z.discriminatedUnion("kind", [
-  import_zod34.z.object({ kind: import_zod34.z.literal("sdk"), export: identifier2 }).strict(),
-  import_zod34.z.object({ kind: import_zod34.z.literal("literal"), value: import_zod34.z.unknown() }).strict(),
-  import_zod34.z.object({ kind: import_zod34.z.literal("env"), name: import_zod34.z.string().regex(/^[A-Za-z_][A-Za-z0-9_]*$/) }).strict(),
-  import_zod34.z.object({ kind: import_zod34.z.literal("symbol"), ...ProjectClientReference.shape }).strict()
+var identifier3 = import_zod35.z.string().regex(/^[A-Za-z_$][\w$]*$/);
+var ProjectClientReference = import_zod35.z.object({ path: import_zod35.z.string().min(1), export: identifier3 }).strict();
+var ClientValue = import_zod35.z.discriminatedUnion("kind", [
+  import_zod35.z.object({ kind: import_zod35.z.literal("sdk"), export: identifier3 }).strict(),
+  import_zod35.z.object({ kind: import_zod35.z.literal("literal"), value: import_zod35.z.unknown() }).strict(),
+  import_zod35.z.object({ kind: import_zod35.z.literal("env"), name: import_zod35.z.string().regex(/^[A-Za-z_][A-Za-z0-9_]*$/) }).strict(),
+  import_zod35.z.object({ kind: import_zod35.z.literal("symbol"), ...ProjectClientReference.shape }).strict()
 ]);
-var ClientConfiguration = import_zod34.z.record(import_zod34.z.string().min(1), ClientValue);
-var NodeClientRequest = import_zod34.z.object({
-  revision: import_zod34.z.string().min(1),
-  selection: import_zod34.z.discriminatedUnion("kind", [
-    import_zod34.z.object({ kind: import_zod34.z.literal("keep") }).strict(),
-    import_zod34.z.object({ kind: import_zod34.z.literal("existing"), ...ProjectClientReference.shape }).strict(),
-    import_zod34.z.object({ kind: import_zod34.z.literal("create"), name: identifier2.optional(), values: ClientConfiguration }).strict(),
-    import_zod34.z.object({ kind: import_zod34.z.literal("configure"), values: ClientConfiguration }).strict()
+var ClientConfiguration = import_zod35.z.record(import_zod35.z.string().min(1), ClientValue);
+var NodeClientRequest = import_zod35.z.object({
+  revision: import_zod35.z.string().min(1),
+  selection: import_zod35.z.discriminatedUnion("kind", [
+    import_zod35.z.object({ kind: import_zod35.z.literal("keep") }).strict(),
+    import_zod35.z.object({ kind: import_zod35.z.literal("existing"), ...ProjectClientReference.shape }).strict(),
+    import_zod35.z.object({ kind: import_zod35.z.literal("create"), name: identifier3.optional(), values: ClientConfiguration }).strict(),
+    import_zod35.z.object({ kind: import_zod35.z.literal("configure"), values: ClientConfiguration }).strict()
   ]),
-  arguments: import_zod34.z.array(import_zod34.z.string().max(1e5)).optional()
+  arguments: import_zod35.z.array(import_zod35.z.string().max(1e5)).optional()
 }).strict();
-var NodeClientView = import_zod34.z.object({
-  revision: import_zod34.z.string(),
+var NodeClientView = import_zod35.z.object({
+  revision: import_zod35.z.string(),
   definition: NpmClientDefinition,
-  exports: import_zod34.z.array(NpmSdkExport).optional(),
-  existing: import_zod34.z.array(ProjectClientReference),
+  exports: import_zod35.z.array(NpmSdkExport).optional(),
+  existing: import_zod35.z.array(ProjectClientReference),
   selected: ProjectClientReference.optional(),
   values: ClientConfiguration.optional(),
-  arguments: import_zod34.z.array(import_zod34.z.string()).optional(),
-  parameters: import_zod34.z.array(import_zod34.z.string()),
-  usedBy: import_zod34.z.array(import_zod34.z.string()),
-  editable: import_zod34.z.boolean()
+  arguments: import_zod35.z.array(import_zod35.z.string()).optional(),
+  parameters: import_zod35.z.array(import_zod35.z.string()),
+  usedBy: import_zod35.z.array(import_zod35.z.string()),
+  editable: import_zod35.z.boolean()
 });
 
 // packages/schema/src/source/index.ts
-var import_zod36 = require("zod");
+var import_zod38 = require("zod");
+
+// packages/schema/src/source/constants.ts
+var SOURCE_EXECUTION_MAX_DEPTH = 64;
+var SOURCE_EXECUTION_MAX_VISIT_BYTES = 8 * 1024 * 1024;
 
 // packages/schema/src/octonode/constants/constants.ts
 var CONFIG_API_VERSION = "octonode.dev/v1";
 
+// packages/schema/src/source/execution.ts
+var import_zod36 = require("zod");
+var SourceExecution = import_zod36.z.object({
+  key: import_zod36.z.string().min(1),
+  entry: import_zod36.z.boolean().optional(),
+  output: import_zod36.z.boolean().optional(),
+  owner: import_zod36.z.string().optional()
+});
+var SourceOperand = import_zod36.z.object({
+  owner: import_zod36.z.string().min(1),
+  port: import_zod36.z.string().min(1),
+  display: import_zod36.z.boolean().optional()
+});
+var SourceOperandView = SourceOperand.extend({ text: import_zod36.z.string().optional() });
+var SourceParams = import_zod36.z.record(import_zod36.z.unknown());
+var SourceVisitPoint = import_zod36.z.object({
+  node: import_zod36.z.string().min(1),
+  phase: import_zod36.z.enum(["statement", "condition", "update", "exit"]),
+  iterations: import_zod36.z.array(import_zod36.z.object({ loop: import_zod36.z.string().min(1), iteration: import_zod36.z.number().int().nonnegative() })).max(SOURCE_EXECUTION_MAX_DEPTH)
+});
+var SourceVisitIdentity = SourceVisitPoint.extend({
+  id: import_zod36.z.string().min(1),
+  invocationId: import_zod36.z.string().uuid(),
+  sequence: import_zod36.z.number().int().nonnegative()
+});
+var SourceCompletion = import_zod36.z.enum(["normal", "break", "continue", "return", "throw"]);
+var SourceExecutionFrame = import_zod36.z.discriminatedUnion("done", [
+  import_zod36.z.object({ done: import_zod36.z.literal(false), next: SourceVisitPoint, completion: SourceCompletion.optional() }).strict(),
+  import_zod36.z.object({ done: import_zod36.z.literal(true), result: import_zod36.z.unknown(), completion: SourceCompletion.optional() }).strict()
+]);
+var SourceVariable = import_zod36.z.object({
+  binding: import_zod36.z.string().min(1),
+  name: import_zod36.z.string().min(1),
+  operation: import_zod36.z.enum([
+    "declare",
+    "=",
+    "+=",
+    "-=",
+    "*=",
+    "/=",
+    "%=",
+    "**=",
+    "<<=",
+    ">>=",
+    ">>>=",
+    "&=",
+    "|=",
+    "^=",
+    "&&=",
+    "||=",
+    "??=",
+    "++",
+    "--"
+  ])
+});
+
 // packages/schema/src/source/actions.ts
-var import_zod35 = require("zod");
-var sourceActionSchema = import_zod35.z.object({
-  revision: import_zod35.z.string(),
-  apply: import_zod35.z.boolean().optional(),
-  action: import_zod35.z.discriminatedUnion("kind", [
-    import_zod35.z.object({
-      kind: import_zod35.z.literal("replace-node-source"),
-      targetPath: import_zod35.z.string(),
-      start: import_zod35.z.number().int().nonnegative(),
-      end: import_zod35.z.number().int().positive(),
-      expected: import_zod35.z.string().min(1).max(4 * 1024 * 1024),
-      source: import_zod35.z.string().min(1).max(4 * 1024 * 1024)
+var import_zod37 = require("zod");
+var sourceActionSchema = import_zod37.z.object({
+  revision: import_zod37.z.string(),
+  apply: import_zod37.z.boolean().optional(),
+  action: import_zod37.z.discriminatedUnion("kind", [
+    import_zod37.z.object({
+      kind: import_zod37.z.literal("replace-node-source"),
+      targetPath: import_zod37.z.string(),
+      start: import_zod37.z.number().int().nonnegative(),
+      end: import_zod37.z.number().int().positive(),
+      expected: import_zod37.z.string().min(1).max(4 * 1024 * 1024),
+      source: import_zod37.z.string().min(1).max(4 * 1024 * 1024)
     }),
-    import_zod35.z.object({
-      kind: import_zod35.z.literal("edit-file-import"),
-      targetPath: import_zod35.z.string(),
-      declaration: import_zod35.z.string().min(1).max(1e4),
-      remove: import_zod35.z.boolean().optional(),
-      previous: import_zod35.z.string().min(1).max(1e4).optional()
+    import_zod37.z.object({
+      kind: import_zod37.z.literal("edit-file-import"),
+      targetPath: import_zod37.z.string(),
+      declaration: import_zod37.z.string().min(1).max(1e4),
+      remove: import_zod37.z.boolean().optional(),
+      previous: import_zod37.z.string().min(1).max(1e4).optional()
     }),
-    import_zod35.z.object({ kind: import_zod35.z.literal("export-symbol"), symbolId: import_zod35.z.string() }),
-    import_zod35.z.object({ kind: import_zod35.z.literal("move-symbol"), symbolId: import_zod35.z.string(), targetPath: import_zod35.z.string() }),
-    import_zod35.z.object({
-      kind: import_zod35.z.literal("create-declaration"),
-      targetPath: import_zod35.z.string(),
-      declaration: import_zod35.z.string(),
-      ownerId: import_zod35.z.string().optional()
+    import_zod37.z.object({ kind: import_zod37.z.literal("export-symbol"), symbolId: import_zod37.z.string() }),
+    import_zod37.z.object({ kind: import_zod37.z.literal("set-symbol-exported"), symbolId: import_zod37.z.string(), exported: import_zod37.z.boolean() }),
+    import_zod37.z.object({ kind: import_zod37.z.literal("set-workflow-async"), symbolId: import_zod37.z.string(), async: import_zod37.z.boolean() }),
+    import_zod37.z.object({ kind: import_zod37.z.literal("move-symbol"), symbolId: import_zod37.z.string(), targetPath: import_zod37.z.string() }),
+    import_zod37.z.object({
+      kind: import_zod37.z.literal("create-declaration"),
+      targetPath: import_zod37.z.string(),
+      declaration: import_zod37.z.string(),
+      ownerId: import_zod37.z.string().optional()
     }),
-    import_zod35.z.object({ kind: import_zod35.z.literal("replace-symbol"), symbolId: import_zod35.z.string(), declaration: import_zod35.z.string() }),
-    import_zod35.z.object({
-      kind: import_zod35.z.literal("update-workflow-signature"),
-      symbolId: import_zod35.z.string(),
-      parameters: import_zod35.z.array(
-        import_zod35.z.object({
-          name: import_zod35.z.string().regex(/^[A-Za-z_$][\w$]*$/),
-          previousName: import_zod35.z.string().regex(/^[A-Za-z_$][\w$]*$/).optional(),
-          type: import_zod35.z.string().max(500).optional(),
-          optional: import_zod35.z.boolean().optional(),
-          rest: import_zod35.z.boolean().optional(),
-          initializer: import_zod35.z.string().max(2e3).optional()
+    import_zod37.z.object({
+      kind: import_zod37.z.literal("replace-symbol"),
+      symbolId: import_zod37.z.string(),
+      declaration: import_zod37.z.string(),
+      exported: import_zod37.z.boolean().optional()
+    }),
+    import_zod37.z.object({
+      kind: import_zod37.z.literal("update-workflow-signature"),
+      symbolId: import_zod37.z.string(),
+      parameters: import_zod37.z.array(
+        import_zod37.z.object({
+          name: import_zod37.z.string().regex(/^[A-Za-z_$][\w$]*$/),
+          previousName: import_zod37.z.string().regex(/^[A-Za-z_$][\w$]*$/).optional(),
+          type: import_zod37.z.string().max(500).optional(),
+          optional: import_zod37.z.boolean().optional(),
+          rest: import_zod37.z.boolean().optional(),
+          initializer: import_zod37.z.string().max(2e3).optional()
         })
       ).max(100),
-      returns: import_zod35.z.string().max(500).optional()
+      returns: import_zod37.z.string().max(500).optional(),
+      async: import_zod37.z.boolean().optional()
     }),
-    import_zod35.z.object({
-      kind: import_zod35.z.literal("replace-control-region"),
-      symbolId: import_zod35.z.string(),
-      regionId: import_zod35.z.string(),
-      source: import_zod35.z.string(),
-      imports: import_zod35.z.array(import_zod35.z.string()).max(100).optional()
+    import_zod37.z.object({
+      kind: import_zod37.z.literal("insert-workflow-operation"),
+      symbolId: import_zod37.z.string(),
+      operation: import_zod37.z.enum(["call", "dynamic-import"]),
+      module: import_zod37.z.string().min(1).max(1e3),
+      export: import_zod37.z.string().max(500).optional(),
+      binding: import_zod37.z.string().regex(/^[A-Za-z_$][\w$]*$/),
+      arguments: import_zod37.z.array(import_zod37.z.string().min(1).max(1e4)).max(100).optional(),
+      await: import_zod37.z.boolean(),
+      destructure: import_zod37.z.boolean().optional()
     }),
-    import_zod35.z.object({ kind: import_zod35.z.literal("delete-symbol"), symbolId: import_zod35.z.string() })
+    import_zod37.z.object({
+      kind: import_zod37.z.literal("replace-control-region"),
+      symbolId: import_zod37.z.string(),
+      regionId: import_zod37.z.string(),
+      source: import_zod37.z.string(),
+      imports: import_zod37.z.array(import_zod37.z.string()).max(100).optional(),
+      promoteAsync: import_zod37.z.boolean().optional()
+    }),
+    import_zod37.z.object({ kind: import_zod37.z.literal("delete-symbol"), symbolId: import_zod37.z.string() })
   ])
 });
 
 // packages/schema/src/source/index.ts
-var SourceLocation = import_zod36.z.object({
-  path: import_zod36.z.string(),
-  start: import_zod36.z.number().int().nonnegative(),
-  end: import_zod36.z.number().int().nonnegative(),
-  line: import_zod36.z.number().int().positive(),
-  column: import_zod36.z.number().int().positive()
+var SourceLocation = import_zod38.z.object({
+  path: import_zod38.z.string(),
+  start: import_zod38.z.number().int().nonnegative(),
+  end: import_zod38.z.number().int().nonnegative(),
+  line: import_zod38.z.number().int().positive(),
+  column: import_zod38.z.number().int().positive()
 });
-var SourceSymbolKind = import_zod36.z.enum([
+var SourceSymbolKind = import_zod38.z.enum([
   "function",
   "workflow",
   "module-workflow",
@@ -8497,24 +8587,24 @@ var SourceSymbolKind = import_zod36.z.enum([
   "class",
   "service"
 ]);
-var SourceDecorator = import_zod36.z.object({
-  name: import_zod36.z.string(),
-  text: import_zod36.z.string(),
-  arguments: import_zod36.z.array(import_zod36.z.string())
+var SourceDecorator = import_zod38.z.object({
+  name: import_zod38.z.string(),
+  text: import_zod38.z.string(),
+  arguments: import_zod38.z.array(import_zod38.z.string())
 });
-var SourceParameter = import_zod36.z.object({
-  name: import_zod36.z.string(),
-  type: import_zod36.z.string().optional(),
-  optional: import_zod36.z.boolean().optional(),
-  rest: import_zod36.z.boolean().optional(),
-  visibility: import_zod36.z.enum(["public", "protected", "private", "#private"]).optional(),
-  readonly: import_zod36.z.boolean().optional(),
-  decorators: import_zod36.z.array(SourceDecorator).optional(),
-  initializer: import_zod36.z.string().optional()
+var SourceParameter = import_zod38.z.object({
+  name: import_zod38.z.string(),
+  type: import_zod38.z.string().optional(),
+  optional: import_zod38.z.boolean().optional(),
+  rest: import_zod38.z.boolean().optional(),
+  visibility: import_zod38.z.enum(["public", "protected", "private", "#private"]).optional(),
+  readonly: import_zod38.z.boolean().optional(),
+  decorators: import_zod38.z.array(SourceDecorator).optional(),
+  initializer: import_zod38.z.string().optional()
 });
-var SourceClassMember = import_zod36.z.object({
-  name: import_zod36.z.string(),
-  kind: import_zod36.z.enum([
+var SourceClassMember = import_zod38.z.object({
+  name: import_zod38.z.string(),
+  kind: import_zod38.z.enum([
     "constructor",
     "method",
     "property",
@@ -8524,195 +8614,197 @@ var SourceClassMember = import_zod36.z.object({
     "index-signature",
     "static-block"
   ]),
-  type: import_zod36.z.string().optional(),
-  returns: import_zod36.z.string().optional(),
-  parameters: import_zod36.z.array(SourceParameter).optional(),
-  typeParameters: import_zod36.z.array(import_zod36.z.string()).optional(),
-  visibility: import_zod36.z.enum(["public", "protected", "private", "#private"]).optional(),
-  static: import_zod36.z.boolean().optional(),
-  readonly: import_zod36.z.boolean().optional(),
-  declare: import_zod36.z.boolean().optional(),
-  definite: import_zod36.z.boolean().optional(),
-  abstract: import_zod36.z.boolean().optional(),
-  optional: import_zod36.z.boolean().optional(),
-  override: import_zod36.z.boolean().optional(),
-  async: import_zod36.z.boolean().optional(),
-  generator: import_zod36.z.boolean().optional(),
-  decorators: import_zod36.z.array(SourceDecorator).optional(),
-  initializer: import_zod36.z.string().optional(),
-  workflowId: import_zod36.z.string().optional()
+  type: import_zod38.z.string().optional(),
+  returns: import_zod38.z.string().optional(),
+  parameters: import_zod38.z.array(SourceParameter).optional(),
+  typeParameters: import_zod38.z.array(import_zod38.z.string()).optional(),
+  visibility: import_zod38.z.enum(["public", "protected", "private", "#private"]).optional(),
+  static: import_zod38.z.boolean().optional(),
+  readonly: import_zod38.z.boolean().optional(),
+  declare: import_zod38.z.boolean().optional(),
+  definite: import_zod38.z.boolean().optional(),
+  abstract: import_zod38.z.boolean().optional(),
+  optional: import_zod38.z.boolean().optional(),
+  override: import_zod38.z.boolean().optional(),
+  async: import_zod38.z.boolean().optional(),
+  generator: import_zod38.z.boolean().optional(),
+  decorators: import_zod38.z.array(SourceDecorator).optional(),
+  initializer: import_zod38.z.string().optional(),
+  workflowId: import_zod38.z.string().optional()
 });
-var SourceDiagnostic = import_zod36.z.object({
-  severity: import_zod36.z.enum(["error", "warning"]),
-  code: import_zod36.z.string(),
-  message: import_zod36.z.string(),
+var SourceDiagnostic = import_zod38.z.object({
+  severity: import_zod38.z.enum(["error", "warning"]),
+  code: import_zod38.z.string(),
+  message: import_zod38.z.string(),
   location: SourceLocation.optional(),
-  typescriptCode: import_zod36.z.number().int().optional(),
+  typescriptCode: import_zod38.z.number().int().optional(),
   explanation: DiagnosticExplanation.optional()
 }).merge(DiagnosticContext);
-var SourceControlRegion = import_zod36.z.object({
-  id: import_zod36.z.string(),
-  kind: import_zod36.z.enum(SOURCE_CONTROL_REGION_KINDS),
-  path: import_zod36.z.array(import_zod36.z.number().int().nonnegative()),
-  parentId: import_zod36.z.string().optional(),
+var SourceControlRegion = import_zod38.z.object({
+  id: import_zod38.z.string(),
+  kind: import_zod38.z.enum(SOURCE_CONTROL_REGION_KINDS),
+  path: import_zod38.z.array(import_zod38.z.number().int().nonnegative()),
+  parentId: import_zod38.z.string().optional(),
   location: SourceLocation,
-  source: import_zod36.z.string()
+  source: import_zod38.z.string()
 });
-var SourceSymbol = import_zod36.z.object({
-  id: import_zod36.z.string(),
-  name: import_zod36.z.string(),
+var SourceSymbol = import_zod38.z.object({
+  id: import_zod38.z.string(),
+  name: import_zod38.z.string(),
   kind: SourceSymbolKind,
-  exported: import_zod36.z.boolean(),
-  declared: import_zod36.z.boolean().optional(),
+  exported: import_zod38.z.boolean(),
+  declared: import_zod38.z.boolean().optional(),
   location: SourceLocation,
-  declaration: import_zod36.z.string().optional(),
-  owner: import_zod36.z.string().optional(),
-  signature: import_zod36.z.object({
-    params: import_zod36.z.array(SourceParameter).optional(),
-    returns: import_zod36.z.string().optional(),
-    typeText: import_zod36.z.string().optional(),
-    decorators: import_zod36.z.array(SourceDecorator).optional(),
-    typeParameters: import_zod36.z.array(import_zod36.z.string()).optional(),
-    extends: import_zod36.z.string().optional(),
-    implements: import_zod36.z.array(import_zod36.z.string()).optional(),
-    abstract: import_zod36.z.boolean().optional(),
-    instances: import_zod36.z.array(import_zod36.z.string()).optional(),
-    members: import_zod36.z.array(SourceClassMember).optional()
+  declaration: import_zod38.z.string().optional(),
+  owner: import_zod38.z.string().optional(),
+  signature: import_zod38.z.object({
+    params: import_zod38.z.array(SourceParameter).optional(),
+    returns: import_zod38.z.string().optional(),
+    async: import_zod38.z.boolean().optional(),
+    typeText: import_zod38.z.string().optional(),
+    decorators: import_zod38.z.array(SourceDecorator).optional(),
+    typeParameters: import_zod38.z.array(import_zod38.z.string()).optional(),
+    extends: import_zod38.z.string().optional(),
+    implements: import_zod38.z.array(import_zod38.z.string()).optional(),
+    abstract: import_zod38.z.boolean().optional(),
+    instances: import_zod38.z.array(import_zod38.z.string()).optional(),
+    members: import_zod38.z.array(SourceClassMember).optional()
   }).optional(),
-  constant: import_zod36.z.object({
-    serializable: import_zod36.z.boolean(),
-    value: import_zod36.z.unknown().optional(),
-    declarationKind: import_zod36.z.literal("const").optional(),
-    mutable: import_zod36.z.boolean().optional(),
-    expression: import_zod36.z.string().optional()
+  constant: import_zod38.z.object({
+    serializable: import_zod38.z.boolean(),
+    value: import_zod38.z.unknown().optional(),
+    declarationKind: import_zod38.z.literal("const").optional(),
+    mutable: import_zod38.z.boolean().optional(),
+    expression: import_zod38.z.string().optional()
   }).optional(),
-  variable: import_zod36.z.object({
-    declarationKind: import_zod36.z.enum(["let", "var"]),
-    initializer: import_zod36.z.string().optional()
+  variable: import_zod38.z.object({
+    declarationKind: import_zod38.z.enum(["let", "var"]),
+    initializer: import_zod38.z.string().optional()
   }).optional(),
-  service: import_zod36.z.object({
-    classSymbol: import_zod36.z.string().optional(),
-    methods: import_zod36.z.array(import_zod36.z.string()),
-    lifecycle: import_zod36.z.enum(["invocation", "workflow-run", "worker"])
+  service: import_zod38.z.object({
+    classSymbol: import_zod38.z.string().optional(),
+    methods: import_zod38.z.array(import_zod38.z.string()),
+    lifecycle: import_zod38.z.enum(["invocation", "workflow-run", "worker"])
   }).optional(),
-  controlFlow: import_zod36.z.array(SourceControlRegion).optional()
+  controlFlow: import_zod38.z.array(SourceControlRegion).optional()
 });
-var SourceReference = import_zod36.z.object({
-  from: import_zod36.z.string(),
-  to: import_zod36.z.string(),
-  kind: import_zod36.z.enum(["call", "type", "value", "construct", "method"]),
+var SourceReference = import_zod38.z.object({
+  from: import_zod38.z.string(),
+  to: import_zod38.z.string(),
+  kind: import_zod38.z.enum(["call", "type", "value", "construct", "method"]),
   location: SourceLocation
 });
-var SourceRecursion = import_zod36.z.object({
-  via: import_zod36.z.array(import_zod36.z.string().min(1)).min(1),
+var SourceRecursion = import_zod38.z.object({
+  via: import_zod38.z.array(import_zod38.z.string().min(1)).min(1),
   location: SourceLocation
 });
-var SourceImport = import_zod36.z.object({
-  source: import_zod36.z.string(),
-  module: import_zod36.z.string(),
-  typeOnly: import_zod36.z.boolean(),
-  default: import_zod36.z.string().optional(),
-  namespace: import_zod36.z.string().optional(),
-  named: import_zod36.z.array(import_zod36.z.object({ name: import_zod36.z.string(), alias: import_zod36.z.string().optional(), typeOnly: import_zod36.z.boolean() }))
+var SourceImport = import_zod38.z.object({
+  source: import_zod38.z.string(),
+  module: import_zod38.z.string(),
+  typeOnly: import_zod38.z.boolean(),
+  default: import_zod38.z.string().optional(),
+  namespace: import_zod38.z.string().optional(),
+  named: import_zod38.z.array(import_zod38.z.object({ name: import_zod38.z.string(), alias: import_zod38.z.string().optional(), typeOnly: import_zod38.z.boolean() }))
 });
-var SourceFileIndex = import_zod36.z.object({
-  runtime: import_zod36.z.literal("frontend").optional(),
-  path: import_zod36.z.string(),
-  language: import_zod36.z.enum(["typescript", "javascript"]),
-  bundleId: import_zod36.z.string(),
-  entryWorkflowId: import_zod36.z.string().optional(),
-  imports: import_zod36.z.array(SourceImport).optional(),
-  exports: import_zod36.z.array(
-    import_zod36.z.object({
-      name: import_zod36.z.string(),
-      local: import_zod36.z.string().optional(),
-      module: import_zod36.z.string().optional(),
-      typeOnly: import_zod36.z.boolean()
+var SourceFileIndex = import_zod38.z.object({
+  runtime: import_zod38.z.literal("frontend").optional(),
+  path: import_zod38.z.string(),
+  language: import_zod38.z.enum(["typescript", "javascript"]),
+  bundleId: import_zod38.z.string(),
+  entryWorkflowId: import_zod38.z.string().optional(),
+  imports: import_zod38.z.array(SourceImport).optional(),
+  exports: import_zod38.z.array(
+    import_zod38.z.object({
+      name: import_zod38.z.string(),
+      local: import_zod38.z.string().optional(),
+      module: import_zod38.z.string().optional(),
+      typeOnly: import_zod38.z.boolean()
     })
   ).optional(),
-  symbols: import_zod36.z.array(SourceSymbol),
-  diagnostics: import_zod36.z.array(SourceDiagnostic)
+  symbols: import_zod38.z.array(SourceSymbol),
+  diagnostics: import_zod38.z.array(SourceDiagnostic)
 });
-var ProjectSourceIndex = import_zod36.z.object({
-  revision: import_zod36.z.string(),
-  files: import_zod36.z.array(SourceFileIndex),
-  references: import_zod36.z.array(SourceReference)
+var ProjectSourceIndex = import_zod38.z.object({
+  revision: import_zod38.z.string(),
+  files: import_zod38.z.array(SourceFileIndex),
+  references: import_zod38.z.array(SourceReference)
 });
-var ProjectPackageExports = import_zod36.z.object({
-  packages: import_zod36.z.array(import_zod36.z.string()),
-  dependencies: import_zod36.z.array(
-    import_zod36.z.object({
-      name: import_zod36.z.string(),
-      spec: import_zod36.z.string(),
-      version: import_zod36.z.string().nullable(),
-      pluginId: import_zod36.z.string().nullable()
+var ProjectPackageExports = import_zod38.z.object({
+  packages: import_zod38.z.array(import_zod38.z.string()),
+  dependencies: import_zod38.z.array(
+    import_zod38.z.object({
+      name: import_zod38.z.string(),
+      spec: import_zod38.z.string(),
+      version: import_zod38.z.string().nullable(),
+      pluginId: import_zod38.z.string().nullable()
     })
   ).optional(),
-  exports: import_zod36.z.array(
-    import_zod36.z.object({
-      name: import_zod36.z.string(),
-      kind: import_zod36.z.enum(["function", "constant", "type", "class", "value"]),
-      typeOnly: import_zod36.z.boolean(),
-      declaration: import_zod36.z.string()
+  exports: import_zod38.z.array(
+    import_zod38.z.object({
+      name: import_zod38.z.string(),
+      kind: import_zod38.z.enum(["function", "constant", "type", "class", "value"]),
+      typeOnly: import_zod38.z.boolean(),
+      declaration: import_zod38.z.string(),
+      parameters: import_zod38.z.array(SourceParameter).optional()
     })
   )
 });
 
 // packages/schema/src/project/metadata.ts
-var import_zod37 = require("zod");
-var projectAttachmentsSchema = import_zod37.z.object({
-  plugins: import_zod37.z.array(import_zod37.z.string()),
-  variables: import_zod37.z.array(import_zod37.z.string()),
-  dataTables: import_zod37.z.array(import_zod37.z.string())
+var import_zod39 = require("zod");
+var projectAttachmentsSchema = import_zod39.z.object({
+  plugins: import_zod39.z.array(import_zod39.z.string()),
+  variables: import_zod39.z.array(import_zod39.z.string()),
+  dataTables: import_zod39.z.array(import_zod39.z.string())
 });
-var projectSettingsSchema = import_zod37.z.object({
-  name: import_zod37.z.string(),
-  description: import_zod37.z.string(),
-  version: import_zod37.z.string(),
-  revision: import_zod37.z.string()
+var projectSettingsSchema = import_zod39.z.object({
+  name: import_zod39.z.string(),
+  description: import_zod39.z.string(),
+  version: import_zod39.z.string(),
+  revision: import_zod39.z.string()
 });
-var projectSettingsUpdateSchema = import_zod37.z.object({
-  name: import_zod37.z.string().trim().min(1).max(128),
-  description: import_zod37.z.string().max(4e3),
-  version: import_zod37.z.string().trim().max(128),
-  revision: import_zod37.z.string().min(1)
+var projectSettingsUpdateSchema = import_zod39.z.object({
+  name: import_zod39.z.string().trim().min(1).max(128),
+  description: import_zod39.z.string().max(4e3),
+  version: import_zod39.z.string().trim().max(128),
+  revision: import_zod39.z.string().min(1)
 }).strict();
-var projectSourceSupportSchema = import_zod37.z.object({
-  revision: import_zod37.z.string(),
-  items: import_zod37.z.array(
-    import_zod37.z.object({
-      id: import_zod37.z.string(),
-      name: import_zod37.z.string(),
-      path: import_zod37.z.string(),
-      kind: import_zod37.z.enum(["type-alias", "interface", "enum", "constant"]),
-      scope: import_zod37.z.enum(["workflow", "file", "project"]).optional(),
-      owner: import_zod37.z.string().optional(),
-      exported: import_zod37.z.boolean().optional(),
-      declaration: import_zod37.z.string().optional(),
-      value: import_zod37.z.unknown().optional(),
+var projectSourceSupportSchema = import_zod39.z.object({
+  revision: import_zod39.z.string(),
+  items: import_zod39.z.array(
+    import_zod39.z.object({
+      id: import_zod39.z.string(),
+      name: import_zod39.z.string(),
+      path: import_zod39.z.string(),
+      kind: import_zod39.z.enum(["type-alias", "interface", "enum", "constant"]),
+      scope: import_zod39.z.enum(["workflow", "file", "project"]).optional(),
+      owner: import_zod39.z.string().optional(),
+      exported: import_zod39.z.boolean().optional(),
+      declaration: import_zod39.z.string().optional(),
+      value: import_zod39.z.unknown().optional(),
       schema: JsonSchema.optional()
     })
   )
 });
-var projectBrowseMetadataSchema = import_zod37.z.object({
+var projectBrowseMetadataSchema = import_zod39.z.object({
   attachments: projectAttachmentsSchema,
   settings: projectSettingsSchema,
   packages: ProjectPackageExports,
-  packageModules: import_zod37.z.record(import_zod37.z.string(), ProjectPackageExports),
-  variables: import_zod37.z.record(
-    import_zod37.z.enum(["user", "group", "org", "public"]),
-    import_zod37.z.array(
-      import_zod37.z.object({
-        key: import_zod37.z.string().max(240),
-        file: import_zod37.z.string().max(1024)
+  packageModules: import_zod39.z.record(import_zod39.z.string(), ProjectPackageExports),
+  variables: import_zod39.z.record(
+    import_zod39.z.enum(["user", "group", "org", "public"]),
+    import_zod39.z.array(
+      import_zod39.z.object({
+        key: import_zod39.z.string().max(240),
+        file: import_zod39.z.string().max(1024)
       }).strict()
     )
   )
 }).strict();
 
 // packages/schema/src/test/workflow/graph.ts
-var import_zod38 = require("zod");
-var TestWorkflowGraphNodeKind = import_zod38.z.enum([
+var import_zod40 = require("zod");
+var TestWorkflowGraphNodeKind = import_zod40.z.enum([
   "file",
   "suite",
   "test",
@@ -8740,7 +8832,7 @@ var TestWorkflowGraphNodeKind = import_zod38.z.enum([
   "source-class",
   "source-service"
 ]);
-var TestWorkflowGraphEdgeKind = import_zod38.z.enum([
+var TestWorkflowGraphEdgeKind = import_zod40.z.enum([
   "contains",
   "invokes",
   "executes",
@@ -8756,15 +8848,15 @@ var TestWorkflowGraphEdgeKind = import_zod38.z.enum([
   "constructs",
   "calls-service"
 ]);
-var TestWorkflowGraphNode = import_zod38.z.object({
-  id: import_zod38.z.string(),
+var TestWorkflowGraphNode = import_zod40.z.object({
+  id: import_zod40.z.string(),
   kind: TestWorkflowGraphNodeKind,
-  label: import_zod38.z.string(),
+  label: import_zod40.z.string(),
   location: SourceLocation,
-  detail: import_zod38.z.string().optional(),
-  framework: import_zod38.z.enum(["vitest", "jest", "playwright"]).optional(),
-  sourceSymbolId: import_zod38.z.string().optional(),
-  sourceSymbolKind: import_zod38.z.enum([
+  detail: import_zod40.z.string().optional(),
+  framework: import_zod40.z.enum(["vitest", "jest", "playwright"]).optional(),
+  sourceSymbolId: import_zod40.z.string().optional(),
+  sourceSymbolKind: import_zod40.z.enum([
     "workflow",
     "module-workflow",
     "function",
@@ -8776,25 +8868,25 @@ var TestWorkflowGraphNode = import_zod38.z.object({
     "class",
     "service"
   ]).optional(),
-  mockPhase: import_zod38.z.enum(["hoisted", "ordered", "runner-controlled"]).optional(),
-  runnable: import_zod38.z.boolean().optional()
+  mockPhase: import_zod40.z.enum(["hoisted", "ordered", "runner-controlled"]).optional(),
+  runnable: import_zod40.z.boolean().optional()
 });
-var TestWorkflowGraphEdge = import_zod38.z.object({
-  id: import_zod38.z.string(),
-  from: import_zod38.z.string(),
-  to: import_zod38.z.string(),
+var TestWorkflowGraphEdge = import_zod40.z.object({
+  id: import_zod40.z.string(),
+  from: import_zod40.z.string(),
+  to: import_zod40.z.string(),
   kind: TestWorkflowGraphEdgeKind
 });
-var TestWorkflowGraphDiagnostic = import_zod38.z.object({
-  severity: import_zod38.z.enum(["warning", "error"]),
-  code: import_zod38.z.string(),
-  message: import_zod38.z.string(),
+var TestWorkflowGraphDiagnostic = import_zod40.z.object({
+  severity: import_zod40.z.enum(["warning", "error"]),
+  code: import_zod40.z.string(),
+  message: import_zod40.z.string(),
   location: SourceLocation.optional()
 });
-var TestWorkflowGraphAction = import_zod38.z.discriminatedUnion("kind", [
-  import_zod38.z.object({
-    kind: import_zod38.z.literal("create-node"),
-    nodeKind: import_zod38.z.enum([
+var TestWorkflowGraphAction = import_zod40.z.discriminatedUnion("kind", [
+  import_zod40.z.object({
+    kind: import_zod40.z.literal("create-node"),
+    nodeKind: import_zod40.z.enum([
       "suite",
       "test",
       "helper",
@@ -8804,50 +8896,50 @@ var TestWorkflowGraphAction = import_zod38.z.discriminatedUnion("kind", [
       "after-each",
       "module-mock"
     ]),
-    parentId: import_zod38.z.string().optional(),
-    label: import_zod38.z.string().optional(),
-    module: import_zod38.z.string().optional(),
-    body: import_zod38.z.string().optional(),
-    parameters: import_zod38.z.string().optional(),
-    async: import_zod38.z.boolean().optional()
+    parentId: import_zod40.z.string().optional(),
+    label: import_zod40.z.string().optional(),
+    module: import_zod40.z.string().optional(),
+    body: import_zod40.z.string().optional(),
+    parameters: import_zod40.z.string().optional(),
+    async: import_zod40.z.boolean().optional()
   }),
-  import_zod38.z.object({
-    kind: import_zod38.z.literal("create-data"),
-    dataKind: import_zod38.z.enum(["fixture", "mock-data"]),
-    scopeId: import_zod38.z.string().optional(),
-    name: import_zod38.z.string(),
-    typeName: import_zod38.z.string(),
-    value: import_zod38.z.record(import_zod38.z.string(), import_zod38.z.unknown())
+  import_zod40.z.object({
+    kind: import_zod40.z.literal("create-data"),
+    dataKind: import_zod40.z.enum(["fixture", "mock-data"]),
+    scopeId: import_zod40.z.string().optional(),
+    name: import_zod40.z.string(),
+    typeName: import_zod40.z.string(),
+    value: import_zod40.z.record(import_zod40.z.string(), import_zod40.z.unknown())
   }),
-  import_zod38.z.object({ kind: import_zod38.z.literal("rename-node"), nodeId: import_zod38.z.string(), label: import_zod38.z.string() }),
-  import_zod38.z.object({ kind: import_zod38.z.literal("delete-node"), nodeId: import_zod38.z.string() }),
-  import_zod38.z.object({ kind: import_zod38.z.literal("import-symbol"), symbolId: import_zod38.z.string(), sourceIndexRevision: import_zod38.z.string().length(64) })
+  import_zod40.z.object({ kind: import_zod40.z.literal("rename-node"), nodeId: import_zod40.z.string(), label: import_zod40.z.string() }),
+  import_zod40.z.object({ kind: import_zod40.z.literal("delete-node"), nodeId: import_zod40.z.string() }),
+  import_zod40.z.object({ kind: import_zod40.z.literal("import-symbol"), symbolId: import_zod40.z.string(), sourceIndexRevision: import_zod40.z.string().length(64) })
 ]);
-var TestWorkflowGraph = import_zod38.z.object({
-  path: import_zod38.z.string(),
-  revision: import_zod38.z.string().length(64),
-  sourceIndexRevision: import_zod38.z.string().length(64),
-  runner: import_zod38.z.enum(["vitest", "jest", "playwright"]),
-  nodes: import_zod38.z.array(TestWorkflowGraphNode),
-  edges: import_zod38.z.array(TestWorkflowGraphEdge),
-  referencedSymbols: import_zod38.z.array(import_zod38.z.string()),
-  diagnostics: import_zod38.z.array(TestWorkflowGraphDiagnostic),
-  truncated: import_zod38.z.boolean()
+var TestWorkflowGraph = import_zod40.z.object({
+  path: import_zod40.z.string(),
+  revision: import_zod40.z.string().length(64),
+  sourceIndexRevision: import_zod40.z.string().length(64),
+  runner: import_zod40.z.enum(["vitest", "jest", "playwright"]),
+  nodes: import_zod40.z.array(TestWorkflowGraphNode),
+  edges: import_zod40.z.array(TestWorkflowGraphEdge),
+  referencedSymbols: import_zod40.z.array(import_zod40.z.string()),
+  diagnostics: import_zod40.z.array(TestWorkflowGraphDiagnostic),
+  truncated: import_zod40.z.boolean()
 });
 
 // packages/schema/src/workflow/entry.ts
-var import_zod39 = require("zod");
-var WorkflowNodeRole = import_zod39.z.enum(["entry", "step"]);
+var import_zod41 = require("zod");
+var WorkflowNodeRole = import_zod41.z.enum(["entry", "step"]);
 function isWorkflowEntryIcon(icon, role) {
   return role ? role === "entry" : icon === "play" || icon === "webhook";
 }
-var WorkflowEntryNodes = import_zod39.z.array(import_zod39.z.object({ id: import_zod39.z.string(), icon: import_zod39.z.string().optional(), role: WorkflowNodeRole.optional() })).superRefine((nodes, ctx) => {
+var WorkflowEntryNodes = import_zod41.z.array(import_zod41.z.object({ id: import_zod41.z.string(), icon: import_zod41.z.string().optional(), role: WorkflowNodeRole.optional() })).superRefine((nodes, ctx) => {
   const entries = nodes.filter((node) => isWorkflowEntryIcon(node.icon, node.role));
   if (new Set(entries.map((node) => node.id)).size > 1)
     ctx.addIssue({ code: "custom", message: "A workflow can contain only one Start or Webhook entry node." });
 });
 
-// node_modules/croner/dist/croner.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/croner/dist/croner.js
 function h(n2, t, e, r, s, i, a, l) {
   return h.fromTZ(h.tp(n2, t, e, r, s, i, a), l);
 }
@@ -9218,30 +9310,30 @@ var R = class {
 };
 
 // packages/schema/src/workflow/triggers.ts
-var import_zod40 = require("zod");
+var import_zod42 = require("zod");
 function nextCronRun(expression, timezone, after = /* @__PURE__ */ new Date()) {
   return new R(expression, { timezone }).nextRun(after);
 }
-var triggerBase = import_zod40.z.object({
-  id: import_zod40.z.string().uuid(),
-  name: import_zod40.z.string().trim().min(1).max(100),
-  enabled: import_zod40.z.boolean().default(false)
+var triggerBase = import_zod42.z.object({
+  id: import_zod42.z.string().uuid(),
+  name: import_zod42.z.string().trim().min(1).max(100),
+  enabled: import_zod42.z.boolean().default(false)
 });
-var WorkflowTrigger = import_zod40.z.discriminatedUnion("kind", [
+var WorkflowTrigger = import_zod42.z.discriminatedUnion("kind", [
   triggerBase.extend({
-    kind: import_zod40.z.literal("cron"),
-    provider: import_zod40.z.enum(["native", "external"]),
-    expression: import_zod40.z.string().trim().max(100),
-    timezone: import_zod40.z.string().max(100),
-    input: import_zod40.z.record(import_zod40.z.unknown()).default({})
+    kind: import_zod42.z.literal("cron"),
+    provider: import_zod42.z.enum(["native", "external"]),
+    expression: import_zod42.z.string().trim().max(100),
+    timezone: import_zod42.z.string().max(100),
+    input: import_zod42.z.record(import_zod42.z.unknown()).default({})
   }),
   triggerBase.extend({
-    kind: import_zod40.z.literal("webhook"),
+    kind: import_zod42.z.literal("webhook"),
     /** Empty uses the whole JSON body; otherwise selects an object at a JSON Pointer. */
-    payloadPath: import_zod40.z.string().max(500).regex(/^(?:|\/(?:[^~]|~[01])*)$/).default("")
+    payloadPath: import_zod42.z.string().max(500).regex(/^(?:|\/(?:[^~]|~[01])*)$/).default("")
   })
 ]);
-var WorkflowTriggers = import_zod40.z.array(WorkflowTrigger).max(20).superRefine((triggers, ctx) => {
+var WorkflowTriggers = import_zod42.z.array(WorkflowTrigger).max(20).superRefine((triggers, ctx) => {
   const ids = /* @__PURE__ */ new Set();
   triggers.forEach((trigger, index) => {
     if (ids.has(trigger.id))
@@ -9261,37 +9353,39 @@ var WorkflowTriggers = import_zod40.z.array(WorkflowTrigger).max(20).superRefine
     }
   });
 });
-var WorkflowTriggerState = import_zod40.z.object({
-  revision: import_zod40.z.string(),
-  active: import_zod40.z.boolean(),
+var WorkflowTriggerState = import_zod42.z.object({
+  revision: import_zod42.z.string(),
+  active: import_zod42.z.boolean(),
   triggers: WorkflowTriggers,
-  nativeCron: import_zod40.z.boolean(),
-  synchronized: import_zod40.z.boolean(),
-  nextRuns: import_zod40.z.record(import_zod40.z.string().datetime()),
-  lastError: import_zod40.z.string().optional()
+  nativeCron: import_zod42.z.boolean(),
+  synchronized: import_zod42.z.boolean(),
+  nextRuns: import_zod42.z.record(import_zod42.z.string().datetime()),
+  lastError: import_zod42.z.string().optional()
 });
-var WorkflowTriggerUpdate = import_zod40.z.object({
-  baseRevision: import_zod40.z.string().regex(/^[a-f0-9]{64}$/),
-  active: import_zod40.z.boolean(),
+var WorkflowTriggerUpdate = import_zod42.z.object({
+  baseRevision: import_zod42.z.string().regex(/^[a-f0-9]{64}$/),
+  active: import_zod42.z.boolean(),
   triggers: WorkflowTriggers
 });
 
 // packages/schema/src/octonode/config.ts
-var NodeKind = import_zod41.z.enum(["function", "class", "service", "const"]);
-var NodeSignature = import_zod41.z.object({
+var NodeKind = import_zod43.z.enum(["function", "class", "service", "const"]);
+var NodeSignature = import_zod43.z.object({
   flow: FlowInstruction.optional(),
-  language: import_zod41.z.string(),
+  language: import_zod43.z.string(),
   /** CODE-OWNED target of a workflow invocation wrapper. */
-  workflowId: import_zod41.z.string().min(1).optional(),
+  workflowId: import_zod43.z.string().min(1).optional(),
   /** The command the engine spawns for this node, e.g. `python3 nodes/x.py`. */
-  command: import_zod41.z.string(),
+  command: import_zod43.z.string(),
+  /** Run an ordinary Node.js entry point using Octonode's IPC adapter. */
+  sourceModule: import_zod43.z.literal(true).optional(),
   /** Hydrated by trusted plugin runtime adapters; bypasses command-string parsing. */
-  args: import_zod41.z.array(import_zod41.z.string()).optional(),
-  invokeAs: import_zod41.z.string().optional(),
+  args: import_zod43.z.array(import_zod43.z.string()).optional(),
+  invokeAs: import_zod43.z.string().optional(),
   /** Live plugin readiness failure. Prevents execution while keeping the catalog editable. */
-  runtimeError: import_zod41.z.string().optional(),
-  defaults: import_zod41.z.record(import_zod41.z.unknown()).optional(),
-  requiredEnv: import_zod41.z.array(import_zod41.z.string()).optional(),
+  runtimeError: import_zod43.z.string().optional(),
+  defaults: import_zod43.z.record(import_zod43.z.unknown()).optional(),
+  requiredEnv: import_zod43.z.array(import_zod43.z.string()).optional(),
   /**
    * What this node is (CODE-OWNED, from the describe manifest). Omitted →
    * `function`. `class`/`service`/`const` are setup-time entities without I/O.
@@ -9303,26 +9397,27 @@ var NodeSignature = import_zod41.z.object({
    * plugin nodes, whose relative paths resolve against the plugin folder.
    * Absent → the engine's working directory.
    */
-  cwd: import_zod41.z.string().optional(),
+  cwd: import_zod43.z.string().optional(),
   inputs: JsonSchema.optional(),
   outputs: JsonSchema.optional(),
   /** CODE-OWNED expressions evaluated inside this node's original source scope. */
-  sourceExpressions: import_zod41.z.record(import_zod41.z.string()).optional(),
+  sourceExpressions: import_zod43.z.record(import_zod43.z.string()).optional(),
+  sourceValueModes: import_zod43.z.record(import_zod43.z.enum(["direct", "conditional", "expression"])).optional(),
   /** Exact authored text for this compiled node. Empty for synthetic workflow plumbing. */
-  sourceExcerpt: SourceLocation.extend({ content: import_zod41.z.string() }).optional(),
+  sourceExcerpt: SourceLocation.extend({ content: import_zod43.z.string() }).optional(),
   /** Resolved marketplace calls retained in their original source scope, never IPC substitutions. */
-  sourcePlugins: import_zod41.z.array(
-    import_zod41.z.object({
-      alias: import_zod41.z.string(),
-      node: import_zod41.z.string(),
-      version: import_zod41.z.string(),
-      module: import_zod41.z.string(),
-      export: import_zod41.z.string(),
-      execution: import_zod41.z.literal("source")
+  sourcePlugins: import_zod43.z.array(
+    import_zod43.z.object({
+      alias: import_zod43.z.string(),
+      node: import_zod43.z.string(),
+      version: import_zod43.z.string(),
+      module: import_zod43.z.string(),
+      export: import_zod43.z.string(),
+      execution: import_zod43.z.literal("source")
     })
   ).optional(),
   /** CODE-OWNED recursive call sites; visualization only, not execution edges. */
-  recursion: import_zod41.z.array(SourceRecursion).optional(),
+  recursion: import_zod43.z.array(SourceRecursion).optional(),
   /**
    * Setup params for non-`function` kinds (class constructor / service config /
    * const shape). Rendered as a form in the editor. Unused by `function` nodes,
@@ -9330,53 +9425,61 @@ var NodeSignature = import_zod41.z.object({
    */
   setup: JsonSchema.optional(),
   /** sha256 of the normalized signature, for drift/staleness detection. */
-  checksum: import_zod41.z.string().optional(),
+  checksum: import_zod43.z.string().optional(),
   /** Set when scan no longer finds this node in code; not deleted automatically. */
-  orphaned: import_zod41.z.boolean().optional(),
+  orphaned: import_zod43.z.boolean().optional(),
   /** CODE-OWNED. This node participates in a shared resumable source scope. */
-  sourceScope: import_zod41.z.boolean().optional(),
+  sourceScope: import_zod43.z.boolean().optional(),
+  sourceExecution: SourceExecution.optional(),
+  /** CODE-OWNED. Set on a side node that computes one operand of another node ahead of it. */
+  sourceOperand: SourceOperand.optional(),
+  /** CODE-OWNED catalog params of an in-scope native operation; display only, the source text still runs. */
+  sourceParams: SourceParams.optional(),
+  sourceVariable: SourceVariable.optional(),
+  /** CODE-OWNED return syntax within this statement, excluding nested functions. */
+  sourceReturns: import_zod43.z.boolean().optional(),
   /** CODE-OWNED reason an operation remains in authored JavaScript. */
-  sourceFallback: import_zod41.z.enum(["expression", "statement", "function"]).optional(),
+  sourceFallback: import_zod43.z.enum(["expression", "statement", "function"]).optional(),
   /** Routing metadata for an explicitly exposed service host or method node. */
-  service: import_zod41.z.object({
-    host: import_zod41.z.string(),
-    method: import_zod41.z.string().optional(),
-    lifecycle: import_zod41.z.enum(["invocation", "workflow-run", "worker"])
+  service: import_zod43.z.object({
+    host: import_zod43.z.string(),
+    method: import_zod43.z.string().optional(),
+    lifecycle: import_zod43.z.enum(["invocation", "workflow-run", "worker"])
   }).optional()
 });
-var NodeRuntime = import_zod41.z.object({
-  timeout_ms: import_zod41.z.number().int().positive().optional(),
-  retries: import_zod41.z.number().int().nonnegative().optional(),
-  retry_backoff_ms: import_zod41.z.number().int().nonnegative().optional(),
-  concurrency: import_zod41.z.number().int().positive().optional(),
+var NodeRuntime = import_zod43.z.object({
+  timeout_ms: import_zod43.z.number().int().positive().optional(),
+  retries: import_zod43.z.number().int().nonnegative().optional(),
+  retry_backoff_ms: import_zod43.z.number().int().nonnegative().optional(),
+  concurrency: import_zod43.z.number().int().positive().optional(),
   /** When true, this node waits for running nodes and executes alone within the workflow run. */
-  async: import_zod41.z.boolean().optional()
+  async: import_zod43.z.boolean().optional()
 });
-var NodePresentation = import_zod41.z.object({
+var NodePresentation = import_zod43.z.object({
   icon: IconValue.optional(),
   /** Optional human-facing label used when the node id is implementation detail. */
-  label: import_zod41.z.string().optional(),
-  symbol: import_zod41.z.string().max(16).optional(),
-  description: import_zod41.z.string().optional(),
-  color: import_zod41.z.string().optional(),
-  position: import_zod41.z.object({ x: import_zod41.z.number(), y: import_zod41.z.number() }).optional(),
+  label: import_zod43.z.string().optional(),
+  symbol: import_zod43.z.string().max(16).optional(),
+  description: import_zod43.z.string().optional(),
+  color: import_zod43.z.string().optional(),
+  position: import_zod43.z.object({ x: import_zod43.z.number(), y: import_zod43.z.number() }).optional(),
   /** Optional plugin renderer selected for this node instance. */
-  renderer: import_zod41.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i).optional()
+  renderer: import_zod43.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i).optional()
 });
-var NodeConfig = import_zod41.z.object({
+var NodeConfig = import_zod43.z.object({
   /** Catalog ancestry, independent of editable presentation. */
-  native: import_zod41.z.string().optional(),
-  /** Stable execution boundary; legacy entries fall back to their icon. */
+  native: import_zod43.z.string().optional(),
+  /** Stable execution boundary; nodes without a role are classified by their icon. */
   role: WorkflowNodeRole.optional(),
   /** Stable identity key; edges reference this, never the source path. */
-  id: import_zod41.z.string(),
+  id: import_zod43.z.string(),
   /**
    * CONFIG-OWNED. For setup-time kinds (class/service/const): the ids of the
    * function nodes that depend on this entity. Rendered as dashed dependency
    * edges in the editor, distinct from data-flow edges. (The node's `kind`
    * itself is code-owned and lives in `signature.kind`.)
    */
-  provides: import_zod41.z.array(import_zod41.z.string()).optional(),
+  provides: import_zod43.z.array(import_zod43.z.string()).optional(),
   /**
    * Reference to an installed plugin's node (`<pluginId>/<nodeId>`). The
    * signature is hydrated from the LIVE plugin manifest at config-load time
@@ -9384,11 +9487,11 @@ var NodeConfig = import_zod41.z.object({
    * every node referencing the plugin. Any stored signature is the last-known
    * snapshot, kept as a fallback when the plugin can't be resolved.
    */
-  plugin: import_zod41.z.string().optional(),
+  plugin: import_zod43.z.string().optional(),
   /** Resolved from the installed immutable plugin; never edited by project configuration. */
-  pluginVersion: import_zod41.z.string().optional(),
+  pluginVersion: import_zod43.z.string().optional(),
   pluginClient: ProjectClientReference.optional(),
-  pluginClientChecksum: import_zod41.z.string().optional(),
+  pluginClientChecksum: import_zod43.z.string().optional(),
   pluginUi: PluginNodeUi.optional(),
   /** Generated by `octonode scan`. Optional so runtime/presentation can be pre-declared. */
   signature: NodeSignature.optional(),
@@ -9396,28 +9499,28 @@ var NodeConfig = import_zod41.z.object({
   presentation: NodePresentation.optional(),
   /** CODE-OWNED optional defaults from octonode.config.ts. */
   definitionPresentation: NodePresentation.optional(),
-  /** Generated defaults are inheritable; old records without provenance keep their explicit presentation. */
+  /** Generated defaults are inheritable; without a seed (non-native nodes) all presentation is explicit. */
   presentationSeed: NodePresentation.optional(),
   /** CONFIG-OWNED. When true the scheduler bypasses this node (passes inputs through). */
-  disabled: import_zod41.z.boolean().optional()
+  disabled: import_zod43.z.boolean().optional()
 });
-var Environment = import_zod41.z.object({
-  inherits: import_zod41.z.string().optional(),
-  vars: import_zod41.z.record(import_zod41.z.string()).optional(),
-  secrets: import_zod41.z.array(import_zod41.z.string()).optional()
+var Environment = import_zod43.z.object({
+  inherits: import_zod43.z.string().optional(),
+  vars: import_zod43.z.record(import_zod43.z.string()).optional(),
+  secrets: import_zod43.z.array(import_zod43.z.string()).optional()
 });
-var ProjectDefaults = import_zod41.z.object({
+var ProjectDefaults = import_zod43.z.object({
   /** TypeScript is the only active v1 authoring/runtime choice. */
-  language: import_zod41.z.literal("typescript").optional()
+  language: import_zod43.z.literal("typescript").optional()
 });
-var ProjectAttachments = import_zod41.z.object({
-  plugins: import_zod41.z.array(import_zod41.z.string()).default([]),
-  variables: import_zod41.z.array(import_zod41.z.string()).default([]),
-  dataTables: import_zod41.z.array(import_zod41.z.string()).default([])
+var ProjectAttachments = import_zod43.z.object({
+  plugins: import_zod43.z.array(import_zod43.z.string()).default([]),
+  variables: import_zod43.z.array(import_zod43.z.string()).default([]),
+  dataTables: import_zod43.z.array(import_zod43.z.string()).default([])
 });
-var WorkflowEdge = import_zod41.z.object({
-  from: import_zod41.z.object({ node: import_zod41.z.string(), output: import_zod41.z.string().optional() }),
-  to: import_zod41.z.object({ node: import_zod41.z.string(), input: import_zod41.z.string().optional() }),
+var WorkflowEdge = import_zod43.z.object({
+  from: import_zod43.z.object({ node: import_zod43.z.string(), output: import_zod43.z.string().optional() }),
+  to: import_zod43.z.object({ node: import_zod43.z.string(), input: import_zod43.z.string().optional() }),
   /**
    * `data` (default) — a normal data-flow connection between ports.
    * `dependency` — a setup-time dependency from a class/service/const onto the
@@ -9426,9 +9529,9 @@ var WorkflowEdge = import_zod41.z.object({
    * `control` — an execution dependency that carries no input value (used by
    * sequential `await` and Promise callback lowering).
    */
-  kind: import_zod41.z.enum(["data", "dependency", "control"]).optional()
+  kind: import_zod43.z.enum(["data", "dependency", "control"]).optional()
 });
-var WorkflowPromiseMode = import_zod41.z.enum([
+var WorkflowPromiseMode = import_zod43.z.enum([
   "all",
   "allSettled",
   "race",
@@ -9439,59 +9542,59 @@ var WorkflowPromiseMode = import_zod41.z.enum([
   "catch",
   "finally"
 ]);
-var WorkflowPromise = import_zod41.z.object({
-  node: import_zod41.z.string(),
+var WorkflowPromise = import_zod43.z.object({
+  node: import_zod43.z.string(),
   mode: WorkflowPromiseMode
 });
-var WorkflowEvaluation = import_zod41.z.object({
-  id: import_zod41.z.string().min(1),
-  description: import_zod41.z.string().optional(),
-  input: import_zod41.z.unknown().optional(),
-  expect: import_zod41.z.object({
-    status: import_zod41.z.enum(["ok", "error", "partial"]).default("ok"),
+var WorkflowEvaluation = import_zod43.z.object({
+  id: import_zod43.z.string().min(1),
+  description: import_zod43.z.string().optional(),
+  input: import_zod43.z.unknown().optional(),
+  expect: import_zod43.z.object({
+    status: import_zod43.z.enum(["ok", "error", "partial"]).default("ok"),
     /** Exact terminal outputs, keyed by terminal node id. Omit to check status only. */
-    outputs: import_zod41.z.record(import_zod41.z.unknown()).optional()
+    outputs: import_zod43.z.record(import_zod43.z.unknown()).optional()
   }),
   /** Optional workflow judge for semantic, safety, or agent-trajectory grading. */
-  judge: import_zod41.z.object({
-    workflow: import_zod41.z.string().min(1),
-    rubric: import_zod41.z.string().min(1),
-    threshold: import_zod41.z.number().min(0).max(1).default(0.7)
+  judge: import_zod43.z.object({
+    workflow: import_zod43.z.string().min(1),
+    rubric: import_zod43.z.string().min(1),
+    threshold: import_zod43.z.number().min(0).max(1).default(0.7)
   }).optional()
 });
-var WorkflowTestWorkflow = import_zod41.z.object({
-  path: import_zod41.z.string().min(1),
-  runner: import_zod41.z.enum(["vitest", "jest", "playwright", "promptfoo"])
+var WorkflowTestWorkflow = import_zod43.z.object({
+  path: import_zod43.z.string().min(1),
+  runner: import_zod43.z.enum(["vitest", "jest", "playwright", "promptfoo"])
 });
-var WorkflowInputBinding = import_zod41.z.discriminatedUnion("kind", [
-  import_zod41.z.object({
-    kind: import_zod41.z.literal("literal"),
-    value: import_zod41.z.unknown(),
-    attachments: import_zod41.z.record(import_zod41.z.string(), import_zod41.z.string()).optional()
+var WorkflowInputBinding = import_zod43.z.discriminatedUnion("kind", [
+  import_zod43.z.object({
+    kind: import_zod43.z.literal("literal"),
+    value: import_zod43.z.unknown(),
+    attachments: import_zod43.z.record(import_zod43.z.string(), import_zod43.z.string()).optional()
   }),
-  import_zod41.z.object({ kind: import_zod41.z.literal("symbol"), symbol: import_zod41.z.string(), value: import_zod41.z.unknown() })
+  import_zod43.z.object({ kind: import_zod43.z.literal("symbol"), symbol: import_zod43.z.string(), value: import_zod43.z.unknown() })
 ]);
-var WorkflowSource = import_zod41.z.object({
-  path: import_zod41.z.string(),
-  symbol: import_zod41.z.string(),
-  kind: import_zod41.z.enum(["module", "function"]),
-  checksum: import_zod41.z.string(),
+var WorkflowSource = import_zod43.z.object({
+  path: import_zod43.z.string(),
+  symbol: import_zod43.z.string(),
+  kind: import_zod43.z.enum(["module", "function"]),
+  checksum: import_zod43.z.string(),
   /** CODE-OWNED revisions of resolved project imports; relative to the project root. */
-  dependencies: import_zod41.z.record(import_zod41.z.string(), import_zod41.z.string()).optional(),
+  dependencies: import_zod43.z.record(import_zod43.z.string(), import_zod43.z.string()).optional(),
   /** CODE-OWNED effective tsconfig/jsconfig and configuration content revision. */
-  compilerChecksum: import_zod41.z.string().optional()
+  compilerChecksum: import_zod43.z.string().optional()
 });
-var Workflow = import_zod41.z.object({
+var Workflow = import_zod43.z.object({
   layout: WorkflowLayout.optional(),
   /** CODE-OWNED optional defaults from octonode.config.ts. */
   definitionPresentation: NodePresentation.optional(),
   /** CONFIG-OWNED display name; stable workflow IDs remain unchanged. */
-  label: import_zod41.z.string().trim().min(1).max(200).optional(),
+  label: import_zod43.z.string().trim().min(1).max(200).optional(),
   /** CONFIG-OWNED catalog archive state. */
-  archived: import_zod41.z.boolean().optional(),
+  archived: import_zod43.z.boolean().optional(),
   /** CONFIG-OWNED subscriptions, never executable DAG nodes. */
   triggers: WorkflowTriggers.optional(),
-  id: import_zod41.z.string(),
+  id: import_zod43.z.string(),
   /** CODE-OWNED origin for a workflow projected from a normal source file. */
   source: WorkflowSource.optional(),
   /**
@@ -9499,40 +9602,42 @@ var Workflow = import_zod41.z.object({
    * function parameters; canvas workflows derive it from their root node(s).
    */
   inputs: JsonSchema.optional(),
-  description: import_zod41.z.string().optional(),
-  entry: import_zod41.z.string().optional(),
+  /** Source-owned return contract, or an explicitly edited canvas output signature. */
+  outputs: JsonSchema.optional(),
+  description: import_zod43.z.string().optional(),
+  entry: import_zod43.z.string().optional(),
   /** Explicit member nodes (canvas membership for not-yet-wired nodes). */
-  nodes: import_zod41.z.array(import_zod41.z.string()).default([]),
-  edges: import_zod41.z.array(WorkflowEdge).default([]),
-  promises: import_zod41.z.array(WorkflowPromise).default([]),
-  on_error: import_zod41.z.object({ policy: import_zod41.z.enum(["halt", "continue"]).default("halt") }).optional(),
+  nodes: import_zod43.z.array(import_zod43.z.string()).default([]),
+  edges: import_zod43.z.array(WorkflowEdge).default([]),
+  promises: import_zod43.z.array(WorkflowPromise).default([]),
+  on_error: import_zod43.z.object({ policy: import_zod43.z.enum(["halt", "continue"]).default("halt") }).optional(),
   /** CONFIG-OWNED. Whether the workflow is enabled (e.g. for scheduling/triggers). */
-  active: import_zod41.z.boolean().optional(),
+  active: import_zod43.z.boolean().optional(),
   /** CONFIG-OWNED freeform labels. */
-  tags: import_zod41.z.array(import_zod41.z.string()).optional(),
+  tags: import_zod43.z.array(import_zod43.z.string()).optional(),
   /** CONFIG-OWNED folder path for organizing workflows, e.g. "math/daily". Absent → project root. */
-  folder: import_zod41.z.string().optional(),
+  folder: import_zod43.z.string().optional(),
   /** CONFIG-OWNED evaluation cases, versioned and shared with this workflow. */
-  evaluations: import_zod41.z.array(WorkflowEvaluation).default([]),
+  evaluations: import_zod43.z.array(WorkflowEvaluation).default([]),
   /** CONFIG-OWNED repository tests relevant to this workflow. */
-  test_workflows: import_zod41.z.array(WorkflowTestWorkflow).default([]),
+  test_workflows: import_zod43.z.array(WorkflowTestWorkflow).default([]),
   /** CONFIG-OWNED pinned outputs: node id -> a frozen outputs object used in place of execution. */
-  pins: import_zod41.z.record(import_zod41.z.unknown()).optional(),
+  pins: import_zod43.z.record(import_zod43.z.unknown()).optional(),
   /**
    * CONFIG-OWNED input expressions: node id -> (input key -> `{{ $json.field }}`
    * template). Evaluated against the node's assembled inputs at runtime and merged
    * over them before the node executes. See runtime/expression.ts.
    */
-  expressions: import_zod41.z.record(import_zod41.z.record(import_zod41.z.string())).optional(),
+  expressions: import_zod43.z.record(import_zod43.z.record(import_zod43.z.string())).optional(),
   /** Static source/manual values applied to node inputs before expressions. */
-  bindings: import_zod41.z.record(import_zod41.z.record(WorkflowInputBinding)).optional(),
+  bindings: import_zod43.z.record(import_zod43.z.record(WorkflowInputBinding)).optional(),
   /**
    * CONFIG-OWNED opt-in to orchestration codegen (Plan B). When `orchestration`
    * is true, a runnable workflow-as-function file is generated at
    * `nodes/_workflows/<id>.js` and kept in sync; `checksum` is the machine-region
    * checksum, managed by the generator (used for hand-edit conflict detection).
    */
-  codegen: import_zod41.z.object({ orchestration: import_zod41.z.boolean().optional(), checksum: import_zod41.z.string().optional() }).optional()
+  codegen: import_zod43.z.object({ orchestration: import_zod43.z.boolean().optional(), checksum: import_zod43.z.string().optional() }).optional()
 });
 var WorkflowExecutionPlan = Workflow.pick({
   id: true,
@@ -9545,32 +9650,33 @@ var WorkflowExecutionPlan = Workflow.pick({
 }).strict().superRefine((plan, ctx) => {
   const members = new Set(plan.nodes);
   if (!members.size || members.size !== plan.nodes.length || plan.entry !== void 0 && !members.has(plan.entry) || plan.edges.some((edge) => !members.has(edge.from.node) || !members.has(edge.to.node)) || plan.promises.some((promise) => !members.has(promise.node)) || new Set(plan.promises.map((promise) => promise.node)).size !== plan.promises.length || [...Object.keys(plan.bindings ?? {}), ...Object.keys(plan.expressions ?? {})].some((id2) => !members.has(id2))) {
-    ctx.addIssue({ code: import_zod41.z.ZodIssueCode.custom, message: "Execution plan has invalid or duplicate members" });
+    ctx.addIssue({ code: import_zod43.z.ZodIssueCode.custom, message: "Execution plan has invalid or duplicate members" });
   }
 });
-var OctonodeConfig = import_zod41.z.object({
-  apiVersion: import_zod41.z.string().default(CONFIG_API_VERSION),
-  metadata: import_zod41.z.object({
-    name: import_zod41.z.string(),
-    id: import_zod41.z.string().min(1).max(240).optional(),
-    version: import_zod41.z.string().optional(),
-    description: import_zod41.z.string().optional()
+var OctonodeConfig = import_zod43.z.object({
+  apiVersion: import_zod43.z.string().default(CONFIG_API_VERSION),
+  metadata: import_zod43.z.object({
+    name: import_zod43.z.string(),
+    /** Project IDs are UUIDs; any other ID is rejected and the project must be re-imported. */
+    id: import_zod43.z.string().uuid().optional(),
+    version: import_zod43.z.string().optional(),
+    description: import_zod43.z.string().optional()
   }),
   defaults: ProjectDefaults.optional(),
   attachments: ProjectAttachments.default({ plugins: [], variables: [], dataTables: [] }),
   /** Commands `octonode scan` probes (via `describe`) to discover nodes. */
-  sources: import_zod41.z.array(import_zod41.z.string()).default([]),
-  environments: import_zod41.z.record(Environment).default({}),
-  nodes: import_zod41.z.array(NodeConfig).default([]),
+  sources: import_zod43.z.array(import_zod43.z.string()).default([]),
+  environments: import_zod43.z.record(Environment).default({}),
+  nodes: import_zod43.z.array(NodeConfig).default([]),
   /** Shared type registry referenced by node signatures (Phase 3+). */
-  types: import_zod41.z.record(JsonSchema).default({}),
+  types: import_zod43.z.record(JsonSchema).default({}),
   /** CODE-OWNED browsing metadata, regenerated by explicit project compilation. */
-  editor: import_zod41.z.object({ sourceIndex: ProjectSourceIndex, sourceSupport: projectSourceSupportSchema }).optional(),
+  editor: import_zod43.z.object({ sourceIndex: ProjectSourceIndex, sourceSupport: projectSourceSupportSchema }).optional(),
   /** CONFIG-OWNED stable IDs of projects required by this project. Resolution is capability-gated. */
-  projectDependencies: import_zod41.z.array(import_zod41.z.string().min(1).max(240)).max(1e3).optional(),
-  workflows: import_zod41.z.array(Workflow).default([]),
+  projectDependencies: import_zod43.z.array(import_zod43.z.string().min(1).max(240)).max(1e3).optional(),
+  workflows: import_zod43.z.array(Workflow).default([]),
   /** CODE-OWNED test projections, including the exact source used to compile cases and data. */
-  test_workflows: import_zod41.z.array(TestWorkflowGraph.extend({ source: import_zod41.z.string() })).optional()
+  test_workflows: import_zod43.z.array(TestWorkflowGraph.extend({ source: import_zod43.z.string() })).optional()
 }).superRefine((config, ctx) => {
   const nodesById = /* @__PURE__ */ new Map();
   for (const node of config.nodes) {
@@ -9610,407 +9716,407 @@ var OctonodeConfig = import_zod41.z.object({
 });
 
 // packages/schema/src/store.ts
-var Scope = import_zod42.z.enum(["user", "group", "org", "public"]);
-var Origin = import_zod42.z.enum(["local", "native", "plugin", "marketplace"]);
-var Visibility = import_zod42.z.object({
+var Scope = import_zod44.z.enum(["user", "group", "org", "public"]);
+var Origin = import_zod44.z.enum(["local", "native", "plugin", "marketplace"]);
+var Visibility = import_zod44.z.object({
   scope: Scope,
-  owner: import_zod42.z.string(),
-  editors: import_zod42.z.array(import_zod42.z.string()).optional(),
-  groupId: import_zod42.z.string().optional(),
-  orgId: import_zod42.z.string().optional()
+  owner: import_zod44.z.string(),
+  editors: import_zod44.z.array(import_zod44.z.string()).optional(),
+  groupId: import_zod44.z.string().optional(),
+  orgId: import_zod44.z.string().optional()
 });
-var Identity = import_zod42.z.object({
-  userId: import_zod42.z.string(),
-  displayName: import_zod42.z.string().optional(),
-  groups: import_zod42.z.array(import_zod42.z.string()).default([]),
-  orgId: import_zod42.z.string()
+var Identity = import_zod44.z.object({
+  userId: import_zod44.z.string(),
+  displayName: import_zod44.z.string().optional(),
+  groups: import_zod44.z.array(import_zod44.z.string()).default([]),
+  orgId: import_zod44.z.string()
 });
 var NodeRecord = NodeConfig.extend({
   origin: Origin,
   visibility: Visibility,
-  createdAt: import_zod42.z.number(),
-  updatedAt: import_zod42.z.number()
+  createdAt: import_zod44.z.number(),
+  updatedAt: import_zod44.z.number()
 });
 var WorkflowRecord = Workflow.extend({
   origin: Origin,
   visibility: Visibility,
-  createdAt: import_zod42.z.number(),
-  updatedAt: import_zod42.z.number()
+  createdAt: import_zod44.z.number(),
+  updatedAt: import_zod44.z.number()
 });
-var InstalledPlugin = import_zod42.z.object({
-  id: import_zod42.z.string(),
-  name: import_zod42.z.string(),
-  version: import_zod42.z.string(),
-  source: import_zod42.z.string(),
-  nodes: import_zod42.z.array(import_zod42.z.object({ id: import_zod42.z.string(), description: import_zod42.z.string().optional() })).default([]),
+var InstalledPlugin = import_zod44.z.object({
+  id: import_zod44.z.string(),
+  name: import_zod44.z.string(),
+  version: import_zod44.z.string(),
+  source: import_zod44.z.string(),
+  nodes: import_zod44.z.array(import_zod44.z.object({ id: import_zod44.z.string(), description: import_zod44.z.string().optional() })).default([]),
   visibility: Visibility
 });
-var StoredRun = import_zod42.z.object({
-  runId: import_zod42.z.string(),
-  workflowId: import_zod42.z.string(),
-  status: import_zod42.z.enum(["ok", "error", "partial"]),
-  durationMs: import_zod42.z.number(),
-  startedAt: import_zod42.z.number(),
-  owner: import_zod42.z.string(),
+var StoredRun = import_zod44.z.object({
+  runId: import_zod44.z.string(),
+  workflowId: import_zod44.z.string(),
+  status: import_zod44.z.enum(["ok", "error", "partial"]),
+  durationMs: import_zod44.z.number(),
+  startedAt: import_zod44.z.number(),
+  owner: import_zod44.z.string(),
   scope: Scope,
   /** The full core RunRecord, kept opaque here (validated by core on produce). */
-  record: import_zod42.z.unknown()
+  record: import_zod44.z.unknown()
 });
 
 // packages/schema/src/data/tables.ts
-var StorageMode = import_zod43.z.enum(["sqlite", "kv_blob"]);
-var DataTableColumnType = import_zod43.z.enum(["text", "number", "boolean", "date", "datetime", "json"]);
-var DataTableColumn = import_zod43.z.object({
-  id: import_zod43.z.string(),
-  key: import_zod43.z.string().min(1).regex(
+var StorageMode = import_zod45.z.enum(["sqlite", "kv_blob"]);
+var DataTableColumnType = import_zod45.z.enum(["text", "number", "boolean", "date", "datetime", "json"]);
+var DataTableColumn = import_zod45.z.object({
+  id: import_zod45.z.string(),
+  key: import_zod45.z.string().min(1).regex(
     /^[A-Za-z_][A-Za-z0-9_]*$/,
     "column key must start with a letter or '_' and contain only letters, digits, or '_'"
   ).refine((key) => !DATA_TABLE_RESERVED_COLUMNS.includes(key.toLowerCase()), "reserved column name"),
-  name: import_zod43.z.string().min(1),
+  name: import_zod45.z.string().min(1),
   type: DataTableColumnType,
-  required: import_zod43.z.boolean().default(false),
-  defaultValue: import_zod43.z.unknown().optional(),
-  position: import_zod43.z.number().int().nonnegative()
+  required: import_zod45.z.boolean().default(false),
+  defaultValue: import_zod45.z.unknown().optional(),
+  position: import_zod45.z.number().int().nonnegative()
 });
-var DataTable = import_zod43.z.object({
-  id: import_zod43.z.string(),
-  projectId: import_zod43.z.string(),
-  name: import_zod43.z.string().min(1),
-  slug: import_zod43.z.string().min(1).regex(
+var DataTable = import_zod45.z.object({
+  id: import_zod45.z.string(),
+  projectId: import_zod45.z.string(),
+  name: import_zod45.z.string().min(1),
+  slug: import_zod45.z.string().min(1).regex(
     /^[A-Za-z0-9][A-Za-z0-9._-]*$/,
     "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'"
   ),
-  description: import_zod43.z.string().optional(),
+  description: import_zod45.z.string().optional(),
   storageMode: StorageMode.default("sqlite"),
-  columns: import_zod43.z.array(DataTableColumn).default([]),
-  rowCount: import_zod43.z.number().int().nonnegative().default(0),
-  schemaVersion: import_zod43.z.number().int().positive().default(1),
-  createdAt: import_zod43.z.number(),
-  updatedAt: import_zod43.z.number()
+  columns: import_zod45.z.array(DataTableColumn).default([]),
+  rowCount: import_zod45.z.number().int().nonnegative().default(0),
+  schemaVersion: import_zod45.z.number().int().positive().default(1),
+  createdAt: import_zod45.z.number(),
+  updatedAt: import_zod45.z.number()
 });
-var DataTableRow = import_zod43.z.object({
-  id: import_zod43.z.string(),
-  tableId: import_zod43.z.string(),
-  data: import_zod43.z.record(import_zod43.z.string(), import_zod43.z.unknown()),
-  version: import_zod43.z.number().int().positive().default(1),
-  createdAt: import_zod43.z.number(),
-  updatedAt: import_zod43.z.number()
+var DataTableRow = import_zod45.z.object({
+  id: import_zod45.z.string(),
+  tableId: import_zod45.z.string(),
+  data: import_zod45.z.record(import_zod45.z.string(), import_zod45.z.unknown()),
+  version: import_zod45.z.number().int().positive().default(1),
+  createdAt: import_zod45.z.number(),
+  updatedAt: import_zod45.z.number()
 });
-var DataTableRowsPage = import_zod43.z.object({
-  rows: import_zod43.z.array(DataTableRow),
-  nextCursor: import_zod43.z.string().optional()
+var DataTableRowsPage = import_zod45.z.object({
+  rows: import_zod45.z.array(DataTableRow),
+  nextCursor: import_zod45.z.string().optional()
 });
-var inputColumns = import_zod43.z.array(DataTableColumn.omit({ id: true }).extend({ id: import_zod43.z.string().optional() })).max(DATA_TABLE_MAX_COLUMNS).refine(
+var inputColumns = import_zod45.z.array(DataTableColumn.omit({ id: true }).extend({ id: import_zod45.z.string().optional() })).max(DATA_TABLE_MAX_COLUMNS).refine(
   (columns) => new Set(columns.map(({ key }) => key.toLowerCase())).size === columns.length,
   "duplicate column name"
 );
-var CreateDataTableInput = import_zod43.z.object({
-  name: import_zod43.z.string().min(1),
-  slug: import_zod43.z.string().min(1).regex(
+var CreateDataTableInput = import_zod45.z.object({
+  name: import_zod45.z.string().min(1),
+  slug: import_zod45.z.string().min(1).regex(
     /^[A-Za-z0-9][A-Za-z0-9._-]*$/,
     "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'"
   ).optional(),
-  description: import_zod43.z.string().optional(),
+  description: import_zod45.z.string().optional(),
   storageMode: StorageMode.default("sqlite"),
   columns: inputColumns.default([])
 });
-var UpdateDataTableInput = import_zod43.z.object({
-  name: import_zod43.z.string().min(1).optional(),
-  slug: import_zod43.z.string().min(1).regex(
+var UpdateDataTableInput = import_zod45.z.object({
+  name: import_zod45.z.string().min(1).optional(),
+  slug: import_zod45.z.string().min(1).regex(
     /^[A-Za-z0-9][A-Za-z0-9._-]*$/,
     "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'"
   ).optional(),
-  description: import_zod43.z.string().nullable().optional(),
+  description: import_zod45.z.string().nullable().optional(),
   columns: inputColumns.optional()
 });
-var ListRowsInput = import_zod43.z.object({
-  cursor: import_zod43.z.string().optional(),
-  limit: import_zod43.z.number().int().positive().max(500).default(50)
+var ListRowsInput = import_zod45.z.object({
+  cursor: import_zod45.z.string().optional(),
+  limit: import_zod45.z.number().int().positive().max(500).default(50)
 });
-var InsertRowInput = import_zod43.z.object({
-  data: import_zod43.z.record(import_zod43.z.string(), import_zod43.z.unknown())
+var InsertRowInput = import_zod45.z.object({
+  data: import_zod45.z.record(import_zod45.z.string(), import_zod45.z.unknown())
 });
-var UpdateRowInput = import_zod43.z.object({
-  data: import_zod43.z.record(import_zod43.z.string(), import_zod43.z.unknown()),
-  expectedVersion: import_zod43.z.number().int().positive().optional()
+var UpdateRowInput = import_zod45.z.object({
+  data: import_zod45.z.record(import_zod45.z.string(), import_zod45.z.unknown()),
+  expectedVersion: import_zod45.z.number().int().positive().optional()
 });
-var BulkRowMutation = import_zod43.z.discriminatedUnion("operation", [
-  import_zod43.z.object({ operation: import_zod43.z.literal("insert"), data: import_zod43.z.record(import_zod43.z.string(), import_zod43.z.unknown()) }),
-  import_zod43.z.object({
-    operation: import_zod43.z.enum(["update", "merge"]),
-    rowId: import_zod43.z.string().min(1),
-    data: import_zod43.z.record(import_zod43.z.string(), import_zod43.z.unknown()),
-    expectedVersion: import_zod43.z.number().int().positive().optional()
+var BulkRowMutation = import_zod45.z.discriminatedUnion("operation", [
+  import_zod45.z.object({ operation: import_zod45.z.literal("insert"), data: import_zod45.z.record(import_zod45.z.string(), import_zod45.z.unknown()) }),
+  import_zod45.z.object({
+    operation: import_zod45.z.enum(["update", "merge"]),
+    rowId: import_zod45.z.string().min(1),
+    data: import_zod45.z.record(import_zod45.z.string(), import_zod45.z.unknown()),
+    expectedVersion: import_zod45.z.number().int().positive().optional()
   }),
-  import_zod43.z.object({ operation: import_zod43.z.literal("delete"), rowId: import_zod43.z.string().min(1) })
+  import_zod45.z.object({ operation: import_zod45.z.literal("delete"), rowId: import_zod45.z.string().min(1) })
 ]);
-var BulkRowsInput = import_zod43.z.object({
-  mutations: import_zod43.z.array(BulkRowMutation).min(1).max(500)
+var BulkRowsInput = import_zod45.z.object({
+  mutations: import_zod45.z.array(BulkRowMutation).min(1).max(500)
 });
-var BulkRowsResult = import_zod43.z.object({
-  rows: import_zod43.z.array(DataTableRow),
-  deletedRowIds: import_zod43.z.array(import_zod43.z.string())
+var BulkRowsResult = import_zod45.z.object({
+  rows: import_zod45.z.array(DataTableRow),
+  deletedRowIds: import_zod45.z.array(import_zod45.z.string())
 });
-var ImportRowsInput = import_zod43.z.object({
-  rows: import_zod43.z.array(import_zod43.z.record(import_zod43.z.string(), import_zod43.z.unknown())).min(1)
+var ImportRowsInput = import_zod45.z.object({
+  rows: import_zod45.z.array(import_zod45.z.record(import_zod45.z.string(), import_zod45.z.unknown())).min(1)
 });
-var ImportRowsResult = import_zod43.z.object({
-  inserted: import_zod43.z.number().int().nonnegative()
+var ImportRowsResult = import_zod45.z.object({
+  inserted: import_zod45.z.number().int().nonnegative()
 });
-var SqlQueryInput = import_zod43.z.object({
-  sql: import_zod43.z.string().min(1).max(DATA_TABLE_MAX_SQL_LENGTH),
-  params: import_zod43.z.array(import_zod43.z.unknown()).max(100).default([])
+var SqlQueryInput = import_zod45.z.object({
+  sql: import_zod45.z.string().min(1).max(DATA_TABLE_MAX_SQL_LENGTH),
+  params: import_zod45.z.array(import_zod45.z.unknown()).max(100).default([])
 });
-var SqlQueryResult = import_zod43.z.object({
-  columns: import_zod43.z.array(import_zod43.z.string()),
-  rows: import_zod43.z.array(import_zod43.z.array(import_zod43.z.unknown())),
-  rowCount: import_zod43.z.number().int().nonnegative(),
-  durationMs: import_zod43.z.number().nonnegative()
+var SqlQueryResult = import_zod45.z.object({
+  columns: import_zod45.z.array(import_zod45.z.string()),
+  rows: import_zod45.z.array(import_zod45.z.array(import_zod45.z.unknown())),
+  rowCount: import_zod45.z.number().int().nonnegative(),
+  durationMs: import_zod45.z.number().nonnegative()
 });
-var ProjectRepoMetadata = import_zod43.z.object({
-  provider: import_zod43.z.enum(["github", "gitlab", "bitbucket", "other"]).optional(),
-  url: import_zod43.z.string().url(),
-  owner: import_zod43.z.string().optional(),
-  name: import_zod43.z.string().optional(),
-  defaultBranch: import_zod43.z.string().optional()
+var ProjectRepoMetadata = import_zod45.z.object({
+  provider: import_zod45.z.enum(["github", "gitlab", "bitbucket", "other"]).optional(),
+  url: import_zod45.z.string().url(),
+  owner: import_zod45.z.string().optional(),
+  name: import_zod45.z.string().optional(),
+  defaultBranch: import_zod45.z.string().optional()
 });
-var ProjectMetadata = import_zod43.z.object({
-  id: import_zod43.z.string(),
-  orgId: import_zod43.z.string(),
-  ownerUserId: import_zod43.z.string(),
-  name: import_zod43.z.string().min(1),
-  slug: import_zod43.z.string().min(1).regex(
+var ProjectMetadata = import_zod45.z.object({
+  id: import_zod45.z.string(),
+  orgId: import_zod45.z.string(),
+  ownerUserId: import_zod45.z.string(),
+  name: import_zod45.z.string().min(1),
+  slug: import_zod45.z.string().min(1).regex(
     /^[A-Za-z0-9][A-Za-z0-9._-]*$/,
     "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'"
   ),
-  description: import_zod43.z.string().optional(),
+  description: import_zod45.z.string().optional(),
   visibility: Visibility,
   repo: ProjectRepoMetadata.optional(),
-  cloudflare: import_zod43.z.object({
-    workerName: import_zod43.z.string().optional(),
-    dataDoName: import_zod43.z.string()
+  cloudflare: import_zod45.z.object({
+    workerName: import_zod45.z.string().optional(),
+    dataDoName: import_zod45.z.string()
   }).optional(),
-  createdAt: import_zod43.z.number(),
-  updatedAt: import_zod43.z.number()
+  createdAt: import_zod45.z.number(),
+  updatedAt: import_zod45.z.number()
 });
-var CreateProjectInput = import_zod43.z.object({
-  id: import_zod43.z.string().uuid().optional(),
-  name: import_zod43.z.string().min(1),
-  slug: import_zod43.z.string().min(1).regex(
+var CreateProjectInput = import_zod45.z.object({
+  id: import_zod45.z.string().uuid().optional(),
+  name: import_zod45.z.string().min(1),
+  slug: import_zod45.z.string().min(1).regex(
     /^[A-Za-z0-9][A-Za-z0-9._-]*$/,
     "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'"
   ).optional(),
-  description: import_zod43.z.string().optional(),
+  description: import_zod45.z.string().optional(),
   visibility: Visibility.pick({ scope: true, groupId: true, orgId: true }).optional(),
   repo: ProjectRepoMetadata.optional()
 });
-var UpdateProjectInput = import_zod43.z.object({
-  name: import_zod43.z.string().min(1).optional(),
-  slug: import_zod43.z.string().min(1).regex(
+var UpdateProjectInput = import_zod45.z.object({
+  name: import_zod45.z.string().min(1).optional(),
+  slug: import_zod45.z.string().min(1).regex(
     /^[A-Za-z0-9][A-Za-z0-9._-]*$/,
     "slug must start alphanumeric and contain only letters, digits, '.', '_' or '-'"
   ).optional(),
-  description: import_zod43.z.string().nullable().optional(),
+  description: import_zod45.z.string().nullable().optional(),
   visibility: Visibility.pick({ scope: true, groupId: true, orgId: true }).optional(),
   repo: ProjectRepoMetadata.nullable().optional()
 });
 
 // packages/schema/src/design/collaboration.ts
-var import_zod44 = require("zod");
-var projectRevisionSchema = import_zod44.z.union([gitShaSchema, sha256Schema]);
-var projectRelativePathSchema = import_zod44.z.string().min(1).max(1024).refine(
+var import_zod46 = require("zod");
+var projectRevisionSchema = import_zod46.z.union([gitShaSchema, sha256Schema]);
+var projectRelativePathSchema = import_zod46.z.string().min(1).max(1024).refine(
   (value) => (value === "." || value.split("/").every((part) => part && part !== "." && part !== "..")) && !value.startsWith("/") && !value.includes("\\") && !value.includes("\0"),
   "path must be a safe project-relative path"
 );
-var designPreviewDescriptorSchema = import_zod44.z.object({
-  title: import_zod44.z.string().trim().min(1).max(120),
+var designPreviewDescriptorSchema = import_zod46.z.object({
+  title: import_zod46.z.string().trim().min(1).max(120),
   sourcePath: projectRelativePathSchema,
-  entryScript: import_zod44.z.string().min(1).max(80).regex(/^[A-Za-z0-9][A-Za-z0-9:._-]*$/),
-  workingDirectory: import_zod44.z.union([import_zod44.z.literal("."), projectRelativePathSchema]),
-  port: import_zod44.z.number().int().min(1024).max(65535),
-  healthPath: import_zod44.z.string().min(1).max(1024).regex(/^\/(?!\/)[^?#]*$/)
+  entryScript: import_zod46.z.string().min(1).max(80).regex(/^[A-Za-z0-9][A-Za-z0-9:._-]*$/),
+  workingDirectory: import_zod46.z.union([import_zod46.z.literal("."), projectRelativePathSchema]),
+  port: import_zod46.z.number().int().min(1024).max(65535),
+  healthPath: import_zod46.z.string().min(1).max(1024).regex(/^\/(?!\/)[^?#]*$/)
 }).strict();
-var designArtifactRevisionSchema = import_zod44.z.object({
+var designArtifactRevisionSchema = import_zod46.z.object({
   artifactRevision: entityIdSchema,
   projectRevision: projectRevisionSchema,
   preview: designPreviewDescriptorSchema,
-  createdByKind: import_zod44.z.enum(["user", "agent"]),
-  createdBy: import_zod44.z.string().min(1).max(128),
-  createdAt: import_zod44.z.number().int().nonnegative()
+  createdByKind: import_zod46.z.enum(["user", "agent"]),
+  createdBy: import_zod46.z.string().min(1).max(128),
+  createdAt: import_zod46.z.number().int().nonnegative()
 }).strict();
-var designArtifactSchema = import_zod44.z.object({
+var designArtifactSchema = import_zod46.z.object({
   id: entityIdSchema,
-  projectId: import_zod44.z.string().min(1).max(128),
-  createdByKind: import_zod44.z.enum(["user", "agent"]),
-  createdBy: import_zod44.z.string().min(1).max(128),
-  createdAt: import_zod44.z.number().int().nonnegative(),
-  archivedAt: import_zod44.z.number().int().positive().nullable(),
-  revisions: import_zod44.z.array(designArtifactRevisionSchema).min(1).max(1e3)
+  projectId: import_zod46.z.string().min(1).max(128),
+  createdByKind: import_zod46.z.enum(["user", "agent"]),
+  createdBy: import_zod46.z.string().min(1).max(128),
+  createdAt: import_zod46.z.number().int().nonnegative(),
+  archivedAt: import_zod46.z.number().int().positive().nullable(),
+  revisions: import_zod46.z.array(designArtifactRevisionSchema).min(1).max(1e3)
 }).strict();
 var designArtifactSummarySchema = designArtifactSchema.omit({ revisions: true }).extend({
   latestRevision: designArtifactRevisionSchema
 }).strict();
 var designArtifactPageSchema = pageSchema(designArtifactSummarySchema);
-var designArtifactCreateSchema = import_zod44.z.object({
+var designArtifactCreateSchema = import_zod46.z.object({
   projectRevision: projectRevisionSchema,
   preview: designPreviewDescriptorSchema,
   clientMutationId: idempotencyKeySchema
 }).strict();
-var designSourceReferenceSchema = import_zod44.z.object({
+var designSourceReferenceSchema = import_zod46.z.object({
   path: projectRelativePathSchema,
-  startLine: import_zod44.z.number().int().positive().nullable(),
-  endLine: import_zod44.z.number().int().positive().nullable()
+  startLine: import_zod46.z.number().int().positive().nullable(),
+  endLine: import_zod46.z.number().int().positive().nullable()
 }).strict().superRefine((value, ctx) => {
   if (value.startLine === null !== (value.endLine === null)) {
-    ctx.addIssue({ code: import_zod44.z.ZodIssueCode.custom, message: "source line bounds must be provided together" });
+    ctx.addIssue({ code: import_zod46.z.ZodIssueCode.custom, message: "source line bounds must be provided together" });
   } else if (value.startLine !== null && value.endLine < value.startLine) {
-    ctx.addIssue({ code: import_zod44.z.ZodIssueCode.custom, message: "source endLine must not precede startLine" });
+    ctx.addIssue({ code: import_zod46.z.ZodIssueCode.custom, message: "source endLine must not precede startLine" });
   }
 });
-var designCommentTargetSchema = import_zod44.z.object({
-  kind: import_zod44.z.literal("design"),
+var designCommentTargetSchema = import_zod46.z.object({
+  kind: import_zod46.z.literal("design"),
   artifactId: entityIdSchema,
   artifactRevision: entityIdSchema,
-  viewport: import_zod44.z.object({
-    width: import_zod44.z.number().int().min(1).max(16384),
-    height: import_zod44.z.number().int().min(1).max(16384)
+  viewport: import_zod46.z.object({
+    width: import_zod46.z.number().int().min(1).max(16384),
+    height: import_zod46.z.number().int().min(1).max(16384)
   }).strict(),
-  position: import_zod44.z.object({ x: import_zod44.z.number().min(0).max(1), y: import_zod44.z.number().min(0).max(1) }).strict(),
-  selection: import_zod44.z.object({
-    quote: import_zod44.z.string().trim().min(1).max(1e3),
-    prefix: import_zod44.z.string().max(200),
-    suffix: import_zod44.z.string().max(200)
+  position: import_zod46.z.object({ x: import_zod46.z.number().min(0).max(1), y: import_zod46.z.number().min(0).max(1) }).strict(),
+  selection: import_zod46.z.object({
+    quote: import_zod46.z.string().trim().min(1).max(1e3),
+    prefix: import_zod46.z.string().max(200),
+    suffix: import_zod46.z.string().max(200)
   }).strict().optional(),
   selectorFingerprint: sha256Schema.optional(),
-  nodeId: import_zod44.z.string().min(1).max(200).optional(),
+  nodeId: import_zod46.z.string().min(1).max(200).optional(),
   source: designSourceReferenceSchema.optional(),
-  architecture: import_zod44.z.object({
-    blockId: import_zod44.z.string().min(1).max(200).regex(/^[A-Za-z0-9][A-Za-z0-9._:-]*$/),
-    entityId: import_zod44.z.string().min(1).max(512).optional(),
+  architecture: import_zod46.z.object({
+    blockId: import_zod46.z.string().min(1).max(200).regex(/^[A-Za-z0-9][A-Za-z0-9._:-]*$/),
+    entityId: import_zod46.z.string().min(1).max(512).optional(),
     projectionRevision: sha256Schema
   }).strict().optional()
 }).strict();
-var pullRequestCommentTargetSchema = import_zod44.z.object({
-  kind: import_zod44.z.literal("pull_request"),
+var pullRequestCommentTargetSchema = import_zod46.z.object({
+  kind: import_zod46.z.literal("pull_request"),
   contextId: entityIdSchema,
-  workflowId: import_zod44.z.string().max(200).nullable(),
-  scope: import_zod44.z.enum(["pull_request", "workflow", "nodes", "code"]),
-  nodeIds: import_zod44.z.array(import_zod44.z.string().min(1).max(200)).max(100),
+  workflowId: import_zod46.z.string().max(200).nullable(),
+  scope: import_zod46.z.enum(["pull_request", "workflow", "nodes", "code"]),
+  nodeIds: import_zod46.z.array(import_zod46.z.string().min(1).max(200)).max(100),
   anchor: reviewAnchorSchema
 }).strict();
-var commentTargetSchema = import_zod44.z.discriminatedUnion("kind", [
+var commentTargetSchema = import_zod46.z.discriminatedUnion("kind", [
   pullRequestCommentTargetSchema,
   designCommentTargetSchema
 ]);
-var designAnchorProjectionSchema = import_zod44.z.object({
+var designAnchorProjectionSchema = import_zod46.z.object({
   threadId: entityIdSchema,
   artifactRevision: entityIdSchema,
-  state: import_zod44.z.enum(["projected", "detached"]),
-  position: import_zod44.z.object({ x: import_zod44.z.number().min(0).max(1), y: import_zod44.z.number().min(0).max(1) }).strict().nullable(),
-  reason: import_zod44.z.string().trim().min(1).max(200).nullable(),
-  createdAt: import_zod44.z.number().int().nonnegative()
+  state: import_zod46.z.enum(["projected", "detached"]),
+  position: import_zod46.z.object({ x: import_zod46.z.number().min(0).max(1), y: import_zod46.z.number().min(0).max(1) }).strict().nullable(),
+  reason: import_zod46.z.string().trim().min(1).max(200).nullable(),
+  createdAt: import_zod46.z.number().int().nonnegative()
 }).strict().superRefine((value, ctx) => {
   if (value.state === "projected" !== (value.position !== null)) {
-    ctx.addIssue({ code: import_zod44.z.ZodIssueCode.custom, message: "only projected anchors carry a position" });
+    ctx.addIssue({ code: import_zod46.z.ZodIssueCode.custom, message: "only projected anchors carry a position" });
   }
 });
-var designReviewThreadSchema = import_zod44.z.object({
+var designReviewThreadSchema = import_zod46.z.object({
   id: entityIdSchema,
   target: designCommentTargetSchema,
-  projections: import_zod44.z.array(designAnchorProjectionSchema).max(1e3),
-  status: import_zod44.z.enum(["open", "resolved"]),
+  projections: import_zod46.z.array(designAnchorProjectionSchema).max(1e3),
+  status: import_zod46.z.enum(["open", "resolved"]),
   version: revisionSchema,
-  createdAt: import_zod44.z.number().int().nonnegative(),
-  updatedAt: import_zod44.z.number().int().nonnegative(),
-  comments: import_zod44.z.array(reviewCommentSchema).max(1e4)
+  createdAt: import_zod46.z.number().int().nonnegative(),
+  updatedAt: import_zod46.z.number().int().nonnegative(),
+  comments: import_zod46.z.array(reviewCommentSchema).max(1e4)
 }).strict();
 var designReviewThreadPageSchema = pageSchema(designReviewThreadSchema);
 var designReviewThreadCreateSchema = designCommentTargetSchema.omit({
   kind: true,
   artifactId: true
 }).extend({
-  body: import_zod44.z.string().min(1).max(32768),
+  body: import_zod46.z.string().min(1).max(32768),
   clientMutationId: idempotencyKeySchema
 }).strict();
 
 // packages/schema/src/design/documents.ts
-var import_zod45 = require("zod");
-var designDocumentFormatSchema = import_zod45.z.enum(["markdown", "html", "text", "latex"]);
-var designDocumentAccessSchema = import_zod45.z.enum(["private", "workspace", "public_file", "public_host"]);
-var designDocumentScopeSchema = import_zod45.z.discriminatedUnion("kind", [
-  import_zod45.z.object({ kind: import_zod45.z.literal("workspace") }).strict(),
-  import_zod45.z.object({ kind: import_zod45.z.literal("project"), projectId: import_zod45.z.string().min(1).max(128) }).strict()
+var import_zod47 = require("zod");
+var designDocumentFormatSchema = import_zod47.z.enum(["markdown", "html", "text", "latex"]);
+var designDocumentAccessSchema = import_zod47.z.enum(["private", "workspace", "public_file", "public_host"]);
+var designDocumentScopeSchema = import_zod47.z.discriminatedUnion("kind", [
+  import_zod47.z.object({ kind: import_zod47.z.literal("workspace") }).strict(),
+  import_zod47.z.object({ kind: import_zod47.z.literal("project"), projectId: import_zod47.z.string().min(1).max(128) }).strict()
 ]);
-var designDocumentRevisionSchema = import_zod45.z.object({
+var designDocumentRevisionSchema = import_zod47.z.object({
   id: entityIdSchema,
-  title: import_zod45.z.string().trim().min(1).max(160),
+  title: import_zod47.z.string().trim().min(1).max(160),
   format: designDocumentFormatSchema,
   checksum: sha256Schema,
-  size: import_zod45.z.number().int().nonnegative().max(2 * 1024 * 1024),
-  createdByKind: import_zod45.z.enum(["user", "agent"]),
-  createdBy: import_zod45.z.string().min(1).max(128),
-  createdAt: import_zod45.z.number().int().nonnegative()
+  size: import_zod47.z.number().int().nonnegative().max(2 * 1024 * 1024),
+  createdByKind: import_zod47.z.enum(["user", "agent"]),
+  createdBy: import_zod47.z.string().min(1).max(128),
+  createdAt: import_zod47.z.number().int().nonnegative()
 }).strict();
-var designDocumentSchema = import_zod45.z.object({
+var designDocumentSchema = import_zod47.z.object({
   id: entityIdSchema,
   scope: designDocumentScopeSchema,
   access: designDocumentAccessSchema,
-  sharePath: import_zod45.z.string().startsWith("/design/").nullable(),
+  sharePath: import_zod47.z.string().startsWith("/design/").nullable(),
   version: revisionSchema,
-  createdByKind: import_zod45.z.enum(["user", "agent"]),
-  createdBy: import_zod45.z.string().min(1).max(128),
-  createdAt: import_zod45.z.number().int().nonnegative(),
-  updatedAt: import_zod45.z.number().int().nonnegative(),
+  createdByKind: import_zod47.z.enum(["user", "agent"]),
+  createdBy: import_zod47.z.string().min(1).max(128),
+  createdAt: import_zod47.z.number().int().nonnegative(),
+  updatedAt: import_zod47.z.number().int().nonnegative(),
   latestRevision: designDocumentRevisionSchema
 }).strict();
 var designDocumentDetailSchema = designDocumentSchema.extend({
-  content: import_zod45.z.string().max(2 * 1024 * 1024),
-  commentProjectId: import_zod45.z.string().min(1).max(128)
+  content: import_zod47.z.string().max(2 * 1024 * 1024),
+  commentProjectId: import_zod47.z.string().min(1).max(128)
 }).strict();
-var designDocumentCreateSchema = import_zod45.z.object({
+var designDocumentCreateSchema = import_zod47.z.object({
   scope: designDocumentScopeSchema,
-  title: import_zod45.z.string().trim().min(1).max(160),
+  title: import_zod47.z.string().trim().min(1).max(160),
   format: designDocumentFormatSchema,
-  content: import_zod45.z.string().max(2 * 1024 * 1024)
+  content: import_zod47.z.string().max(2 * 1024 * 1024)
 }).strict();
-var designDocumentUpdateSchema = import_zod45.z.object({
-  title: import_zod45.z.string().trim().min(1).max(160),
+var designDocumentUpdateSchema = import_zod47.z.object({
+  title: import_zod47.z.string().trim().min(1).max(160),
   format: designDocumentFormatSchema,
-  content: import_zod45.z.string().max(2 * 1024 * 1024),
+  content: import_zod47.z.string().max(2 * 1024 * 1024),
   baseRevision: entityIdSchema
 }).strict();
-var designDocumentShareSchema = import_zod45.z.object({
+var designDocumentShareSchema = import_zod47.z.object({
   access: designDocumentAccessSchema,
   expectedVersion: revisionSchema
 }).strict();
-var designDocumentFilterSchema = import_zod45.z.object({
-  q: import_zod45.z.string().trim().max(200).optional(),
-  ids: import_zod45.z.array(entityIdSchema).max(100).optional(),
-  excludeIds: import_zod45.z.array(entityIdSchema).max(100).optional()
+var designDocumentFilterSchema = import_zod47.z.object({
+  q: import_zod47.z.string().trim().max(200).optional(),
+  ids: import_zod47.z.array(entityIdSchema).max(100).optional(),
+  excludeIds: import_zod47.z.array(entityIdSchema).max(100).optional()
 }).strict();
 
 // packages/schema/src/design/latex.ts
-var import_zod46 = require("zod");
-var latexDiagnosticSchema = import_zod46.z.object({
-  severity: import_zod46.z.enum(["error", "warning"]),
-  message: import_zod46.z.string().max(2e3),
-  line: import_zod46.z.number().int().positive().optional()
+var import_zod48 = require("zod");
+var latexDiagnosticSchema = import_zod48.z.object({
+  severity: import_zod48.z.enum(["error", "warning"]),
+  message: import_zod48.z.string().max(2e3),
+  line: import_zod48.z.number().int().positive().optional()
 }).strict();
-var latexCompileResultSchema = import_zod46.z.discriminatedUnion("status", [
-  import_zod46.z.object({
-    status: import_zod46.z.literal("ready"),
-    pdf: import_zod46.z.string().min(1).max(24 * 1024 * 1024).regex(/^[A-Za-z0-9+/]+={0,2}$/).refine((value) => value.length % 4 === 0, "Invalid base64 PDF length"),
-    diagnostics: import_zod46.z.array(latexDiagnosticSchema).max(200),
-    toolchain: import_zod46.z.string().min(1).max(128)
+var latexCompileResultSchema = import_zod48.z.discriminatedUnion("status", [
+  import_zod48.z.object({
+    status: import_zod48.z.literal("ready"),
+    pdf: import_zod48.z.string().min(1).max(24 * 1024 * 1024).regex(/^[A-Za-z0-9+/]+={0,2}$/).refine((value) => value.length % 4 === 0, "Invalid base64 PDF length"),
+    diagnostics: import_zod48.z.array(latexDiagnosticSchema).max(200),
+    toolchain: import_zod48.z.string().min(1).max(128)
   }).strict(),
-  import_zod46.z.object({
-    status: import_zod46.z.literal("error"),
-    diagnostics: import_zod46.z.array(latexDiagnosticSchema).min(1).max(200),
-    toolchain: import_zod46.z.string().min(1).max(128)
+  import_zod48.z.object({
+    status: import_zod48.z.literal("error"),
+    diagnostics: import_zod48.z.array(latexDiagnosticSchema).min(1).max(200),
+    toolchain: import_zod48.z.string().min(1).max(128)
   }).strict()
 ]);
-var latexCompileResponseSchema = import_zod46.z.object({ digest: import_zod46.z.string().regex(/^[a-f0-9]{64}$/), result: latexCompileResultSchema }).strict();
-var latexPdfPublishSchema = import_zod46.z.object({
+var latexCompileResponseSchema = import_zod48.z.object({ digest: import_zod48.z.string().regex(/^[a-f0-9]{64}$/), result: latexCompileResultSchema }).strict();
+var latexPdfPublishSchema = import_zod48.z.object({
   revision: entityIdSchema,
   artifact: latexCompileResponseSchema.refine(
     (value) => value.result.status === "ready",
@@ -10148,6 +10254,48 @@ var NODE_SCHEMA = {
         checksum: { type: "string" },
         orphaned: { type: "boolean" },
         sourceScope: { type: "boolean" },
+        sourceVariable: {
+          type: "object",
+          properties: {
+            binding: { type: "string", minLength: 1 },
+            name: { type: "string", minLength: 1 },
+            operation: {
+              type: "string",
+              enum: [
+                "declare",
+                "=",
+                "+=",
+                "-=",
+                "*=",
+                "/=",
+                "%=",
+                "**=",
+                "<<=",
+                ">>=",
+                ">>>=",
+                "&=",
+                "|=",
+                "^=",
+                "&&=",
+                "||=",
+                "??=",
+                "++",
+                "--"
+              ]
+            }
+          },
+          required: ["binding", "name", "operation"]
+        },
+        sourceExecution: {
+          type: "object",
+          required: ["key"],
+          properties: {
+            key: { type: "string", minLength: 1 },
+            entry: { type: "boolean" },
+            output: { type: "boolean" },
+            owner: { type: "string" }
+          }
+        },
         sourceFallback: { enum: ["expression", "statement", "function"] },
         service: {
           type: "object",
@@ -10520,72 +10668,72 @@ var SCHEMA = {
 };
 
 // packages/schema/src/knowledge.ts
-var import_zod47 = require("zod");
-var digestSchema = import_zod47.z.string().regex(/^[a-f0-9]{64}$/);
-var chunkIdSchema = import_zod47.z.string().regex(/^octokb:[a-f0-9]{56}$/);
-var knowledgeSearchRequestSchema = import_zod47.z.object({
-  query: import_zod47.z.string().trim().min(1).max(2e3),
-  topK: import_zod47.z.number().int().min(1).max(8).default(6)
+var import_zod49 = require("zod");
+var digestSchema = import_zod49.z.string().regex(/^[a-f0-9]{64}$/);
+var chunkIdSchema = import_zod49.z.string().regex(/^octokb:[a-f0-9]{56}$/);
+var knowledgeSearchRequestSchema = import_zod49.z.object({
+  query: import_zod49.z.string().trim().min(1).max(2e3),
+  topK: import_zod49.z.number().int().min(1).max(8).default(6)
 }).strict();
-var knowledgeMatchSchema = import_zod47.z.object({
+var knowledgeMatchSchema = import_zod49.z.object({
   id: chunkIdSchema,
-  score: import_zod47.z.number().finite(),
-  source: import_zod47.z.string().min(1).max(256),
-  title: import_zod47.z.string().min(1).max(200),
-  heading: import_zod47.z.string().min(1).max(200),
-  content: import_zod47.z.string().min(1).max(2e3),
+  score: import_zod49.z.number().finite(),
+  source: import_zod49.z.string().min(1).max(256),
+  title: import_zod49.z.string().min(1).max(200),
+  heading: import_zod49.z.string().min(1).max(200),
+  content: import_zod49.z.string().min(1).max(2e3),
   digest: digestSchema,
-  kind: import_zod47.z.enum(["documentation", "skill"])
+  kind: import_zod49.z.enum(["documentation", "skill"])
 }).strict();
-var knowledgeSearchResponseSchema = import_zod47.z.object({
+var knowledgeSearchResponseSchema = import_zod49.z.object({
   corpusGeneration: digestSchema,
-  model: import_zod47.z.literal("@cf/baai/bge-base-en-v1.5"),
-  matches: import_zod47.z.array(knowledgeMatchSchema).max(8)
+  model: import_zod49.z.literal("@cf/baai/bge-base-en-v1.5"),
+  matches: import_zod49.z.array(knowledgeMatchSchema).max(8)
 }).strict();
 var knowledgeCorpusChunkSchema = knowledgeMatchSchema.omit({ score: true });
-var knowledgeSyncBatchSchema = import_zod47.z.object({
+var knowledgeSyncBatchSchema = import_zod49.z.object({
   generation: digestSchema,
-  chunks: import_zod47.z.array(knowledgeCorpusChunkSchema).min(1).max(50)
+  chunks: import_zod49.z.array(knowledgeCorpusChunkSchema).min(1).max(50)
 }).strict();
-var knowledgeSyncActivateSchema = import_zod47.z.object({
+var knowledgeSyncActivateSchema = import_zod49.z.object({
   generation: digestSchema,
-  chunkCount: import_zod47.z.number().int().min(1).max(1e4),
-  sourceRevision: import_zod47.z.string().min(1).max(128)
+  chunkCount: import_zod49.z.number().int().min(1).max(1e4),
+  sourceRevision: import_zod49.z.string().min(1).max(128)
 }).strict();
 
 // packages/schema/src/workflow/graph.ts
-var import_zod64 = require("zod");
+var import_zod66 = require("zod");
 
 // packages/schema/src/plugin/allowlist.ts
-var import_zod48 = require("zod");
-var PluginAllowlistKind = import_zod48.z.enum(["org", "team", "user"]);
-var PluginAllowlistQuery = import_zod48.z.object({
+var import_zod50 = require("zod");
+var PluginAllowlistKind = import_zod50.z.enum(["org", "team", "user"]);
+var PluginAllowlistQuery = import_zod50.z.object({
   kind: PluginAllowlistKind,
-  q: import_zod48.z.string().trim().max(200).default(""),
-  status: import_zod48.z.enum(["allowed", "available", "all"]).default("allowed"),
-  sort: import_zod48.z.enum(["name", "id"]).default("name"),
-  direction: import_zod48.z.enum(["asc", "desc"]).default("asc"),
-  offset: import_zod48.z.coerce.number().int().min(0).max(1e6).default(0),
-  limit: import_zod48.z.coerce.number().int().min(1).max(100).default(25)
+  q: import_zod50.z.string().trim().max(200).default(""),
+  status: import_zod50.z.enum(["allowed", "available", "all"]).default("allowed"),
+  sort: import_zod50.z.enum(["name", "id"]).default("name"),
+  direction: import_zod50.z.enum(["asc", "desc"]).default("asc"),
+  offset: import_zod50.z.coerce.number().int().min(0).max(1e6).default(0),
+  limit: import_zod50.z.coerce.number().int().min(1).max(100).default(25)
 });
-var PluginAllowlistInput = import_zod48.z.object({
+var PluginAllowlistInput = import_zod50.z.object({
   kind: PluginAllowlistKind,
-  id: import_zod48.z.string().min(1).max(200)
+  id: import_zod50.z.string().min(1).max(200)
 }).strict();
-var PluginAllowlistPage = import_zod48.z.object({
-  items: import_zod48.z.array(
-    import_zod48.z.object({
-      id: import_zod48.z.string(),
-      name: import_zod48.z.string(),
-      allowed: import_zod48.z.boolean(),
-      inherited: import_zod48.z.boolean(),
-      eligible: import_zod48.z.boolean()
+var PluginAllowlistPage = import_zod50.z.object({
+  items: import_zod50.z.array(
+    import_zod50.z.object({
+      id: import_zod50.z.string(),
+      name: import_zod50.z.string(),
+      allowed: import_zod50.z.boolean(),
+      inherited: import_zod50.z.boolean(),
+      eligible: import_zod50.z.boolean()
     })
   ),
-  total: import_zod48.z.number(),
-  offset: import_zod48.z.number(),
-  limit: import_zod48.z.number(),
-  canAdd: import_zod48.z.boolean()
+  total: import_zod50.z.number(),
+  offset: import_zod50.z.number(),
+  limit: import_zod50.z.number(),
+  canAdd: import_zod50.z.boolean()
 });
 
 // packages/schema/src/plugin/constants.ts
@@ -10612,70 +10760,70 @@ var PREPARED_RUNTIME_MAX_FILES = 5e4;
 var PREPARED_RUNTIME_ARCHIVE = "octonode-runtime.tgz";
 
 // packages/schema/src/plugin/execution.ts
-var import_zod49 = require("zod");
-var PreparedPluginRuntime = import_zod49.z.object({
-  format: import_zod49.z.literal(1),
-  nodeMajor: import_zod49.z.literal(24),
-  platform: import_zod49.z.enum(["portable", "linux", "darwin"]),
-  arch: import_zod49.z.string().max(32).optional(),
-  libc: import_zod49.z.string().max(64).optional(),
-  dependencies: import_zod49.z.literal(PREPARED_RUNTIME_ARCHIVE).optional()
+var import_zod51 = require("zod");
+var PreparedPluginRuntime = import_zod51.z.object({
+  format: import_zod51.z.literal(1),
+  nodeMajor: import_zod51.z.literal(24),
+  platform: import_zod51.z.enum(["portable", "linux", "darwin"]),
+  arch: import_zod51.z.string().max(32).optional(),
+  libc: import_zod51.z.string().max(64).optional(),
+  dependencies: import_zod51.z.literal(PREPARED_RUNTIME_ARCHIVE).optional()
 }).strict();
 var executionIdentity = {
-  sha256: import_zod49.z.string().regex(/^sha256:[a-f0-9]{64}$/),
-  nodeId: import_zod49.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i)
+  sha256: import_zod51.z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  nodeId: import_zod51.z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i)
 };
-var PluginExecutionReference = import_zod49.z.union([
-  import_zod49.z.object({ ...executionIdentity, installId: import_zod49.z.string().uuid() }).strict(),
-  import_zod49.z.object({
+var PluginExecutionReference = import_zod51.z.union([
+  import_zod51.z.object({ ...executionIdentity, installId: import_zod51.z.string().uuid() }).strict(),
+  import_zod51.z.object({
     ...executionIdentity,
-    workspaceArchiveSha256: import_zod49.z.string().regex(/^[a-f0-9]{64}$/),
-    grantId: import_zod49.z.string().uuid()
+    workspaceArchiveSha256: import_zod51.z.string().regex(/^[a-f0-9]{64}$/),
+    grantId: import_zod51.z.string().uuid()
   }).strict()
 ]);
-var PluginExecutionRequest = import_zod49.z.object({
+var PluginExecutionRequest = import_zod51.z.object({
   plugin: PluginExecutionReference,
   request: InvokeRequest,
-  environment: import_zod49.z.record(
-    import_zod49.z.string().regex(/^[a-z_][a-z0-9_]*$/i),
-    import_zod49.z.string().max(65536).refine((value) => !value.includes("\0"))
+  environment: import_zod51.z.record(
+    import_zod51.z.string().regex(/^[a-z_][a-z0-9_]*$/i),
+    import_zod51.z.string().max(65536).refine((value) => !value.includes("\0"))
   ).default({}),
-  timeoutMs: import_zod49.z.number().int().positive().max(PLUGIN_EXECUTION_TIMEOUT_MS).default(PLUGIN_EXECUTION_TIMEOUT_MS)
+  timeoutMs: import_zod51.z.number().int().positive().max(PLUGIN_EXECUTION_TIMEOUT_MS).default(PLUGIN_EXECUTION_TIMEOUT_MS)
 }).strict();
-var AuthorizedPluginRelease = import_zod49.z.object({
+var AuthorizedPluginRelease = import_zod51.z.object({
   manifest: PluginManifest,
-  archiveSha256: import_zod49.z.string().regex(/^[a-f0-9]{64}$/)
+  archiveSha256: import_zod51.z.string().regex(/^[a-f0-9]{64}$/)
 });
 var WorkspacePluginExecutionGrant = AuthorizedPluginRelease.extend({
-  sha256: import_zod49.z.string().regex(/^sha256:[a-f0-9]{64}$/),
-  permissions: import_zod49.z.array(PluginPermission)
+  sha256: import_zod51.z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  permissions: import_zod51.z.array(PluginPermission)
 });
 
 // packages/schema/src/plugin/publishing.ts
-var import_zod51 = require("zod");
+var import_zod53 = require("zod");
 
 // packages/schema/src/plugin/version.ts
-var import_zod50 = require("zod");
-var PluginVersion = import_zod50.z.string().max(200).regex(
+var import_zod52 = require("zod");
+var PluginVersion = import_zod52.z.string().max(200).regex(
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/,
   "Use a semantic version such as 1.2.3 or 2.0.0-beta.1"
 );
 
 // packages/schema/src/plugin/publishing.ts
-var PluginConfigPath = import_zod51.z.string().max(512).refine(
+var PluginConfigPath = import_zod53.z.string().max(512).refine(
   (path3) => /^(?:[a-zA-Z0-9_.-]+\/)*(?:plugin\.octonode\.(?:json|ya?ml)|octonode\.plugin\.json)$/.test(path3) && !path3.split("/").some((part) => [".", "..", ".git", "node_modules"].includes(part)),
   "Select a repository-relative octonode.plugin.json file (older plugin.octonode release files also work)"
 );
-var PluginReleaseConfig = import_zod51.z.object({
-  apiVersion: import_zod51.z.literal("octonode.plugin/v1"),
-  id: import_zod51.z.string().max(128).regex(/^[a-z0-9][a-z0-9-]*$/),
+var PluginReleaseConfig = import_zod53.z.object({
+  apiVersion: import_zod53.z.literal("octonode.plugin/v1"),
+  id: import_zod53.z.string().max(128).regex(/^[a-z0-9][a-z0-9-]*$/),
   version: PluginVersion,
   icon: IconValue.optional(),
-  scope: import_zod51.z.enum(["user", "team", "organization", "public"]),
-  teamId: import_zod51.z.string().min(1).max(128).optional(),
-  orgId: import_zod51.z.string().min(1).max(128).optional(),
-  contributors: import_zod51.z.array(import_zod51.z.string().trim().min(1).max(240)).max(100).optional(),
-  workflow: import_zod51.z.string().regex(/^\.github\/workflows\/[a-zA-Z0-9_-]+\.ya?ml$/).default(".github/workflows/octonode-publish.yml")
+  scope: import_zod53.z.enum(["user", "team", "organization", "public"]),
+  teamId: import_zod53.z.string().min(1).max(128).optional(),
+  orgId: import_zod53.z.string().min(1).max(128).optional(),
+  contributors: import_zod53.z.array(import_zod53.z.string().trim().min(1).max(240)).max(100).optional(),
+  workflow: import_zod53.z.string().regex(/^\.github\/workflows\/[a-zA-Z0-9_-]+\.ya?ml$/).default(".github/workflows/octonode-publish.yml")
 }).strict().superRefine((config, ctx) => {
   if (config.scope === "team" !== Boolean(config.teamId))
     ctx.addIssue({ code: "custom", path: ["teamId"], message: "teamId is required only for team scope" });
@@ -10683,159 +10831,155 @@ var PluginReleaseConfig = import_zod51.z.object({
     ctx.addIssue({ code: "custom", path: ["orgId"], message: "orgId is required only for organization scope" });
 });
 var pluginReleaseScope = (config) => config.scope === "team" ? "group" : config.scope === "organization" ? "org" : config.scope;
-var PluginPublisherInput = import_zod51.z.object({ repositoryId: import_zod51.z.number().int().positive(), configPath: PluginConfigPath }).strict();
-var PluginPublisherRepository = PluginPublisherInput.pick({ repositoryId: true });
-var PluginPublisherConsent = PluginPublisherInput.extend({ sha256: import_zod51.z.string().regex(/^[a-f0-9]{64}$/) });
-var PluginPublisherPreview = import_zod51.z.object({
+var PluginPublisherRepository = import_zod53.z.object({ repositoryId: import_zod53.z.number().int().positive() }).strict();
+var PluginPublisherConnection = import_zod53.z.object({
   config: PluginReleaseConfig,
-  sha256: import_zod51.z.string(),
-  repository: import_zod51.z.string(),
-  branch: import_zod51.z.string()
-});
-var PluginPublisherConnection = PluginPublisherPreview.extend({
-  id: import_zod51.z.string().uuid(),
-  repositoryId: import_zod51.z.number(),
+  sha256: import_zod53.z.string(),
+  repository: import_zod53.z.string(),
+  branch: import_zod53.z.string(),
+  id: import_zod53.z.string().uuid(),
+  repositoryId: import_zod53.z.number(),
   configPath: PluginConfigPath,
-  lastVersion: import_zod51.z.string().nullable(),
-  lastSha: import_zod51.z.string().nullable(),
-  lastPublishedAt: import_zod51.z.number().nullable()
+  lastVersion: import_zod53.z.string().nullable(),
+  lastSha: import_zod53.z.string().nullable(),
+  lastPublishedAt: import_zod53.z.number().nullable()
 });
-var PluginPublisherConnections = import_zod51.z.object({ items: import_zod51.z.array(PluginPublisherConnection) });
-var PluginPublisherRepositoryQuery = import_zod51.z.object({
-  search: import_zod51.z.string().trim().max(200).default(""),
-  scope: import_zod51.z.enum(["all", "user", "team", "organization", "public"]).default("all"),
-  sort: import_zod51.z.enum(["name", "-name"]).default("name"),
-  limit: import_zod51.z.coerce.number().int().min(1).max(100).default(20),
-  offset: import_zod51.z.coerce.number().int().min(0).max(1e6).default(0)
+var PluginPublisherConnections = import_zod53.z.object({ items: import_zod53.z.array(PluginPublisherConnection) });
+var PluginPublisherRepositoryQuery = import_zod53.z.object({
+  search: import_zod53.z.string().trim().max(200).default(""),
+  scope: import_zod53.z.enum(["all", "user", "team", "organization", "public"]).default("all"),
+  sort: import_zod53.z.enum(["name", "-name"]).default("name"),
+  limit: import_zod53.z.coerce.number().int().min(1).max(100).default(20),
+  offset: import_zod53.z.coerce.number().int().min(0).max(1e6).default(0)
 });
-var PluginPublisherRepositoryPage = import_zod51.z.object({
-  items: import_zod51.z.array(
-    import_zod51.z.object({
-      repositoryId: import_zod51.z.number().int(),
-      repository: import_zod51.z.string(),
-      branch: import_zod51.z.string(),
-      plugins: import_zod51.z.array(import_zod51.z.string()),
-      scopes: import_zod51.z.array(import_zod51.z.enum(["user", "team", "organization", "public"]))
+var PluginPublisherRepositoryPage = import_zod53.z.object({
+  items: import_zod53.z.array(
+    import_zod53.z.object({
+      repositoryId: import_zod53.z.number().int(),
+      repository: import_zod53.z.string(),
+      branch: import_zod53.z.string(),
+      plugins: import_zod53.z.array(import_zod53.z.string()),
+      scopes: import_zod53.z.array(import_zod53.z.enum(["user", "team", "organization", "public"]))
     })
   ),
-  total: import_zod51.z.number().int().nonnegative()
+  total: import_zod53.z.number().int().nonnegative()
 });
-var PluginPublisherOperation = import_zod51.z.enum(["create", "update", "delete"]);
-var PluginPublisherReviewItem = import_zod51.z.object({
+var PluginPublisherOperation = import_zod53.z.enum(["create", "update", "delete"]);
+var PluginPublisherReviewItem = import_zod53.z.object({
   configPath: PluginConfigPath,
   config: PluginReleaseConfig,
-  sha256: import_zod51.z.string(),
-  connectionId: import_zod51.z.string().nullable(),
-  missing: import_zod51.z.boolean()
+  sha256: import_zod53.z.string(),
+  connectionId: import_zod53.z.string().nullable(),
+  missing: import_zod53.z.boolean()
 });
-var PluginPublisherReview = import_zod51.z.object({
-  repositoryId: import_zod51.z.number(),
-  repository: import_zod51.z.string(),
-  branch: import_zod51.z.string(),
-  headSha: import_zod51.z.string(),
-  revision: import_zod51.z.string(),
-  items: import_zod51.z.array(PluginPublisherReviewItem)
+var PluginPublisherReview = import_zod53.z.object({
+  repositoryId: import_zod53.z.number(),
+  repository: import_zod53.z.string(),
+  branch: import_zod53.z.string(),
+  headSha: import_zod53.z.string(),
+  revision: import_zod53.z.string(),
+  items: import_zod53.z.array(PluginPublisherReviewItem)
 });
-var PluginPublisherApply = import_zod51.z.object({
-  repositoryId: import_zod51.z.number().int().positive(),
-  revision: import_zod51.z.string().regex(/^[a-f0-9]{64}$/),
-  operations: import_zod51.z.array(import_zod51.z.object({ configPath: PluginConfigPath, operation: PluginPublisherOperation }).strict()).min(1).max(100)
+var PluginPublisherApply = import_zod53.z.object({
+  repositoryId: import_zod53.z.number().int().positive(),
+  revision: import_zod53.z.string().regex(/^[a-f0-9]{64}$/),
+  operations: import_zod53.z.array(import_zod53.z.object({ configPath: PluginConfigPath, operation: PluginPublisherOperation }).strict()).min(1).max(100)
 }).strict();
-var PluginPublisherApplied = import_zod51.z.object({
-  ok: import_zod51.z.boolean(),
-  sha: import_zod51.z.string(),
-  repositoryId: import_zod51.z.number(),
-  buildId: import_zod51.z.number()
+var PluginPublisherApplied = import_zod53.z.object({
+  ok: import_zod53.z.boolean(),
+  sha: import_zod53.z.string(),
+  repositoryId: import_zod53.z.number(),
+  buildId: import_zod53.z.number()
 });
-var PluginPublisherListQuery = import_zod51.z.object({
-  q: import_zod51.z.string().trim().max(200).default(""),
-  offset: import_zod51.z.coerce.number().int().min(0).max(1e6).default(0),
-  limit: import_zod51.z.coerce.number().int().min(1).max(100).default(25),
-  days: import_zod51.z.enum(["7", "30", "90"]).default("30"),
-  scope: import_zod51.z.enum(["", "user", "group", "org", "public"]).default(""),
-  source: import_zod51.z.enum(["", "sdk", "npm"]).default(""),
-  sort: import_zod51.z.enum(["updated", "name", "version", "scope", "source", "installs", "score", "versions"]).default("updated"),
-  direction: import_zod51.z.enum(["asc", "desc"]).default("desc")
+var PluginPublisherListQuery = import_zod53.z.object({
+  q: import_zod53.z.string().trim().max(200).default(""),
+  offset: import_zod53.z.coerce.number().int().min(0).max(1e6).default(0),
+  limit: import_zod53.z.coerce.number().int().min(1).max(100).default(25),
+  days: import_zod53.z.enum(["7", "30", "90"]).default("30"),
+  scope: import_zod53.z.enum(["", "user", "group", "org", "public"]).default(""),
+  source: import_zod53.z.enum(["", "sdk", "npm"]).default(""),
+  sort: import_zod53.z.enum(["updated", "name", "version", "scope", "source", "installs", "score", "versions"]).default("updated"),
+  direction: import_zod53.z.enum(["asc", "desc"]).default("desc")
 });
-var PluginPublisherBuildQuery = import_zod51.z.object({
-  repositoryId: import_zod51.z.coerce.number().int().positive().optional(),
-  page: import_zod51.z.coerce.number().int().min(1).max(1e6).default(1),
-  search: import_zod51.z.string().max(200).default(""),
-  status: import_zod51.z.enum(["", "queued", "in_progress", "success", "failure"]).default(""),
-  sort: import_zod51.z.enum(["newest", "oldest", "name", "status", "branch", "sha"]).default("newest"),
-  direction: import_zod51.z.enum(["asc", "desc"]).default("asc"),
-  limit: import_zod51.z.coerce.number().int().min(1).max(100).default(30),
-  branch: import_zod51.z.string().trim().max(200).default(""),
-  sha: import_zod51.z.string().trim().max(200).default("")
+var PluginPublisherBuildQuery = import_zod53.z.object({
+  repositoryId: import_zod53.z.coerce.number().int().positive().optional(),
+  page: import_zod53.z.coerce.number().int().min(1).max(1e6).default(1),
+  search: import_zod53.z.string().max(200).default(""),
+  status: import_zod53.z.enum(["", "queued", "in_progress", "success", "failure"]).default(""),
+  sort: import_zod53.z.enum(["newest", "oldest", "name", "status", "branch", "sha"]).default("newest"),
+  direction: import_zod53.z.enum(["asc", "desc"]).default("asc"),
+  limit: import_zod53.z.coerce.number().int().min(1).max(100).default(30),
+  branch: import_zod53.z.string().trim().max(200).default(""),
+  sha: import_zod53.z.string().trim().max(200).default("")
 });
-var PluginPublisherBuilds = import_zod51.z.object({
-  total: import_zod51.z.number(),
-  page: import_zod51.z.number(),
-  hasMore: import_zod51.z.boolean(),
-  limit: import_zod51.z.number(),
-  items: import_zod51.z.array(
-    import_zod51.z.object({
-      id: import_zod51.z.number(),
-      repositoryId: import_zod51.z.number(),
-      number: import_zod51.z.number(),
-      attempt: import_zod51.z.number(),
-      title: import_zod51.z.string(),
-      sha: import_zod51.z.string(),
-      branch: import_zod51.z.string(),
-      status: import_zod51.z.string(),
-      conclusion: import_zod51.z.string().nullable(),
-      url: import_zod51.z.string(),
-      createdAt: import_zod51.z.string(),
-      updatedAt: import_zod51.z.string()
+var PluginPublisherBuilds = import_zod53.z.object({
+  total: import_zod53.z.number(),
+  page: import_zod53.z.number(),
+  hasMore: import_zod53.z.boolean(),
+  limit: import_zod53.z.number(),
+  items: import_zod53.z.array(
+    import_zod53.z.object({
+      id: import_zod53.z.number(),
+      repositoryId: import_zod53.z.number(),
+      number: import_zod53.z.number(),
+      attempt: import_zod53.z.number(),
+      title: import_zod53.z.string(),
+      sha: import_zod53.z.string(),
+      branch: import_zod53.z.string(),
+      status: import_zod53.z.string(),
+      conclusion: import_zod53.z.string().nullable(),
+      url: import_zod53.z.string(),
+      createdAt: import_zod53.z.string(),
+      updatedAt: import_zod53.z.string()
     })
   )
 });
-var PluginPublisherBuildDetail = import_zod51.z.object({
-  repository: import_zod51.z.string(),
-  sha: import_zod51.z.string(),
-  branch: import_zod51.z.string(),
-  status: import_zod51.z.string(),
-  createdAt: import_zod51.z.string(),
-  items: import_zod51.z.array(
-    import_zod51.z.object({
+var PluginPublisherBuildDetail = import_zod53.z.object({
+  repository: import_zod53.z.string(),
+  sha: import_zod53.z.string(),
+  branch: import_zod53.z.string(),
+  status: import_zod53.z.string(),
+  createdAt: import_zod53.z.string(),
+  items: import_zod53.z.array(
+    import_zod53.z.object({
       configPath: PluginConfigPath,
-      name: import_zod51.z.string(),
-      version: import_zod51.z.string(),
-      scope: import_zod51.z.enum(["user", "team", "organization", "public"]),
+      name: import_zod53.z.string(),
+      version: import_zod53.z.string(),
+      scope: import_zod53.z.enum(["user", "team", "organization", "public"]),
       operation: PluginPublisherOperation,
-      status: import_zod51.z.string(),
-      url: import_zod51.z.string().nullable(),
-      error: import_zod51.z.string().nullable()
+      status: import_zod53.z.string(),
+      url: import_zod53.z.string().nullable(),
+      error: import_zod53.z.string().nullable()
     })
   ),
-  log: import_zod51.z.string()
+  log: import_zod53.z.string()
 });
-var PluginCloudBuild = import_zod51.z.object({
-  id: import_zod51.z.number().int().positive(),
-  sha: import_zod51.z.string().regex(/^[a-f0-9]{40}$/),
-  active: import_zod51.z.boolean(),
-  items: import_zod51.z.array(
-    import_zod51.z.object({
+var PluginCloudBuild = import_zod53.z.object({
+  id: import_zod53.z.number().int().positive(),
+  sha: import_zod53.z.string().regex(/^[a-f0-9]{40}$/),
+  active: import_zod53.z.boolean(),
+  items: import_zod53.z.array(
+    import_zod53.z.object({
       configPath: PluginConfigPath,
       config: PluginReleaseConfig,
       operation: PluginPublisherOperation,
-      status: import_zod51.z.string()
+      status: import_zod53.z.string()
     })
   ).max(100)
 });
 
 // packages/schema/src/plugin/pypi.ts
-var import_zod52 = require("zod");
-var pythonName = import_zod52.z.string().regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/).refine((value) => !value.startsWith("__"));
-var PluginPypiImport = import_zod52.z.object({
+var import_zod54 = require("zod");
+var pythonName = import_zod54.z.string().regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/).refine((value) => !value.startsWith("__"));
+var PluginPypiImport = import_zod54.z.object({
   package: PypiPackageName,
   version: PypiVersion,
-  python: import_zod52.z.string().regex(/^3\.(?:12|13|14)$/).default("3.13"),
-  operations: import_zod52.z.array(
-    import_zod52.z.object({
-      id: import_zod52.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100),
-      label: import_zod52.z.string().min(1).max(240),
-      module: import_zod52.z.string().min(1).max(240).refine(
+  python: import_zod54.z.string().regex(/^3\.(?:12|13|14)$/).default("3.13"),
+  operations: import_zod54.z.array(
+    import_zod54.z.object({
+      id: import_zod54.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100),
+      label: import_zod54.z.string().min(1).max(240),
+      module: import_zod54.z.string().min(1).max(240).refine(
         (value) => value.split(".").every((part) => pythonName.safeParse(part).success),
         "Use a Python module name"
       ),
@@ -10847,16 +10991,16 @@ var PluginPypiImport = import_zod52.z.object({
 }).strict();
 
 // packages/schema/src/plugin/queries.ts
-var import_zod56 = require("zod");
+var import_zod58 = require("zod");
 
 // packages/schema/src/app/analytics.ts
-var import_zod53 = require("zod");
-var calendarDateSchema = import_zod53.z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine((value) => {
+var import_zod55 = require("zod");
+var calendarDateSchema = import_zod55.z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine((value) => {
   const timestamp = Date.parse(`${value}T00:00:00Z`);
   return Number.isFinite(timestamp) && new Date(timestamp).toISOString().slice(0, 10) === value;
 }, "Invalid calendar date");
-var appAnalyticsQuerySchema = import_zod53.z.object({
-  days: import_zod53.z.enum(["7", "30", "90"]).default("30"),
+var appAnalyticsQuerySchema = import_zod55.z.object({
+  days: import_zod55.z.enum(["7", "30", "90"]).default("30"),
   from: calendarDateSchema.optional(),
   to: calendarDateSchema.optional()
 }).refine(({ from, to }) => {
@@ -10867,68 +11011,68 @@ var appAnalyticsQuerySchema = import_zod53.z.object({
 }, "Choose both dates in order, spanning at most 366 days");
 
 // packages/schema/src/app/installation.ts
-var import_zod54 = require("zod");
-var appPublishSchema = import_zod54.z.object({
+var import_zod56 = require("zod");
+var appPublishSchema = import_zod56.z.object({
   workspace: workspaceRefSchema,
-  distribution: import_zod54.z.enum(["user", "team", "org", "public"]).optional(),
-  slug: import_zod54.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
-  name: import_zod54.z.string().trim().min(1).max(200),
-  description: import_zod54.z.string().max(4e3).optional(),
+  distribution: import_zod56.z.enum(["user", "team", "org", "public"]).optional(),
+  slug: import_zod56.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
+  name: import_zod56.z.string().trim().min(1).max(200),
+  description: import_zod56.z.string().max(4e3).optional(),
   version: PluginVersion,
   app: AppDefinition,
-  bundles: import_zod54.z.array(
-    import_zod54.z.object({
-      id: import_zod54.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
-      code: import_zod54.z.string().min(1).max(2 * 1024 * 1024)
+  bundles: import_zod56.z.array(
+    import_zod56.z.object({
+      id: import_zod56.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).max(100),
+      code: import_zod56.z.string().min(1).max(2 * 1024 * 1024)
     }).strict()
   ).max(32).optional(),
-  expectedRevision: import_zod54.z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1)
+  expectedRevision: import_zod56.z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1)
 }).strict().refine(
   (body) => !body.distribution || body.distribution === "public" || body.distribution === body.workspace.kind,
   "Private distribution must match the publisher workspace"
 );
-var appLifecycleSchema = import_zod54.z.object({
+var appLifecycleSchema = import_zod56.z.object({
   workspace: workspaceRefSchema,
-  expectedRevision: import_zod54.z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1)
+  expectedRevision: import_zod56.z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1)
 }).strict();
-var appStatusSchema = appLifecycleSchema.extend({ status: import_zod54.z.enum(["published", "deprecated"]) }).strict();
-var appReviewSchema = import_zod54.z.object({ stars: import_zod54.z.number().int().min(1).max(5), body: import_zod54.z.string().max(2e3) }).strict();
-var appGrantSchema = import_zod54.z.object({
+var appStatusSchema = appLifecycleSchema.extend({ status: import_zod56.z.enum(["published", "deprecated"]) }).strict();
+var appReviewSchema = import_zod56.z.object({ stars: import_zod56.z.number().int().min(1).max(5), body: import_zod56.z.string().max(2e3) }).strict();
+var appGrantSchema = import_zod56.z.object({
   action: AppAction,
-  projectId: import_zod54.z.string().min(1).max(128)
+  projectId: import_zod56.z.string().min(1).max(128)
 }).strict();
-var appGrantsSchema = import_zod54.z.array(appGrantSchema).max(100).refine(
+var appGrantsSchema = import_zod56.z.array(appGrantSchema).max(100).refine(
   (grants) => new Set(grants.map((grant) => JSON.stringify([grant.action, grant.projectId]))).size === grants.length,
   "App grants must be unique"
 );
-var appInstallSchema = import_zod54.z.object({
-  appId: import_zod54.z.string().uuid(),
+var appInstallSchema = import_zod56.z.object({
+  appId: import_zod56.z.string().uuid(),
   version: PluginVersion,
-  manifestSha256: import_zod54.z.string().regex(/^[a-f0-9]{64}$/),
+  manifestSha256: import_zod56.z.string().regex(/^[a-f0-9]{64}$/),
   grants: appGrantsSchema,
-  updateMode: import_zod54.z.literal("preserve-consent").optional(),
-  expectedRevision: import_zod54.z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1)
+  updateMode: import_zod56.z.literal("preserve-consent").optional(),
+  expectedRevision: import_zod56.z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1)
 }).strict();
-var appUninstallSchema = import_zod54.z.object({
-  expectedRevision: import_zod54.z.number().int().min(1).max(Number.MAX_SAFE_INTEGER - 1)
+var appUninstallSchema = import_zod56.z.object({
+  expectedRevision: import_zod56.z.number().int().min(1).max(Number.MAX_SAFE_INTEGER - 1)
 }).strict();
-var appInstallationSchema = import_zod54.z.object({
-  id: import_zod54.z.string().uuid(),
-  appId: import_zod54.z.string().uuid(),
+var appInstallationSchema = import_zod56.z.object({
+  id: import_zod56.z.string().uuid(),
+  appId: import_zod56.z.string().uuid(),
   workspace: workspaceRefSchema,
   version: PluginVersion,
-  manifestSha256: import_zod54.z.string().regex(/^[a-f0-9]{64}$/),
+  manifestSha256: import_zod56.z.string().regex(/^[a-f0-9]{64}$/),
   grants: appGrantsSchema,
-  status: import_zod54.z.enum(["active", "uninstalled"]),
-  enabled: import_zod54.z.boolean(),
-  configuration: import_zod54.z.record(import_zod54.z.string().max(4e3)),
-  revision: import_zod54.z.number().int().positive(),
-  installedBy: import_zod54.z.string(),
-  updatedAt: import_zod54.z.number().int().nonnegative()
+  status: import_zod56.z.enum(["active", "uninstalled"]),
+  enabled: import_zod56.z.boolean(),
+  configuration: import_zod56.z.record(import_zod56.z.string().max(4e3)),
+  revision: import_zod56.z.number().int().positive(),
+  installedBy: import_zod56.z.string(),
+  updatedAt: import_zod56.z.number().int().nonnegative()
 }).strict();
-var appShellSchema = import_zod54.z.object({
-  items: import_zod54.z.array(
-    import_zod54.z.object({
+var appShellSchema = import_zod56.z.object({
+  items: import_zod56.z.array(
+    import_zod56.z.object({
       installation: appInstallationSchema.pick({
         id: true,
         appId: true,
@@ -10939,35 +11083,35 @@ var appShellSchema = import_zod54.z.object({
         status: true,
         enabled: true
       }),
-      name: import_zod54.z.string().min(1).max(200),
+      name: import_zod56.z.string().min(1).max(200),
       icon: IconName.optional(),
-      iconUrl: import_zod54.z.string().url().optional(),
-      apiVersion: import_zod54.z.enum(["1", "2", "3"]),
-      hasPage: import_zod54.z.boolean(),
-      hasBlock: import_zod54.z.boolean(),
-      contributions: import_zod54.z.array(appContributionSchema.omit({ path: true, sha256: true })).max(32),
+      iconUrl: import_zod56.z.string().url().optional(),
+      apiVersion: import_zod56.z.enum(["1", "2", "3"]),
+      hasPage: import_zod56.z.boolean(),
+      hasBlock: import_zod56.z.boolean(),
+      contributions: import_zod56.z.array(appContributionSchema.omit({ path: true, sha256: true })).max(32),
       launchers: ContributionApp.innerType().shape.launchers,
       locales: ContributionApp.innerType().shape.locales
     }).strict()
   )
 }).strict();
-var appSettingsSchema = import_zod54.z.object({
-  expectedRevision: import_zod54.z.number().int().min(1).max(Number.MAX_SAFE_INTEGER - 1),
-  enabled: import_zod54.z.boolean(),
-  configuration: import_zod54.z.record(import_zod54.z.string().max(4e3)).refine((value) => Object.keys(value).length <= 32)
+var appSettingsSchema = import_zod56.z.object({
+  expectedRevision: import_zod56.z.number().int().min(1).max(Number.MAX_SAFE_INTEGER - 1),
+  enabled: import_zod56.z.boolean(),
+  configuration: import_zod56.z.record(import_zod56.z.string().max(4e3)).refine((value) => Object.keys(value).length <= 32)
 }).strict();
-var appDevelopmentConsentSchema = import_zod54.z.object({
-  expectedRevision: import_zod54.z.number().int().positive(),
+var appDevelopmentConsentSchema = import_zod56.z.object({
+  expectedRevision: import_zod56.z.number().int().positive(),
   grants: appGrantsSchema
 }).strict();
-var appInstallationsQuerySchema = import_zod54.z.object({
-  appId: import_zod54.z.string().uuid().optional(),
-  offset: import_zod54.z.coerce.number().int().min(0).max(1e6).default(0),
-  q: import_zod54.z.string().max(200).optional(),
-  sort: import_zod54.z.enum(["name", "installed", "updated"]).default("installed"),
-  direction: import_zod54.z.enum(["asc", "desc"]).default("desc"),
-  status: import_zod54.z.enum(["active", "uninstalled"]).optional(),
-  enabled: import_zod54.z.enum(["true", "false"]).optional(),
+var appInstallationsQuerySchema = import_zod56.z.object({
+  appId: import_zod56.z.string().uuid().optional(),
+  offset: import_zod56.z.coerce.number().int().min(0).max(1e6).default(0),
+  q: import_zod56.z.string().max(200).optional(),
+  sort: import_zod56.z.enum(["name", "installed", "updated"]).default("installed"),
+  direction: import_zod56.z.enum(["asc", "desc"]).default("desc"),
+  status: import_zod56.z.enum(["active", "uninstalled"]).optional(),
+  enabled: import_zod56.z.enum(["true", "false"]).optional(),
   installedAfter: calendarDateSchema.optional(),
   installedBefore: calendarDateSchema.optional()
 }).refine(
@@ -10976,30 +11120,30 @@ var appInstallationsQuerySchema = import_zod54.z.object({
 );
 
 // packages/schema/src/app/runtime.ts
-var import_zod55 = require("zod");
-var projectId = import_zod55.z.string().min(1).max(128);
-var tableId = import_zod55.z.string().min(1).max(128);
-var rowId = import_zod55.z.string().min(1).max(128);
-var appDataRequestSchema = import_zod55.z.discriminatedUnion("operation", [
-  import_zod55.z.object({ operation: import_zod55.z.literal("project.get"), projectId }).strict(),
-  import_zod55.z.object({ operation: import_zod55.z.literal("tables.list"), projectId }).strict(),
-  import_zod55.z.object({ operation: import_zod55.z.literal("rows.list"), projectId, tableId, input: ListRowsInput }).strict(),
-  import_zod55.z.object({ operation: import_zod55.z.literal("rows.insert"), projectId, tableId, input: InsertRowInput }).strict(),
-  import_zod55.z.object({
-    operation: import_zod55.z.literal("rows.update"),
+var import_zod57 = require("zod");
+var projectId = import_zod57.z.string().min(1).max(128);
+var tableId = import_zod57.z.string().min(1).max(128);
+var rowId = import_zod57.z.string().min(1).max(128);
+var appDataRequestSchema = import_zod57.z.discriminatedUnion("operation", [
+  import_zod57.z.object({ operation: import_zod57.z.literal("project.get"), projectId }).strict(),
+  import_zod57.z.object({ operation: import_zod57.z.literal("tables.list"), projectId }).strict(),
+  import_zod57.z.object({ operation: import_zod57.z.literal("rows.list"), projectId, tableId, input: ListRowsInput }).strict(),
+  import_zod57.z.object({ operation: import_zod57.z.literal("rows.insert"), projectId, tableId, input: InsertRowInput }).strict(),
+  import_zod57.z.object({
+    operation: import_zod57.z.literal("rows.update"),
     projectId,
     tableId,
     rowId,
-    input: UpdateRowInput.extend({ expectedVersion: import_zod55.z.number().int().positive() })
+    input: UpdateRowInput.extend({ expectedVersion: import_zod57.z.number().int().positive() })
   }).strict(),
-  import_zod55.z.object({ operation: import_zod55.z.literal("rows.delete"), projectId, tableId, rowId }).strict()
+  import_zod57.z.object({ operation: import_zod57.z.literal("rows.delete"), projectId, tableId, rowId }).strict()
 ]);
-var appExecutionRequestSchema = import_zod55.z.object({
+var appExecutionRequestSchema = import_zod57.z.object({
   projectId,
-  workflowId: import_zod55.z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/).max(240),
-  idempotencyKey: import_zod55.z.string().uuid(),
-  input: import_zod55.z.record(import_zod55.z.string(), import_zod55.z.unknown()).default({}),
-  env: import_zod55.z.string().max(100).optional()
+  workflowId: import_zod57.z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/).max(240),
+  idempotencyKey: import_zod57.z.string().uuid(),
+  input: import_zod57.z.record(import_zod57.z.string(), import_zod57.z.unknown()).default({}),
+  env: import_zod57.z.string().max(100).optional()
 }).strict();
 
 // packages/schema/src/plugin/queries.constants.ts
@@ -11023,40 +11167,40 @@ var SELECTABLE_FIELDS = [
 ];
 
 // packages/schema/src/plugin/queries.ts
-var installedPluginInventorySchema = import_zod56.z.array(
-  import_zod56.z.object({
-    id: import_zod56.z.string(),
-    name: import_zod56.z.string(),
-    version: import_zod56.z.string(),
-    description: import_zod56.z.string().optional(),
-    author: import_zod56.z.string().optional(),
-    category: import_zod56.z.string().optional(),
-    source: import_zod56.z.string().optional(),
-    tags: import_zod56.z.array(import_zod56.z.string()).optional(),
-    nodes: import_zod56.z.array(import_zod56.z.object({ id: import_zod56.z.string() }).passthrough()).optional(),
-    nodeCount: import_zod56.z.number().int().nonnegative().optional(),
-    installedAt: import_zod56.z.number().nullable().optional()
+var installedPluginInventorySchema = import_zod58.z.array(
+  import_zod58.z.object({
+    id: import_zod58.z.string(),
+    name: import_zod58.z.string(),
+    version: import_zod58.z.string(),
+    description: import_zod58.z.string().optional(),
+    author: import_zod58.z.string().optional(),
+    category: import_zod58.z.string().optional(),
+    source: import_zod58.z.string().optional(),
+    tags: import_zod58.z.array(import_zod58.z.string()).optional(),
+    nodes: import_zod58.z.array(import_zod58.z.object({ id: import_zod58.z.string() }).passthrough()).optional(),
+    nodeCount: import_zod58.z.number().int().nonnegative().optional(),
+    installedAt: import_zod58.z.number().nullable().optional()
   }).passthrough()
 );
-var fieldsSchema = import_zod56.z.string().regex(/^[A-Za-z]+(?:,[A-Za-z]+)*$/).refine(
+var fieldsSchema = import_zod58.z.string().regex(/^[A-Za-z]+(?:,[A-Za-z]+)*$/).refine(
   (value) => value.split(",").every((field) => SELECTABLE_FIELDS.includes(field)),
   "contains an unsupported field"
 );
-var pluginListQuerySchema = import_zod56.z.object({
-  global: import_zod56.z.enum(["true"]).optional(),
+var pluginListQuerySchema = import_zod58.z.object({
+  global: import_zod58.z.enum(["true"]).optional(),
   fields: fieldsSchema.optional()
 });
-var installedPluginSearchQuerySchema = import_zod56.z.object({
-  q: import_zod56.z.string().max(200).optional(),
-  category: import_zod56.z.string().max(200).optional(),
-  source: import_zod56.z.enum(["store", "workspace", "project", "user"]).optional(),
-  sort: import_zod56.z.enum(["name", "installed", "nodes"]).optional(),
-  direction: import_zod56.z.enum(["asc", "desc"]).optional(),
-  installedAfter: import_zod56.z.string().refine((value) => calendarDateSchema.safeParse(value).success, "Invalid calendar date").optional(),
-  installedBefore: import_zod56.z.string().refine((value) => calendarDateSchema.safeParse(value).success, "Invalid calendar date").optional(),
-  offset: import_zod56.z.coerce.number().int().nonnegative().optional(),
-  limit: import_zod56.z.coerce.number().int().positive().max(100).optional(),
-  global: import_zod56.z.enum(["true"]).optional(),
+var installedPluginSearchQuerySchema = import_zod58.z.object({
+  q: import_zod58.z.string().max(200).optional(),
+  category: import_zod58.z.string().max(200).optional(),
+  source: import_zod58.z.enum(["store", "workspace", "project", "user"]).optional(),
+  sort: import_zod58.z.enum(["name", "installed", "nodes"]).optional(),
+  direction: import_zod58.z.enum(["asc", "desc"]).optional(),
+  installedAfter: import_zod58.z.string().refine((value) => calendarDateSchema.safeParse(value).success, "Invalid calendar date").optional(),
+  installedBefore: import_zod58.z.string().refine((value) => calendarDateSchema.safeParse(value).success, "Invalid calendar date").optional(),
+  offset: import_zod58.z.coerce.number().int().nonnegative().optional(),
+  limit: import_zod58.z.coerce.number().int().positive().max(100).optional(),
+  global: import_zod58.z.enum(["true"]).optional(),
   fields: fieldsSchema.optional()
 }).refine(
   (query) => !query.installedAfter || !query.installedBefore || query.installedAfter <= query.installedBefore,
@@ -11064,40 +11208,40 @@ var installedPluginSearchQuerySchema = import_zod56.z.object({
 );
 
 // packages/schema/src/plugin/lock.ts
-var import_zod58 = require("zod");
+var import_zod60 = require("zod");
 
 // packages/schema/src/toolkit.ts
-var import_zod57 = require("zod");
-var ToolkitOwner = import_zod57.z.object({
-  kind: import_zod57.z.enum(["user", "team", "org"]),
-  id: import_zod57.z.string().trim().min(1).max(240)
+var import_zod59 = require("zod");
+var ToolkitOwner = import_zod59.z.object({
+  kind: import_zod59.z.enum(["user", "team", "org"]),
+  id: import_zod59.z.string().trim().min(1).max(240)
 }).strict();
-var ToolkitVisibility = import_zod57.z.enum(["user", "team", "org", "public"]);
-var ToolkitMember = import_zod57.z.object({
-  development: import_zod57.z.boolean().optional(),
-  pluginId: import_zod57.z.string().min(1).max(240),
+var ToolkitVisibility = import_zod59.z.enum(["user", "team", "org", "public"]);
+var ToolkitMember = import_zod59.z.object({
+  development: import_zod59.z.boolean().optional(),
+  pluginId: import_zod59.z.string().min(1).max(240),
   version: PluginVersion,
-  alias: import_zod57.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100)
+  alias: import_zod59.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100)
 }).strict();
-var ToolkitAction = import_zod57.z.object({
-  id: import_zod57.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100),
-  development: import_zod57.z.boolean().optional(),
-  description: import_zod57.z.string().max(1e3).default(""),
-  kind: import_zod57.z.enum(["plugin", "script", "command"]),
-  plugin: import_zod57.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100),
-  target: import_zod57.z.string().regex(/^[a-zA-Z0-9_@][a-zA-Z0-9_@:./-]*$/).max(200),
-  expected: import_zod57.z.string().max(4e3).optional(),
-  args: import_zod57.z.array(import_zod57.z.string().max(4e3)).max(100).default([]),
-  timeoutMs: import_zod57.z.number().int().min(100).max(3e5).default(6e4)
+var ToolkitAction = import_zod59.z.object({
+  id: import_zod59.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100),
+  development: import_zod59.z.boolean().optional(),
+  description: import_zod59.z.string().max(1e3).default(""),
+  kind: import_zod59.z.enum(["plugin", "script", "command"]),
+  plugin: import_zod59.z.string().regex(/^[a-z][a-z0-9-]*$/).max(100),
+  target: import_zod59.z.string().regex(/^[a-zA-Z0-9_@][a-zA-Z0-9_@:./-]*$/).max(200),
+  expected: import_zod59.z.string().max(4e3).optional(),
+  args: import_zod59.z.array(import_zod59.z.string().max(4e3)).max(100).default([]),
+  timeoutMs: import_zod59.z.number().int().min(100).max(3e5).default(6e4)
 }).strict();
-var ToolkitDefinition = import_zod57.z.object({
-  name: import_zod57.z.string().trim().min(1).max(200),
-  description: import_zod57.z.string().max(4e3).default(""),
+var ToolkitDefinition = import_zod59.z.object({
+  name: import_zod59.z.string().trim().min(1).max(200),
+  description: import_zod59.z.string().max(4e3).default(""),
   version: PluginVersion,
   owner: ToolkitOwner,
   visibility: ToolkitVisibility,
-  plugins: import_zod57.z.array(ToolkitMember).max(100),
-  actions: import_zod57.z.array(ToolkitAction).max(100).optional()
+  plugins: import_zod59.z.array(ToolkitMember).max(100),
+  actions: import_zod59.z.array(ToolkitAction).max(100).optional()
 }).strict().superRefine((value, ctx) => {
   if (value.visibility !== "public" && value.visibility !== value.owner.kind)
     ctx.addIssue({ code: "custom", path: ["visibility"], message: "Visibility must match the owner or be public" });
@@ -11114,54 +11258,54 @@ var ToolkitDefinition = import_zod57.z.object({
     if (new Set(value.plugins.map((plugin) => plugin[field])).size !== value.plugins.length)
       ctx.addIssue({ code: "custom", path: ["plugins"], message: `Duplicate plugin ${field}` });
 });
-var ToolkitQuery = import_zod57.z.object({
-  q: import_zod57.z.string().trim().max(200).default(""),
+var ToolkitQuery = import_zod59.z.object({
+  q: import_zod59.z.string().trim().max(200).default(""),
   visibility: ToolkitVisibility.optional(),
-  status: import_zod57.z.enum(["draft", "published"]).optional(),
+  status: import_zod59.z.enum(["draft", "published"]).optional(),
   ownerKind: ToolkitOwner.shape.kind.optional(),
   ownerId: ToolkitOwner.shape.id.optional(),
-  sort: import_zod57.z.enum(["name", "updated", "plugins"]).default("updated"),
-  direction: import_zod57.z.enum(["asc", "desc"]).default("desc"),
-  offset: import_zod57.z.coerce.number().int().min(0).max(1e6).default(0),
-  limit: import_zod57.z.coerce.number().int().min(1).max(100).default(24),
-  npmPackage: import_zod57.z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/).optional(),
+  sort: import_zod59.z.enum(["name", "updated", "plugins"]).default("updated"),
+  direction: import_zod59.z.enum(["asc", "desc"]).default("desc"),
+  offset: import_zod59.z.coerce.number().int().min(0).max(1e6).default(0),
+  limit: import_zod59.z.coerce.number().int().min(1).max(100).default(24),
+  npmPackage: import_zod59.z.string().regex(/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/).optional(),
   npmVersion: PluginVersion.optional(),
-  installed: import_zod57.z.enum(["true", "false"]).optional(),
-  installedVersions: import_zod57.z.string().max(64e3).default("[]").transform((value, ctx) => {
+  installed: import_zod59.z.enum(["true", "false"]).optional(),
+  installedVersions: import_zod59.z.string().max(64e3).default("[]").transform((value, ctx) => {
     try {
-      return import_zod57.z.array(import_zod57.z.tuple([import_zod57.z.string().max(240), PluginVersion])).max(1e3).parse(JSON.parse(value));
+      return import_zod59.z.array(import_zod59.z.tuple([import_zod59.z.string().max(240), PluginVersion])).max(1e3).parse(JSON.parse(value));
     } catch {
       ctx.addIssue({ code: "custom", message: "Invalid installed toolkit versions" });
-      return import_zod57.z.NEVER;
+      return import_zod59.z.NEVER;
     }
   })
 });
 var ToolkitResolvedMember = ToolkitMember.extend({
-  name: import_zod57.z.string(),
-  manifestId: import_zod57.z.string(),
-  sha256: import_zod57.z.string().regex(/^[a-f0-9]{64}$/),
+  name: import_zod59.z.string(),
+  manifestId: import_zod59.z.string(),
+  sha256: import_zod59.z.string().regex(/^[a-f0-9]{64}$/),
   scope: PluginScope,
-  permissions: import_zod57.z.array(PluginPermission),
-  publisher: import_zod57.z.string().nullable(),
-  npmPackage: import_zod57.z.string().nullable(),
-  connections: import_zod57.z.array(import_zod57.z.string())
+  permissions: import_zod59.z.array(PluginPermission),
+  publisher: import_zod59.z.string().nullable(),
+  npmPackage: import_zod59.z.string().nullable(),
+  connections: import_zod59.z.array(import_zod59.z.string())
 });
-var ToolkitRelease = import_zod57.z.object({
-  id: import_zod57.z.string(),
-  name: import_zod57.z.string(),
-  description: import_zod57.z.string(),
+var ToolkitRelease = import_zod59.z.object({
+  id: import_zod59.z.string(),
+  name: import_zod59.z.string(),
+  description: import_zod59.z.string(),
   version: PluginVersion,
   owner: ToolkitOwner,
   visibility: ToolkitVisibility,
-  revision: import_zod57.z.number().int(),
-  sha256: import_zod57.z.string().nullable(),
-  status: import_zod57.z.enum(["draft", "published"]),
-  plugins: import_zod57.z.array(ToolkitResolvedMember).max(100),
-  actions: import_zod57.z.array(ToolkitAction).max(100).optional()
+  revision: import_zod59.z.number().int(),
+  sha256: import_zod59.z.string().nullable(),
+  status: import_zod59.z.enum(["draft", "published"]),
+  plugins: import_zod59.z.array(ToolkitResolvedMember).max(100),
+  actions: import_zod59.z.array(ToolkitAction).max(100).optional()
 });
-var ToolkitInstallRequest = import_zod57.z.object({
+var ToolkitInstallRequest = import_zod59.z.object({
   version: PluginVersion,
-  sha256: import_zod57.z.string().regex(/^[a-f0-9]{64}$/),
+  sha256: import_zod59.z.string().regex(/^[a-f0-9]{64}$/),
   destination: ToolkitOwner
 }).strict();
 function toolkitForMode(release2, mode) {
@@ -11178,188 +11322,193 @@ function toolkitForMode(release2, mode) {
 }
 
 // packages/schema/src/plugin/lock.ts
-var PluginLockEntry = import_zod58.z.object({
-  /** False only for pins introduced exclusively by a toolkit. Legacy pins are direct. */
-  direct: import_zod58.z.boolean().optional(),
-  installedAt: import_zod58.z.number().int().nonnegative().max(864e13).optional(),
-  version: import_zod58.z.string(),
+var PluginLockEntry = import_zod60.z.object({
+  /**
+   * False only for pins introduced exclusively by a toolkit. Writers that omit it record a user
+   * install; parsing fills it, so every lock write stores it explicitly.
+   */
+  direct: import_zod60.z.boolean().default(true),
+  installedAt: import_zod60.z.number().int().nonnegative().max(864e13).optional(),
+  version: import_zod60.z.string(),
   /** `sha256:<hex>` dir-content hash (hashPluginDir) — the store address + integrity check. */
-  sha256: import_zod58.z.string(),
+  sha256: import_zod60.z.string(),
   /** Registry archive checksum, distinct from the unpacked file-tree identity. */
-  archiveSha256: import_zod58.z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  archiveSha256: import_zod60.z.string().regex(/^[a-f0-9]{64}$/).optional(),
   /** Marketplace base URL the bundle came from (absent for local installs). */
-  registry: import_zod58.z.string().optional(),
+  registry: import_zod60.z.string().optional(),
   /** Marketplace tier it was resolved from. */
   scope: PluginScope.optional(),
   /** Permissions granted at install consent, frozen per locked version. */
-  permissions: import_zod58.z.array(PluginPermission).optional(),
+  permissions: import_zod60.z.array(PluginPermission).optional(),
   /** Hosted marketplace install record used to report uninstall analytics. */
-  installId: import_zod58.z.string().optional(),
+  installId: import_zod60.z.string().optional(),
   /** Original manifest ID; record key remains the project-local alias. */
-  pluginId: import_zod58.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).optional(),
+  pluginId: import_zod60.z.string().regex(/^[a-z0-9][a-z0-9-]*$/).optional(),
   /** Registry-qualified marketplace ID (may differ from the manifest ID for private publications). */
-  remoteId: import_zod58.z.string().optional(),
-  publisher: import_zod58.z.string().optional(),
-  workspaceArtifact: import_zod58.z.object({
+  remoteId: import_zod60.z.string().optional(),
+  publisher: import_zod60.z.string().optional(),
+  workspaceArtifact: import_zod60.z.object({
     workspace: ToolkitOwner,
-    archiveSha256: import_zod58.z.string().regex(/^[a-f0-9]{64}$/),
-    grantId: import_zod58.z.string().uuid().optional()
+    archiveSha256: import_zod60.z.string().regex(/^[a-f0-9]{64}$/),
+    grantId: import_zod60.z.string().uuid().optional()
   }).strict().optional()
 });
-var PluginLockfile = import_zod58.z.object({
-  lockfileVersion: import_zod58.z.union([import_zod58.z.literal(1), import_zod58.z.literal(2)]).default(1),
-  plugins: import_zod58.z.record(PluginLockEntry).default({}),
-  managedDependencies: import_zod58.z.record(import_zod58.z.string()).optional(),
-  toolkits: import_zod58.z.record(
-    import_zod58.z.object({
-      id: import_zod58.z.string(),
-      registry: import_zod58.z.string().url(),
-      version: import_zod58.z.string(),
-      sha256: import_zod58.z.string().regex(/^[a-f0-9]{64}$/),
-      plugins: import_zod58.z.array(import_zod58.z.string()),
-      developmentPlugins: import_zod58.z.array(import_zod58.z.string()).optional(),
+var PluginLockfile = import_zod60.z.object({
+  lockfileVersion: import_zod60.z.union([import_zod60.z.literal(1), import_zod60.z.literal(2)]).default(1),
+  plugins: import_zod60.z.record(PluginLockEntry).default({}),
+  managedDependencies: import_zod60.z.record(import_zod60.z.string()).optional(),
+  toolkits: import_zod60.z.record(
+    import_zod60.z.object({
+      id: import_zod60.z.string(),
+      registry: import_zod60.z.string().url(),
+      version: import_zod60.z.string(),
+      sha256: import_zod60.z.string().regex(/^[a-f0-9]{64}$/),
+      plugins: import_zod60.z.array(import_zod60.z.string()),
+      developmentPlugins: import_zod60.z.array(import_zod60.z.string()).optional(),
       destination: ToolkitOwner,
-      mode: import_zod58.z.enum(["development", "production"]).optional(),
-      actions: import_zod58.z.array(ToolkitAction).max(100).optional()
+      mode: import_zod60.z.enum(["development", "production"]).optional(),
+      actions: import_zod60.z.array(ToolkitAction).max(100).optional()
     }).strict()
   ).optional(),
-  generated: import_zod58.z.object({
-    name: import_zod58.z.literal("@octonodes/plugin"),
-    spec: import_zod58.z.string().regex(/^file:\.\/\.octonode-generated\/plugin-[a-f0-9]{64}\.tgz$/),
-    subpaths: import_zod58.z.array(import_zod58.z.string()),
-    packer: import_zod58.z.string(),
-    sha256: import_zod58.z.string().regex(/^sha256:[a-f0-9]{64}$/)
+  generated: import_zod60.z.object({
+    name: import_zod60.z.literal("@octonodes/plugin"),
+    spec: import_zod60.z.string().regex(/^file:\.\/\.octonode-generated\/plugin-[a-f0-9]{64}\.tgz$/),
+    subpaths: import_zod60.z.array(import_zod60.z.string()),
+    packer: import_zod60.z.string(),
+    sha256: import_zod60.z.string().regex(/^sha256:[a-f0-9]{64}$/)
   }).strict().optional()
 });
 
 // packages/schema/src/plugin/exports.ts
-var import_zod59 = require("zod");
-var PluginExportKind = import_zod59.z.enum(["node", "class", "service", "value", "type"]);
-var PluginExport = import_zod59.z.object({
-  id: import_zod59.z.string().uuid(),
-  name: import_zod59.z.string().min(1).max(1024),
+var import_zod61 = require("zod");
+var PluginExportKind = import_zod61.z.enum(["node", "class", "service", "value", "type"]);
+var PluginExport = import_zod61.z.object({
+  id: import_zod61.z.string().uuid(),
+  name: import_zod61.z.string().min(1).max(1024),
   kind: PluginExportKind,
-  signature: import_zod59.z.string().max(160).optional(),
-  declaration: import_zod59.z.string().max(32768).optional(),
+  signature: import_zod61.z.string().max(160).optional(),
+  declaration: import_zod61.z.string().max(32768).optional(),
   typeView: PluginTypeView.optional(),
-  declarationKind: import_zod59.z.enum(["interface", "type", "enum"]).optional(),
-  memberCount: import_zod59.z.number().int().nonnegative().optional()
+  declarationKind: import_zod61.z.enum(["interface", "type", "enum"]).optional(),
+  memberCount: import_zod61.z.number().int().nonnegative().optional()
 });
-var PluginExportsPage = import_zod59.z.object({
-  items: import_zod59.z.array(PluginExport).max(100),
-  total: import_zod59.z.number().int().nonnegative(),
-  offset: import_zod59.z.number().int().nonnegative(),
-  limit: import_zod59.z.number().int().min(1).max(100),
+var PluginExportsPage = import_zod61.z.object({
+  items: import_zod61.z.array(PluginExport).max(100),
+  total: import_zod61.z.number().int().nonnegative(),
+  offset: import_zod61.z.number().int().nonnegative(),
+  limit: import_zod61.z.number().int().min(1).max(100),
   selected: PluginExport.optional(),
   members: PluginExportMembersPage.optional()
 });
-var pluginExportsQuerySchema = import_zod59.z.object({
-  exports: import_zod59.z.enum(["page"]).optional(),
-  exportArchiveSha256: import_zod59.z.string().regex(/^[a-f0-9]{64}$/).optional(),
+var pluginExportsQuerySchema = import_zod61.z.object({
+  exports: import_zod61.z.enum(["page"]).optional(),
+  exportArchiveSha256: import_zod61.z.string().regex(/^[a-f0-9]{64}$/).optional(),
   exportKind: PluginExportKind.exclude(["node"]).optional(),
-  exportQ: import_zod59.z.string().trim().max(200).optional(),
-  exportSort: import_zod59.z.enum(["name", "id"]).optional(),
-  exportDirection: import_zod59.z.enum(["asc", "desc"]).optional(),
-  exportOffset: import_zod59.z.coerce.number().int().nonnegative().optional(),
-  exportLimit: import_zod59.z.coerce.number().int().min(1).max(100).optional(),
-  exportId: import_zod59.z.string().uuid().optional(),
-  exportMembers: import_zod59.z.literal("page").optional(),
-  memberParentId: import_zod59.z.string().uuid().optional(),
-  memberQ: import_zod59.z.string().trim().max(200).optional(),
+  exportQ: import_zod61.z.string().trim().max(200).optional(),
+  exportSort: import_zod61.z.enum(["name", "id"]).optional(),
+  exportDirection: import_zod61.z.enum(["asc", "desc"]).optional(),
+  exportOffset: import_zod61.z.coerce.number().int().nonnegative().optional(),
+  exportLimit: import_zod61.z.coerce.number().int().min(1).max(100).optional(),
+  exportId: import_zod61.z.string().uuid().optional(),
+  exportMembers: import_zod61.z.literal("page").optional(),
+  memberParentId: import_zod61.z.string().uuid().optional(),
+  memberQ: import_zod61.z.string().trim().max(200).optional(),
   memberKind: PluginMemberKind.optional(),
-  memberOffset: import_zod59.z.coerce.number().int().nonnegative().optional(),
-  memberLimit: import_zod59.z.coerce.number().int().min(1).max(50).optional(),
-  exportSignature: import_zod59.z.enum(["available", "missing"]).optional()
+  memberOffset: import_zod61.z.coerce.number().int().nonnegative().optional(),
+  memberLimit: import_zod61.z.coerce.number().int().min(1).max(50).optional(),
+  exportSignature: import_zod61.z.enum(["available", "missing"]).optional()
 });
-var PluginExportIndex = import_zod59.z.object({
-  pluginId: import_zod59.z.string().uuid(),
-  version: import_zod59.z.string().min(1).max(200),
-  archiveSha256: import_zod59.z.string().regex(/^[a-f0-9]{64}$/),
-  generation: import_zod59.z.string().uuid(),
-  items: import_zod59.z.array(PluginExport.strict()).max(2e4),
-  members: import_zod59.z.array(PluginExportMember.omit({ memberCount: true })).max(5e4).default([]),
-  links: import_zod59.z.array(
-    import_zod59.z.object({
-      id: import_zod59.z.string().uuid(),
-      nodeId: import_zod59.z.string().min(1).max(240),
-      direction: import_zod59.z.enum(["inputs", "outputs"]),
-      portName: import_zod59.z.string().max(240),
-      typeId: import_zod59.z.string().uuid(),
-      typeName: import_zod59.z.string().min(1).max(1024)
+var PluginExportIndex = import_zod61.z.object({
+  pluginId: import_zod61.z.string().uuid(),
+  version: import_zod61.z.string().min(1).max(200),
+  archiveSha256: import_zod61.z.string().regex(/^[a-f0-9]{64}$/),
+  generation: import_zod61.z.string().uuid(),
+  items: import_zod61.z.array(PluginExport.strict()).max(2e4),
+  members: import_zod61.z.array(PluginExportMember.omit({ memberCount: true })).max(5e4).default([]),
+  links: import_zod61.z.array(
+    import_zod61.z.object({
+      id: import_zod61.z.string().uuid(),
+      nodeId: import_zod61.z.string().min(1).max(240),
+      direction: import_zod61.z.enum(["inputs", "outputs"]),
+      portName: import_zod61.z.string().max(240),
+      typeId: import_zod61.z.string().uuid(),
+      typeName: import_zod61.z.string().min(1).max(1024)
     }).strict()
   ).max(2e4)
 }).strict();
 
 // packages/schema/src/plugin/metadata.ts
-var import_zod60 = require("zod");
+var import_zod62 = require("zod");
 var pluginDetailQuerySchema = pluginExportsQuerySchema.extend({
-  nodes: import_zod60.z.enum(["none", "page"]).optional(),
-  kind: import_zod60.z.enum(["action", "trigger"]).optional(),
-  sort: import_zod60.z.enum(["name", "id"]).optional(),
-  direction: import_zod60.z.enum(["asc", "desc"]).optional(),
-  global: import_zod60.z.enum(["true"]).optional(),
-  q: import_zod60.z.string().max(200).optional(),
-  offset: import_zod60.z.coerce.number().int().nonnegative().optional(),
-  limit: import_zod60.z.coerce.number().int().positive().max(100).optional()
+  nodes: import_zod62.z.enum(["none", "page"]).optional(),
+  kind: import_zod62.z.enum(["action", "trigger"]).optional(),
+  sort: import_zod62.z.enum(["name", "id"]).optional(),
+  direction: import_zod62.z.enum(["asc", "desc"]).optional(),
+  global: import_zod62.z.enum(["true"]).optional(),
+  q: import_zod62.z.string().max(200).optional(),
+  offset: import_zod62.z.coerce.number().int().nonnegative().optional(),
+  limit: import_zod62.z.coerce.number().int().positive().max(100).optional()
 });
-var pluginMetadataIdentitySchema = import_zod60.z.object({
-  project: import_zod60.z.string().min(1).max(240),
-  references: import_zod60.z.array(import_zod60.z.string().max(1024)).max(10),
-  name: import_zod60.z.string().max(240),
-  worktree: import_zod60.z.string().uuid().nullable()
+var pluginMetadataIdentitySchema = import_zod62.z.object({
+  project: import_zod62.z.string().min(1).max(240),
+  name: import_zod62.z.string().max(240),
+  worktree: import_zod62.z.string().uuid().nullable()
 }).strict();
+var catalogInventoryScopeSchema = pluginMetadataIdentitySchema.extend({
+  captureKey: import_zod62.z.string().regex(/^[a-f0-9]{64}$/).nullable()
+});
 var pluginMetadataScopeSchema = pluginMetadataIdentitySchema.extend({
-  available: import_zod60.z.boolean(),
+  available: import_zod62.z.boolean(),
   projectMetadata: projectBrowseMetadataSchema.optional(),
-  nodes: import_zod60.z.array(NodeRecord).max(1e4).optional(),
-  customization: import_zod60.z.object({
-    workspace: import_zod60.z.object({
-      text: import_zod60.z.string().max(1048576),
-      revision: import_zod60.z.string(),
-      files: import_zod60.z.array(import_zod60.z.string()),
-      diagnostics: import_zod60.z.array(import_zod60.z.string())
+  nodes: import_zod62.z.array(NodeRecord).max(1e4).optional(),
+  customization: import_zod62.z.object({
+    workspace: import_zod62.z.object({
+      text: import_zod62.z.string().max(1048576),
+      revision: import_zod62.z.string(),
+      files: import_zod62.z.array(import_zod62.z.string()),
+      diagnostics: import_zod62.z.array(import_zod62.z.string())
     }),
-    project: import_zod60.z.object({
-      text: import_zod60.z.string().max(1048576),
-      revision: import_zod60.z.string(),
-      files: import_zod60.z.array(import_zod60.z.string()),
-      diagnostics: import_zod60.z.array(import_zod60.z.string())
+    project: import_zod62.z.object({
+      text: import_zod62.z.string().max(1048576),
+      revision: import_zod62.z.string(),
+      files: import_zod62.z.array(import_zod62.z.string()),
+      diagnostics: import_zod62.z.array(import_zod62.z.string())
     })
   }).optional(),
-  plugins: import_zod60.z.array(
-    import_zod60.z.object({
+  plugins: import_zod62.z.array(
+    import_zod62.z.object({
       manifest: PluginManifest,
-      source: import_zod60.z.enum(["store", "workspace", "project", "user"]),
-      installedAt: import_zod60.z.number().nonnegative().nullable(),
-      sha256: import_zod60.z.string().regex(/^sha256:[a-f0-9]{64}$/)
+      source: import_zod62.z.enum(["store", "workspace", "project", "user"]),
+      installedAt: import_zod62.z.number().nonnegative().nullable(),
+      sha256: import_zod62.z.string().regex(/^sha256:[a-f0-9]{64}$/)
     }).strict()
   ).max(1e3),
-  sourcePackages: import_zod60.z.array(import_zod60.z.object({ root: import_zod60.z.string().max(1024), plugin: import_zod60.z.boolean(), config: import_zod60.z.boolean() }).strict()).max(2e3),
-  problems: import_zod60.z.array(import_zod60.z.string().max(4096)).max(1e3),
-  attachments: import_zod60.z.array(import_zod60.z.string()).max(1e3),
-  variables: import_zod60.z.array(import_zod60.z.string().max(240)).max(1e4),
+  sourcePackages: import_zod62.z.array(import_zod62.z.object({ root: import_zod62.z.string().max(1024), plugin: import_zod62.z.boolean(), config: import_zod62.z.boolean() }).strict()).max(2e3),
+  problems: import_zod62.z.array(import_zod62.z.string().max(4096)).max(1e3),
+  attachments: import_zod62.z.array(import_zod62.z.string()).max(1e3),
+  variables: import_zod62.z.array(import_zod62.z.string().max(240)).max(1e4),
   lock: PluginLockfile,
-  lockRevision: import_zod60.z.string().regex(/^[a-f0-9]{64}$/),
-  registry: import_zod60.z.string().url(),
-  mode: import_zod60.z.enum(["development", "production"]),
-  executionAvailable: import_zod60.z.boolean()
+  lockRevision: import_zod62.z.string().regex(/^[a-f0-9]{64}$/),
+  registry: import_zod62.z.string().url(),
+  mode: import_zod62.z.enum(["development", "production"]),
+  executionAvailable: import_zod62.z.boolean()
 }).strict();
-var pluginMetadataHeadSchema = import_zod60.z.object({
-  generation: import_zod60.z.string().uuid(),
-  state: import_zod60.z.enum(["pending", "ready"]),
-  scopes: import_zod60.z.array(pluginMetadataIdentitySchema).max(256)
+var pluginMetadataHeadSchema = import_zod62.z.object({
+  generation: import_zod62.z.string().uuid(),
+  state: import_zod62.z.enum(["pending", "ready"]),
+  scopes: import_zod62.z.array(pluginMetadataIdentitySchema).max(256)
 }).strict();
-var pluginMetadataBeginSchema = import_zod60.z.object({
-  generation: import_zod60.z.string().uuid(),
-  expectedGeneration: import_zod60.z.string().uuid().nullable()
+var pluginMetadataBeginSchema = import_zod62.z.object({
+  generation: import_zod62.z.string().uuid(),
+  expectedGeneration: import_zod62.z.string().uuid().nullable()
 }).strict();
-var pluginMetadataStageSchema = import_zod60.z.object({
-  generation: import_zod60.z.string().uuid(),
+var pluginMetadataStageSchema = import_zod62.z.object({
+  generation: import_zod62.z.string().uuid(),
   scope: pluginMetadataScopeSchema
 }).strict();
-var pluginMetadataCommitSchema = import_zod60.z.object({
-  generation: import_zod60.z.string().uuid(),
-  scopes: import_zod60.z.array(pluginMetadataIdentitySchema).min(1).max(256)
+var pluginMetadataCommitSchema = import_zod62.z.object({
+  generation: import_zod62.z.string().uuid(),
+  scopes: import_zod62.z.array(pluginMetadataIdentitySchema).min(1).max(256)
 }).strict();
 
 // packages/schema/src/plugin/icon.ts
@@ -11391,11 +11540,11 @@ function installedPluginSummary(plugin) {
 }
 
 // packages/schema/src/plugin/browse.ts
-var import_zod61 = require("zod");
-var identity = import_zod61.z.object({
-  project: import_zod61.z.string().min(1).max(240),
-  worktree: import_zod61.z.string().uuid().nullable(),
-  generation: import_zod61.z.string().uuid().optional()
+var import_zod63 = require("zod");
+var identity = import_zod63.z.object({
+  project: import_zod63.z.string().min(1).max(240),
+  worktree: import_zod63.z.string().uuid().nullable(),
+  generation: import_zod63.z.string().uuid().optional()
 });
 var pluginMetadataContextSchema = pluginMetadataScopeSchema.pick({
   project: true,
@@ -11409,116 +11558,115 @@ var pluginMetadataContextSchema = pluginMetadataScopeSchema.pick({
   executionAvailable: true,
   variables: true
 }).extend({
-  nodeSelectors: import_zod61.z.array(NodeRecord.pick({ id: true, native: true, plugin: true }).extend({ kind: import_zod61.z.string() })).max(1e4).optional()
+  nodeSelectors: import_zod63.z.array(NodeRecord.pick({ id: true, native: true, plugin: true }).extend({ kind: import_zod63.z.string() })).max(1e4).optional()
 });
-var pluginMetadataBrowseSchema = import_zod61.z.discriminatedUnion("operation", [
-  identity.extend({ operation: import_zod61.z.literal("context"), nodes: import_zod61.z.boolean().optional() }),
-  identity.extend({ operation: import_zod61.z.literal("inventory") }),
-  identity.extend({ operation: import_zod61.z.literal("attachments"), id: import_zod61.z.string().min(1).max(240) }),
-  identity.extend({ operation: import_zod61.z.literal("plugins"), query: installedPluginSearchQuerySchema, paged: import_zod61.z.boolean() }),
-  identity.extend({ operation: import_zod61.z.literal("pluginNodes"), query: installedPluginSearchQuerySchema }),
-  identity.extend({ operation: import_zod61.z.literal("plugin"), id: import_zod61.z.string().min(1).max(240), query: pluginDetailQuerySchema }),
+var pluginMetadataBrowseSchema = import_zod63.z.discriminatedUnion("operation", [
+  identity.extend({ operation: import_zod63.z.literal("context"), nodes: import_zod63.z.boolean().optional() }),
+  identity.extend({ operation: import_zod63.z.literal("inventory") }),
+  identity.extend({ operation: import_zod63.z.literal("attachments"), id: import_zod63.z.string().min(1).max(240) }),
+  identity.extend({ operation: import_zod63.z.literal("plugins"), query: installedPluginSearchQuerySchema, paged: import_zod63.z.boolean() }),
+  identity.extend({ operation: import_zod63.z.literal("pluginNodes"), query: installedPluginSearchQuerySchema }),
+  identity.extend({ operation: import_zod63.z.literal("plugin"), id: import_zod63.z.string().min(1).max(240), query: pluginDetailQuerySchema }),
   identity.extend({
-    operation: import_zod61.z.literal("nodes"),
-    q: import_zod61.z.string().max(200).optional(),
-    scope: import_zod61.z.enum(["all", "user", "group", "org", "public"]).optional(),
-    view: import_zod61.z.string().max(240).optional(),
-    offset: import_zod61.z.number().int().nonnegative(),
-    limit: import_zod61.z.number().int().min(1).max(1e3),
-    visibleIds: import_zod61.z.array(import_zod61.z.string()).max(1e4),
+    operation: import_zod63.z.literal("nodes"),
+    q: import_zod63.z.string().max(200).optional(),
+    scope: import_zod63.z.enum(["all", "user", "group", "org", "public"]).optional(),
+    view: import_zod63.z.string().max(240).optional(),
+    offset: import_zod63.z.number().int().nonnegative(),
+    limit: import_zod63.z.number().int().min(1).max(1e3),
+    visibleIds: import_zod63.z.array(import_zod63.z.string()).max(1e4),
     identity: Identity
   })
 ]);
 
 // packages/schema/src/plugin/library.ts
-var import_zod62 = require("zod");
-var workspacePluginPromotionSchema = import_zod62.z.object({
-  expectedWorkspaceRevision: import_zod62.z.string().uuid().optional(),
-  sourceSha256: import_zod62.z.string().regex(/^sha256:[a-f0-9]{64}$/),
-  expectedSha256: import_zod62.z.string().regex(/^sha256:[a-f0-9]{64}$/).nullable(),
-  expectedId: import_zod62.z.string().min(1).max(200).nullable(),
-  expectedLibraryRevision: import_zod62.z.string().uuid().optional()
+var import_zod64 = require("zod");
+var workspacePluginPromotionSchema = import_zod64.z.object({
+  expectedWorkspaceRevision: import_zod64.z.string().uuid().optional(),
+  sourceSha256: import_zod64.z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  expectedSha256: import_zod64.z.string().regex(/^sha256:[a-f0-9]{64}$/).nullable(),
+  expectedId: import_zod64.z.string().min(1).max(200).nullable(),
+  expectedLibraryRevision: import_zod64.z.string().uuid().optional()
 }).strict();
-var workspacePluginEntrySchema = import_zod62.z.object({
-  id: import_zod62.z.string().min(1).max(240),
-  catalogId: import_zod62.z.string().min(1).max(240).optional(),
-  revision: import_zod62.z.string().uuid(),
+var workspacePluginEntrySchema = import_zod64.z.object({
+  id: import_zod64.z.string().min(1).max(240),
+  catalogId: import_zod64.z.string().min(1).max(240).optional(),
+  revision: import_zod64.z.string().uuid(),
   manifest: PluginManifest,
-  installedAt: import_zod62.z.number().int().nonnegative(),
-  archiveSha256: import_zod62.z.string().regex(/^[a-f0-9]{64}$/),
-  treeSha256: import_zod62.z.string().regex(/^sha256:[a-f0-9]{64}$/).optional(),
-  installId: import_zod62.z.string().uuid().optional(),
-  permissions: import_zod62.z.array(PluginPermission),
-  source: import_zod62.z.discriminatedUnion("kind", [
-    import_zod62.z.object({
-      kind: import_zod62.z.literal("registry"),
-      registry: import_zod62.z.string().url(),
-      remoteId: import_zod62.z.string().min(1).max(240),
-      publisher: import_zod62.z.string().optional(),
+  installedAt: import_zod64.z.number().int().nonnegative(),
+  archiveSha256: import_zod64.z.string().regex(/^[a-f0-9]{64}$/),
+  treeSha256: import_zod64.z.string().regex(/^sha256:[a-f0-9]{64}$/).optional(),
+  installId: import_zod64.z.string().uuid().optional(),
+  permissions: import_zod64.z.array(PluginPermission),
+  source: import_zod64.z.discriminatedUnion("kind", [
+    import_zod64.z.object({
+      kind: import_zod64.z.literal("registry"),
+      registry: import_zod64.z.string().url(),
+      remoteId: import_zod64.z.string().min(1).max(240),
+      publisher: import_zod64.z.string().optional(),
       scope: PluginScope
     }).strict(),
-    import_zod62.z.object({ kind: import_zod62.z.literal("workspace"), key: import_zod62.z.string().min(1).max(1024) }).strict()
+    import_zod64.z.object({ kind: import_zod64.z.literal("workspace"), key: import_zod64.z.string().min(1).max(1024) }).strict()
   ])
 }).strict();
-var workspacePluginLibrarySchema = import_zod62.z.object({
-  schemaVersion: import_zod62.z.literal(1),
-  revision: import_zod62.z.string().uuid(),
-  entries: import_zod62.z.array(workspacePluginEntrySchema).max(PLUGIN_LIBRARY_LIMITS.entries).refine((entries) => new Set(entries.map((entry) => entry.id)).size === entries.length, "Duplicate library alias").refine(
+var workspacePluginLibrarySchema = import_zod64.z.object({
+  schemaVersion: import_zod64.z.literal(1),
+  revision: import_zod64.z.string().uuid(),
+  entries: import_zod64.z.array(workspacePluginEntrySchema).max(PLUGIN_LIBRARY_LIMITS.entries).refine((entries) => new Set(entries.map((entry) => entry.id)).size === entries.length, "Duplicate library alias").refine(
     (entries) => new Set(entries.map((entry) => entry.revision)).size === entries.length,
     "Duplicate library entry revision"
   )
 }).strict();
-var workspacePluginMutationSchema = import_zod62.z.object({
-  expectedRevision: import_zod62.z.string().uuid(),
-  requestKey: import_zod62.z.string().regex(/^[a-f0-9]{64}$/),
-  actorId: import_zod62.z.string().min(1).max(240),
-  replaceRevision: import_zod62.z.string().uuid().optional(),
+var workspacePluginMutationSchema = import_zod64.z.object({
+  expectedRevision: import_zod64.z.string().uuid(),
+  requestKey: import_zod64.z.string().regex(/^[a-f0-9]{64}$/),
+  actorId: import_zod64.z.string().min(1).max(240),
+  replaceRevision: import_zod64.z.string().uuid().optional(),
   entry: workspacePluginEntrySchema
 }).strict();
-var workspacePluginArtifactSchema = import_zod62.z.object({
-  expectedWorkspaceRevision: import_zod62.z.string().uuid().optional(),
-  id: import_zod62.z.string().min(1).max(240),
+var workspacePluginArtifactSchema = import_zod64.z.object({
+  expectedWorkspaceRevision: import_zod64.z.string().uuid().optional(),
+  id: import_zod64.z.string().min(1).max(240),
   manifest: PluginManifest,
-  treeSha256: import_zod62.z.string().regex(/^sha256:[a-f0-9]{64}$/),
-  expectedRevision: import_zod62.z.string().uuid().nullable(),
-  migration: import_zod62.z.boolean().optional()
+  treeSha256: import_zod64.z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  expectedRevision: import_zod64.z.string().uuid().nullable()
 }).strict();
-var workspacePluginEventSchema = import_zod62.z.object({
-  id: import_zod62.z.string().min(1),
-  type: import_zod62.z.enum(["install", "uninstall"]),
-  actorId: import_zod62.z.string().min(1),
+var workspacePluginEventSchema = import_zod64.z.object({
+  id: import_zod64.z.string().min(1),
+  type: import_zod64.z.enum(["install", "uninstall"]),
+  actorId: import_zod64.z.string().min(1),
   entry: workspacePluginEntrySchema
 }).strict();
-var workspacePluginArchiveSchema = import_zod62.z.object({
-  format: import_zod62.z.literal("octonode-workspace-library-v1"),
-  workspace: import_zod62.z.object({ kind: import_zod62.z.enum(["user", "org", "team"]), id: import_zod62.z.string().min(1).max(240) }).strict(),
-  namespace: import_zod62.z.string().regex(/^[a-zA-Z0-9_-]{0,100}$/),
+var workspacePluginArchiveSchema = import_zod64.z.object({
+  format: import_zod64.z.literal("octonode-workspace-library-v1"),
+  workspace: import_zod64.z.object({ kind: import_zod64.z.enum(["user", "org", "team"]), id: import_zod64.z.string().min(1).max(240) }).strict(),
+  namespace: import_zod64.z.string().regex(/^[a-zA-Z0-9_-]{0,100}$/),
   library: workspacePluginLibrarySchema,
-  receipts: import_zod62.z.array(
-    import_zod62.z.object({ key: import_zod62.z.string().regex(/^[a-f0-9]{64}$/), fingerprint: import_zod62.z.string().regex(/^[a-f0-9]{64}$/) }).strict()
+  receipts: import_zod64.z.array(
+    import_zod64.z.object({ key: import_zod64.z.string().regex(/^[a-f0-9]{64}$/), fingerprint: import_zod64.z.string().regex(/^[a-f0-9]{64}$/) }).strict()
   ).max(PLUGIN_LIBRARY_LIMITS.receipts),
-  events: import_zod62.z.array(workspacePluginEventSchema).max(PLUGIN_LIBRARY_LIMITS.pendingEvents)
+  events: import_zod64.z.array(workspacePluginEventSchema).max(PLUGIN_LIBRARY_LIMITS.pendingEvents)
 }).strict();
-var workspacePluginRestoreSchema = import_zod62.z.object({
-  expectedRevision: import_zod62.z.string().uuid(),
+var workspacePluginRestoreSchema = import_zod64.z.object({
+  expectedRevision: import_zod64.z.string().uuid(),
   archive: workspacePluginArchiveSchema,
-  sha256: import_zod62.z.string().regex(/^[a-f0-9]{64}$/)
+  sha256: import_zod64.z.string().regex(/^[a-f0-9]{64}$/)
 }).strict();
 
 // packages/schema/src/plugin/preparation.ts
-var import_zod63 = require("zod");
-var npmPluginPreparationSchema = import_zod63.z.object({
-  package: import_zod63.z.string().min(1).max(214).regex(/^(@[a-z0-9~][a-z0-9~._-]*\/)?[a-z0-9~][a-z0-9~._-]*$/i),
-  version: import_zod63.z.string().min(1).max(100).regex(/^[a-z0-9^~><=.*+-]+$/i).optional(),
-  id: import_zod63.z.string().min(1).max(128).regex(/^[a-z0-9][a-z0-9-]*$/).optional(),
-  include: import_zod63.z.array(import_zod63.z.string().min(1).max(128)).max(100).optional(),
-  overloads: import_zod63.z.record(import_zod63.z.string().min(1).max(128), import_zod63.z.number().int().nonnegative()).optional(),
-  target: import_zod63.z.enum(["workspace", "project"])
+var import_zod65 = require("zod");
+var npmPluginPreparationSchema = import_zod65.z.object({
+  package: import_zod65.z.string().min(1).max(214).regex(/^(@[a-z0-9~][a-z0-9~._-]*\/)?[a-z0-9~][a-z0-9~._-]*$/i),
+  version: import_zod65.z.string().min(1).max(100).regex(/^[a-z0-9^~><=.*+-]+$/i).optional(),
+  id: import_zod65.z.string().min(1).max(128).regex(/^[a-z0-9][a-z0-9-]*$/).optional(),
+  include: import_zod65.z.array(import_zod65.z.string().min(1).max(128)).max(100).optional(),
+  overloads: import_zod65.z.record(import_zod65.z.string().min(1).max(128), import_zod65.z.number().int().nonnegative()).optional(),
+  target: import_zod65.z.enum(["workspace", "project"])
 }).strict();
-var npmPluginPreparationResultSchema = import_zod63.z.object({
+var npmPluginPreparationResultSchema = import_zod65.z.object({
   manifest: PluginManifest,
-  treeSha256: import_zod63.z.string().regex(/^sha256:[a-f0-9]{64}$/),
-  warnings: import_zod63.z.array(import_zod63.z.string())
+  treeSha256: import_zod65.z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  warnings: import_zod65.z.array(import_zod65.z.string())
 }).strict();
 
 // packages/schema/src/plugin/export/constants.ts
@@ -11542,202 +11690,208 @@ var EXPORT_UUID_NAMESPACE = Uint8Array.from([
 ]);
 
 // packages/schema/src/workflow/graph.ts
-var point = import_zod64.z.object({ x: import_zod64.z.number(), y: import_zod64.z.number() });
-var scope = import_zod64.z.enum(["user", "group", "org", "public"]);
-var groupLayout = GroupLayout.extend({ nodeIds: import_zod64.z.array(import_zod64.z.string()) });
-var workflowSummarySchema = import_zod64.z.object({
-  icon: import_zod64.z.string().optional(),
-  color: import_zod64.z.string().optional(),
-  style: import_zod64.z.object({ density: import_zod64.z.enum(["compact", "comfortable"]).optional(), radius: import_zod64.z.enum(["sharp", "soft"]).optional() }).optional(),
-  source: import_zod64.z.object({ path: import_zod64.z.string(), symbol: import_zod64.z.string(), kind: import_zod64.z.enum(["module", "function"]), checksum: import_zod64.z.string() }).optional(),
-  label: import_zod64.z.string().optional(),
-  archived: import_zod64.z.boolean().optional(),
-  id: import_zod64.z.string(),
-  description: import_zod64.z.string().optional(),
-  nodeCount: import_zod64.z.number(),
-  edgeCount: import_zod64.z.number(),
+var point = import_zod66.z.object({ x: import_zod66.z.number(), y: import_zod66.z.number() });
+var scope = import_zod66.z.enum(["user", "group", "org", "public"]);
+var groupLayout = GroupLayout.extend({ nodeIds: import_zod66.z.array(import_zod66.z.string()) });
+var workflowSummarySchema = import_zod66.z.object({
+  icon: import_zod66.z.string().optional(),
+  color: import_zod66.z.string().optional(),
+  style: import_zod66.z.object({ density: import_zod66.z.enum(["compact", "comfortable"]).optional(), radius: import_zod66.z.enum(["sharp", "soft"]).optional() }).optional(),
+  source: import_zod66.z.object({ path: import_zod66.z.string(), symbol: import_zod66.z.string(), kind: import_zod66.z.enum(["module", "function"]), checksum: import_zod66.z.string() }).optional(),
+  label: import_zod66.z.string().optional(),
+  archived: import_zod66.z.boolean().optional(),
+  id: import_zod66.z.string(),
+  description: import_zod66.z.string().optional(),
+  nodeCount: import_zod66.z.number(),
+  edgeCount: import_zod66.z.number(),
   scope: scope.optional(),
-  owner: import_zod64.z.string().optional(),
-  active: import_zod64.z.boolean().optional(),
-  tags: import_zod64.z.array(import_zod64.z.string()).optional(),
-  folder: import_zod64.z.string().optional(),
-  createdAt: import_zod64.z.number().optional(),
-  updatedAt: import_zod64.z.number().optional()
+  owner: import_zod66.z.string().optional(),
+  active: import_zod66.z.boolean().optional(),
+  tags: import_zod66.z.array(import_zod66.z.string()).optional(),
+  folder: import_zod66.z.string().optional(),
+  createdAt: import_zod66.z.number().optional(),
+  updatedAt: import_zod66.z.number().optional()
 });
-var graphNodeSchema = import_zod64.z.object({
+var graphNodeSchema = import_zod66.z.object({
   flow: NodeSignature.shape.flow,
-  native: import_zod64.z.string().optional(),
-  plugin: import_zod64.z.string().optional(),
-  pluginVersion: import_zod64.z.string().optional(),
+  native: import_zod66.z.string().optional(),
+  plugin: import_zod66.z.string().optional(),
+  pluginVersion: import_zod66.z.string().optional(),
   pluginUi: PluginNodeUi.optional(),
-  renderer: import_zod64.z.string().optional(),
-  hiddenReason: import_zod64.z.string().optional(),
-  color: import_zod64.z.string().optional(),
-  style: import_zod64.z.object({ density: import_zod64.z.enum(["compact", "comfortable"]).optional(), radius: import_zod64.z.enum(["sharp", "soft"]).optional() }).optional(),
+  renderer: import_zod66.z.string().optional(),
+  hiddenReason: import_zod66.z.string().optional(),
+  color: import_zod66.z.string().optional(),
+  style: import_zod66.z.object({ density: import_zod66.z.enum(["compact", "comfortable"]).optional(), radius: import_zod66.z.enum(["sharp", "soft"]).optional() }).optional(),
   workflowId: NodeSignature.shape.workflowId,
   recursion: NodeSignature.shape.recursion,
-  role: import_zod64.z.enum(["entry", "step"]).optional(),
-  symbol: import_zod64.z.string().optional(),
-  description: import_zod64.z.string().optional(),
-  id: import_zod64.z.string(),
-  language: import_zod64.z.string().optional(),
-  icon: import_zod64.z.string().optional(),
-  label: import_zod64.z.string().optional(),
+  role: import_zod66.z.enum(["entry", "step"]).optional(),
+  symbol: import_zod66.z.string().optional(),
+  description: import_zod66.z.string().optional(),
+  id: import_zod66.z.string(),
+  language: import_zod66.z.string().optional(),
+  icon: import_zod66.z.string().optional(),
+  label: import_zod66.z.string().optional(),
   inputs: JsonSchema.optional(),
   outputs: JsonSchema.optional(),
-  sourceExpressions: import_zod64.z.record(import_zod64.z.string(), import_zod64.z.string()).optional(),
-  sourceScope: import_zod64.z.boolean().optional(),
+  sourceExpressions: import_zod66.z.record(import_zod66.z.string(), import_zod66.z.string()).optional(),
+  sourceValueModes: NodeSignature.shape.sourceValueModes,
+  sourceScope: import_zod66.z.boolean().optional(),
+  sourceExecution: NodeSignature.shape.sourceExecution,
+  sourceOperand: SourceOperandView.optional(),
+  sourceParams: NodeSignature.shape.sourceParams,
+  sourceVariable: NodeSignature.shape.sourceVariable,
   sourceFallback: NodeSignature.shape.sourceFallback,
-  hasSdkClient: import_zod64.z.boolean().optional(),
-  kind: import_zod64.z.enum(["function", "class", "service", "const"]).optional(),
+  hasSdkClient: import_zod66.z.boolean().optional(),
+  kind: import_zod66.z.enum(["function", "class", "service", "const"]).optional(),
   setup: JsonSchema.optional(),
-  provides: import_zod64.z.array(import_zod64.z.string()).optional(),
-  sourceLocation: import_zod64.z.object({ path: import_zod64.z.string(), line: import_zod64.z.number(), column: import_zod64.z.number() }).optional(),
-  serviceLifecycle: import_zod64.z.enum(["invocation", "workflow-run", "worker"]).optional(),
+  provides: import_zod66.z.array(import_zod66.z.string()).optional(),
+  sourceLocation: import_zod66.z.object({ path: import_zod66.z.string(), line: import_zod66.z.number(), column: import_zod66.z.number() }).optional(),
+  serviceLifecycle: import_zod66.z.enum(["invocation", "workflow-run", "worker"]).optional(),
   runtime: NodeRuntime.optional(),
-  command: import_zod64.z.string().optional(),
-  disabled: import_zod64.z.boolean().optional(),
+  command: import_zod66.z.string().optional(),
+  disabled: import_zod66.z.boolean().optional(),
   position: point.optional(),
   scope: scope.optional(),
-  owner: import_zod64.z.string().optional(),
-  expressions: import_zod64.z.record(import_zod64.z.string(), import_zod64.z.string()).optional(),
-  bindings: import_zod64.z.record(
-    import_zod64.z.string(),
-    import_zod64.z.discriminatedUnion("kind", [
-      import_zod64.z.object({
-        kind: import_zod64.z.literal("literal"),
-        value: import_zod64.z.unknown(),
-        attachments: import_zod64.z.record(import_zod64.z.string(), import_zod64.z.string()).optional()
+  owner: import_zod66.z.string().optional(),
+  expressions: import_zod66.z.record(import_zod66.z.string(), import_zod66.z.string()).optional(),
+  bindings: import_zod66.z.record(
+    import_zod66.z.string(),
+    import_zod66.z.discriminatedUnion("kind", [
+      import_zod66.z.object({
+        kind: import_zod66.z.literal("literal"),
+        value: import_zod66.z.unknown(),
+        attachments: import_zod66.z.record(import_zod66.z.string(), import_zod66.z.string()).optional()
       }),
-      import_zod64.z.object({ kind: import_zod64.z.literal("symbol"), symbol: import_zod64.z.string(), value: import_zod64.z.unknown() })
+      import_zod66.z.object({ kind: import_zod66.z.literal("symbol"), symbol: import_zod66.z.string(), value: import_zod66.z.unknown() })
     ])
   ).optional()
 });
-var workflowGraphSchema = import_zod64.z.object({
-  references: import_zod64.z.array(
-    import_zod64.z.object({
-      nodeId: import_zod64.z.string(),
-      label: import_zod64.z.string(),
-      plugin: import_zod64.z.string().optional(),
-      workflowId: import_zod64.z.string().optional(),
-      source: import_zod64.z.object({ path: import_zod64.z.string(), symbol: import_zod64.z.string(), kind: import_zod64.z.enum(["module", "function"]) }).optional()
+var workflowGraphSchema = import_zod66.z.object({
+  references: import_zod66.z.array(
+    import_zod66.z.object({
+      nodeId: import_zod66.z.string(),
+      label: import_zod66.z.string(),
+      plugin: import_zod66.z.string().optional(),
+      workflowId: import_zod66.z.string().optional(),
+      source: import_zod66.z.object({ path: import_zod66.z.string(), symbol: import_zod66.z.string(), kind: import_zod66.z.enum(["module", "function"]) }).optional()
     })
   ).optional(),
-  revealed: import_zod64.z.boolean().optional(),
-  presentation: import_zod64.z.object({
-    revision: import_zod64.z.string(),
-    view: import_zod64.z.string().optional(),
-    detail: import_zod64.z.object({
-      level: import_zod64.z.enum(["files", "workflows", "steps"]).optional(),
-      maxCallDepth: import_zod64.z.number().optional(),
-      maxDirectoryDepth: import_zod64.z.number().optional()
+  revealed: import_zod66.z.boolean().optional(),
+  presentation: import_zod66.z.object({
+    revision: import_zod66.z.string(),
+    view: import_zod66.z.string().optional(),
+    detail: import_zod66.z.object({
+      level: import_zod66.z.enum(["files", "workflows", "steps"]).optional(),
+      maxCallDepth: import_zod66.z.number().optional(),
+      maxDirectoryDepth: import_zod66.z.number().optional()
     }).optional(),
-    diagnostics: import_zod64.z.array(import_zod64.z.string())
+    diagnostics: import_zod66.z.array(import_zod66.z.string())
   }).optional(),
   triggers: WorkflowTriggers.optional(),
-  id: import_zod64.z.string(),
-  executionId: import_zod64.z.string().uuid().optional(),
-  revision: import_zod64.z.string(),
-  source: import_zod64.z.object({ path: import_zod64.z.string(), symbol: import_zod64.z.string(), kind: import_zod64.z.enum(["module", "function"]), checksum: import_zod64.z.string() }).optional(),
+  id: import_zod66.z.string(),
+  executionId: import_zod66.z.string().uuid().optional(),
+  revision: import_zod66.z.string(),
+  source: import_zod66.z.object({ path: import_zod66.z.string(), symbol: import_zod66.z.string(), kind: import_zod66.z.enum(["module", "function"]), checksum: import_zod66.z.string() }).optional(),
   inputs: JsonSchema.optional(),
-  types: import_zod64.z.record(import_zod64.z.string(), JsonSchema).optional(),
-  nodes: import_zod64.z.array(graphNodeSchema),
-  edges: import_zod64.z.array(WorkflowEdge),
-  promises: import_zod64.z.array(WorkflowPromise).optional(),
-  roots: import_zod64.z.array(import_zod64.z.string()),
-  terminals: import_zod64.z.array(import_zod64.z.string()),
-  stickyNotes: import_zod64.z.array(StickyNoteLayout).optional(),
-  groups: import_zod64.z.array(groupLayout).optional()
+  outputs: JsonSchema.optional(),
+  types: import_zod66.z.record(import_zod66.z.string(), JsonSchema).optional(),
+  nodes: import_zod66.z.array(graphNodeSchema),
+  edges: import_zod66.z.array(WorkflowEdge),
+  promises: import_zod66.z.array(WorkflowPromise).optional(),
+  roots: import_zod66.z.array(import_zod66.z.string()),
+  terminals: import_zod66.z.array(import_zod66.z.string()),
+  stickyNotes: import_zod66.z.array(StickyNoteLayout).optional(),
+  groups: import_zod66.z.array(groupLayout).optional()
 });
 
 // packages/schema/src/workflow/document.ts
-var import_zod68 = require("zod");
+var import_zod70 = require("zod");
 
 // packages/schema/src/source/resources/schemas.ts
-var import_zod65 = require("zod");
-var sourceResourceQuerySchema = import_zod65.z.object({
-  kind: import_zod65.z.enum(["types", "constants", "classes", "services"]).default("types"),
-  scope: import_zod65.z.enum(["all", "workflow", "file", "project"]).default("all"),
-  path: import_zod65.z.string().max(1024).optional(),
-  owner: import_zod65.z.string().max(1024).optional(),
-  q: import_zod65.z.string().max(200).optional(),
-  sort: import_zod65.z.enum(["scope", "name", "name-desc"]).optional(),
-  offset: import_zod65.z.coerce.number().int().min(0).default(0),
-  limit: import_zod65.z.coerce.number().int().min(1).max(100).default(25)
+var import_zod67 = require("zod");
+var sourceResourceQuerySchema = import_zod67.z.object({
+  kind: import_zod67.z.enum(["types", "constants", "classes", "services"]).default("types"),
+  scope: import_zod67.z.enum(["all", "workflow", "file", "project"]).default("all"),
+  path: import_zod67.z.string().max(1024).optional(),
+  owner: import_zod67.z.string().max(1024).optional(),
+  q: import_zod67.z.string().max(200).optional(),
+  sort: import_zod67.z.enum(["scope", "name", "name-desc"]).optional(),
+  offset: import_zod67.z.coerce.number().int().min(0).default(0),
+  limit: import_zod67.z.coerce.number().int().min(1).max(100).default(25)
 });
-var sourceResourcePageSchema = import_zod65.z.object({
-  revision: import_zod65.z.string(),
-  items: import_zod65.z.array(
-    import_zod65.z.object({
+var sourceResourcePageSchema = import_zod67.z.object({
+  revision: import_zod67.z.string(),
+  items: import_zod67.z.array(
+    import_zod67.z.object({
       symbol: SourceSymbol,
-      scope: import_zod65.z.enum(["workflow", "file", "project"]),
-      methods: import_zod65.z.array(import_zod65.z.object({ name: import_zod65.z.string(), workflowId: import_zod65.z.string() }))
+      scope: import_zod67.z.enum(["workflow", "file", "project"]),
+      methods: import_zod67.z.array(import_zod67.z.object({ name: import_zod67.z.string(), workflowId: import_zod67.z.string() }))
     })
   ),
-  total: import_zod65.z.number().int().nonnegative(),
-  offset: import_zod65.z.number().int().nonnegative(),
-  limit: import_zod65.z.number().int().positive()
+  total: import_zod67.z.number().int().nonnegative(),
+  offset: import_zod67.z.number().int().nonnegative(),
+  limit: import_zod67.z.number().int().positive()
 });
-var sourceResourceSnapshotSchema = import_zod65.z.object({
+var sourceResourceSnapshotSchema = import_zod67.z.object({
   index: ProjectSourceIndex,
-  workflowIds: import_zod65.z.array(import_zod65.z.string())
+  workflowIds: import_zod67.z.array(import_zod67.z.string())
 });
 
 // packages/schema/src/source/resources/configuration/schemas.ts
-var import_zod66 = require("zod");
-var configurationKeysSchema = import_zod66.z.record(import_zod66.z.array(import_zod66.z.object({ key: import_zod66.z.string() })));
+var import_zod68 = require("zod");
+var configurationKeysSchema = import_zod68.z.record(import_zod68.z.array(import_zod68.z.object({ key: import_zod68.z.string() })));
 var configurationResourceQuerySchema = sourceResourceQuerySchema.pick({ q: true, sort: true, offset: true, limit: true }).extend({
-  scope: import_zod66.z.enum(["all", "project", "global", "workflow", "file"]).default("all")
+  scope: import_zod68.z.enum(["all", "project", "global", "workflow", "file"]).default("all")
 });
-var configurationResourcePageSchema = import_zod66.z.object({
-  items: import_zod66.z.array(
-    import_zod66.z.object({
-      key: import_zod66.z.string(),
-      scope: import_zod66.z.enum(["projectVariables", "globalVariables"]),
-      unavailable: import_zod66.z.enum(["notAttached", "overridden"]).optional()
+var configurationResourcePageSchema = import_zod68.z.object({
+  items: import_zod68.z.array(
+    import_zod68.z.object({
+      key: import_zod68.z.string(),
+      scope: import_zod68.z.enum(["projectVariables", "globalVariables"]),
+      unavailable: import_zod68.z.enum(["notAttached", "overridden"]).optional()
     })
   ),
-  total: import_zod66.z.number().int().nonnegative(),
-  offset: import_zod66.z.number().int().nonnegative(),
-  limit: import_zod66.z.number().int().positive()
+  total: import_zod68.z.number().int().nonnegative(),
+  offset: import_zod68.z.number().int().nonnegative(),
+  limit: import_zod68.z.number().int().positive()
 });
 
 // packages/schema/src/sync/schema.ts
-var import_zod67 = require("zod");
-var segment = import_zod67.z.union([import_zod67.z.string().max(1024), import_zod67.z.number().int().nonnegative().max(1e5)]);
-var path = import_zod67.z.array(segment).max(64);
-var jsonChangeSchema = import_zod67.z.discriminatedUnion("op", [
-  import_zod67.z.object({ op: import_zod67.z.literal("set"), path, value: import_zod67.z.unknown() }),
-  import_zod67.z.object({ op: import_zod67.z.literal("remove"), path }),
-  import_zod67.z.object({
-    op: import_zod67.z.literal("splice"),
+var import_zod69 = require("zod");
+var segment = import_zod69.z.union([import_zod69.z.string().max(1024), import_zod69.z.number().int().nonnegative().max(1e5)]);
+var path = import_zod69.z.array(segment).max(64);
+var jsonChangeSchema = import_zod69.z.discriminatedUnion("op", [
+  import_zod69.z.object({ op: import_zod69.z.literal("set"), path, value: import_zod69.z.unknown() }),
+  import_zod69.z.object({ op: import_zod69.z.literal("remove"), path }),
+  import_zod69.z.object({
+    op: import_zod69.z.literal("splice"),
     path,
-    start: import_zod67.z.number().int().nonnegative(),
-    deleteCount: import_zod67.z.number().int().nonnegative(),
-    values: import_zod67.z.array(import_zod67.z.unknown()).max(1e5)
+    start: import_zod69.z.number().int().nonnegative(),
+    deleteCount: import_zod69.z.number().int().nonnegative(),
+    values: import_zod69.z.array(import_zod69.z.unknown()).max(1e5)
   })
 ]);
-var jsonChangesSchema = import_zod67.z.array(jsonChangeSchema).max(1e5);
-var textEditSchema = import_zod67.z.object({
-  start: import_zod67.z.number().int().nonnegative(),
-  end: import_zod67.z.number().int().nonnegative(),
-  text: import_zod67.z.string().max(2 * 1024 * 1024)
+var jsonChangesSchema = import_zod69.z.array(jsonChangeSchema).max(1e5);
+var textEditSchema = import_zod69.z.object({
+  start: import_zod69.z.number().int().nonnegative(),
+  end: import_zod69.z.number().int().nonnegative(),
+  text: import_zod69.z.string().max(2 * 1024 * 1024)
 });
-var textEditsSchema = import_zod67.z.array(textEditSchema).max(1e3);
+var textEditsSchema = import_zod69.z.array(textEditSchema).max(1e3);
 
 // packages/schema/src/workflow/document.ts
-var revision2 = import_zod68.z.string().regex(/^[a-f0-9]{64}$/);
-var workflowDocumentContextSchema = import_zod68.z.record(
-  import_zod68.z.string(),
-  import_zod68.z.object({
+var revision2 = import_zod70.z.string().regex(/^[a-f0-9]{64}$/);
+var workflowDocumentContextSchema = import_zod70.z.record(
+  import_zod70.z.string(),
+  import_zod70.z.object({
     revision: revision2,
-    executionId: import_zod68.z.string().uuid().optional(),
+    executionId: import_zod70.z.string().uuid().optional(),
     layout: WorkflowLayout.nullable(),
     presentation: workflowGraphSchema.shape.presentation,
-    revealed: import_zod68.z.boolean().optional(),
+    revealed: import_zod70.z.boolean().optional(),
     summary: workflowSummarySchema.optional(),
-    nodes: import_zod68.z.record(
-      import_zod68.z.string(),
+    nodes: import_zod70.z.record(
+      import_zod70.z.string(),
       graphNodeSchema.pick({
         icon: true,
         label: true,
@@ -11752,15 +11906,15 @@ var workflowDocumentContextSchema = import_zod68.z.record(
     ).optional()
   })
 );
-var workflowDocumentSchema = import_zod68.z.object({
-  path: import_zod68.z.string().min(1).max(1024),
-  content: import_zod68.z.string().max(25e6),
-  format: import_zod68.z.enum(["json", "yaml"]),
+var workflowDocumentSchema = import_zod70.z.object({
+  path: import_zod70.z.string().min(1).max(1024),
+  content: import_zod70.z.string().max(25e6),
+  format: import_zod70.z.enum(["json", "yaml"]),
   revision: revision2,
   workflows: workflowDocumentContextSchema,
   resources: sourceResourceSnapshotSchema.optional()
 });
-var workflowDocumentDeltaSchema = import_zod68.z.object({
+var workflowDocumentDeltaSchema = import_zod70.z.object({
   path: workflowDocumentSchema.shape.path,
   baseRevision: revision2,
   revision: revision2,
@@ -11768,136 +11922,136 @@ var workflowDocumentDeltaSchema = import_zod68.z.object({
   changes: jsonChangesSchema,
   resourceChanges: jsonChangesSchema.optional()
 });
-var workflowDocumentQuerySchema = import_zod68.z.object({
-  workspace: import_zod68.z.string().optional(),
-  project: import_zod68.z.string().optional(),
-  computer: import_zod68.z.string().uuid().optional(),
-  view: import_zod68.z.string().max(240).optional(),
-  generation: import_zod68.z.string().uuid().optional(),
+var workflowDocumentQuerySchema = import_zod70.z.object({
+  workspace: import_zod70.z.string().optional(),
+  project: import_zod70.z.string().optional(),
+  computer: import_zod70.z.string().uuid().optional(),
+  view: import_zod70.z.string().max(240).optional(),
+  generation: import_zod70.z.string().uuid().optional(),
   baseRevision: revision2.optional()
 });
 
 // packages/schema/src/project/catalog.ts
-var import_zod75 = require("zod");
+var import_zod77 = require("zod");
 
 // packages/schema/src/workflow/create.ts
-var import_zod69 = require("zod");
-var createWorkflowSchema = import_zod69.z.object({
-  id: import_zod69.z.string().min(1).regex(
+var import_zod71 = require("zod");
+var createWorkflowSchema = import_zod71.z.object({
+  id: import_zod71.z.string().min(1).regex(
     /^[A-Za-z0-9][A-Za-z0-9._-]*$/,
     "id must start alphanumeric and contain only letters, digits, '.', '_' or '-'"
   ).optional(),
-  label: import_zod69.z.string().trim().min(1).max(200).optional(),
-  description: import_zod69.z.string().optional()
+  label: import_zod71.z.string().trim().min(1).max(200).optional(),
+  description: import_zod71.z.string().optional()
 });
 
 // packages/schema/src/workflow/templates.ts
-var import_zod70 = require("zod");
-var publicJsonSchema = import_zod70.z.lazy(
-  () => import_zod70.z.union([
-    import_zod70.z.null(),
-    import_zod70.z.boolean(),
-    import_zod70.z.number().finite(),
-    import_zod70.z.string().max(1e4),
-    import_zod70.z.array(publicJsonSchema).max(1e3),
-    import_zod70.z.record(import_zod70.z.string().min(1).max(120), publicJsonSchema)
+var import_zod72 = require("zod");
+var publicJsonSchema = import_zod72.z.lazy(
+  () => import_zod72.z.union([
+    import_zod72.z.null(),
+    import_zod72.z.boolean(),
+    import_zod72.z.number().finite(),
+    import_zod72.z.string().max(1e4),
+    import_zod72.z.array(publicJsonSchema).max(1e3),
+    import_zod72.z.record(import_zod72.z.string().min(1).max(120), publicJsonSchema)
   ])
 );
-var safeId = import_zod70.z.string().min(1).max(160).regex(/^[A-Za-z0-9][A-Za-z0-9._/-]*$/);
-var workflowTemplateDefinitionSchema = import_zod70.z.discriminatedUnion("kind", [
-  import_zod70.z.object({ kind: import_zod70.z.literal("native"), catalogId: safeId }).strict(),
-  import_zod70.z.object({ kind: import_zod70.z.literal("plugin"), pluginId: safeId, nodeId: safeId, version: import_zod70.z.string().min(1).max(80) }).strict()
+var safeId = import_zod72.z.string().min(1).max(160).regex(/^[A-Za-z0-9][A-Za-z0-9._/-]*$/);
+var workflowTemplateDefinitionSchema = import_zod72.z.discriminatedUnion("kind", [
+  import_zod72.z.object({ kind: import_zod72.z.literal("native"), catalogId: safeId }).strict(),
+  import_zod72.z.object({ kind: import_zod72.z.literal("plugin"), pluginId: safeId, nodeId: safeId, version: import_zod72.z.string().min(1).max(80) }).strict()
 ]);
-var workflowTemplateNodeSchema = import_zod70.z.object({
+var workflowTemplateNodeSchema = import_zod72.z.object({
   instanceId: safeId,
   definition: workflowTemplateDefinitionSchema,
-  params: import_zod70.z.record(import_zod70.z.string().min(1).max(120), publicJsonSchema).optional(),
-  position: import_zod70.z.object({ x: import_zod70.z.number().finite(), y: import_zod70.z.number().finite() }).strict().optional()
+  params: import_zod72.z.record(import_zod72.z.string().min(1).max(120), publicJsonSchema).optional(),
+  position: import_zod72.z.object({ x: import_zod72.z.number().finite(), y: import_zod72.z.number().finite() }).strict().optional()
 }).strict();
-var workflowTemplateEdgeSchema = import_zod70.z.object({
-  from: import_zod70.z.object({ node: safeId, output: safeId.optional() }).strict(),
-  to: import_zod70.z.object({ node: safeId, input: safeId.optional() }).strict(),
-  kind: import_zod70.z.enum(["data", "dependency", "control"]).optional()
+var workflowTemplateEdgeSchema = import_zod72.z.object({
+  from: import_zod72.z.object({ node: safeId, output: safeId.optional() }).strict(),
+  to: import_zod72.z.object({ node: safeId, input: safeId.optional() }).strict(),
+  kind: import_zod72.z.enum(["data", "dependency", "control"]).optional()
 }).strict();
-var workflowTemplatePlaceholderSchema = import_zod70.z.object({
+var workflowTemplatePlaceholderSchema = import_zod72.z.object({
   key: safeId,
-  label: import_zod70.z.string().min(1).max(120),
-  description: import_zod70.z.string().max(500),
-  required: import_zod70.z.boolean(),
+  label: import_zod72.z.string().min(1).max(120),
+  description: import_zod72.z.string().max(500),
+  required: import_zod72.z.boolean(),
   schema: publicJsonSchema
 }).strict();
-var workflowTemplatePermissionSchema = import_zod70.z.object({
+var workflowTemplatePermissionSchema = import_zod72.z.object({
   id: safeId,
-  label: import_zod70.z.string().min(1).max(120),
-  reason: import_zod70.z.string().min(1).max(500)
+  label: import_zod72.z.string().min(1).max(120),
+  reason: import_zod72.z.string().min(1).max(500)
 }).strict();
-var workflowTemplatePayloadBaseSchema = import_zod70.z.object({
-  schemaVersion: import_zod70.z.literal(1),
+var workflowTemplatePayloadBaseSchema = import_zod72.z.object({
+  schemaVersion: import_zod72.z.literal(1),
   sourceWorkflowRevision: sha256Schema,
-  title: import_zod70.z.string().trim().min(1).max(200),
-  description: import_zod70.z.string().trim().min(1).max(1e3),
-  graph: import_zod70.z.object({
-    nodes: import_zod70.z.array(workflowTemplateNodeSchema).min(1).max(500),
-    edges: import_zod70.z.array(workflowTemplateEdgeSchema).max(2e3),
+  title: import_zod72.z.string().trim().min(1).max(200),
+  description: import_zod72.z.string().trim().min(1).max(1e3),
+  graph: import_zod72.z.object({
+    nodes: import_zod72.z.array(workflowTemplateNodeSchema).min(1).max(500),
+    edges: import_zod72.z.array(workflowTemplateEdgeSchema).max(2e3),
     inputs: publicJsonSchema.optional()
   }).strict(),
-  dependencies: import_zod70.z.object({
-    plugins: import_zod70.z.array(import_zod70.z.object({ id: safeId, version: import_zod70.z.string().min(1).max(80) }).strict()).max(100),
-    runtimes: import_zod70.z.array(import_zod70.z.string().min(1).max(80)).max(20)
+  dependencies: import_zod72.z.object({
+    plugins: import_zod72.z.array(import_zod72.z.object({ id: safeId, version: import_zod72.z.string().min(1).max(80) }).strict()).max(100),
+    runtimes: import_zod72.z.array(import_zod72.z.string().min(1).max(80)).max(20)
   }).strict(),
-  placeholders: import_zod70.z.array(workflowTemplatePlaceholderSchema).max(100),
-  permissions: import_zod70.z.array(workflowTemplatePermissionSchema).max(100),
-  compatibility: import_zod70.z.object({ octonode: import_zod70.z.string().min(1).max(80), notes: import_zod70.z.string().max(1e3).optional() }).strict(),
-  creator: import_zod70.z.object({ handle: creatorHandleSchema, displayName: import_zod70.z.string().min(1).max(80) }).strict(),
-  license: import_zod70.z.string().min(1).max(80)
+  placeholders: import_zod72.z.array(workflowTemplatePlaceholderSchema).max(100),
+  permissions: import_zod72.z.array(workflowTemplatePermissionSchema).max(100),
+  compatibility: import_zod72.z.object({ octonode: import_zod72.z.string().min(1).max(80), notes: import_zod72.z.string().max(1e3).optional() }).strict(),
+  creator: import_zod72.z.object({ handle: creatorHandleSchema, displayName: import_zod72.z.string().min(1).max(80) }).strict(),
+  license: import_zod72.z.string().min(1).max(80)
 }).strict();
 var workflowTemplatePayloadSchema = workflowTemplatePayloadBaseSchema.superRefine(
   (value, context) => scanSensitive(value, context)
 );
 var workflowTemplateSnapshotSchema = workflowTemplatePayloadBaseSchema.extend({ digest: sha256Schema }).strict().superRefine((value, context) => scanSensitive(value, context));
-var workflowTemplateCreateSchema = import_zod70.z.object({
+var workflowTemplateCreateSchema = import_zod72.z.object({
   publicationId: entityIdSchema,
   slug: publicationSlugSchema,
-  useCase: import_zod70.z.string().trim().min(1).max(120),
-  difficulty: import_zod70.z.enum(["beginner", "intermediate", "advanced"]),
-  triggers: import_zod70.z.array(import_zod70.z.string().min(1).max(80)).max(20),
-  services: import_zod70.z.array(import_zod70.z.string().min(1).max(80)).max(20),
+  useCase: import_zod72.z.string().trim().min(1).max(120),
+  difficulty: import_zod72.z.enum(["beginner", "intermediate", "advanced"]),
+  triggers: import_zod72.z.array(import_zod72.z.string().min(1).max(80)).max(20),
+  services: import_zod72.z.array(import_zod72.z.string().min(1).max(80)).max(20),
   snapshot: workflowTemplateSnapshotSchema,
-  clientMutationId: import_zod70.z.string().min(1).max(128)
+  clientMutationId: import_zod72.z.string().min(1).max(128)
 }).strict();
-var workflowTemplateListQuerySchema = import_zod70.z.object({
-  q: import_zod70.z.string().trim().min(1).max(200).optional(),
-  useCase: import_zod70.z.string().max(120).optional(),
+var workflowTemplateListQuerySchema = import_zod72.z.object({
+  q: import_zod72.z.string().trim().min(1).max(200).optional(),
+  useCase: import_zod72.z.string().max(120).optional(),
   node: safeId.optional(),
   plugin: safeId.optional(),
-  runtime: import_zod70.z.string().max(80).optional(),
-  difficulty: import_zod70.z.enum(["beginner", "intermediate", "advanced"]).optional(),
-  trigger: import_zod70.z.string().max(80).optional(),
-  service: import_zod70.z.string().max(80).optional(),
+  runtime: import_zod72.z.string().max(80).optional(),
+  difficulty: import_zod72.z.enum(["beginner", "intermediate", "advanced"]).optional(),
+  trigger: import_zod72.z.string().max(80).optional(),
+  service: import_zod72.z.string().max(80).optional(),
   creator: creatorHandleSchema.optional(),
-  sort: import_zod70.z.enum(["published", "updated", "title"]).default("published"),
-  order: import_zod70.z.enum(["asc", "desc"]).default("desc"),
-  cursor: import_zod70.z.string().max(512).optional(),
-  limit: import_zod70.z.number().int().min(1).max(100).default(24)
+  sort: import_zod72.z.enum(["published", "updated", "title"]).default("published"),
+  order: import_zod72.z.enum(["asc", "desc"]).default("desc"),
+  cursor: import_zod72.z.string().max(512).optional(),
+  limit: import_zod72.z.number().int().min(1).max(100).default(24)
 }).strict();
-var workflowTemplateSummarySchema = import_zod70.z.object({
+var workflowTemplateSummarySchema = import_zod72.z.object({
   id: entityIdSchema,
   publicationId: entityIdSchema,
   slug: publicationSlugSchema,
-  title: import_zod70.z.string(),
-  description: import_zod70.z.string(),
-  useCase: import_zod70.z.string(),
-  difficulty: import_zod70.z.enum(["beginner", "intermediate", "advanced"]),
+  title: import_zod72.z.string(),
+  description: import_zod72.z.string(),
+  useCase: import_zod72.z.string(),
+  difficulty: import_zod72.z.enum(["beginner", "intermediate", "advanced"]),
   creator: creatorHandleSchema,
-  nodes: import_zod70.z.array(safeId),
-  plugins: import_zod70.z.array(safeId),
-  runtimes: import_zod70.z.array(import_zod70.z.string()),
-  triggers: import_zod70.z.array(import_zod70.z.string()),
-  services: import_zod70.z.array(import_zod70.z.string()),
-  license: import_zod70.z.string(),
+  nodes: import_zod72.z.array(safeId),
+  plugins: import_zod72.z.array(safeId),
+  runtimes: import_zod72.z.array(import_zod72.z.string()),
+  triggers: import_zod72.z.array(import_zod72.z.string()),
+  services: import_zod72.z.array(import_zod72.z.string()),
+  license: import_zod72.z.string(),
   digest: sha256Schema,
-  publishedAt: import_zod70.z.number().int().nonnegative().nullable(),
-  updatedAt: import_zod70.z.number().int().nonnegative()
+  publishedAt: import_zod72.z.number().int().nonnegative().nullable(),
+  updatedAt: import_zod72.z.number().int().nonnegative()
 }).strict();
 var workflowTemplateDetailSchema = workflowTemplateSummarySchema.extend({ snapshot: workflowTemplateSnapshotSchema }).strict();
 function scanSensitive(value, context) {
@@ -11905,7 +12059,7 @@ function scanSensitive(value, context) {
   const visit4 = (current, path3, depth) => {
     if (depth > 12 || ++fields > 1e4) {
       context.addIssue({
-        code: import_zod70.z.ZodIssueCode.custom,
+        code: import_zod72.z.ZodIssueCode.custom,
         path: path3,
         message: "workflow snapshot exceeds safe structural bounds"
       });
@@ -11913,7 +12067,7 @@ function scanSensitive(value, context) {
     }
     if (typeof current === "string" && sensitiveValue(current)) {
       context.addIssue({
-        code: import_zod70.z.ZodIssueCode.custom,
+        code: import_zod72.z.ZodIssueCode.custom,
         path: path3,
         message: "workflow snapshot contains a private or secret value"
       });
@@ -11924,7 +12078,7 @@ function scanSensitive(value, context) {
           key
         )) {
           context.addIssue({
-            code: import_zod70.z.ZodIssueCode.custom,
+            code: import_zod72.z.ZodIssueCode.custom,
             path: [...path3, key],
             message: "workflow snapshot contains a forbidden field"
           });
@@ -11942,71 +12096,71 @@ function sensitiveValue(value) {
 }
 
 // packages/schema/src/workflow/sync.ts
-var import_zod72 = require("zod");
+var import_zod74 = require("zod");
 
 // packages/schema/src/octonode/patch.ts
-var import_zod71 = require("zod");
-var nodeConfigPatchSchema = import_zod71.z.object({
-  runtime: import_zod71.z.object({
-    timeout_ms: import_zod71.z.number().int().positive().optional(),
-    retries: import_zod71.z.number().int().nonnegative().optional(),
-    retry_backoff_ms: import_zod71.z.number().int().nonnegative().optional(),
-    concurrency: import_zod71.z.number().int().positive().optional(),
-    async: import_zod71.z.boolean().optional()
+var import_zod73 = require("zod");
+var nodeConfigPatchSchema = import_zod73.z.object({
+  runtime: import_zod73.z.object({
+    timeout_ms: import_zod73.z.number().int().positive().optional(),
+    retries: import_zod73.z.number().int().nonnegative().optional(),
+    retry_backoff_ms: import_zod73.z.number().int().nonnegative().optional(),
+    concurrency: import_zod73.z.number().int().positive().optional(),
+    async: import_zod73.z.boolean().optional()
   }).nullable().optional(),
-  presentation: import_zod71.z.object({
-    icon: import_zod71.z.string().optional(),
-    label: import_zod71.z.string().optional(),
-    color: import_zod71.z.string().optional(),
-    renderer: import_zod71.z.string().optional(),
-    position: import_zod71.z.object({ x: import_zod71.z.number(), y: import_zod71.z.number() }).optional()
+  presentation: import_zod73.z.object({
+    icon: import_zod73.z.string().optional(),
+    label: import_zod73.z.string().optional(),
+    color: import_zod73.z.string().optional(),
+    renderer: import_zod73.z.string().optional(),
+    position: import_zod73.z.object({ x: import_zod73.z.number(), y: import_zod73.z.number() }).optional()
   }).nullable().optional(),
-  disabled: import_zod71.z.boolean().nullable().optional()
+  disabled: import_zod73.z.boolean().nullable().optional()
 });
 
 // packages/schema/src/workflow/sync.ts
-var revision3 = import_zod72.z.string().regex(/^[a-f0-9]{64}$/);
-var workflowTopologySchema = import_zod72.z.object({
-  entry: import_zod72.z.string().optional(),
-  nodes: import_zod72.z.array(import_zod72.z.string()).max(1e4).optional(),
-  edges: import_zod72.z.array(WorkflowEdge).max(1e4),
-  expressions: import_zod72.z.record(import_zod72.z.string(), graphNodeSchema.shape.expressions.unwrap()).optional(),
-  bindings: import_zod72.z.record(import_zod72.z.string(), graphNodeSchema.shape.bindings.unwrap()).optional(),
-  positions: import_zod72.z.record(import_zod72.z.string(), import_zod72.z.object({ x: import_zod72.z.number(), y: import_zod72.z.number() })).optional(),
-  stickyNotes: import_zod72.z.array(StickyNoteLayout).max(1e4).optional(),
-  groups: import_zod72.z.array(GroupLayout).max(1e4).optional()
+var revision3 = import_zod74.z.string().regex(/^[a-f0-9]{64}$/);
+var workflowTopologySchema = import_zod74.z.object({
+  entry: import_zod74.z.string().optional(),
+  nodes: import_zod74.z.array(import_zod74.z.string()).max(1e4).optional(),
+  edges: import_zod74.z.array(WorkflowEdge).max(1e4),
+  expressions: import_zod74.z.record(import_zod74.z.string(), graphNodeSchema.shape.expressions.unwrap()).optional(),
+  bindings: import_zod74.z.record(import_zod74.z.string(), graphNodeSchema.shape.bindings.unwrap()).optional(),
+  positions: import_zod74.z.record(import_zod74.z.string(), import_zod74.z.object({ x: import_zod74.z.number(), y: import_zod74.z.number() })).optional(),
+  stickyNotes: import_zod74.z.array(StickyNoteLayout).max(1e4).optional(),
+  groups: import_zod74.z.array(GroupLayout).max(1e4).optional()
 }).strict();
-var workflowEditOperationSchema = import_zod72.z.discriminatedUnion("type", [
-  import_zod72.z.object({
-    type: import_zod72.z.literal("add"),
-    id: import_zod72.z.string().min(1).max(240).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/),
-    catalogId: import_zod72.z.string().min(1).max(512),
-    params: import_zod72.z.record(import_zod72.z.string(), import_zod72.z.unknown()).optional()
+var workflowEditOperationSchema = import_zod74.z.discriminatedUnion("type", [
+  import_zod74.z.object({
+    type: import_zod74.z.literal("add"),
+    id: import_zod74.z.string().min(1).max(240).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/),
+    catalogId: import_zod74.z.string().min(1).max(512),
+    params: import_zod74.z.record(import_zod74.z.string(), import_zod74.z.unknown()).optional()
   }).strict(),
-  import_zod72.z.object({
-    type: import_zod72.z.literal("update"),
-    id: import_zod72.z.string().min(1).max(240),
+  import_zod74.z.object({
+    type: import_zod74.z.literal("update"),
+    id: import_zod74.z.string().min(1).max(240),
     patch: nodeConfigPatchSchema.strict()
   }).strict(),
-  import_zod72.z.object({
-    type: import_zod72.z.literal("duplicate"),
-    id: import_zod72.z.string().min(1).max(240).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/),
-    sourceId: import_zod72.z.string().min(1).max(240)
+  import_zod74.z.object({
+    type: import_zod74.z.literal("duplicate"),
+    id: import_zod74.z.string().min(1).max(240).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/),
+    sourceId: import_zod74.z.string().min(1).max(240)
   }).strict()
 ]);
-var workflowTopologyDiffSchema = import_zod72.z.object({
+var workflowTopologyDiffSchema = import_zod74.z.object({
   baseRevision: revision3,
   baseGraphDigest: revision3,
   changes: jsonChangesSchema,
-  operations: import_zod72.z.array(workflowEditOperationSchema).max(1e3).optional()
+  operations: import_zod74.z.array(workflowEditOperationSchema).max(1e3).optional()
 }).strict();
-var workflowEditsSchema = import_zod72.z.object({
-  workflowId: import_zod72.z.string().min(1).max(240),
-  view: import_zod72.z.string().max(240).optional(),
+var workflowEditsSchema = import_zod74.z.object({
+  workflowId: import_zod74.z.string().min(1).max(240),
+  view: import_zod74.z.string().max(240).optional(),
   diff: workflowTopologyDiffSchema
 }).strict();
-var workflowSaveAckSchema = import_zod72.z.object({
-  saved: import_zod72.z.literal(true),
+var workflowSaveAckSchema = import_zod74.z.object({
+  saved: import_zod74.z.literal(true),
   baseRevision: revision3,
   revision: revision3,
   corrections: jsonChangesSchema.optional(),
@@ -12015,102 +12169,137 @@ var workflowSaveAckSchema = import_zod72.z.object({
 });
 
 // packages/schema/src/workflow/metadata.ts
-var import_zod73 = require("zod");
-var workflowMetaSchema = import_zod73.z.object({
-  label: import_zod73.z.string().trim().min(1).max(200).nullable().optional(),
-  archived: import_zod73.z.boolean().nullable().optional(),
-  active: import_zod73.z.boolean().nullable().optional(),
-  tags: import_zod73.z.array(import_zod73.z.string()).nullable().optional(),
-  folder: import_zod73.z.string().nullable().optional()
+var import_zod75 = require("zod");
+var workflowMetaSchema = import_zod75.z.object({
+  label: import_zod75.z.string().trim().min(1).max(200).nullable().optional(),
+  archived: import_zod75.z.boolean().nullable().optional(),
+  active: import_zod75.z.boolean().nullable().optional(),
+  tags: import_zod75.z.array(import_zod75.z.string()).nullable().optional(),
+  folder: import_zod75.z.string().nullable().optional(),
+  source: import_zod75.z.object({
+    path: import_zod75.z.string().min(1).max(1024),
+    symbol: import_zod75.z.string().min(1).max(240),
+    revision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/)
+  }).optional()
 });
 
 // packages/schema/src/workflow/execution.ts
-var import_zod74 = require("zod");
-var executionRequestSchema = import_zod74.z.object({
-  idempotencyKey: import_zod74.z.string().uuid(),
+var import_zod76 = require("zod");
+
+// packages/schema/src/workflow/constants.ts
+var WORKFLOW_ENDPOINT_INVOCATION_VERSION = 1;
+var WORKFLOW_ENDPOINT_BODY_MAX_BYTES = 128 * 1024;
+var WORKFLOW_ENDPOINT_DEFAULT_ENV = "dev";
+
+// packages/schema/src/workflow/execution.ts
+var workflowInputSchema = import_zod76.z.record(import_zod76.z.string(), import_zod76.z.unknown());
+var executionRequestSchema = import_zod76.z.object({
+  idempotencyKey: import_zod76.z.string().uuid(),
   edits: workflowTopologyDiffSchema.optional(),
-  view: import_zod74.z.string().max(240).optional(),
-  baseRevision: import_zod74.z.string().regex(/^[a-f0-9]{64}$/).optional(),
-  env: import_zod74.z.string().max(100).optional(),
-  input: import_zod74.z.record(import_zod74.z.string(), import_zod74.z.unknown()).default({}),
-  fromNode: import_zod74.z.string().max(240).optional(),
-  pins: import_zod74.z.record(import_zod74.z.string(), import_zod74.z.unknown()).optional()
+  view: import_zod76.z.string().max(240).optional(),
+  baseRevision: import_zod76.z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  env: import_zod76.z.string().max(100).optional(),
+  input: workflowInputSchema.default({}),
+  fromNode: import_zod76.z.string().max(240).optional(),
+  pins: import_zod76.z.record(import_zod76.z.string(), import_zod76.z.unknown()).optional()
 });
+var workflowEndpointInvocationSchema = import_zod76.z.tuple([
+  import_zod76.z.literal(WORKFLOW_ENDPOINT_INVOCATION_VERSION),
+  executionRequestSchema.pick({ fromNode: true, pins: true }).extend({ input: workflowInputSchema, env: import_zod76.z.literal(WORKFLOW_ENDPOINT_DEFAULT_ENV).optional() }).strict()
+]);
 
 // packages/schema/src/project/constants.ts
 var CATALOG_PAYLOAD_MAX_BYTES = 128 * 1024 * 1024;
+var WORKFLOW_WORKER_ARTIFACT_MAX_BYTES = 128 * 1024;
+var WORKFLOW_WORKER_ARTIFACT_MAX_COUNT = 16;
+var WORKFLOW_ENDPOINT_MAX_BYTES = 4 * 1024 * 1024;
 
 // packages/schema/src/project/catalog.ts
-var catalogEvaluationsSchema = import_zod75.z.object({
-  items: import_zod75.z.array(WorkflowEvaluation),
-  revision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/)
+var catalogEvaluationsSchema = import_zod77.z.object({
+  items: import_zod77.z.array(WorkflowEvaluation),
+  revision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/)
 });
-var catalogTestWorkflowsSchema = import_zod75.z.object({
-  items: import_zod75.z.array(
-    import_zod75.z.object({ path: import_zod75.z.string(), runner: WorkflowTestWorkflow.shape.runner.optional(), linked: import_zod75.z.boolean() })
+var catalogTestWorkflowsSchema = import_zod77.z.object({
+  items: import_zod77.z.array(
+    import_zod77.z.object({ path: import_zod77.z.string(), runner: WorkflowTestWorkflow.shape.runner.optional(), linked: import_zod77.z.boolean() })
   ),
-  availableRunners: import_zod75.z.array(WorkflowTestWorkflow.shape.runner)
+  availableRunners: import_zod77.z.array(WorkflowTestWorkflow.shape.runner)
 });
-var catalogPathSchema = import_zod75.z.string().min(1).max(1024).refine(
+var catalogPathSchema = import_zod77.z.string().min(1).max(1024).refine(
   (path3) => !path3.startsWith("/") && !path3.includes("\\") && [...path3].every((char) => char.charCodeAt(0) > 31 && char.charCodeAt(0) !== 127) && path3.split("/").every((part) => part && part !== "." && part !== ".."),
   "Invalid catalog path"
 );
-var catalogSourceSchema = import_zod75.z.object({
+var catalogSourceSchema = import_zod77.z.object({
   path: catalogPathSchema,
-  revision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/),
-  contextRevision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/),
-  imports: import_zod75.z.array(import_zod75.z.string().max(1024)).max(2e3),
-  dependencies: import_zod75.z.array(catalogPathSchema).max(2e3),
-  types: import_zod75.z.record(import_zod75.z.string(), JsonSchema)
+  revision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/),
+  contextRevision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/),
+  imports: import_zod77.z.array(import_zod77.z.string().max(1024)).max(2e3),
+  dependencies: import_zod77.z.array(catalogPathSchema).max(2e3),
+  types: import_zod77.z.record(import_zod77.z.string(), JsonSchema)
 });
-var catalogObjectSchema = import_zod75.z.object({
-  revision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/),
-  size: import_zod75.z.number().int().nonnegative().max(CATALOG_PAYLOAD_MAX_BYTES),
-  location: import_zod75.z.string().max(240)
+var catalogObjectSchema = import_zod77.z.object({
+  revision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/),
+  size: import_zod77.z.number().int().nonnegative().max(CATALOG_PAYLOAD_MAX_BYTES),
+  location: import_zod77.z.string().max(240)
 });
-var catalogScopeSchema = import_zod75.z.object({
-  project: import_zod75.z.string().min(1).max(240),
-  worktree: import_zod75.z.string().uuid().nullable(),
-  name: import_zod75.z.string().max(240),
-  references: import_zod75.z.array(import_zod75.z.string().max(1024)).max(100),
-  repository: import_zod75.z.string().max(240).nullable(),
-  sourceKind: import_zod75.z.literal("repository").optional(),
-  repositoryProjects: import_zod75.z.array(import_zod75.z.object({ id: import_zod75.z.string().min(1).max(240), path: catalogPathSchema.or(import_zod75.z.literal(".")) })).max(256).refine(
+var catalogWorkflowWorkersSchema = import_zod77.z.array(
+  import_zod77.z.object({
+    workflowId: import_zod77.z.string().min(1).max(240),
+    code: import_zod77.z.string().min(1).max(WORKFLOW_WORKER_ARTIFACT_MAX_BYTES),
+    target: import_zod77.z.literal("node-service").optional()
+  })
+).max(WORKFLOW_WORKER_ARTIFACT_MAX_COUNT).refine((items) => new TextEncoder().encode(JSON.stringify(items)).byteLength <= WORKFLOW_WORKER_ARTIFACT_MAX_BYTES);
+var catalogWorkflowEndpointSchema = import_zod77.z.object({
+  invocationVersion: import_zod77.z.literal(WORKFLOW_ENDPOINT_INVOCATION_VERSION).optional(),
+  defaultEnvironment: import_zod77.z.literal(WORKFLOW_ENDPOINT_DEFAULT_ENV).optional(),
+  code: import_zod77.z.string().min(1).max(WORKFLOW_ENDPOINT_MAX_BYTES),
+  workflows: import_zod77.z.array(import_zod77.z.string().min(1).max(240)).min(1).max(1e4)
+});
+var catalogScopeSchema = import_zod77.z.object({
+  project: import_zod77.z.string().min(1).max(240),
+  worktree: import_zod77.z.string().uuid().nullable(),
+  name: import_zod77.z.string().max(240),
+  repository: import_zod77.z.string().max(240).nullable(),
+  sourceKind: import_zod77.z.literal("repository").optional(),
+  repositoryProjects: import_zod77.z.array(import_zod77.z.object({ id: import_zod77.z.string().min(1).max(240), path: catalogPathSchema.or(import_zod77.z.literal(".")) })).max(256).refine(
     (owners) => new Set(owners.map((owner) => owner.id)).size === owners.length && new Set(owners.map((owner) => owner.path.toLowerCase())).size === owners.length,
     "Repository source owners must be distinct"
   ).optional(),
-  revision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/),
-  fileCount: import_zod75.z.number().int().min(0).max(1e5),
-  complete: import_zod75.z.boolean(),
+  revision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/),
+  fileCount: import_zod77.z.number().int().min(0).max(1e5),
+  complete: import_zod77.z.boolean(),
   payload: catalogObjectSchema.optional(),
-  projectFiles: import_zod75.z.array(catalogObjectSchema.extend({ path: catalogPathSchema })).max(2).optional(),
+  projectFiles: import_zod77.z.array(catalogObjectSchema.extend({ path: catalogPathSchema })).max(2).optional(),
   workflowDocument: workflowDocumentSchema.optional(),
-  workflows: import_zod75.z.array(workflowSummarySchema).max(1e4).optional(),
-  workflowGraphs: import_zod75.z.array(workflowGraphSchema).max(1e3).optional(),
-  workflowSources: import_zod75.z.array(catalogSourceSchema).max(2e4).optional(),
-  workflowTriggers: import_zod75.z.record(import_zod75.z.string(), WorkflowTriggerState).optional(),
-  evaluations: import_zod75.z.record(import_zod75.z.string(), catalogEvaluationsSchema).optional(),
-  workflowVisibility: import_zod75.z.record(import_zod75.z.string(), Visibility).optional(),
-  nodeVisibility: import_zod75.z.record(import_zod75.z.string(), Visibility).optional(),
+  workflows: import_zod77.z.array(workflowSummarySchema).max(1e4).optional(),
+  workflowGraphs: import_zod77.z.array(workflowGraphSchema).max(1e3).optional(),
+  workflowWorkers: catalogWorkflowWorkersSchema.optional(),
+  workflowEndpoint: catalogWorkflowEndpointSchema.optional(),
+  workflowSources: import_zod77.z.array(catalogSourceSchema).max(2e4).optional(),
+  workflowTriggers: import_zod77.z.record(import_zod77.z.string(), WorkflowTriggerState).optional(),
+  evaluations: import_zod77.z.record(import_zod77.z.string(), catalogEvaluationsSchema).optional(),
+  workflowVisibility: import_zod77.z.record(import_zod77.z.string(), Visibility).optional(),
+  nodeVisibility: import_zod77.z.record(import_zod77.z.string(), Visibility).optional(),
   testWorkflows: catalogTestWorkflowsSchema.optional(),
-  linkedTestWorkflows: import_zod75.z.record(import_zod75.z.string(), catalogTestWorkflowsSchema.shape.items).optional(),
-  verificationSourceRevision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/).optional(),
-  compilerError: import_zod75.z.string().optional(),
+  linkedTestWorkflows: import_zod77.z.record(import_zod77.z.string(), catalogTestWorkflowsSchema.shape.items).optional(),
+  verificationSourceRevision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  compilerError: import_zod77.z.string().optional(),
   sourceIndex: ProjectSourceIndex.optional(),
   sourceSupport: projectSourceSupportSchema.optional(),
-  parserRevision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/).optional(),
-  compilation: import_zod75.z.object({
-    state: import_zod75.z.enum(["unknown", "current", "stale", "failed"]),
-    sourceRevision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/).nullable(),
-    compiledRevision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/).nullable(),
-    compiledAt: import_zod75.z.number().int().nonnegative().nullable()
-  }).optional()
+  parserRevision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  compilation: import_zod77.z.object({
+    state: import_zod77.z.enum(["unknown", "current", "stale", "failed"]),
+    sourceRevision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    compiledRevision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    compiledAt: import_zod77.z.number().int().nonnegative().nullable()
+  }).optional(),
+  /** Key of every input the last full capture read; publication carries the scope while it stays equal. */
+  captureKey: import_zod77.z.string().regex(/^[a-f0-9]{64}$/).optional()
 });
 var catalogScopeHeaderSchema = catalogScopeSchema.pick({
   project: true,
   worktree: true,
   name: true,
-  references: true,
   repository: true,
   sourceKind: true,
   repositoryProjects: true,
@@ -12120,13 +12309,13 @@ var catalogScopeHeaderSchema = catalogScopeSchema.pick({
   payload: true,
   projectFiles: true,
   compilation: true,
-  parserRevision: true
+  parserRevision: true,
+  captureKey: true
 });
 var catalogScopePayloadSchema = catalogScopeSchema.omit({
   project: true,
   worktree: true,
   name: true,
-  references: true,
   repository: true,
   sourceKind: true,
   repositoryProjects: true,
@@ -12136,37 +12325,41 @@ var catalogScopePayloadSchema = catalogScopeSchema.omit({
   payload: true,
   projectFiles: true,
   compilation: true,
-  parserRevision: true
+  parserRevision: true,
+  captureKey: true
 });
-var catalogCompilationReceiptSchema = import_zod75.z.object({
-  sourceRevision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/).nullable(),
-  success: import_zod75.z.boolean(),
-  compiledAt: import_zod75.z.number().int().nonnegative()
+var catalogCompilationReceiptSchema = import_zod77.z.object({
+  sourceRevision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/).nullable(),
+  success: import_zod77.z.boolean(),
+  compiledAt: import_zod77.z.number().int().nonnegative(),
+  workerConfigRevision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  workflowWorkers: catalogWorkflowWorkersSchema.optional(),
+  workflowEndpoint: catalogWorkflowEndpointSchema.optional()
 });
-var catalogGraphScopesSchema = import_zod75.z.array(catalogScopeSchema.pick({ repository: true, worktree: true })).max(128);
-var catalogFileSchema = import_zod75.z.object({
+var catalogGraphScopesSchema = import_zod77.z.array(catalogScopeSchema.pick({ repository: true, worktree: true })).max(128);
+var catalogFileSchema = import_zod77.z.object({
   path: catalogPathSchema,
-  size: import_zod75.z.number().int().min(0).max(1e8),
-  binary: import_zod75.z.boolean().optional(),
-  mode: import_zod75.z.union([import_zod75.z.literal(420), import_zod75.z.literal(493)]).optional(),
-  mtime: import_zod75.z.number().int().nonnegative(),
-  revision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/).nullable(),
-  contentAvailable: import_zod75.z.boolean(),
-  location: import_zod75.z.string().max(240),
-  workspaceRevision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/).optional()
+  size: import_zod77.z.number().int().min(0).max(1e8),
+  binary: import_zod77.z.boolean().optional(),
+  mode: import_zod77.z.union([import_zod77.z.literal(420), import_zod77.z.literal(493)]).optional(),
+  mtime: import_zod77.z.number().int().nonnegative(),
+  revision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/).nullable(),
+  contentAvailable: import_zod77.z.boolean(),
+  location: import_zod77.z.string().max(240),
+  workspaceRevision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/).optional()
 }).refine(
   (file) => file.contentAvailable === (file.revision !== null),
   "Available content requires its exact revision"
 );
-var catalogGraphObjectSchema = import_zod75.z.object({
-  architectureId: import_zod75.z.string().min(1).max(240),
-  worktree: import_zod75.z.string().uuid().nullable(),
+var catalogGraphObjectSchema = import_zod77.z.object({
+  architectureId: import_zod77.z.string().min(1).max(240),
+  worktree: import_zod77.z.string().uuid().nullable(),
   level: ArchitectureLevel,
-  name: import_zod75.z.string().max(240),
-  revision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/),
-  nodes: import_zod75.z.array(ArchitectureNode).max(1e4),
-  edges: import_zod75.z.array(ArchitectureEdge).max(2e4),
-  diagnostics: import_zod75.z.array(import_zod75.z.object({ code: import_zod75.z.string(), message: import_zod75.z.string() })).max(100)
+  name: import_zod77.z.string().max(240),
+  revision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/),
+  nodes: import_zod77.z.array(ArchitectureNode).max(1e4),
+  edges: import_zod77.z.array(ArchitectureEdge).max(2e4),
+  diagnostics: import_zod77.z.array(import_zod77.z.object({ code: import_zod77.z.string(), message: import_zod77.z.string() })).max(100)
 });
 var catalogGraphSchema = catalogGraphObjectSchema.refine((graph) => {
   const ids = new Set(graph.nodes.map((node) => node.id));
@@ -12180,20 +12373,20 @@ var catalogGraphReferenceSchema = catalogGraphObjectSchema.pick({
   name: true,
   revision: true
 }).extend({
-  nodes: import_zod75.z.array(import_zod75.z.object({ id: import_zod75.z.string().max(240), kind: import_zod75.z.literal("project") })).max(1e4),
-  nodeCount: import_zod75.z.number().int().min(0).max(1e4),
-  edgeCount: import_zod75.z.number().int().min(0).max(2e4),
+  nodes: import_zod77.z.array(import_zod77.z.object({ id: import_zod77.z.string().max(240), kind: import_zod77.z.literal("project") })).max(1e4),
+  nodeCount: import_zod77.z.number().int().min(0).max(1e4),
+  edgeCount: import_zod77.z.number().int().min(0).max(2e4),
   payload: catalogObjectSchema
 });
-var catalogStoredGraphSchema = import_zod75.z.union([catalogGraphReferenceSchema, catalogGraphSchema]);
-var catalogHeadSchema = import_zod75.z.object({
-  generation: import_zod75.z.string().uuid(),
-  state: import_zod75.z.enum(["pending", "ready"]),
-  capturedAt: import_zod75.z.number().int().nonnegative()
+var catalogStoredGraphSchema = import_zod77.z.union([catalogGraphReferenceSchema, catalogGraphSchema]);
+var catalogHeadSchema = import_zod77.z.object({
+  generation: import_zod77.z.string().uuid(),
+  state: import_zod77.z.enum(["pending", "ready"]),
+  capturedAt: import_zod77.z.number().int().nonnegative()
 });
-var projectCatalogStatusSchema = import_zod75.z.object({
-  enabled: import_zod75.z.boolean(),
-  workflowsAvailable: import_zod75.z.boolean().optional(),
+var projectCatalogStatusSchema = import_zod77.z.object({
+  enabled: import_zod77.z.boolean(),
+  workflowsAvailable: import_zod77.z.boolean().optional(),
   head: catalogHeadSchema.nullable(),
   scope: catalogScopeSchema.omit({
     workflowDocument: true,
@@ -12201,6 +12394,8 @@ var projectCatalogStatusSchema = import_zod75.z.object({
     projectFiles: true,
     workflows: true,
     workflowGraphs: true,
+    workflowWorkers: true,
+    workflowEndpoint: true,
     workflowSources: true,
     workflowTriggers: true,
     evaluations: true,
@@ -12211,85 +12406,88 @@ var projectCatalogStatusSchema = import_zod75.z.object({
     verificationSourceRevision: true,
     sourceIndex: true,
     sourceSupport: true,
-    parserRevision: true
+    parserRevision: true,
+    captureKey: true
   }).nullable()
 });
-var catalogFileRecordSchema = import_zod75.z.object({
+var catalogFileRecordSchema = import_zod77.z.object({
   file: catalogFileSchema,
   scope: catalogScopeSchema,
   generation: catalogHeadSchema.shape.generation
 });
-var catalogQuerySchema = import_zod75.z.object({
-  generation: import_zod75.z.string().uuid(),
-  search: import_zod75.z.string().trim().max(240).default(""),
-  offset: import_zod75.z.coerce.number().int().min(0).max(1e5).default(0),
-  limit: import_zod75.z.coerce.number().int().min(1).max(100).default(50)
+var catalogQuerySchema = import_zod77.z.object({
+  generation: import_zod77.z.string().uuid(),
+  search: import_zod77.z.string().trim().max(240).default(""),
+  offset: import_zod77.z.coerce.number().int().min(0).max(1e5).default(0),
+  limit: import_zod77.z.coerce.number().int().min(1).max(100).default(50)
 });
 var catalogFileQuerySchema = catalogQuerySchema.pick({ generation: true }).extend({ path: catalogPathSchema });
-var catalogFilesPageSchema = import_zod75.z.object({
-  items: import_zod75.z.array(catalogFileSchema),
-  total: import_zod75.z.number().int().nonnegative(),
-  offset: import_zod75.z.number().int().nonnegative(),
-  limit: import_zod75.z.number().int().positive(),
-  generation: import_zod75.z.string().uuid()
+var catalogFilesPageSchema = import_zod77.z.object({
+  items: import_zod77.z.array(catalogFileSchema),
+  total: import_zod77.z.number().int().nonnegative(),
+  offset: import_zod77.z.number().int().nonnegative(),
+  limit: import_zod77.z.number().int().positive(),
+  generation: import_zod77.z.string().uuid()
 });
-var catalogContentSchema = import_zod75.z.object({
+var catalogContentSchema = import_zod77.z.object({
   path: catalogPathSchema,
-  content: import_zod75.z.string().max(2e6),
-  revision: import_zod75.z.string().regex(/^[a-f0-9]{64}$/),
-  mtime: import_zod75.z.number().int().nonnegative(),
-  readOnly: import_zod75.z.literal(true),
-  generation: import_zod75.z.string().uuid()
+  content: import_zod77.z.string().max(2e6),
+  revision: import_zod77.z.string().regex(/^[a-f0-9]{64}$/),
+  mtime: import_zod77.z.number().int().nonnegative(),
+  readOnly: import_zod77.z.literal(true),
+  generation: import_zod77.z.string().uuid()
 });
-var catalogBeginSchema = import_zod75.z.object({
-  generation: import_zod75.z.string().uuid(),
-  expectedGeneration: import_zod75.z.string().uuid().nullable(),
-  preserveSourceProjections: import_zod75.z.boolean().optional(),
-  invalidate: import_zod75.z.object({ project: catalogScopeSchema.shape.project.nullable(), worktree: catalogScopeSchema.shape.worktree }).optional()
+var catalogBeginSchema = import_zod77.z.object({
+  generation: import_zod77.z.string().uuid(),
+  expectedGeneration: import_zod77.z.string().uuid().nullable(),
+  preserveSourceProjections: import_zod77.z.boolean(),
+  invalidate: import_zod77.z.object({ project: catalogScopeSchema.shape.project.nullable(), worktree: catalogScopeSchema.shape.worktree }).optional(),
+  /** Unchanged scopes whose rows move from the ready head into the new generation instead of being staged again. */
+  carry: import_zod77.z.array(import_zod77.z.object({ project: catalogScopeSchema.shape.project, worktree: catalogScopeSchema.shape.worktree })).max(256).optional()
 });
-var catalogStageSchema = import_zod75.z.object({
-  generation: import_zod75.z.string().uuid(),
+var catalogStageSchema = import_zod77.z.object({
+  generation: import_zod77.z.string().uuid(),
   scope: catalogScopeSchema,
-  files: import_zod75.z.array(catalogFileSchema).max(100)
+  files: import_zod77.z.array(catalogFileSchema).max(100)
 });
-var catalogCommitSchema = import_zod75.z.object({
-  generation: import_zod75.z.string().uuid(),
-  scopes: import_zod75.z.array(catalogScopeSchema).max(256),
-  graphs: import_zod75.z.array(catalogStoredGraphSchema).max(512)
+var catalogCommitSchema = import_zod77.z.object({
+  generation: import_zod77.z.string().uuid(),
+  scopes: import_zod77.z.array(catalogScopeSchema).max(256),
+  graphs: import_zod77.z.array(catalogStoredGraphSchema).max(512)
 });
-var catalogCapturePageSchema = import_zod75.z.object({
+var catalogCapturePageSchema = import_zod77.z.object({
   scope: catalogScopeSchema,
-  files: import_zod75.z.array(import_zod75.z.intersection(catalogFileSchema, import_zod75.z.object({ content: import_zod75.z.string().max(2e6).optional() }))).max(100),
-  nextOffset: import_zod75.z.number().int().min(1).max(1e5).nullable()
+  files: import_zod77.z.array(import_zod77.z.intersection(catalogFileSchema, import_zod77.z.object({ content: import_zod77.z.string().max(2e6).optional() }))).max(100),
+  nextOffset: import_zod77.z.number().int().min(1).max(1e5).nullable()
 });
-var catalogBlobsQuerySchema = import_zod75.z.object({
+var catalogBlobsQuerySchema = import_zod77.z.object({
   generation: catalogHeadSchema.shape.generation.nullable(),
   project: catalogScopeSchema.shape.project,
   worktree: catalogScopeSchema.shape.worktree,
-  location: import_zod75.z.string().min(1).max(240),
-  revisions: import_zod75.z.array(catalogScopeSchema.shape.revision).max(100)
+  location: import_zod77.z.string().min(1).max(240),
+  revisions: import_zod77.z.array(catalogScopeSchema.shape.revision).max(100)
 });
-var catalogBlobSchema = import_zod75.z.object({
+var catalogBlobSchema = import_zod77.z.object({
   project: catalogScopeSchema.shape.project,
   worktree: catalogScopeSchema.shape.worktree,
   revision: catalogScopeSchema.shape.revision,
-  location: import_zod75.z.string().min(1).max(240),
-  lastSeen: import_zod75.z.number().int().nonnegative()
+  location: import_zod77.z.string().min(1).max(240),
+  lastSeen: import_zod77.z.number().int().nonnegative()
 });
-var catalogRetireSchema = import_zod75.z.object({
+var catalogRetireSchema = import_zod77.z.object({
   generation: catalogHeadSchema.shape.generation,
-  location: import_zod75.z.string().min(1).max(240).optional(),
-  blobs: import_zod75.z.array(catalogBlobSchema).max(100).optional()
+  location: import_zod77.z.string().min(1).max(240).optional(),
+  blobs: import_zod77.z.array(catalogBlobSchema).max(100).optional()
 });
-var catalogEraseSchema = import_zod75.z.object({
+var catalogEraseSchema = import_zod77.z.object({
   project: catalogScopeSchema.shape.project.nullable(),
   worktree: catalogScopeSchema.shape.worktree
 });
-var catalogErasureStateSchema = import_zod75.z.object({
-  workspace: import_zod75.z.boolean(),
-  projects: import_zod75.z.array(catalogScopeSchema.shape.project).max(1e4),
-  checkouts: import_zod75.z.array(import_zod75.z.string().uuid()).max(1e4),
-  scopes: import_zod75.z.array(catalogEraseSchema).max(1e4)
+var catalogErasureStateSchema = import_zod77.z.object({
+  workspace: import_zod77.z.boolean(),
+  projects: import_zod77.z.array(catalogScopeSchema.shape.project).max(1e4),
+  checkouts: import_zod77.z.array(import_zod77.z.string().uuid()).max(1e4),
+  scopes: import_zod77.z.array(catalogEraseSchema).max(1e4)
 });
 
 // packages/schema/src/project/jobs.ts
@@ -12301,15 +12499,15 @@ __export(jobs_exports, {
   ProjectJobStatus: () => ProjectJobStatus,
   ProjectPurgeConfirmation: () => ProjectPurgeConfirmation
 });
-var import_zod76 = require("zod");
-var ProjectPurgeConfirmation = import_zod76.z.object({ name: import_zod76.z.string().min(1).max(240), revision: import_zod76.z.string().min(1).max(240) }).strict();
-var identity2 = { idempotencyKey: import_zod76.z.string().uuid() };
-var ProjectJobInput = import_zod76.z.discriminatedUnion("kind", [
-  import_zod76.z.object({
+var import_zod78 = require("zod");
+var ProjectPurgeConfirmation = import_zod78.z.object({ name: import_zod78.z.string().min(1).max(240), revision: import_zod78.z.string().min(1).max(240) }).strict();
+var identity2 = { idempotencyKey: import_zod78.z.string().uuid() };
+var ProjectJobInput = import_zod78.z.discriminatedUnion("kind", [
+  import_zod78.z.object({
     ...identity2,
-    kind: import_zod76.z.literal("import"),
-    provider: import_zod76.z.enum(["git", "github", "gitlab"]),
-    url: import_zod76.z.string().trim().min(1).max(2048).refine((value) => {
+    kind: import_zod78.z.literal("import"),
+    provider: import_zod78.z.enum(["git", "github", "gitlab"]),
+    url: import_zod78.z.string().trim().min(1).max(2048).refine((value) => {
       if (/[\r\n\0]/.test(value) || value.includes("::")) return false;
       if (/^https?:\/\//i.test(value)) {
         try {
@@ -12321,73 +12519,75 @@ var ProjectJobInput = import_zod76.z.discriminatedUnion("kind", [
       }
       return value.startsWith("/") || value.startsWith("file://") || /^(?:git@[^:]+:|ssh:\/\/git@)/.test(value);
     }, "Invalid repository URL"),
-    dir: import_zod76.z.string().trim().min(1).max(240).optional(),
-    branch: import_zod76.z.string().trim().min(1).max(200).optional()
+    dir: import_zod78.z.string().trim().min(1).max(240).optional(),
+    branch: import_zod78.z.string().trim().min(1).max(200).optional()
   }).strict(),
-  import_zod76.z.object({
+  import_zod78.z.object({
     ...identity2,
-    kind: import_zod76.z.literal("purge"),
-    projectId: import_zod76.z.string().min(1).max(240),
+    kind: import_zod78.z.literal("purge"),
+    projectId: import_zod78.z.string().min(1).max(240),
     ...ProjectPurgeConfirmation.shape
   }).strict(),
-  import_zod76.z.object({
+  import_zod78.z.object({
     ...identity2,
-    kind: import_zod76.z.literal("compile"),
-    projectId: import_zod76.z.string().min(1).max(240),
+    kind: import_zod78.z.literal("compile"),
+    projectId: import_zod78.z.string().min(1).max(240),
     workflowEdits: workflowEditsSchema.optional()
   }).strict(),
-  import_zod76.z.object({
+  import_zod78.z.object({
     ...identity2,
-    kind: import_zod76.z.literal("attachments"),
-    projectId: import_zod76.z.string().min(1).max(240),
+    kind: import_zod78.z.literal("attachments"),
+    projectId: import_zod78.z.string().min(1).max(240),
     attachments: ProjectAttachments,
     expectedAttachments: ProjectAttachments
   }).strict(),
-  import_zod76.z.object({
+  import_zod78.z.object({
     ...identity2,
-    kind: import_zod76.z.literal("catalog"),
-    projectId: import_zod76.z.string().min(1).max(240),
-    operation: import_zod76.z.enum(["publish", "cleanup"]).optional()
+    kind: import_zod78.z.literal("catalog"),
+    projectId: import_zod78.z.string().min(1).max(240),
+    operation: import_zod78.z.enum(["publish", "cleanup"]).optional()
   }).strict()
 ]);
-var ProjectJobResult = import_zod76.z.object({
+var ProjectJobResult = import_zod78.z.object({
   workflowSave: workflowSaveAckSchema.optional(),
   workflowDocumentDelta: workflowDocumentDeltaSchema.optional(),
   attachments: ProjectAttachments.optional(),
-  sourceReady: import_zod76.z.boolean().optional(),
-  projects: import_zod76.z.array(import_zod76.z.object({ projectId: import_zod76.z.string(), ready: import_zod76.z.boolean().optional() })),
-  success: import_zod76.z.boolean(),
-  diagnostics: import_zod76.z.array(
-    import_zod76.z.object({
-      severity: import_zod76.z.enum(["error", "warning"]),
-      code: import_zod76.z.string(),
-      message: import_zod76.z.string(),
-      path: import_zod76.z.string().optional()
+  sourceReady: import_zod78.z.boolean().optional(),
+  /** A Compile stage answered before its workspace backup; the job protects it in a separate step. */
+  protection: import_zod78.z.literal("pending").optional(),
+  projects: import_zod78.z.array(import_zod78.z.object({ projectId: import_zod78.z.string(), ready: import_zod78.z.boolean().optional() })),
+  success: import_zod78.z.boolean(),
+  diagnostics: import_zod78.z.array(
+    import_zod78.z.object({
+      severity: import_zod78.z.enum(["error", "warning"]),
+      code: import_zod78.z.string(),
+      message: import_zod78.z.string(),
+      path: import_zod78.z.string().optional()
     })
   )
 });
-var ProjectJobStatus = import_zod76.z.object({
+var ProjectJobStatus = import_zod78.z.object({
   workflowSave: workflowSaveAckSchema.optional(),
-  jobId: import_zod76.z.string(),
-  status: import_zod76.z.enum(["queued", "running", "succeeded", "failed"]),
-  phase: import_zod76.z.enum(["queued", "importing", "compiling", "fetching", "saving", "complete"]),
-  createdAt: import_zod76.z.number(),
-  updatedAt: import_zod76.z.number(),
+  jobId: import_zod78.z.string(),
+  status: import_zod78.z.enum(["queued", "running", "succeeded", "failed"]),
+  phase: import_zod78.z.enum(["queued", "importing", "compiling", "fetching", "saving", "complete"]),
+  createdAt: import_zod78.z.number(),
+  updatedAt: import_zod78.z.number(),
   result: ProjectJobResult.optional(),
-  error: import_zod76.z.string().optional()
+  error: import_zod78.z.string().optional()
 });
-var ProjectJobNotification = import_zod76.z.object({
-  jobId: import_zod76.z.string().regex(/^[a-f0-9]{64}$/),
-  userId: import_zod76.z.string().min(1).max(128),
-  kind: import_zod76.z.enum(["import", "compile", "catalog", "purge"]),
-  status: import_zod76.z.enum(["succeeded", "failed"]),
-  projectId: import_zod76.z.string().min(1).max(240).optional(),
-  compilationSucceeded: import_zod76.z.boolean().optional(),
-  timestamp: import_zod76.z.number().int().nonnegative()
+var ProjectJobNotification = import_zod78.z.object({
+  jobId: import_zod78.z.string().regex(/^[a-f0-9]{64}$/),
+  userId: import_zod78.z.string().min(1).max(128),
+  kind: import_zod78.z.enum(["import", "compile", "catalog", "purge"]),
+  status: import_zod78.z.enum(["succeeded", "failed"]),
+  projectId: import_zod78.z.string().min(1).max(240).optional(),
+  compilationSucceeded: import_zod78.z.boolean().optional(),
+  timestamp: import_zod78.z.number().int().nonnegative()
 }).strict();
 
 // packages/schema/src/project/source/schemas.ts
-var import_zod77 = require("zod");
+var import_zod79 = require("zod");
 
 // packages/schema/src/project/source/constants.ts
 var SOURCE_WORKSPACE_MAX_FILES = 2e4;
@@ -12431,82 +12631,85 @@ var SOURCE_WORKSPACE_EXCLUDED_PARTS = /* @__PURE__ */ new Set([
 ]);
 
 // packages/schema/src/project/source/schemas.ts
-var sourceWorkspaceDigestSchema = import_zod77.z.string().regex(/^[a-f0-9]{64}$/);
-var nodesPinBodySchema = import_zod77.z.object({ outputs: import_zod77.z.unknown() });
-var nodeSourcePutSchema = import_zod77.z.object({ content: import_zod77.z.string(), baseRevision: import_zod77.z.string().length(64) });
-var nodeSignaturePutSchema = import_zod77.z.object({
-  inputs: import_zod77.z.record(import_zod77.z.string(), import_zod77.z.unknown()),
-  outputs: import_zod77.z.record(import_zod77.z.string(), import_zod77.z.unknown()),
-  baseRevision: import_zod77.z.string().length(64)
+var sourceWorkspaceDigestSchema = import_zod79.z.string().regex(/^[a-f0-9]{64}$/);
+var nodesPinBodySchema = import_zod79.z.object({ outputs: import_zod79.z.unknown() });
+var nodeSourcePutSchema = import_zod79.z.object({ content: import_zod79.z.string(), baseRevision: import_zod79.z.string().length(64) });
+var nodeSignaturePutSchema = import_zod79.z.object({
+  inputs: import_zod79.z.record(import_zod79.z.string(), import_zod79.z.unknown()),
+  outputs: import_zod79.z.record(import_zod79.z.string(), import_zod79.z.unknown()),
+  baseRevision: import_zod79.z.string().length(64)
 });
-var sourceWorkspaceTextSchema = import_zod77.z.string().max(SOURCE_WORKSPACE_FILE_MAX_BYTES).refine((content) => !SOURCE_WORKSPACE_INVALID_UNICODE.test(content), "Source contains invalid Unicode").refine(
+var sourceWorkspaceTextSchema = import_zod79.z.string().max(SOURCE_WORKSPACE_FILE_MAX_BYTES).refine((content) => !SOURCE_WORKSPACE_INVALID_UNICODE.test(content), "Source contains invalid Unicode").refine(
   (content) => !content.includes("\0") && new TextEncoder().encode(content).byteLength <= SOURCE_WORKSPACE_FILE_MAX_BYTES,
   "Source must be bounded text"
 );
-var sourceWorkspaceTextRecordSchema = import_zod77.z.object({ content: sourceWorkspaceTextSchema });
+var sourceWorkspaceTextRecordSchema = import_zod79.z.object({ content: sourceWorkspaceTextSchema });
 var sourceWorkspacePathSchema = catalogPathSchema.refine(
   (path3) => !SOURCE_WORKSPACE_INVALID_UNICODE.test(path3) && path3.split("/").every(
     (part) => !SOURCE_WORKSPACE_EXCLUDED_PARTS.has(part) && !/^\.(?:env(?:\.|$)|octonode(?:[.-]|$))|\.(?:pem|key|p12)$/i.test(part)
   ),
   "Path is excluded from the source workspace"
 );
-var sourceWorkspaceScopeSchema = catalogScopeSchema.pick({ project: true, worktree: true });
+var sourceWorkspaceScopeSchema = import_zod79.z.object({
+  project: catalogScopeSchema.shape.project,
+  worktree: catalogScopeSchema.shape.worktree
+});
 var protectedProjectPathSchema = catalogPathSchema.refine((path3) => PROJECT_DOCUMENT_FILENAMES.has(path3));
 var sourceWorkspaceStoredPathSchema = sourceWorkspacePathSchema.or(protectedProjectPathSchema);
-var projectDocumentTextSchema = import_zod77.z.string().max(PROJECT_DOCUMENT_MAX_BYTES).refine(
+var projectDocumentTextSchema = import_zod79.z.string().max(PROJECT_DOCUMENT_MAX_BYTES).refine(
   (content) => !content.includes("\0") && !SOURCE_WORKSPACE_INVALID_UNICODE.test(content) && new TextEncoder().encode(content).byteLength <= PROJECT_DOCUMENT_MAX_BYTES,
   "Project document must be bounded text"
 );
-var sourceWorkspaceFileSchema = import_zod77.z.object({
+var sourceWorkspaceFileSchema = import_zod79.z.object({
   path: sourceWorkspaceStoredPathSchema,
   revision: sourceWorkspaceDigestSchema,
-  size: import_zod77.z.number().int().min(0).max(PROJECT_DOCUMENT_MAX_BYTES),
-  mode: import_zod77.z.union([import_zod77.z.literal(420), import_zod77.z.literal(493)]).default(420)
+  size: import_zod79.z.number().int().min(0).max(PROJECT_DOCUMENT_MAX_BYTES),
+  mode: import_zod79.z.union([import_zod79.z.literal(420), import_zod79.z.literal(493)]).default(420)
 }).refine(
   (file) => file.size <= (PROJECT_DOCUMENT_FILENAMES.has(file.path) ? PROJECT_DOCUMENT_MAX_BYTES : SOURCE_WORKSPACE_FILE_MAX_BYTES),
   "Source file exceeds its file limit"
 );
 var sourceWorkspaceHeadSchema = sourceWorkspaceScopeSchema.extend({
-  epoch: import_zod77.z.string().uuid(),
-  sequence: import_zod77.z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+  epoch: import_zod79.z.string().uuid(),
+  sequence: import_zod79.z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
   revision: sourceWorkspaceDigestSchema,
   baseline: sourceWorkspaceDigestSchema,
-  fileCount: import_zod77.z.number().int().min(0).max(SOURCE_WORKSPACE_MAX_FILES),
-  bytes: import_zod77.z.number().int().nonnegative().max(SOURCE_WORKSPACE_MAX_BYTES),
-  updatedAt: import_zod77.z.number().int().nonnegative(),
-  location: import_zod77.z.string().min(1).max(240)
+  fileCount: import_zod79.z.number().int().min(0).max(SOURCE_WORKSPACE_MAX_FILES),
+  bytes: import_zod79.z.number().int().nonnegative().max(SOURCE_WORKSPACE_MAX_BYTES),
+  updatedAt: import_zod79.z.number().int().nonnegative(),
+  location: import_zod79.z.string().min(1).max(240)
 });
 var sourceWorkspaceInitializeSchema = sourceWorkspaceScopeSchema.extend({
-  epoch: import_zod77.z.string().uuid(),
+  epoch: import_zod79.z.string().uuid(),
   baseline: sourceWorkspaceDigestSchema,
   location: sourceWorkspaceHeadSchema.shape.location,
-  files: import_zod77.z.array(sourceWorkspaceFileSchema).max(SOURCE_WORKSPACE_MAX_FILES)
+  files: import_zod79.z.array(sourceWorkspaceFileSchema).max(SOURCE_WORKSPACE_MAX_FILES)
 });
-var sourceWorkspaceStatusSchema = import_zod77.z.object({
+var sourceWorkspaceStatusSchema = import_zod79.z.object({
   scope: sourceWorkspaceScopeSchema,
   head: sourceWorkspaceHeadSchema.nullable()
 });
-var sourceWorkspaceChangeSchema = import_zod77.z.object({
+var sourceWorkspaceChangeSchema = import_zod79.z.object({
   path: sourceWorkspaceStoredPathSchema,
   baseRevision: sourceWorkspaceDigestSchema.nullable(),
   file: sourceWorkspaceFileSchema.nullable()
 }).refine((change) => change.file === null || change.file.path === change.path, "Changed file path mismatch");
 var sourceWorkspaceCommitSchema = sourceWorkspaceScopeSchema.extend({
-  operationId: import_zod77.z.string().uuid(),
+  operationId: import_zod79.z.string().uuid(),
   expectedRevision: sourceWorkspaceDigestSchema,
   previousManifestDigest: sourceWorkspaceDigestSchema.optional(),
-  history: import_zod77.z.literal("git").optional(),
-  changes: import_zod77.z.array(sourceWorkspaceChangeSchema).min(1).max(SOURCE_WORKSPACE_MAX_FILES)
+  history: import_zod79.z.literal("git").optional(),
+  changes: import_zod79.z.array(sourceWorkspaceChangeSchema).min(1).max(SOURCE_WORKSPACE_MAX_FILES)
 });
 var sourceWorkspaceSaveSchema = sourceWorkspaceScopeSchema.extend({
-  operationId: import_zod77.z.string().uuid(),
+  operationId: import_zod79.z.string().uuid(),
   expectedRevision: sourceWorkspaceDigestSchema,
-  changes: import_zod77.z.array(
-    import_zod77.z.object({
+  changes: import_zod79.z.array(
+    import_zod79.z.object({
       path: sourceWorkspacePathSchema,
       baseRevision: sourceWorkspaceDigestSchema.nullable(),
       content: sourceWorkspaceTextSchema.nullable(),
-      executable: import_zod77.z.boolean().optional()
+      executable: import_zod79.z.boolean().optional()
     })
   ).min(1).max(SOURCE_WORKSPACE_BATCH_MAX_FILES).refine(
     (changes) => new Set(changes.map((change) => change.path)).size === changes.length,
@@ -12517,13 +12720,13 @@ var sourceWorkspaceSaveSchema = sourceWorkspaceScopeSchema.extend({
   )
 });
 var sourceWorkspaceStoredSaveSchema = sourceWorkspaceSaveSchema.extend({
-  history: import_zod77.z.literal("git").optional(),
-  changes: import_zod77.z.array(
-    import_zod77.z.object({
+  history: import_zod79.z.literal("git").optional(),
+  changes: import_zod79.z.array(
+    import_zod79.z.object({
       path: sourceWorkspaceStoredPathSchema,
       baseRevision: sourceWorkspaceDigestSchema.nullable(),
       content: projectDocumentTextSchema.nullable(),
-      executable: import_zod77.z.boolean().optional()
+      executable: import_zod79.z.boolean().optional()
     })
   ).min(1).max(SOURCE_WORKSPACE_BATCH_MAX_FILES).refine(
     (changes) => new Set(changes.map((change) => change.path)).size === changes.length && changes.every(
@@ -12532,131 +12735,131 @@ var sourceWorkspaceStoredSaveSchema = sourceWorkspaceSaveSchema.extend({
     "Invalid stored source changes"
   )
 });
-var sourceWorkspaceCatalogFenceSchema = import_zod77.z.object({
+var sourceWorkspaceCatalogFenceSchema = import_zod79.z.object({
   global: catalogHeadSchema.nullable(),
-  projection: import_zod77.z.string().uuid().nullable()
+  projection: import_zod79.z.string().uuid().nullable()
 });
 var sourceWorkspaceManagedSaveSchema = sourceWorkspaceStoredSaveSchema.extend({
   previousManifestDigest: sourceWorkspaceDigestSchema,
-  publication: import_zod77.z.object({ catalogFence: sourceWorkspaceCatalogFenceSchema, scope: catalogScopeSchema }).optional()
+  publication: import_zod79.z.object({ catalogFence: sourceWorkspaceCatalogFenceSchema, scope: catalogScopeSchema }).optional()
 }).refine(
   (input) => input.changes.every((change) => change.content === null || change.executable !== void 0),
   "Managed source writes require an explicit file mode"
 );
 var sourceWorkspacePageQuerySchema = sourceWorkspaceScopeSchema.extend({
   revision: sourceWorkspaceDigestSchema,
-  search: import_zod77.z.string().trim().max(240).default(""),
-  offset: import_zod77.z.coerce.number().int().min(0).max(SOURCE_WORKSPACE_MAX_FILES).default(0),
-  limit: import_zod77.z.coerce.number().int().min(1).max(SOURCE_WORKSPACE_BATCH_MAX_FILES).default(50)
+  search: import_zod79.z.string().trim().max(240).default(""),
+  offset: import_zod79.z.coerce.number().int().min(0).max(SOURCE_WORKSPACE_MAX_FILES).default(0),
+  limit: import_zod79.z.coerce.number().int().min(1).max(SOURCE_WORKSPACE_BATCH_MAX_FILES).default(50)
 });
-var sourceWorkspacePageSchema = import_zod77.z.object({
+var sourceWorkspacePageSchema = import_zod79.z.object({
   head: sourceWorkspaceHeadSchema,
-  items: import_zod77.z.array(sourceWorkspaceFileSchema).max(SOURCE_WORKSPACE_BATCH_MAX_FILES),
-  total: import_zod77.z.number().int().nonnegative(),
-  offset: import_zod77.z.number().int().nonnegative(),
-  limit: import_zod77.z.number().int().positive()
+  items: import_zod79.z.array(sourceWorkspaceFileSchema).max(SOURCE_WORKSPACE_BATCH_MAX_FILES),
+  total: import_zod79.z.number().int().nonnegative(),
+  offset: import_zod79.z.number().int().nonnegative(),
+  limit: import_zod79.z.number().int().positive()
 });
 var sourceWorkspaceFileQuerySchema = sourceWorkspaceScopeSchema.extend({
   revision: sourceWorkspaceDigestSchema,
   path: sourceWorkspacePathSchema
 });
-var sourceWorkspaceFileRecordSchema = import_zod77.z.object({
+var sourceWorkspaceFileRecordSchema = import_zod79.z.object({
   head: sourceWorkspaceHeadSchema,
   file: sourceWorkspaceFileSchema
 });
-var sourceWorkspaceContentSchema = sourceWorkspaceFileRecordSchema.extend({ content: import_zod77.z.string() });
-var sourceWorkspaceReceiptSchema = import_zod77.z.object({
-  operationId: import_zod77.z.string().uuid(),
+var sourceWorkspaceContentSchema = sourceWorkspaceFileRecordSchema.extend({ content: import_zod79.z.string() });
+var sourceWorkspaceReceiptSchema = import_zod79.z.object({
+  operationId: import_zod79.z.string().uuid(),
   previousRevision: sourceWorkspaceDigestSchema,
   previousManifestDigest: sourceWorkspaceDigestSchema.optional(),
   head: sourceWorkspaceHeadSchema,
-  changedPaths: import_zod77.z.array(sourceWorkspaceStoredPathSchema).max(SOURCE_WORKSPACE_MAX_FILES),
-  checkpoint: import_zod77.z.literal("pending"),
-  validation: import_zod77.z.literal("pending"),
-  history: import_zod77.z.discriminatedUnion("state", [
-    import_zod77.z.object({ state: import_zod77.z.literal("pending") }),
-    import_zod77.z.object({
-      state: import_zod77.z.literal("archived"),
-      commit: import_zod77.z.string().regex(/^[a-f0-9]{40,64}$/),
-      archiveId: import_zod77.z.string().min(1).max(1e3)
+  changedPaths: import_zod79.z.array(sourceWorkspaceStoredPathSchema).max(SOURCE_WORKSPACE_MAX_FILES),
+  checkpoint: import_zod79.z.literal("pending"),
+  validation: import_zod79.z.literal("pending"),
+  history: import_zod79.z.discriminatedUnion("state", [
+    import_zod79.z.object({ state: import_zod79.z.literal("pending") }),
+    import_zod79.z.object({
+      state: import_zod79.z.literal("archived"),
+      commit: import_zod79.z.string().regex(/^[a-f0-9]{40,64}$/),
+      archiveId: import_zod79.z.string().min(1).max(1e3)
     })
   ]).optional()
 });
-var sourceWorkspaceGitCheckpointSchema = import_zod77.z.object({
-  operationId: import_zod77.z.string().uuid(),
+var sourceWorkspaceGitCheckpointSchema = import_zod79.z.object({
+  operationId: import_zod79.z.string().uuid(),
   revision: sourceWorkspaceDigestSchema,
-  commit: import_zod77.z.string().regex(/^[a-f0-9]{40,64}$/),
-  repository: catalogPathSchema.or(import_zod77.z.literal(".")).optional(),
-  projectPath: catalogPathSchema.or(import_zod77.z.literal(".")).optional()
+  commit: import_zod79.z.string().regex(/^[a-f0-9]{40,64}$/),
+  repository: catalogPathSchema.or(import_zod79.z.literal(".")).optional(),
+  projectPath: catalogPathSchema.or(import_zod79.z.literal(".")).optional()
 });
 var sourceWorkspaceHistoryCheckpointSchema = sourceWorkspaceScopeSchema.extend({
-  archiveId: import_zod77.z.string().min(1).max(1e3),
-  checkpoints: import_zod77.z.array(sourceWorkspaceGitCheckpointSchema).min(1).max(SOURCE_WORKSPACE_BATCH_MAX_FILES)
+  archiveId: import_zod79.z.string().min(1).max(1e3),
+  checkpoints: import_zod79.z.array(sourceWorkspaceGitCheckpointSchema).min(1).max(SOURCE_WORKSPACE_BATCH_MAX_FILES)
 });
-var sourceWorkspaceStoredObjectSchema = import_zod77.z.object({
+var sourceWorkspaceStoredObjectSchema = import_zod79.z.object({
   location: sourceWorkspaceHeadSchema.shape.location,
-  kind: import_zod77.z.enum(["body", "manifest"]),
+  kind: import_zod79.z.enum(["body", "manifest"]),
   revision: sourceWorkspaceDigestSchema,
-  size: import_zod77.z.number().int().nonnegative().max(SOURCE_WORKSPACE_OBJECT_MAX_BYTES),
-  actor: import_zod77.z.string().max(240)
+  size: import_zod79.z.number().int().nonnegative().max(SOURCE_WORKSPACE_OBJECT_MAX_BYTES),
+  actor: import_zod79.z.string().max(240)
 });
-var sourceWorkspaceExportSchema = import_zod77.z.object({
-  format: import_zod77.z.literal("octonode-source-workspace-v1"),
+var sourceWorkspaceExportSchema = import_zod79.z.object({
+  format: import_zod79.z.literal("octonode-source-workspace-v1"),
   head: sourceWorkspaceHeadSchema,
-  files: import_zod77.z.array(sourceWorkspaceFileSchema).max(SOURCE_WORKSPACE_MAX_FILES),
-  pendingHistory: import_zod77.z.boolean().optional(),
+  files: import_zod79.z.array(sourceWorkspaceFileSchema).max(SOURCE_WORKSPACE_MAX_FILES),
+  pendingHistory: import_zod79.z.boolean().optional(),
   pendingHistoryStart: sourceWorkspaceHeadSchema.pick({ sequence: true, revision: true }).optional(),
-  journal: import_zod77.z.object({
+  journal: import_zod79.z.object({
     requestDigest: sourceWorkspaceDigestSchema,
     receipt: sourceWorkspaceReceiptSchema,
-    actor: import_zod77.z.string().max(240)
+    actor: import_zod79.z.string().max(240)
   }).optional(),
-  objects: import_zod77.z.array(sourceWorkspaceStoredObjectSchema).max(1e5).optional(),
-  attribution: import_zod77.z.object({ head: import_zod77.z.string().max(240), files: import_zod77.z.record(sourceWorkspaceStoredPathSchema, import_zod77.z.string().max(240)) }).optional()
+  objects: import_zod79.z.array(sourceWorkspaceStoredObjectSchema).max(1e5).optional(),
+  attribution: import_zod79.z.object({ head: import_zod79.z.string().max(240), files: import_zod79.z.record(sourceWorkspaceStoredPathSchema, import_zod79.z.string().max(240)) }).optional()
 });
 var sourceWorkspacePreparationSchema = sourceWorkspaceStatusSchema.extend({
   manifest: sourceWorkspaceExportSchema.nullable(),
-  publicationPending: import_zod77.z.boolean(),
+  publicationPending: import_zod79.z.boolean(),
   catalogFence: sourceWorkspaceCatalogFenceSchema,
-  managedSave: import_zod77.z.boolean(),
-  managedPublication: import_zod77.z.boolean()
+  managedSave: import_zod79.z.boolean(),
+  managedPublication: import_zod79.z.boolean()
 });
-var sourceWorkspaceCommitResultSchema = import_zod77.z.object({
+var sourceWorkspaceCommitResultSchema = import_zod79.z.object({
   receipt: sourceWorkspaceReceiptSchema,
   manifest: sourceWorkspaceExportSchema
 });
 var sourceWorkspaceSaveBodySchema = sourceWorkspaceSaveSchema.omit({ project: true, worktree: true });
 var sourceWorkspaceFilesQuerySchema = sourceWorkspacePageQuerySchema.omit({ project: true, worktree: true });
 var sourceWorkspaceContentQuerySchema = sourceWorkspaceFileQuerySchema.omit({ project: true, worktree: true });
-var sourceWorkspaceObjectSchema = import_zod77.z.object({
-  kind: import_zod77.z.enum(["body", "manifest"]),
+var sourceWorkspaceObjectSchema = import_zod79.z.object({
+  kind: import_zod79.z.enum(["body", "manifest"]),
   revision: sourceWorkspaceDigestSchema,
-  size: import_zod77.z.number().int().nonnegative().max(SOURCE_WORKSPACE_OBJECT_MAX_BYTES)
+  size: import_zod79.z.number().int().nonnegative().max(SOURCE_WORKSPACE_OBJECT_MAX_BYTES)
 });
 var sourceWorkspaceReserveSchema = sourceWorkspaceScopeSchema.extend({
   location: sourceWorkspaceHeadSchema.shape.location,
-  objects: import_zod77.z.array(sourceWorkspaceObjectSchema).min(1).max(SOURCE_WORKSPACE_MAX_FILES)
+  objects: import_zod79.z.array(sourceWorkspaceObjectSchema).min(1).max(SOURCE_WORKSPACE_MAX_FILES)
 });
-var sourceWorkspacePublishSchema = sourceWorkspaceScopeSchema.extend({ operationId: import_zod77.z.string().uuid() });
+var sourceWorkspacePublishSchema = sourceWorkspaceScopeSchema.extend({ operationId: import_zod79.z.string().uuid() });
 var sourceWorkspaceDiskStateSchema = sourceWorkspaceScopeSchema.extend({
   revision: sourceWorkspaceDigestSchema,
-  files: import_zod77.z.array(sourceWorkspaceFileSchema).max(SOURCE_WORKSPACE_MAX_FILES),
+  files: import_zod79.z.array(sourceWorkspaceFileSchema).max(SOURCE_WORKSPACE_MAX_FILES),
   applied: sourceWorkspaceExportSchema.nullable(),
   target: sourceWorkspaceDigestSchema.nullable(),
-  history: import_zod77.z.array(sourceWorkspaceGitCheckpointSchema).max(SOURCE_WORKSPACE_MAX_OPERATIONS).optional()
+  history: import_zod79.z.array(sourceWorkspaceGitCheckpointSchema).max(SOURCE_WORKSPACE_MAX_OPERATIONS).optional()
 });
-var sourceWorkspaceDiskFenceSchema = import_zod77.z.object({
+var sourceWorkspaceDiskFenceSchema = import_zod79.z.object({
   expectedRevision: sourceWorkspaceDigestSchema,
-  lease: import_zod77.z.string().uuid(),
+  lease: import_zod79.z.string().uuid(),
   target: sourceWorkspaceDigestSchema.nullable()
 });
-var sourceWorkspaceDiskPatchSchema = import_zod77.z.object({
-  changes: import_zod77.z.array(
-    import_zod77.z.object({
+var sourceWorkspaceDiskPatchSchema = import_zod79.z.object({
+  changes: import_zod79.z.array(
+    import_zod79.z.object({
       path: sourceWorkspaceStoredPathSchema,
       baseRevision: sourceWorkspaceDigestSchema.nullable(),
       content: projectDocumentTextSchema.nullable(),
-      executable: import_zod77.z.boolean().optional()
+      executable: import_zod79.z.boolean().optional()
     })
   ).max(SOURCE_WORKSPACE_BATCH_MAX_FILES),
   expectedRevision: sourceWorkspaceDigestSchema,
@@ -12667,24 +12870,24 @@ var sourceWorkspaceDiskPatchSchema = import_zod77.z.object({
   ),
   "Source file exceeds its file limit"
 );
-var sourceWorkspaceDiskDocumentSchema = import_zod77.z.object({
+var sourceWorkspaceDiskDocumentSchema = import_zod79.z.object({
   path: protectedProjectPathSchema,
   expectedRevision: sourceWorkspaceDigestSchema,
   target: sourceWorkspaceDigestSchema,
   baseRevision: sourceWorkspaceDigestSchema.nullable(),
-  executable: import_zod77.z.boolean()
+  executable: import_zod79.z.boolean()
 });
-var sourceWorkspaceDiskBindingSchema = import_zod77.z.object({
-  lease: import_zod77.z.string().uuid(),
+var sourceWorkspaceDiskBindingSchema = import_zod79.z.object({
+  lease: import_zod79.z.string().uuid(),
   manifest: sourceWorkspaceExportSchema,
-  initializeHistory: import_zod77.z.boolean().optional()
+  initializeHistory: import_zod79.z.boolean().optional()
 });
 var sourceWorkspaceProjectionSchema = sourceWorkspaceScopeSchema.extend({
   revision: sourceWorkspaceDigestSchema,
-  catalogGeneration: import_zod77.z.string().uuid().nullable(),
+  catalogGeneration: import_zod79.z.string().uuid().nullable(),
   scope: catalogScopeSchema
 });
-var sourceWorkspaceFileMutationSchema = import_zod77.z.object({
+var sourceWorkspaceFileMutationSchema = import_zod79.z.object({
   path: sourceWorkspacePathSchema,
   content: sourceWorkspaceTextSchema.optional(),
   baseRevision: sourceWorkspaceDigestSchema.optional(),
@@ -12693,262 +12896,212 @@ var sourceWorkspaceFileMutationSchema = import_zod77.z.object({
 var sourceWorkspaceRecoverySchema = sourceWorkspaceScopeSchema.extend({
   target: sourceWorkspaceDigestSchema,
   manifest: sourceWorkspaceExportSchema,
-  manifestBytes: import_zod77.z.number().int().positive().max(SOURCE_WORKSPACE_OBJECT_MAX_BYTES),
+  manifestBytes: import_zod79.z.number().int().positive().max(SOURCE_WORKSPACE_OBJECT_MAX_BYTES),
   manifestDigest: sourceWorkspaceDigestSchema
 });
-var sourceWorkspaceRecoverBodySchema = import_zod77.z.object({ useProtectedBackup: import_zod77.z.boolean().optional() }).strict().optional();
-var sourceWorkspaceRecoveryStateSchema = import_zod77.z.object({
+var sourceWorkspaceRecoverBodySchema = import_zod79.z.object({ useProtectedBackup: import_zod79.z.boolean().optional() }).strict().optional();
+var sourceWorkspaceRecoveryStateSchema = import_zod79.z.object({
   target: sourceWorkspaceDigestSchema,
   next: sourceWorkspaceDigestSchema.nullable(),
   digest: sourceWorkspaceDigestSchema.nullable(),
-  sequence: import_zod77.z.number().int().nonnegative()
+  sequence: import_zod79.z.number().int().nonnegative()
 });
 var sourceWorkspaceCleanupSchema = sourceWorkspaceScopeSchema.extend({
   revision: sourceWorkspaceDigestSchema,
-  objects: import_zod77.z.array(sourceWorkspaceStoredObjectSchema).max(100)
+  objects: import_zod79.z.array(sourceWorkspaceStoredObjectSchema).max(100)
 });
-var sourceWorkspaceMaintenanceSchema = import_zod77.z.object({
-  complete: import_zod77.z.boolean(),
+var sourceWorkspaceMaintenanceSchema = import_zod79.z.object({
+  complete: import_zod79.z.boolean(),
   head: sourceWorkspaceHeadSchema.optional(),
-  remaining: import_zod77.z.number().int().nonnegative().optional(),
-  removed: import_zod77.z.number().int().nonnegative().optional(),
-  erased: import_zod77.z.boolean().optional()
+  remaining: import_zod79.z.number().int().nonnegative().optional(),
+  removed: import_zod79.z.number().int().nonnegative().optional(),
+  erased: import_zod79.z.boolean().optional()
 });
-var sourceWorkspaceExecutionInputSchema = import_zod77.z.object({
+var sourceWorkspaceExecutionInputSchema = import_zod79.z.object({
   source: sourceWorkspaceHeadSchema.nullable(),
-  nodeVersion: import_zod77.z.string().min(1).max(120),
-  platform: import_zod77.z.string().min(1).max(120),
-  arch: import_zod77.z.string().min(1).max(120)
+  nodeVersion: import_zod79.z.string().min(1).max(120),
+  platform: import_zod79.z.string().min(1).max(120),
+  arch: import_zod79.z.string().min(1).max(120)
 });
 
 // packages/schema/src/project/lifecycle.ts
-var import_zod78 = require("zod");
-var ProjectLifecycle = import_zod78.z.object({
-  id: import_zod78.z.string().min(1),
-  name: import_zod78.z.string(),
-  state: import_zod78.z.enum(["archived", "deleted"]),
-  changedAt: import_zod78.z.number(),
-  expiresAt: import_zod78.z.number().optional(),
-  purgedAt: import_zod78.z.number().optional()
+var import_zod80 = require("zod");
+var ProjectLifecycle = import_zod80.z.object({
+  id: import_zod80.z.string().min(1),
+  name: import_zod80.z.string(),
+  state: import_zod80.z.enum(["archived", "deleted"]),
+  changedAt: import_zod80.z.number(),
+  expiresAt: import_zod80.z.number().optional(),
+  purgedAt: import_zod80.z.number().optional()
 });
 var ProjectLifecycleRecord = ProjectLifecycle.extend({
-  configPath: import_zod78.z.string(),
-  projectRoot: import_zod78.z.string(),
-  storeDir: import_zod78.z.string(),
-  configFingerprint: import_zod78.z.string(),
-  canonicalId: import_zod78.z.string()
+  configPath: import_zod80.z.string(),
+  projectRoot: import_zod80.z.string(),
+  storeDir: import_zod80.z.string(),
+  configFingerprint: import_zod80.z.string(),
+  canonicalId: import_zod80.z.string()
 });
 
 // packages/schema/src/project/analysis.ts
-var import_zod79 = require("zod");
-var ProjectAnalysisInput = import_zod79.z.object({
-  drafts: import_zod79.z.array(
-    import_zod79.z.object({
-      path: import_zod79.z.string().min(1).max(500),
-      content: import_zod79.z.string().max(262144),
-      baseRevision: import_zod79.z.string().regex(/^[a-f0-9]{64}$/)
+var import_zod81 = require("zod");
+var ProjectAnalysisInput = import_zod81.z.object({
+  drafts: import_zod81.z.array(
+    import_zod81.z.object({
+      path: import_zod81.z.string().min(1).max(500),
+      content: import_zod81.z.string().max(262144),
+      baseRevision: import_zod81.z.string().regex(/^[a-f0-9]{64}$/)
     }).strict()
   ).max(20).default([]),
-  declaration: import_zod79.z.object({
-    symbolId: import_zod79.z.string().min(1).max(1e3),
-    sourceRevision: import_zod79.z.string().regex(/^[a-f0-9]{64}$/),
-    replacement: import_zod79.z.string().max(262144).optional()
+  declaration: import_zod81.z.object({
+    symbolId: import_zod81.z.string().min(1).max(1e3),
+    sourceRevision: import_zod81.z.string().regex(/^[a-f0-9]{64}$/),
+    replacement: import_zod81.z.string().max(262144).optional()
   }).strict().optional()
 }).strict();
-var ProjectAnalysisDiagnostic = import_zod79.z.object({
-  tool: import_zod79.z.enum(["typescript", "oxlint", "eslint", "analysis"]),
-  severity: import_zod79.z.enum(["error", "warning", "info", "hint"]),
-  code: import_zod79.z.string().max(200),
-  message: import_zod79.z.string().max(8e3),
-  path: import_zod79.z.string().max(1e3).optional(),
-  line: import_zod79.z.number().int().positive().optional(),
-  column: import_zod79.z.number().int().positive().optional(),
-  start: import_zod79.z.number().int().nonnegative().optional(),
-  end: import_zod79.z.number().int().nonnegative().optional(),
-  revision: import_zod79.z.string().optional(),
-  introduced: import_zod79.z.boolean().optional(),
+var ProjectAnalysisDiagnostic = import_zod81.z.object({
+  tool: import_zod81.z.enum(["typescript", "oxlint", "eslint", "analysis"]),
+  severity: import_zod81.z.enum(["error", "warning", "info", "hint"]),
+  code: import_zod81.z.string().max(200),
+  message: import_zod81.z.string().max(8e3),
+  path: import_zod81.z.string().max(1e3).optional(),
+  line: import_zod81.z.number().int().positive().optional(),
+  column: import_zod81.z.number().int().positive().optional(),
+  start: import_zod81.z.number().int().nonnegative().optional(),
+  end: import_zod81.z.number().int().nonnegative().optional(),
+  revision: import_zod81.z.string().optional(),
+  introduced: import_zod81.z.boolean().optional(),
   explanation: DiagnosticExplanation.optional()
 }).merge(DiagnosticContext);
-var ProjectAnalysisResult = import_zod79.z.object({
-  revision: import_zod79.z.string(),
-  status: import_zod79.z.enum(["complete", "incomplete", "unavailable"]),
-  linter: import_zod79.z.enum(["oxlint", "eslint", "none"]),
-  origin: import_zod79.z.enum(["default", "repository", "browser"]),
-  diagnostics: import_zod79.z.array(ProjectAnalysisDiagnostic).max(200),
-  truncated: import_zod79.z.boolean(),
-  usages: import_zod79.z.array(
-    import_zod79.z.object({
-      id: import_zod79.z.string(),
-      name: import_zod79.z.string(),
-      kind: import_zod79.z.string(),
-      path: import_zod79.z.string(),
-      line: import_zod79.z.number().int().positive(),
-      column: import_zod79.z.number().int().positive(),
-      direct: import_zod79.z.boolean()
+var ProjectAnalysisResult = import_zod81.z.object({
+  revision: import_zod81.z.string(),
+  status: import_zod81.z.enum(["complete", "incomplete", "unavailable"]),
+  linter: import_zod81.z.enum(["oxlint", "eslint", "none"]),
+  origin: import_zod81.z.enum(["default", "repository", "browser"]),
+  diagnostics: import_zod81.z.array(ProjectAnalysisDiagnostic).max(200),
+  truncated: import_zod81.z.boolean(),
+  usages: import_zod81.z.array(
+    import_zod81.z.object({
+      id: import_zod81.z.string(),
+      name: import_zod81.z.string(),
+      kind: import_zod81.z.string(),
+      path: import_zod81.z.string(),
+      line: import_zod81.z.number().int().positive(),
+      column: import_zod81.z.number().int().positive(),
+      direct: import_zod81.z.boolean()
     })
   ).max(200),
-  usageCount: import_zod79.z.number().int().nonnegative()
+  usageCount: import_zod81.z.number().int().nonnegative()
 });
 
-// packages/schema/src/project/starter/constants.ts
-var STARTER_INPUTS = { type: "object", properties: {}, additionalProperties: false };
-var STARTER_OUTPUTS = {
-  type: "object",
-  properties: { message: { type: "string" } },
-  required: ["message"],
-  additionalProperties: false
-};
-var STARTER_SOURCE = `import { readFileSync } from "node:fs";
-
-export function helloWorld(): { message: string } {
-  return { message: "Hello, world!" };
-}
-
-function start(): void {
-  if (process.argv.includes("--hello")) {
-    process.stdout.write(JSON.stringify(helloWorld()) + "\\n");
-  } else {
-    let invocationId = "";
-    let type = "result";
-    try {
-      const request: unknown = JSON.parse(readFileSync(0, "utf8"));
-      if (!request || typeof request !== "object" ||
-          !("octonode" in request) || request.octonode !== "1" ||
-          !("invocationId" in request) || typeof request.invocationId !== "string" ||
-          !("type" in request) || (request.type !== "invoke" && request.type !== "describe")) {
-        throw new Error("Invalid Octonode request");
-      }
-      invocationId = request.invocationId;
-      type = request.type === "describe" ? "manifest" : "result";
-      if (request.type === "invoke" && (!("inputs" in request) || !request.inputs ||
-          typeof request.inputs !== "object" || Array.isArray(request.inputs) ||
-          Object.keys(request.inputs).length > 0)) {
-        throw new Error("Hello World expects an empty input object");
-      }
-      const payload = request.type === "describe"
-        ? { manifest: { id: "hello-world", language: "typescript", inputs: ${JSON.stringify(STARTER_INPUTS)}, outputs: ${JSON.stringify(STARTER_OUTPUTS)} } }
-        : { outputs: helloWorld() };
-      process.stdout.write(JSON.stringify({ octonode: "1", type, invocationId, status: "ok", ...payload }) + "\\n");
-    } catch {
-      process.stdout.write(JSON.stringify({ octonode: "1", type, invocationId, status: "error",
-        error: { code: "VALIDATION_ERROR", message: "Expected a valid Octonode request with empty inputs", retryable: false } }) + "\\n");
-    }
-  }
-}
-
-if (import.meta.main) start();
-`;
-
 // packages/schema/src/project/starter/schema.ts
-var import_zod80 = require("zod");
-var projectStarterSchema = import_zod80.z.object({
-  version: import_zod80.z.literal(1).default(1),
-  layout: import_zod80.z.enum(["single", "monorepo"]).default("single"),
-  packageManager: import_zod80.z.enum(["yarn", "pnpm", "bun", "npm"]).default("pnpm")
+var import_zod82 = require("zod");
+var projectStarterSchema = import_zod82.z.object({
+  version: import_zod82.z.union([import_zod82.z.literal(2), import_zod82.z.literal(3)]).default(3),
+  layout: import_zod82.z.enum(["single", "monorepo"]).default("single"),
+  packageManager: import_zod82.z.enum(["yarn", "pnpm", "bun", "npm"]).default("pnpm")
 });
 
 // packages/schema/src/project/browse.ts
-var import_zod81 = require("zod");
-var hostedProjectSummarySchema = import_zod81.z.object({
-  id: import_zod81.z.string(),
-  name: import_zod81.z.string(),
-  workflowCount: import_zod81.z.number(),
-  hosted: import_zod81.z.boolean().optional(),
-  environments: import_zod81.z.array(import_zod81.z.string()).optional(),
-  readOnly: import_zod81.z.literal(true).optional(),
-  legacyLanguage: import_zod81.z.string().optional(),
-  sourceKind: import_zod81.z.enum(["repository", "managed", "standalone"]).optional(),
-  sourceRepositoryId: import_zod81.z.string().nullable().optional()
+var import_zod83 = require("zod");
+var hostedProjectSummarySchema = import_zod83.z.object({
+  id: import_zod83.z.string(),
+  name: import_zod83.z.string(),
+  workflowCount: import_zod83.z.number(),
+  hosted: import_zod83.z.boolean().optional(),
+  environments: import_zod83.z.array(import_zod83.z.string()).optional(),
+  sourceKind: import_zod83.z.enum(["repository", "managed", "standalone"]).optional(),
+  sourceRepositoryId: import_zod83.z.string().nullable().optional()
 });
-var hostedProjectBrowseSchema = import_zod81.z.object({
-  mode: import_zod81.z.enum(["list", "search", "repositories"]),
-  q: import_zod81.z.string().max(200).optional(),
-  cloud: import_zod81.z.boolean(),
-  offset: import_zod81.z.number().int().nonnegative(),
-  limit: import_zod81.z.number().int().min(1).max(100),
-  catalog: import_zod81.z.object({
-    projects: import_zod81.z.array(hostedProjectSummarySchema).max(1e4),
-    hiddenIds: import_zod81.z.array(import_zod81.z.string()).max(1e4),
-    repositories: import_zod81.z.array(
-      import_zod81.z.object({
-        sourceRepository: import_zod81.z.record(import_zod81.z.unknown()),
-        projects: import_zod81.z.array(import_zod81.z.object({ projectId: import_zod81.z.string() }).passthrough()).max(1e4)
+var hostedProjectBrowseSchema = import_zod83.z.object({
+  mode: import_zod83.z.enum(["list", "search", "repositories"]),
+  q: import_zod83.z.string().max(200).optional(),
+  cloud: import_zod83.z.boolean(),
+  offset: import_zod83.z.number().int().nonnegative(),
+  limit: import_zod83.z.number().int().min(1).max(100),
+  catalog: import_zod83.z.object({
+    projects: import_zod83.z.array(hostedProjectSummarySchema).max(1e4),
+    hiddenIds: import_zod83.z.array(import_zod83.z.string()).max(1e4),
+    repositories: import_zod83.z.array(
+      import_zod83.z.object({
+        sourceRepository: import_zod83.z.record(import_zod83.z.unknown()),
+        projects: import_zod83.z.array(import_zod83.z.object({ projectId: import_zod83.z.string() }).passthrough()).max(1e4)
       }).passthrough()
     ).max(1e4)
   }).optional()
 });
 
 // packages/schema/src/profile/schema.ts
-var import_zod82 = require("zod");
-var workspaceProfileSchema = import_zod82.z.object({
-  userId: import_zod82.z.string(),
-  displayName: import_zod82.z.string().nullable(),
-  title: import_zod82.z.string().nullable(),
-  bio: import_zod82.z.string().nullable(),
-  avatarUrl: import_zod82.z.string().nullable(),
-  profileVersion: import_zod82.z.number().int().positive()
+var import_zod84 = require("zod");
+var workspaceProfileSchema = import_zod84.z.object({
+  userId: import_zod84.z.string(),
+  displayName: import_zod84.z.string().nullable(),
+  title: import_zod84.z.string().nullable(),
+  bio: import_zod84.z.string().nullable(),
+  avatarUrl: import_zod84.z.string().nullable(),
+  profileVersion: import_zod84.z.number().int().positive()
 });
 
 // packages/schema/src/project/sync/index.ts
-var import_zod84 = require("zod");
+var import_zod86 = require("zod");
 
 // packages/schema/src/parser/index.ts
-var import_zod83 = require("zod");
-var parserRenderWorkflowSchema = import_zod83.z.object({
-  id: import_zod83.z.string().min(1).max(1024),
-  entry: import_zod83.z.string().max(1024).optional(),
-  nodes: import_zod83.z.array(import_zod83.z.string().max(1024)).max(1e4).optional(),
-  edges: import_zod83.z.array(WorkflowEdge).max(2e4),
-  expressions: import_zod83.z.record(import_zod83.z.string(), import_zod83.z.record(import_zod83.z.string(), import_zod83.z.string())).optional(),
-  bindings: import_zod83.z.record(import_zod83.z.string(), import_zod83.z.record(import_zod83.z.string(), WorkflowInputBinding)).optional(),
-  promises: import_zod83.z.array(WorkflowPromise).optional()
+var import_zod85 = require("zod");
+var parserRenderWorkflowSchema = import_zod85.z.object({
+  id: import_zod85.z.string().min(1).max(1024),
+  entry: import_zod85.z.string().max(1024).optional(),
+  nodes: import_zod85.z.array(import_zod85.z.string().max(1024)).max(1e4).optional(),
+  edges: import_zod85.z.array(WorkflowEdge).max(2e4),
+  expressions: import_zod85.z.record(import_zod85.z.string(), import_zod85.z.record(import_zod85.z.string(), import_zod85.z.string())).optional(),
+  bindings: import_zod85.z.record(import_zod85.z.string(), import_zod85.z.record(import_zod85.z.string(), WorkflowInputBinding)).optional(),
+  promises: import_zod85.z.array(WorkflowPromise).optional()
 });
-var parsedSourceWorkflowSchema = import_zod83.z.object({
-  id: import_zod83.z.string(),
-  params: import_zod83.z.array(import_zod83.z.string()),
+var parsedSourceWorkflowSchema = import_zod85.z.object({
+  id: import_zod85.z.string(),
+  params: import_zod85.z.array(import_zod85.z.string()),
   inputs: JsonSchema.optional(),
-  nodes: import_zod83.z.array(
-    import_zod83.z.object({
-      instanceId: import_zod83.z.string(),
-      catalogId: import_zod83.z.string(),
-      disabled: import_zod83.z.boolean().optional(),
-      params: import_zod83.z.record(import_zod83.z.string(), import_zod83.z.unknown()).optional()
+  outputs: JsonSchema.optional(),
+  nodes: import_zod85.z.array(
+    import_zod85.z.object({
+      instanceId: import_zod85.z.string(),
+      catalogId: import_zod85.z.string(),
+      disabled: import_zod85.z.boolean().optional(),
+      params: import_zod85.z.record(import_zod85.z.string(), import_zod85.z.unknown()).optional()
     })
   ),
-  edges: import_zod83.z.array(WorkflowEdge),
-  promises: import_zod83.z.array(WorkflowPromise),
-  bindings: import_zod83.z.record(import_zod83.z.string(), import_zod83.z.record(import_zod83.z.string(), WorkflowInputBinding)),
-  returns: import_zod83.z.object({ node: import_zod83.z.string(), output: import_zod83.z.string().optional() }).optional(),
-  returnWrapped: import_zod83.z.boolean().optional(),
-  warnings: import_zod83.z.array(import_zod83.z.string())
+  edges: import_zod85.z.array(WorkflowEdge),
+  promises: import_zod85.z.array(WorkflowPromise),
+  bindings: import_zod85.z.record(import_zod85.z.string(), import_zod85.z.record(import_zod85.z.string(), WorkflowInputBinding)),
+  returns: import_zod85.z.object({ node: import_zod85.z.string(), output: import_zod85.z.string().optional() }).optional(),
+  returnWrapped: import_zod85.z.boolean().optional(),
+  warnings: import_zod85.z.array(import_zod85.z.string())
 });
 var sourceAnalysisSchema = SourceFileIndex.extend({
-  workflows: import_zod83.z.array(parsedSourceWorkflowSchema),
-  references: import_zod83.z.array(SourceReference)
+  workflows: import_zod85.z.array(parsedSourceWorkflowSchema),
+  references: import_zod85.z.array(SourceReference)
 });
-var source = import_zod83.z.string().max(2 * 1024 * 1024);
-var path2 = import_zod83.z.string().min(1).max(1024);
-var parserInspectionSchema = import_zod83.z.discriminatedUnion("operation", [
-  import_zod83.z.object({
-    operation: import_zod83.z.literal("source"),
-    exceptionFlow: import_zod83.z.boolean().optional(),
+var source = import_zod85.z.string().max(2 * 1024 * 1024);
+var path2 = import_zod85.z.string().min(1).max(1024);
+var parserInspectionSchema = import_zod85.z.discriminatedUnion("operation", [
+  import_zod85.z.object({
+    operation: import_zod85.z.literal("source"),
+    exceptionFlow: import_zod85.z.boolean().optional(),
     source,
     path: path2,
-    projectPaths: import_zod83.z.array(path2).max(1e4).optional(),
-    projectTypes: import_zod83.z.record(import_zod83.z.string(), JsonSchema).optional(),
-    retainModule: import_zod83.z.boolean().optional()
+    projectPaths: import_zod85.z.array(path2).max(1e4).optional(),
+    projectTypes: import_zod85.z.record(import_zod85.z.string(), JsonSchema).optional(),
+    retainModule: import_zod85.z.boolean().optional()
   }),
-  import_zod83.z.object({ operation: import_zod83.z.literal("schemas"), source, path: path2 }),
-  import_zod83.z.object({
-    operation: import_zod83.z.literal("value"),
+  import_zod85.z.object({ operation: import_zod85.z.literal("schemas"), source, path: path2 }),
+  import_zod85.z.object({
+    operation: import_zod85.z.literal("value"),
     source,
-    replacement: import_zod83.z.object({ name: import_zod83.z.string().max(240), type: import_zod83.z.string().max(2e3), value: import_zod83.z.unknown() }).optional()
+    replacement: import_zod85.z.object({ name: import_zod85.z.string().max(240), type: import_zod85.z.string().max(2e3), value: import_zod85.z.unknown() }).optional()
   }),
-  import_zod83.z.object({ operation: import_zod83.z.literal("test"), source, path: path2, runner: import_zod83.z.enum(["vitest", "jest", "playwright"]) }),
-  import_zod83.z.object({
-    operation: import_zod83.z.literal("render"),
+  import_zod85.z.object({ operation: import_zod85.z.literal("test"), source, path: path2, runner: import_zod85.z.enum(["vitest", "jest", "playwright"]) }),
+  import_zod85.z.object({
+    operation: import_zod85.z.literal("render"),
     workflow: parserRenderWorkflowSchema,
-    nodes: import_zod83.z.array(
+    nodes: import_zod85.z.array(
       graphNodeSchema.pick({
         id: true,
         icon: true,
@@ -12960,31 +13113,44 @@ var parserInspectionSchema = import_zod83.z.discriminatedUnion("operation", [
       })
     ).max(1e4)
   }),
-  import_zod83.z.object({ operation: import_zod83.z.literal("type"), schema: JsonSchema })
+  import_zod85.z.object({ operation: import_zod85.z.literal("type"), schema: JsonSchema })
 ]);
-var parserInspectionResultSchema = import_zod83.z.discriminatedUnion("operation", [
-  import_zod83.z.object({ operation: import_zod83.z.literal("source"), analysis: sourceAnalysisSchema, types: import_zod83.z.record(import_zod83.z.string(), JsonSchema) }),
-  import_zod83.z.object({ operation: import_zod83.z.literal("schemas"), types: import_zod83.z.record(import_zod83.z.string(), JsonSchema) }),
-  import_zod83.z.object({
-    operation: import_zod83.z.literal("value"),
-    declaration: import_zod83.z.string(),
-    value: import_zod83.z.object({ name: import_zod83.z.string(), type: import_zod83.z.string(), value: import_zod83.z.unknown() })
+var sourceCatalogNodeSchema = import_zod85.z.object({
+  id: import_zod85.z.string(),
+  label: import_zod85.z.string().optional(),
+  icon: import_zod85.z.string().optional(),
+  symbol: import_zod85.z.string().optional(),
+  inputs: JsonSchema.optional(),
+  outputs: JsonSchema.optional()
+});
+var parserInspectionResultSchema = import_zod85.z.discriminatedUnion("operation", [
+  import_zod85.z.object({
+    operation: import_zod85.z.literal("source"),
+    analysis: sourceAnalysisSchema,
+    types: import_zod85.z.record(import_zod85.z.string(), JsonSchema),
+    catalog: import_zod85.z.array(sourceCatalogNodeSchema).optional()
   }),
-  import_zod83.z.object({ operation: import_zod83.z.literal("test"), graph: TestWorkflowGraph }),
-  import_zod83.z.object({ operation: import_zod83.z.literal("render"), path: import_zod83.z.string(), region: import_zod83.z.string() }),
-  import_zod83.z.object({ operation: import_zod83.z.literal("type"), text: import_zod83.z.string() })
+  import_zod85.z.object({ operation: import_zod85.z.literal("schemas"), types: import_zod85.z.record(import_zod85.z.string(), JsonSchema) }),
+  import_zod85.z.object({
+    operation: import_zod85.z.literal("value"),
+    declaration: import_zod85.z.string(),
+    value: import_zod85.z.object({ name: import_zod85.z.string(), type: import_zod85.z.string(), value: import_zod85.z.unknown() })
+  }),
+  import_zod85.z.object({ operation: import_zod85.z.literal("test"), graph: TestWorkflowGraph }),
+  import_zod85.z.object({ operation: import_zod85.z.literal("render"), path: import_zod85.z.string(), region: import_zod85.z.string() }),
+  import_zod85.z.object({ operation: import_zod85.z.literal("type"), text: import_zod85.z.string() })
 ]);
 
 // packages/schema/src/project/sync/index.ts
-var revision4 = import_zod84.z.string().regex(/^[a-f0-9]{64}$/);
-var projectFileProjectionSchema = import_zod84.z.object({
-  graphs: import_zod84.z.record(import_zod84.z.string(), workflowGraphSchema),
+var revision4 = import_zod86.z.string().regex(/^[a-f0-9]{64}$/);
+var projectFileProjectionSchema = import_zod86.z.object({
+  graphs: import_zod86.z.record(import_zod86.z.string(), workflowGraphSchema),
   analysis: sourceAnalysisSchema.nullable(),
-  types: import_zod84.z.record(import_zod84.z.string(), JsonSchema),
-  document: import_zod84.z.unknown().optional(),
-  diagnostics: import_zod84.z.array(SourceDiagnostic)
+  types: import_zod86.z.record(import_zod86.z.string(), JsonSchema),
+  document: import_zod86.z.unknown().optional(),
+  diagnostics: import_zod86.z.array(SourceDiagnostic)
 });
-var projectFileCheckpointSchema = import_zod84.z.object({
+var projectFileCheckpointSchema = import_zod86.z.object({
   path: catalogPathSchema,
   revision: revision4,
   contextRevision: revision4,
@@ -12993,274 +13159,240 @@ var projectFileCheckpointSchema = import_zod84.z.object({
   projection: projectFileProjectionSchema
 });
 var projectFileSnapshotSchema = projectFileCheckpointSchema.extend({
-  content: import_zod84.z.string().max(2 * 1024 * 1024),
-  mtime: import_zod84.z.number().nonnegative(),
+  content: import_zod86.z.string().max(2 * 1024 * 1024),
+  mtime: import_zod86.z.number().nonnegative(),
   workspaceRevision: revision4.optional(),
-  writable: import_zod84.z.boolean(),
-  compilerError: import_zod84.z.string().optional()
+  writable: import_zod86.z.boolean(),
+  compilerError: import_zod86.z.string().optional()
 });
-var projectFileSyncQuerySchema = import_zod84.z.object({
+var projectFileSyncQuerySchema = import_zod86.z.object({
   path: catalogPathSchema,
-  generation: import_zod84.z.string().uuid().optional(),
+  generation: import_zod86.z.string().uuid().optional(),
   baseCheckpointRevision: revision4.optional()
 });
-var projectFileSyncEditSchema = import_zod84.z.object({
+var projectFileSyncEditSchema = import_zod86.z.object({
   path: catalogPathSchema,
-  operationId: import_zod84.z.string().uuid(),
+  operationId: import_zod86.z.string().uuid(),
   baseRevision: revision4,
   baseCheckpointRevision: revision4,
   workspaceRevision: revision4.optional(),
   edits: textEditsSchema
 });
-var projectFileSyncDeltaSchema = import_zod84.z.object({
+var projectFileSyncDeltaSchema = import_zod86.z.object({
   path: catalogPathSchema,
-  operationId: import_zod84.z.string().uuid(),
+  operationId: import_zod86.z.string().uuid(),
   baseRevision: revision4,
   revision: revision4,
   baseCheckpointRevision: revision4,
   checkpointRevision: revision4,
   contextRevision: revision4,
   parserRevision: revision4,
-  mtime: import_zod84.z.number().nonnegative(),
-  writable: import_zod84.z.boolean(),
+  mtime: import_zod86.z.number().nonnegative(),
+  writable: import_zod86.z.boolean(),
   workspaceRevision: revision4.optional(),
   edits: textEditsSchema,
   changes: jsonChangesSchema,
-  compilerError: import_zod84.z.string().optional()
+  compilerError: import_zod86.z.string().optional()
 });
 
 // packages/schema/src/publication/schema.ts
-var import_zod85 = require("zod");
+var import_zod87 = require("zod");
 
 // packages/schema/src/publication/constants.ts
 var PUBLICATION_SORTS = ["recent", "oldest", "name", "name_desc"];
 var PUBLICATION_REALTIME_PROTOCOL = "octonode.publication.v1";
 
 // packages/schema/src/publication/schema.ts
-var PublicationScope = import_zod85.z.object({
-  kind: import_zod85.z.enum(["user", "team", "org", "public"]),
-  id: import_zod85.z.string().min(1).max(200)
+var PublicationScope = import_zod87.z.object({
+  kind: import_zod87.z.enum(["user", "team", "org", "public"]),
+  id: import_zod87.z.string().min(1).max(200)
 });
-var PublicationStatus = import_zod85.z.enum(["pending", "published", "rejected", "cancelled"]);
-var PublicationQuery = import_zod85.z.object({
-  scope: import_zod85.z.string().min(1).max(220),
+var PublicationStatus = import_zod87.z.enum(["pending", "published", "rejected", "cancelled"]);
+var PublicationQuery = import_zod87.z.object({
+  scope: import_zod87.z.string().min(1).max(220),
   status: PublicationStatus.optional(),
-  countOnly: import_zod85.z.enum(["true", "false"]).optional(),
-  product: import_zod85.z.enum(["plugin", "app"]).optional(),
-  mine: import_zod85.z.enum(["true", "false"]).optional(),
-  search: import_zod85.z.string().trim().max(200).default(""),
-  sort: import_zod85.z.enum(PUBLICATION_SORTS).default("recent"),
-  offset: import_zod85.z.coerce.number().int().min(0).max(1e6).default(0)
+  countOnly: import_zod87.z.enum(["true", "false"]).optional(),
+  product: import_zod87.z.enum(["plugin", "app"]).optional(),
+  mine: import_zod87.z.enum(["true", "false"]).optional(),
+  search: import_zod87.z.string().trim().max(200).default(""),
+  sort: import_zod87.z.enum(PUBLICATION_SORTS).default("recent"),
+  offset: import_zod87.z.coerce.number().int().min(0).max(1e6).default(0)
 });
-var PublicationStep = import_zod85.z.object({
-  ordinal: import_zod85.z.number(),
+var PublicationStep = import_zod87.z.object({
+  ordinal: import_zod87.z.number(),
   scope: PublicationScope,
-  status: import_zod85.z.enum(["pending", "approved", "bypassed", "rejected"]),
-  decidedBy: import_zod85.z.string().nullable(),
-  reason: import_zod85.z.string().nullable(),
-  decidedAt: import_zod85.z.string().nullable()
+  status: import_zod87.z.enum(["pending", "approved", "bypassed", "rejected"]),
+  decidedBy: import_zod87.z.string().nullable(),
+  reason: import_zod87.z.string().nullable(),
+  decidedAt: import_zod87.z.string().nullable()
 });
-var PublicationApprovalSummary = import_zod85.z.object({
-  id: import_zod85.z.string(),
-  product: import_zod85.z.enum(["plugin", "app"]),
-  productId: import_zod85.z.string(),
-  name: import_zod85.z.string(),
-  slug: import_zod85.z.string(),
-  version: import_zod85.z.string(),
+var PublicationApprovalSummary = import_zod87.z.object({
+  id: import_zod87.z.string(),
+  product: import_zod87.z.enum(["plugin", "app"]),
+  productId: import_zod87.z.string(),
+  name: import_zod87.z.string(),
+  slug: import_zod87.z.string(),
+  version: import_zod87.z.string(),
   workspace: PublicationScope,
-  distribution: import_zod85.z.enum(["user", "team", "org", "public"]),
-  submittedBy: import_zod85.z.string(),
+  distribution: import_zod87.z.enum(["user", "team", "org", "public"]),
+  submittedBy: import_zod87.z.string(),
   status: PublicationStatus,
-  revision: import_zod85.z.number(),
-  createdAt: import_zod85.z.string(),
-  updatedAt: import_zod85.z.string(),
-  steps: import_zod85.z.array(PublicationStep)
+  revision: import_zod87.z.number(),
+  createdAt: import_zod87.z.string(),
+  updatedAt: import_zod87.z.string(),
+  steps: import_zod87.z.array(PublicationStep)
 });
-var PublicationReceipt = import_zod85.z.object({ publication: PublicationApprovalSummary });
-var PublicationEvent = import_zod85.z.object({
-  sequence: import_zod85.z.number(),
-  actorId: import_zod85.z.string(),
-  action: import_zod85.z.string(),
-  reason: import_zod85.z.string(),
-  createdAt: import_zod85.z.string()
+var PublicationReceipt = import_zod87.z.object({ publication: PublicationApprovalSummary });
+var PublicationEvent = import_zod87.z.object({
+  sequence: import_zod87.z.number(),
+  actorId: import_zod87.z.string(),
+  action: import_zod87.z.string(),
+  reason: import_zod87.z.string(),
+  createdAt: import_zod87.z.string()
 });
 var PublicationApprovalDetail = PublicationApprovalSummary.extend({
   manifest: PluginManifest,
   previousManifest: PluginManifest.nullable(),
-  sha256: import_zod85.z.string(),
-  canDecide: import_zod85.z.boolean(),
-  canCancel: import_zod85.z.boolean(),
-  events: import_zod85.z.array(PublicationEvent)
+  sha256: import_zod87.z.string(),
+  canDecide: import_zod87.z.boolean(),
+  canCancel: import_zod87.z.boolean(),
+  events: import_zod87.z.array(PublicationEvent)
 });
-var PublicationPage = import_zod85.z.object({
-  items: import_zod85.z.array(PublicationApprovalSummary),
-  total: import_zod85.z.number(),
-  pending: import_zod85.z.number(),
-  unread: import_zod85.z.number(),
-  throughSequence: import_zod85.z.number(),
-  offset: import_zod85.z.number(),
-  limit: import_zod85.z.number()
+var PublicationPage = import_zod87.z.object({
+  items: import_zod87.z.array(PublicationApprovalSummary),
+  total: import_zod87.z.number(),
+  pending: import_zod87.z.number(),
+  unread: import_zod87.z.number(),
+  throughSequence: import_zod87.z.number(),
+  offset: import_zod87.z.number(),
+  limit: import_zod87.z.number()
 });
-var PublicationDecision = import_zod85.z.object({
-  expectedRevision: import_zod85.z.number().int().min(0),
-  action: import_zod85.z.enum(["approve", "reject", "cancel"]),
-  reason: import_zod85.z.string().trim().min(1).max(2e3)
+var PublicationDecision = import_zod87.z.object({
+  expectedRevision: import_zod87.z.number().int().min(0),
+  action: import_zod87.z.enum(["approve", "reject", "cancel"]),
+  reason: import_zod87.z.string().trim().min(1).max(2e3)
 });
-var PublicationParams = import_zod85.z.object({ requestId: import_zod85.z.string().min(1).max(100) });
-var PublicationRead = import_zod85.z.object({
-  scope: import_zod85.z.string().min(1).max(220),
-  throughSequence: import_zod85.z.number().int().min(0)
+var PublicationParams = import_zod87.z.object({ requestId: import_zod87.z.string().min(1).max(100) });
+var PublicationRead = import_zod87.z.object({
+  scope: import_zod87.z.string().min(1).max(220),
+  throughSequence: import_zod87.z.number().int().min(0)
 });
-var PublicationNotificationQuery = import_zod85.z.object({
-  scope: import_zod85.z.string().min(1).max(220),
-  before: import_zod85.z.coerce.number().int().positive().optional(),
-  filter: import_zod85.z.enum(["all", "unread"]).default("all"),
-  countOnly: import_zod85.z.enum(["true", "false"]).default("false")
+var PublicationNotificationQuery = import_zod87.z.object({
+  scope: import_zod87.z.string().min(1).max(220),
+  before: import_zod87.z.coerce.number().int().positive().optional(),
+  filter: import_zod87.z.enum(["all", "unread"]).default("all"),
+  countOnly: import_zod87.z.enum(["true", "false"]).default("false")
 });
-var PublicationNotification = import_zod85.z.object({
-  id: import_zod85.z.string(),
-  seq: import_zod85.z.number(),
-  kind: import_zod85.z.literal("publication"),
-  actorKind: import_zod85.z.literal("user"),
-  actorId: import_zod85.z.string(),
-  entityType: import_zod85.z.literal("publication"),
-  entityId: import_zod85.z.string(),
-  payload: import_zod85.z.object({
-    scope: import_zod85.z.string(),
-    name: import_zod85.z.string().max(400),
-    version: import_zod85.z.string().max(200),
-    product: import_zod85.z.enum(["app", "plugin"]),
+var PublicationNotification = import_zod87.z.object({
+  id: import_zod87.z.string(),
+  seq: import_zod87.z.number(),
+  kind: import_zod87.z.literal("publication"),
+  actorKind: import_zod87.z.literal("user"),
+  actorId: import_zod87.z.string(),
+  entityType: import_zod87.z.literal("publication"),
+  entityId: import_zod87.z.string(),
+  payload: import_zod87.z.object({
+    scope: import_zod87.z.string(),
+    name: import_zod87.z.string().max(400),
+    version: import_zod87.z.string().max(200),
+    product: import_zod87.z.enum(["app", "plugin"]),
     status: PublicationStatus,
-    action: import_zod85.z.enum(["submitted", "approved", "rejected", "cancelled", "published"]),
-    needsApproval: import_zod85.z.boolean()
+    action: import_zod87.z.enum(["submitted", "approved", "rejected", "cancelled", "published"]),
+    needsApproval: import_zod87.z.boolean()
   }),
-  createdAt: import_zod85.z.number(),
-  isRead: import_zod85.z.boolean()
+  createdAt: import_zod87.z.number(),
+  isRead: import_zod87.z.boolean()
 });
-var PublicationNotificationPage = import_zod85.z.object({
-  items: import_zod85.z.array(PublicationNotification),
-  unread: import_zod85.z.number(),
-  throughSequence: import_zod85.z.number(),
-  nextCursor: import_zod85.z.number().nullable()
+var PublicationNotificationPage = import_zod87.z.object({
+  items: import_zod87.z.array(PublicationNotification),
+  unread: import_zod87.z.number(),
+  throughSequence: import_zod87.z.number(),
+  nextCursor: import_zod87.z.number().nullable()
 });
-var PublicationRealtimeQuery = import_zod85.z.object({ scope: import_zod85.z.string().min(1).max(220) });
-var PublicationRealtimeTicket = import_zod85.z.object({
-  ticket: import_zod85.z.string(),
-  protocol: import_zod85.z.literal(PUBLICATION_REALTIME_PROTOCOL),
-  expiresAt: import_zod85.z.number(),
-  url: import_zod85.z.string()
+var PublicationRealtimeQuery = import_zod87.z.object({ scope: import_zod87.z.string().min(1).max(220) });
+var PublicationRealtimeTicket = import_zod87.z.object({
+  ticket: import_zod87.z.string(),
+  protocol: import_zod87.z.literal(PUBLICATION_REALTIME_PROTOCOL),
+  expiresAt: import_zod87.z.number(),
+  url: import_zod87.z.string()
 });
-var PublicationRealtimeEvent = import_zod85.z.object({
-  type: import_zod85.z.literal("publication.changed"),
-  scope: import_zod85.z.string().min(1).max(220)
+var PublicationRealtimeEvent = import_zod87.z.object({
+  type: import_zod87.z.literal("publication.changed"),
+  scope: import_zod87.z.string().min(1).max(220)
 });
 
 // packages/schema/src/repository/registry.ts
-var import_zod86 = require("zod");
-var locator = import_zod86.z.string().min(1).max(4096);
-var ProjectId = import_zod86.z.string().min(1).max(240).brand();
-var SourceRepositoryId = import_zod86.z.union([
-  import_zod86.z.string().uuid(),
-  // shortcut: retain legacy reads until the coordinated cloud identity migration is deployed.
-  import_zod86.z.string().regex(/^repo_[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)
-]).brand();
-var RegistryGeneration = import_zod86.z.number().int().nonnegative();
-var RegistryDiagnostic = import_zod86.z.object({
-  code: import_zod86.z.string().min(1).max(120),
-  message: import_zod86.z.string().min(1).max(512)
+var import_zod88 = require("zod");
+var locator = import_zod88.z.string().min(1).max(4096);
+var SourceRepositoryId = import_zod88.z.string().uuid().brand();
+var RegistryGeneration = import_zod88.z.number().int().nonnegative();
+var RegistryDiagnostic = import_zod88.z.object({
+  code: import_zod88.z.string().min(1).max(120),
+  message: import_zod88.z.string().min(1).max(512)
 }).strict();
-var SourceRepositoryRecord = import_zod86.z.object({
+var SourceRepositoryRecord = import_zod88.z.object({
   sourceRepositoryId: SourceRepositoryId,
-  displayName: import_zod86.z.string().min(1).max(240),
+  displayName: import_zod88.z.string().min(1).max(240),
   rootLocator: locator,
-  canonicalRootFingerprint: import_zod86.z.string().regex(/^[a-f0-9]{64}$/),
-  remote: import_zod86.z.object({
-    fetchUrl: import_zod86.z.string().min(1).max(2048),
-    provider: import_zod86.z.literal("github").optional(),
-    githubRepositoryId: import_zod86.z.number().int().positive().optional()
+  canonicalRootFingerprint: import_zod88.z.string().regex(/^[a-f0-9]{64}$/),
+  remote: import_zod88.z.object({
+    fetchUrl: import_zod88.z.string().min(1).max(2048),
+    provider: import_zod88.z.literal("github").optional(),
+    githubRepositoryId: import_zod88.z.number().int().positive().optional()
   }).strict().nullable(),
-  recovery: import_zod86.z.discriminatedUnion("kind", [
-    import_zod86.z.object({
-      kind: import_zod86.z.literal("reclone"),
-      head: import_zod86.z.string().min(1).max(128),
-      branch: import_zod86.z.string().min(1).max(240).optional()
+  recovery: import_zod88.z.discriminatedUnion("kind", [
+    import_zod88.z.object({
+      kind: import_zod88.z.literal("reclone"),
+      head: import_zod88.z.string().min(1).max(128),
+      branch: import_zod88.z.string().min(1).max(240).optional()
     }).strict(),
-    import_zod86.z.object({ kind: import_zod86.z.literal("relink") }).strict()
+    import_zod88.z.object({ kind: import_zod88.z.literal("relink") }).strict()
   ]),
-  status: import_zod86.z.enum(["ready", "missing", "conflict"]),
-  revision: import_zod86.z.number().int().nonnegative()
+  status: import_zod88.z.enum(["ready", "missing", "conflict"]),
+  revision: import_zod88.z.number().int().nonnegative()
 }).strict();
-var RegisteredProjectRecord = import_zod86.z.object({
-  projectId: ProjectId,
-  sourceKind: import_zod86.z.enum(["repository", "managed", "standalone"]),
+var RegisteredProjectId = import_zod88.z.string().uuid().brand();
+var RegisteredProjectRecord = import_zod88.z.object({
+  projectId: RegisteredProjectId,
+  sourceKind: import_zod88.z.enum(["repository", "managed", "standalone"]),
   sourceRepositoryId: SourceRepositoryId.nullable(),
   configLocator: locator,
-  projectRootLocator: import_zod86.z.string().max(4096),
-  configFormat: import_zod86.z.enum(["yaml", "json"]),
-  configFingerprint: import_zod86.z.string().regex(/^[a-f0-9]{64}$/),
+  projectRootLocator: import_zod88.z.string().max(4096),
+  configFormat: import_zod88.z.enum(["yaml", "json"]),
+  configFingerprint: import_zod88.z.string().regex(/^[a-f0-9]{64}$/),
   storeKey: locator,
-  identitySource: import_zod86.z.enum(["new", "legacy", "config"]),
-  status: import_zod86.z.enum(["ready", "missing", "conflict", "invalid"]),
-  revision: import_zod86.z.number().int().nonnegative()
+  identitySource: import_zod88.z.enum(["new", "config"]),
+  status: import_zod88.z.enum(["ready", "missing", "conflict", "invalid"]),
+  revision: import_zod88.z.number().int().nonnegative()
 }).strict();
-var LegacyProjectAlias = import_zod86.z.object({
-  alias: import_zod86.z.string().min(1).max(4096),
-  projectId: ProjectId,
-  kind: import_zod86.z.enum(["path", "slug"]),
-  expiresAfterRelease: import_zod86.z.string().min(1).max(120).nullable()
-}).strict();
-var WorkspaceRegistryV2 = import_zod86.z.object({
-  schemaVersion: import_zod86.z.literal(2),
-  workspaceId: import_zod86.z.string().min(1).max(240),
+var WorkspaceRegistryV2 = import_zod88.z.object({
+  schemaVersion: import_zod88.z.literal(2),
+  workspaceId: import_zod88.z.string().min(1).max(240),
   generation: RegistryGeneration,
-  sourceRepositories: import_zod86.z.array(SourceRepositoryRecord),
-  projects: import_zod86.z.array(RegisteredProjectRecord),
-  legacyAliases: import_zod86.z.array(LegacyProjectAlias)
+  sourceRepositories: import_zod88.z.array(SourceRepositoryRecord),
+  projects: import_zod88.z.array(RegisteredProjectRecord)
 }).strict();
-var RepositoryDiscoveryCandidate = import_zod86.z.object({
-  candidateKey: import_zod86.z.string().regex(/^[a-f0-9]{64}$/),
+var RepositoryDiscoveryCandidate = import_zod88.z.object({
+  candidateKey: import_zod88.z.string().regex(/^[a-f0-9]{64}$/),
   configLocator: locator,
-  projectRootLocator: import_zod86.z.string().max(4096),
-  configFormat: import_zod86.z.enum(["yaml", "json"]),
-  configFingerprint: import_zod86.z.string().regex(/^[a-f0-9]{64}$/),
-  displayName: import_zod86.z.string().min(1).max(240),
-  status: import_zod86.z.enum(["valid", "invalid", "conflict"]),
-  diagnostics: import_zod86.z.array(RegistryDiagnostic).max(100)
+  projectRootLocator: import_zod88.z.string().max(4096),
+  configFormat: import_zod88.z.enum(["yaml", "json"]),
+  configFingerprint: import_zod88.z.string().regex(/^[a-f0-9]{64}$/),
+  displayName: import_zod88.z.string().min(1).max(240),
+  status: import_zod88.z.enum(["valid", "invalid", "conflict"]),
+  diagnostics: import_zod88.z.array(RegistryDiagnostic).max(100)
 }).strict();
-var RepositoryDiscovery = import_zod86.z.object({
-  discoveryId: import_zod86.z.string().min(1).max(240),
+var RepositoryDiscovery = import_zod88.z.object({
+  discoveryId: import_zod88.z.string().min(1).max(240),
   expectedRegistryGeneration: RegistryGeneration,
-  complete: import_zod86.z.boolean(),
-  expiresAt: import_zod86.z.number().int().nonnegative(),
-  counts: import_zod86.z.object({
-    visitedDirectories: import_zod86.z.number().int().nonnegative().max(1e4),
-    candidates: import_zod86.z.number().int().nonnegative().max(1e3)
+  complete: import_zod88.z.boolean(),
+  expiresAt: import_zod88.z.number().int().nonnegative(),
+  counts: import_zod88.z.object({
+    visitedDirectories: import_zod88.z.number().int().nonnegative().max(1e4),
+    candidates: import_zod88.z.number().int().nonnegative().max(1e3)
   }).strict(),
-  candidates: import_zod86.z.array(RepositoryDiscoveryCandidate).max(1e3),
-  diagnostics: import_zod86.z.array(RegistryDiagnostic).max(100)
-}).strict();
-var RegistryMigrationReport = import_zod86.z.object({
-  expectedRegistryGeneration: RegistryGeneration,
-  reportHash: import_zod86.z.string().regex(/^[a-f0-9]{64}$/),
-  blocked: import_zod86.z.boolean(),
-  recordActions: import_zod86.z.array(
-    import_zod86.z.discriminatedUnion("action", [
-      import_zod86.z.object({
-        action: import_zod86.z.literal("preserve_id"),
-        configLocator: locator,
-        currentProjectId: ProjectId,
-        projectId: ProjectId
-      }).strict(),
-      import_zod86.z.object({ action: import_zod86.z.literal("assign_id"), configLocator: locator }).strict(),
-      import_zod86.z.object({ action: import_zod86.z.literal("conflict"), configLocator: locator, currentProjectId: ProjectId.optional() }).strict()
-    ])
-  ),
-  storeMoves: import_zod86.z.array(import_zod86.z.object({ projectId: ProjectId, from: locator, to: locator }).strict()),
-  collisionGroups: import_zod86.z.array(
-    import_zod86.z.object({ legacyId: import_zod86.z.string().min(1).max(240), configLocators: import_zod86.z.array(locator).min(2) }).strict()
-  ),
-  linkedRecordCounts: import_zod86.z.record(import_zod86.z.number().int().nonnegative()),
-  diagnostics: import_zod86.z.array(RegistryDiagnostic).max(100)
+  candidates: import_zod88.z.array(RepositoryDiscoveryCandidate).max(1e3),
+  diagnostics: import_zod88.z.array(RegistryDiagnostic).max(100)
 }).strict();
 var SourceRepositorySummary = SourceRepositoryRecord.pick({
   sourceRepositoryId: true,
@@ -13268,7 +13400,7 @@ var SourceRepositorySummary = SourceRepositoryRecord.pick({
   rootLocator: true,
   status: true,
   revision: true
-}).extend({ projectCount: import_zod86.z.number().int().nonnegative() }).strict();
+}).extend({ projectCount: import_zod88.z.number().int().nonnegative() }).strict();
 var RegisteredProjectSummary = RegisteredProjectRecord.pick({
   projectId: true,
   sourceKind: true,
@@ -13277,18 +13409,18 @@ var RegisteredProjectSummary = RegisteredProjectRecord.pick({
   projectRootLocator: true,
   status: true,
   revision: true
-}).extend({ displayName: import_zod86.z.string().min(1).max(240), workflowCount: import_zod86.z.number().int().nonnegative() }).strict();
-var RegistryPublicSummary = import_zod86.z.object({
-  workspaceId: import_zod86.z.string().min(1).max(240),
+}).extend({ displayName: import_zod88.z.string().min(1).max(240), workflowCount: import_zod88.z.number().int().nonnegative() }).strict();
+var RegistryPublicSummary = import_zod88.z.object({
+  workspaceId: import_zod88.z.string().min(1).max(240),
   generation: RegistryGeneration,
-  sourceRepositories: import_zod86.z.array(SourceRepositorySummary),
-  projects: import_zod86.z.array(RegisteredProjectSummary)
+  sourceRepositories: import_zod88.z.array(SourceRepositorySummary),
+  projects: import_zod88.z.array(RegisteredProjectSummary)
 }).strict();
 
 // packages/schema/src/settings.ts
-var import_zod87 = require("zod");
+var import_zod89 = require("zod");
 
-// node_modules/re2js/build/index.js
+// ../../../../Users/nivdoron/.paradev/projects/octonode/fix-service-class-env-v1/node_modules/re2js/build/index.js
 var RE2Flags = class RE2Flags2 {
   static FOLD_CASE = 1;
   static LITERAL = 2;
@@ -19584,10 +19716,10 @@ var RE2JS = class RE2JS2 {
 };
 
 // packages/schema/src/settings.ts
-var identifier3 = import_zod87.z.string().min(1).max(240).regex(/^(?!(?:__proto__|__all__)$)/, "reserved settings key");
-var label = import_zod87.z.string().min(1).max(240);
-var strings = import_zod87.z.array(import_zod87.z.string().min(1).max(1024)).min(1).max(1e3);
-var SettingsPathPattern = import_zod87.z.string().min(1).max(1024).refine((value) => {
+var identifier4 = import_zod89.z.string().min(1).max(240).regex(/^(?!(?:__proto__|__all__)$)/, "reserved settings key");
+var label = import_zod89.z.string().min(1).max(240);
+var strings = import_zod89.z.array(import_zod89.z.string().min(1).max(1024)).min(1).max(1e3);
+var SettingsPathPattern = import_zod89.z.string().min(1).max(1024).refine((value) => {
   if (value.startsWith("regex:")) {
     try {
       if (value.length === 6) return false;
@@ -19599,37 +19731,37 @@ var SettingsPathPattern = import_zod87.z.string().min(1).max(1024).refine((value
   }
   return !value.startsWith("/") && !value.includes("\\") && !value.split("/").includes("..") && !/[[\]{}!():]/.test(value);
 }, "use project-relative globs or regex: followed by a valid RE2 expression");
-var paths = import_zod87.z.array(SettingsPathPattern).max(1e3);
-var SettingsDiscovery = import_zod87.z.object({
-  files: import_zod87.z.object({ include: paths.optional(), exclude: paths.optional() }).strict().optional()
+var paths = import_zod89.z.array(SettingsPathPattern).max(1e3);
+var SettingsDiscovery = import_zod89.z.object({
+  files: import_zod89.z.object({ include: paths.optional(), exclude: paths.optional() }).strict().optional()
 }).strict();
-var SettingsDetail = import_zod87.z.object({
-  level: import_zod87.z.enum(["files", "workflows", "steps"]).optional(),
-  maxCallDepth: import_zod87.z.number().int().min(0).max(10).optional(),
-  maxDirectoryDepth: import_zod87.z.number().int().min(0).max(100).optional()
+var SettingsDetail = import_zod89.z.object({
+  level: import_zod89.z.enum(["files", "workflows", "steps"]).optional(),
+  maxCallDepth: import_zod89.z.number().int().min(0).max(10).optional(),
+  maxDirectoryDepth: import_zod89.z.number().int().min(0).max(100).optional()
 }).strict();
-var SettingsPresentation = import_zod87.z.object({
+var SettingsPresentation = import_zod89.z.object({
   label: label.optional(),
-  description: import_zod87.z.string().max(4e3).optional(),
+  description: import_zod89.z.string().max(4e3).optional(),
   icon: IconValue.optional(),
-  color: import_zod87.z.string().regex(/^(?:[a-z][a-z0-9-]*|#[0-9a-fA-F]{6})$/).optional(),
-  style: import_zod87.z.object({
-    density: import_zod87.z.enum(["compact", "comfortable"]).optional(),
-    radius: import_zod87.z.enum(["sharp", "soft"]).optional()
+  color: import_zod89.z.string().regex(/^(?:[a-z][a-z0-9-]*|#[0-9a-fA-F]{6})$/).optional(),
+  style: import_zod89.z.object({
+    density: import_zod89.z.enum(["compact", "comfortable"]).optional(),
+    radius: import_zod89.z.enum(["sharp", "soft"]).optional()
   }).strict().optional(),
-  renderer: identifier3.optional()
+  renderer: identifier4.optional()
 }).strict();
-var workflowMatch = import_zod87.z.object({
+var workflowMatch = import_zod89.z.object({
   ids: strings.optional(),
   sourcePaths: paths.refine((values) => values.length > 0).optional(),
   symbols: strings.optional(),
   folders: strings.optional(),
   tagsAny: strings.optional(),
-  exported: import_zod87.z.boolean().optional()
+  exported: import_zod89.z.boolean().optional()
 }).strict();
-var nodeMatch = import_zod87.z.object({
+var nodeMatch = import_zod89.z.object({
   ids: strings.optional(),
-  kinds: import_zod87.z.array(NodeKind).min(1).optional(),
+  kinds: import_zod89.z.array(NodeKind).min(1).optional(),
   native: strings.optional(),
   plugins: strings.optional()
 }).strict();
@@ -19641,87 +19773,87 @@ var SettingsNodeSelector = nodeMatch.refine((value) => Object.keys(value).length
 });
 var workflowViewSelector = workflowMatch.extend({ layersAny: strings.optional() }).refine((value) => Object.keys(value).length > 0, { message: "a workflow selector needs at least one condition" });
 var nodeViewSelector = nodeMatch.extend({ layersAny: strings.optional() }).refine((value) => Object.keys(value).length > 0, { message: "a node selector needs at least one condition" });
-var SettingsAppearance = import_zod87.z.object({
+var SettingsAppearance = import_zod89.z.object({
   nodeDefaults: SettingsPresentation.optional(),
   workflowDefaults: SettingsPresentation.optional(),
-  native: import_zod87.z.record(identifier3, SettingsPresentation).optional(),
-  plugins: import_zod87.z.record(identifier3, SettingsPresentation).optional(),
-  rules: import_zod87.z.array(
-    import_zod87.z.discriminatedUnion("target", [
-      import_zod87.z.object({
-        id: identifier3,
-        target: import_zod87.z.literal("node"),
+  native: import_zod89.z.record(identifier4, SettingsPresentation).optional(),
+  plugins: import_zod89.z.record(identifier4, SettingsPresentation).optional(),
+  rules: import_zod89.z.array(
+    import_zod89.z.discriminatedUnion("target", [
+      import_zod89.z.object({
+        id: identifier4,
+        target: import_zod89.z.literal("node"),
         match: SettingsNodeSelector,
         presentation: SettingsPresentation
       }).strict(),
-      import_zod87.z.object({
-        id: identifier3,
-        target: import_zod87.z.literal("workflow"),
+      import_zod89.z.object({
+        id: identifier4,
+        target: import_zod89.z.literal("workflow"),
         match: SettingsWorkflowSelector,
         presentation: SettingsPresentation
       }).strict()
     ])
   ).max(1e3).optional()
 }).strict();
-var SettingsOverrides = import_zod87.z.object({
-  nodes: import_zod87.z.record(identifier3, SettingsPresentation).optional(),
-  workflows: import_zod87.z.record(
-    identifier3,
-    import_zod87.z.object({
+var SettingsOverrides = import_zod89.z.object({
+  nodes: import_zod89.z.record(identifier4, SettingsPresentation).optional(),
+  workflows: import_zod89.z.record(
+    identifier4,
+    import_zod89.z.object({
       presentation: SettingsPresentation.optional(),
-      nodePresentation: import_zod87.z.record(identifier3, SettingsPresentation).optional()
+      nodePresentation: import_zod89.z.record(identifier4, SettingsPresentation).optional()
     }).strict()
   ).optional()
 }).strict();
-var SettingsLayers = import_zod87.z.record(
-  identifier3,
-  import_zod87.z.object({
+var SettingsLayers = import_zod89.z.record(
+  identifier4,
+  import_zod89.z.object({
     label: label.optional(),
-    workflows: import_zod87.z.array(SettingsWorkflowSelector).min(1).max(1e3).optional(),
-    nodes: import_zod87.z.array(SettingsNodeSelector).min(1).max(1e3).optional()
+    workflows: import_zod89.z.array(SettingsWorkflowSelector).min(1).max(1e3).optional(),
+    nodes: import_zod89.z.array(SettingsNodeSelector).min(1).max(1e3).optional()
   }).strict().refine((value) => value.workflows !== void 0 || value.nodes !== void 0, {
     message: "a layer needs workflow or node selectors"
   })
 );
-var SettingsViews = import_zod87.z.record(
-  identifier3,
-  import_zod87.z.object({
+var SettingsViews = import_zod89.z.record(
+  identifier4,
+  import_zod89.z.object({
     label: label.optional(),
-    groupBy: import_zod87.z.enum(["source", "folder", "flat", "architecture"]).optional(),
+    groupBy: import_zod89.z.enum(["source", "folder", "flat", "architecture"]).optional(),
     detail: SettingsDetail.optional(),
-    workflows: import_zod87.z.object({
-      exportedOnly: import_zod87.z.boolean().optional(),
-      includeModules: import_zod87.z.boolean().optional(),
-      include: import_zod87.z.array(workflowViewSelector).max(1e3).optional(),
-      exclude: import_zod87.z.array(workflowViewSelector).max(1e3).optional()
+    workflows: import_zod89.z.object({
+      exportedOnly: import_zod89.z.boolean().optional(),
+      includeModules: import_zod89.z.boolean().optional(),
+      include: import_zod89.z.array(workflowViewSelector).max(1e3).optional(),
+      exclude: import_zod89.z.array(workflowViewSelector).max(1e3).optional()
     }).strict().optional(),
-    navigation: import_zod87.z.object({ collapsedPaths: strings.optional() }).strict().optional(),
-    canvas: import_zod87.z.object({
-      hideCallsToHiddenWorkflows: import_zod87.z.boolean().optional(),
-      include: import_zod87.z.array(nodeViewSelector).max(1e3).optional(),
-      exclude: import_zod87.z.array(nodeViewSelector).max(1e3).optional(),
+    navigation: import_zod89.z.object({ collapsedPaths: strings.optional() }).strict().optional(),
+    canvas: import_zod89.z.object({
+      hideCallsToHiddenWorkflows: import_zod89.z.boolean().optional(),
+      include: import_zod89.z.array(nodeViewSelector).max(1e3).optional(),
+      exclude: import_zod89.z.array(nodeViewSelector).max(1e3).optional(),
       collapseLayers: strings.optional()
     }).strict().optional()
   }).strict()
 );
-var SettingsFileReference = import_zod87.z.object({ $file: import_zod87.z.string().min(1).max(1024) }).strict();
-var OctonodeSettingsDocument = import_zod87.z.object({
-  $schema: import_zod87.z.string().optional(),
-  apiVersion: import_zod87.z.literal(SETTINGS_API_VERSION),
+var SettingsFileReference = import_zod89.z.object({ $file: import_zod89.z.string().min(1).max(1024) }).strict();
+var OctonodeSettingsDocument = import_zod89.z.object({
+  $schema: import_zod89.z.string().optional(),
+  apiVersion: import_zod89.z.literal(SETTINGS_API_VERSION),
   plugin: PluginManifest.optional(),
-  defaultView: identifier3.optional(),
+  defaultView: identifier4.optional(),
   layout: SettingsLayout.optional(),
-  discovery: import_zod87.z.union([SettingsFileReference, SettingsDiscovery]).optional(),
-  appearance: import_zod87.z.union([SettingsFileReference, SettingsAppearance]).optional(),
-  overrides: import_zod87.z.union([SettingsFileReference, SettingsOverrides]).optional(),
-  layers: import_zod87.z.union([SettingsFileReference, SettingsLayers]).optional(),
-  views: import_zod87.z.union([SettingsFileReference, SettingsViews]).optional()
+  discovery: import_zod89.z.union([SettingsFileReference, SettingsDiscovery]).optional(),
+  appearance: import_zod89.z.union([SettingsFileReference, SettingsAppearance]).optional(),
+  overrides: import_zod89.z.union([SettingsFileReference, SettingsOverrides]).optional(),
+  layers: import_zod89.z.union([SettingsFileReference, SettingsLayers]).optional(),
+  views: import_zod89.z.union([SettingsFileReference, SettingsViews]).optional()
 }).strict();
-var OctonodeSettingsValues = import_zod87.z.object({
-  $schema: import_zod87.z.string().optional(),
-  apiVersion: import_zod87.z.literal(SETTINGS_API_VERSION),
+var OctonodeSettingsValues = import_zod89.z.object({
+  $schema: import_zod89.z.string().optional(),
+  apiVersion: import_zod89.z.literal(SETTINGS_API_VERSION),
   plugin: PluginManifest.optional(),
-  defaultView: identifier3.optional(),
+  defaultView: identifier4.optional(),
   layout: SettingsLayout.optional(),
   discovery: SettingsDiscovery.optional(),
   appearance: SettingsAppearance.optional(),
@@ -19792,196 +19924,196 @@ var SUPPORT_QUEUES = [
 ];
 
 // packages/schema/src/support/schema.ts
-var import_zod88 = require("zod");
-var platformScopeSchema = import_zod88.z.enum(PLATFORM_SCOPES);
-var supportIssueTypeSchema = import_zod88.z.enum(SUPPORT_ISSUE_TYPES);
-var supportStatusSchema = import_zod88.z.enum(SUPPORT_STATUSES);
-var supportMutationSchema = import_zod88.z.object({ clientMutationId: import_zod88.z.string().uuid(), expectedVersion: import_zod88.z.number().int().positive() }).strict();
-var supportCreateSchema = import_zod88.z.object({
-  clientMutationId: import_zod88.z.string().uuid(),
+var import_zod90 = require("zod");
+var platformScopeSchema = import_zod90.z.enum(PLATFORM_SCOPES);
+var supportIssueTypeSchema = import_zod90.z.enum(SUPPORT_ISSUE_TYPES);
+var supportStatusSchema = import_zod90.z.enum(SUPPORT_STATUSES);
+var supportMutationSchema = import_zod90.z.object({ clientMutationId: import_zod90.z.string().uuid(), expectedVersion: import_zod90.z.number().int().positive() }).strict();
+var supportCreateSchema = import_zod90.z.object({
+  clientMutationId: import_zod90.z.string().uuid(),
   issueType: supportIssueTypeSchema,
-  subject: import_zod88.z.string().trim().min(1).max(200),
-  description: import_zod88.z.string().trim().min(1).max(16384),
-  intakeId: import_zod88.z.string().uuid().optional(),
+  subject: import_zod90.z.string().trim().min(1).max(200),
+  description: import_zod90.z.string().trim().min(1).max(16384),
+  intakeId: import_zod90.z.string().uuid().optional(),
   attachmentIds: attachmentIdListSchema.optional(),
-  source: import_zod88.z.enum(["studio", "landing"]).default("studio"),
-  followUpOfTicketId: import_zod88.z.string().uuid().optional()
+  source: import_zod90.z.enum(["studio", "landing"]).default("studio"),
+  followUpOfTicketId: import_zod90.z.string().uuid().optional()
 }).strict();
 var supportReplySchema = supportMutationSchema.extend({
-  body: import_zod88.z.string().trim().max(16384),
+  body: import_zod90.z.string().trim().max(16384),
   attachmentIds: attachmentIdListSchema.optional()
 });
 var supportTransferSchema = supportMutationSchema.extend({
-  assigneeId: import_zod88.z.string().uuid(),
-  reason: import_zod88.z.string().trim().min(1).max(2e3)
+  assigneeId: import_zod90.z.string().uuid(),
+  reason: import_zod90.z.string().trim().min(1).max(2e3)
 });
-var supportCloseSchema = supportMutationSchema.extend({ summary: import_zod88.z.string().trim().min(1).max(4e3) });
+var supportCloseSchema = supportMutationSchema.extend({ summary: import_zod90.z.string().trim().min(1).max(4e3) });
 var supportStateSchema = supportMutationSchema.extend({
-  status: import_zod88.z.enum(["open", "waiting_customer", "waiting_internal"])
+  status: import_zod90.z.enum(["open", "waiting_customer", "waiting_internal"])
 });
 var supportTakeSchema = supportMutationSchema.extend({
-  reason: import_zod88.z.string().trim().min(1).max(2e3).optional()
+  reason: import_zod90.z.string().trim().min(1).max(2e3).optional()
 });
-var supportAssignSchema = supportTakeSchema.extend({ assigneeId: import_zod88.z.string().uuid() });
-var supportReleaseSchema = supportMutationSchema.extend({ reason: import_zod88.z.string().trim().min(1).max(2e3) });
-var supportNoteSchema = supportMutationSchema.extend({ body: import_zod88.z.string().trim().min(1).max(16384) });
-var supportListQuerySchema = import_zod88.z.object({
-  view: import_zod88.z.enum(SUPPORT_QUEUES).default("active"),
-  category: import_zod88.z.enum(["pool", "management"]).optional(),
-  cursor: import_zod88.z.string().max(2048).optional(),
+var supportAssignSchema = supportTakeSchema.extend({ assigneeId: import_zod90.z.string().uuid() });
+var supportReleaseSchema = supportMutationSchema.extend({ reason: import_zod90.z.string().trim().min(1).max(2e3) });
+var supportNoteSchema = supportMutationSchema.extend({ body: import_zod90.z.string().trim().min(1).max(16384) });
+var supportListQuerySchema = import_zod90.z.object({
+  view: import_zod90.z.enum(SUPPORT_QUEUES).default("active"),
+  category: import_zod90.z.enum(["pool", "management"]).optional(),
+  cursor: import_zod90.z.string().max(2048).optional(),
   issueType: supportIssueTypeSchema.optional(),
-  assigneeId: import_zod88.z.string().uuid().optional(),
-  priority: import_zod88.z.enum(["low", "normal", "high", "urgent"]).optional(),
-  tag: import_zod88.z.string().trim().min(1).max(40).optional(),
-  sort: import_zod88.z.enum(["recent", "oldest"]).optional(),
-  limit: import_zod88.z.coerce.number().int().min(1).max(100).default(50),
-  q: import_zod88.z.string().trim().max(200).default(""),
-  days: import_zod88.z.coerce.number().int().min(1).max(90).optional()
+  assigneeId: import_zod90.z.string().uuid().optional(),
+  priority: import_zod90.z.enum(["low", "normal", "high", "urgent"]).optional(),
+  tag: import_zod90.z.string().trim().min(1).max(40).optional(),
+  sort: import_zod90.z.enum(["recent", "oldest"]).optional(),
+  limit: import_zod90.z.coerce.number().int().min(1).max(100).default(50),
+  q: import_zod90.z.string().trim().max(200).default(""),
+  days: import_zod90.z.coerce.number().int().min(1).max(90).optional()
 });
 var supportReportQuerySchema = supportListQuerySchema.omit({ cursor: true, limit: true, sort: true }).extend({
-  view: import_zod88.z.enum(SUPPORT_QUEUES).default("all"),
-  days: import_zod88.z.coerce.number().int().min(1).max(90).default(30)
+  view: import_zod90.z.enum(SUPPORT_QUEUES).default("all"),
+  days: import_zod90.z.coerce.number().int().min(1).max(90).default(30)
 });
-var supportTicketSchema = import_zod88.z.object({
-  id: import_zod88.z.string().uuid(),
-  number: import_zod88.z.number().int().positive(),
-  conversationId: import_zod88.z.string().uuid(),
-  requesterId: import_zod88.z.string().uuid(),
+var supportTicketSchema = import_zod90.z.object({
+  id: import_zod90.z.string().uuid(),
+  number: import_zod90.z.number().int().positive(),
+  conversationId: import_zod90.z.string().uuid(),
+  requesterId: import_zod90.z.string().uuid(),
   issueType: supportIssueTypeSchema,
-  subject: import_zod88.z.string(),
+  subject: import_zod90.z.string(),
   status: supportStatusSchema,
-  source: import_zod88.z.enum(["studio", "landing"]),
-  assigneeId: import_zod88.z.string().uuid().nullable(),
-  assigneeName: import_zod88.z.string().nullable().optional(),
-  previousAssigneeName: import_zod88.z.string().nullable().optional(),
-  acceptedBy: import_zod88.z.string().uuid().nullable(),
-  acceptedAt: import_zod88.z.number().nullable(),
-  closedBy: import_zod88.z.string().uuid().nullable(),
-  closedAt: import_zod88.z.number().nullable(),
-  closeSummary: import_zod88.z.string().nullable(),
-  followUpOfTicketId: import_zod88.z.string().uuid().nullable(),
-  version: import_zod88.z.number().int().positive(),
-  createdAt: import_zod88.z.number(),
-  updatedAt: import_zod88.z.number(),
-  firstResponseAt: import_zod88.z.number().nullable(),
-  lastMessageAt: import_zod88.z.number(),
-  unread: import_zod88.z.number().int().nonnegative()
+  source: import_zod90.z.enum(["studio", "landing"]),
+  assigneeId: import_zod90.z.string().uuid().nullable(),
+  assigneeName: import_zod90.z.string().nullable().optional(),
+  previousAssigneeName: import_zod90.z.string().nullable().optional(),
+  acceptedBy: import_zod90.z.string().uuid().nullable(),
+  acceptedAt: import_zod90.z.number().nullable(),
+  closedBy: import_zod90.z.string().uuid().nullable(),
+  closedAt: import_zod90.z.number().nullable(),
+  closeSummary: import_zod90.z.string().nullable(),
+  followUpOfTicketId: import_zod90.z.string().uuid().nullable(),
+  version: import_zod90.z.number().int().positive(),
+  createdAt: import_zod90.z.number(),
+  updatedAt: import_zod90.z.number(),
+  firstResponseAt: import_zod90.z.number().nullable(),
+  lastMessageAt: import_zod90.z.number(),
+  unread: import_zod90.z.number().int().nonnegative()
 });
-var supportTicketPageSchema = import_zod88.z.object({
+var supportTicketPageSchema = import_zod90.z.object({
   items: supportTicketSchema.array(),
-  nextCursor: import_zod88.z.string().nullable()
+  nextCursor: import_zod90.z.string().nullable()
 });
-var supportMessagePageSchema = import_zod88.z.object({ items: messageSchema.array(), nextCursor: import_zod88.z.string().nullable() });
-var supportActivitySchema = import_zod88.z.object({
-  id: import_zod88.z.string().uuid(),
-  seq: import_zod88.z.number(),
-  ticketId: import_zod88.z.string().uuid(),
-  actorId: import_zod88.z.string().uuid(),
-  actorLabel: import_zod88.z.string().nullable().optional(),
-  previousAssigneeName: import_zod88.z.string().nullable().optional(),
-  assigneeName: import_zod88.z.string().nullable().optional(),
-  kind: import_zod88.z.string(),
-  previousAssigneeId: import_zod88.z.string().uuid().nullable(),
-  assigneeId: import_zod88.z.string().uuid().nullable(),
-  reason: import_zod88.z.string().nullable(),
+var supportMessagePageSchema = import_zod90.z.object({ items: messageSchema.array(), nextCursor: import_zod90.z.string().nullable() });
+var supportActivitySchema = import_zod90.z.object({
+  id: import_zod90.z.string().uuid(),
+  seq: import_zod90.z.number(),
+  ticketId: import_zod90.z.string().uuid(),
+  actorId: import_zod90.z.string().uuid(),
+  actorLabel: import_zod90.z.string().nullable().optional(),
+  previousAssigneeName: import_zod90.z.string().nullable().optional(),
+  assigneeName: import_zod90.z.string().nullable().optional(),
+  kind: import_zod90.z.string(),
+  previousAssigneeId: import_zod90.z.string().uuid().nullable(),
+  assigneeId: import_zod90.z.string().uuid().nullable(),
+  reason: import_zod90.z.string().nullable(),
   status: supportStatusSchema,
-  version: import_zod88.z.number(),
-  createdAt: import_zod88.z.number()
+  version: import_zod90.z.number(),
+  createdAt: import_zod90.z.number()
 });
-var supportNoteViewSchema = import_zod88.z.object({
-  id: import_zod88.z.string().uuid(),
-  seq: import_zod88.z.number(),
-  actorId: import_zod88.z.string().uuid(),
-  actorLabel: import_zod88.z.string().nullable().optional(),
-  body: import_zod88.z.string(),
-  createdAt: import_zod88.z.number()
+var supportNoteViewSchema = import_zod90.z.object({
+  id: import_zod90.z.string().uuid(),
+  seq: import_zod90.z.number(),
+  actorId: import_zod90.z.string().uuid(),
+  actorLabel: import_zod90.z.string().nullable().optional(),
+  body: import_zod90.z.string(),
+  createdAt: import_zod90.z.number()
 });
-var supportAgentSchema = import_zod88.z.object({
-  automatic: import_zod88.z.boolean().optional(),
-  userId: import_zod88.z.string().uuid(),
-  email: import_zod88.z.string().nullable(),
-  displayName: import_zod88.z.string().nullable().optional(),
-  version: import_zod88.z.number(),
-  grantedAt: import_zod88.z.number(),
-  grantedBy: import_zod88.z.string().uuid()
+var supportAgentSchema = import_zod90.z.object({
+  automatic: import_zod90.z.boolean().optional(),
+  userId: import_zod90.z.string().uuid(),
+  email: import_zod90.z.string().nullable(),
+  displayName: import_zod90.z.string().nullable().optional(),
+  version: import_zod90.z.number(),
+  grantedAt: import_zod90.z.number(),
+  grantedBy: import_zod90.z.string().uuid()
 });
-var supportGrantSchema = import_zod88.z.object({
-  enabled: import_zod88.z.boolean(),
-  expectedVersion: import_zod88.z.number().int().nonnegative(),
-  reason: import_zod88.z.string().trim().min(1).max(2e3),
-  clientMutationId: import_zod88.z.string().uuid()
+var supportGrantSchema = import_zod90.z.object({
+  enabled: import_zod90.z.boolean(),
+  expectedVersion: import_zod90.z.number().int().nonnegative(),
+  reason: import_zod90.z.string().trim().min(1).max(2e3),
+  clientMutationId: import_zod90.z.string().uuid()
 }).strict();
-var supportUnreadSchema = import_zod88.z.object({
-  unread: import_zod88.z.number().int().nonnegative(),
-  liveTickets: import_zod88.z.number().int().nonnegative()
+var supportUnreadSchema = import_zod90.z.object({
+  unread: import_zod90.z.number().int().nonnegative(),
+  liveTickets: import_zod90.z.number().int().nonnegative()
 });
-var supportAccessSchema = import_zod88.z.object({
-  uploads: import_zod88.z.boolean(),
-  available: import_zod88.z.boolean(),
-  staff: import_zod88.z.boolean(),
-  canManageAgents: import_zod88.z.boolean(),
-  userId: import_zod88.z.string().uuid(),
+var supportAccessSchema = import_zod90.z.object({
+  uploads: import_zod90.z.boolean(),
+  available: import_zod90.z.boolean(),
+  staff: import_zod90.z.boolean(),
+  canManageAgents: import_zod90.z.boolean(),
+  userId: import_zod90.z.string().uuid(),
   unread: supportUnreadSchema.optional()
 });
-var supportRealtimeRequestSchema = import_zod88.z.object({ ticketId: import_zod88.z.string().uuid().optional(), staff: import_zod88.z.boolean().default(false) }).strict();
-var supportRealtimeTicketSchema = import_zod88.z.object({ ticket: import_zod88.z.string(), expiresAt: import_zod88.z.number(), path: import_zod88.z.string() });
-var supportReadSchema = import_zod88.z.object({ sequence: import_zod88.z.number().int().nonnegative() }).strict();
-var supportReportSchema = import_zod88.z.object({
-  queued: import_zod88.z.number(),
-  active: import_zod88.z.number(),
-  closed: import_zod88.z.number(),
-  overdue: import_zod88.z.number(),
-  transfers: import_zod88.z.number(),
-  meanAcceptanceMs: import_zod88.z.number().nullable(),
-  meanResponseMs: import_zod88.z.number().nullable(),
-  meanResolutionMs: import_zod88.z.number().nullable(),
-  total: import_zod88.z.number().int().nonnegative(),
-  startDate: import_zod88.z.string(),
-  endDate: import_zod88.z.string(),
-  daily: import_zod88.z.array(import_zod88.z.object({ date: import_zod88.z.string(), created: import_zod88.z.number(), closed: import_zod88.z.number() })).max(90)
+var supportRealtimeRequestSchema = import_zod90.z.object({ ticketId: import_zod90.z.string().uuid().optional(), staff: import_zod90.z.boolean().default(false) }).strict();
+var supportRealtimeTicketSchema = import_zod90.z.object({ ticket: import_zod90.z.string(), expiresAt: import_zod90.z.number(), path: import_zod90.z.string() });
+var supportReadSchema = import_zod90.z.object({ sequence: import_zod90.z.number().int().nonnegative() }).strict();
+var supportReportSchema = import_zod90.z.object({
+  queued: import_zod90.z.number(),
+  active: import_zod90.z.number(),
+  closed: import_zod90.z.number(),
+  overdue: import_zod90.z.number(),
+  transfers: import_zod90.z.number(),
+  meanAcceptanceMs: import_zod90.z.number().nullable(),
+  meanResponseMs: import_zod90.z.number().nullable(),
+  meanResolutionMs: import_zod90.z.number().nullable(),
+  total: import_zod90.z.number().int().nonnegative(),
+  startDate: import_zod90.z.string(),
+  endDate: import_zod90.z.string(),
+  daily: import_zod90.z.array(import_zod90.z.object({ date: import_zod90.z.string(), created: import_zod90.z.number(), closed: import_zod90.z.number() })).max(90)
 });
-var supportTemplateSchema = import_zod88.z.object({
-  id: import_zod88.z.string().uuid(),
-  title: import_zod88.z.string().trim().min(1).max(100),
-  body: import_zod88.z.string().trim().min(1).max(16384),
-  version: import_zod88.z.number().int().positive()
+var supportTemplateSchema = import_zod90.z.object({
+  id: import_zod90.z.string().uuid(),
+  title: import_zod90.z.string().trim().min(1).max(100),
+  body: import_zod90.z.string().trim().min(1).max(16384),
+  version: import_zod90.z.number().int().positive()
 });
-var supportTemplateInputSchema = supportTemplateSchema.pick({ title: true, body: true }).extend({ expectedVersion: import_zod88.z.number().int().nonnegative() }).strict();
-var supportSettingsSchema = import_zod88.z.object({
-  version: import_zod88.z.number().int().positive(),
-  responseTargetMinutes: import_zod88.z.number().int().min(1).max(43200).nullable(),
-  retentionDays: import_zod88.z.number().int().min(1).max(3650).nullable()
+var supportTemplateInputSchema = supportTemplateSchema.pick({ title: true, body: true }).extend({ expectedVersion: import_zod90.z.number().int().nonnegative() }).strict();
+var supportSettingsSchema = import_zod90.z.object({
+  version: import_zod90.z.number().int().positive(),
+  responseTargetMinutes: import_zod90.z.number().int().min(1).max(43200).nullable(),
+  retentionDays: import_zod90.z.number().int().min(1).max(3650).nullable()
 });
-var supportSettingsInputSchema = supportSettingsSchema.omit({ version: true }).extend({ expectedVersion: import_zod88.z.number().int().positive() }).strict();
-var supportNotificationSchema = import_zod88.z.object({
-  id: import_zod88.z.string().uuid(),
-  seq: import_zod88.z.number(),
-  ticketId: import_zod88.z.string().uuid(),
-  kind: import_zod88.z.string(),
-  createdAt: import_zod88.z.number(),
-  readAt: import_zod88.z.number().nullable()
+var supportSettingsInputSchema = supportSettingsSchema.omit({ version: true }).extend({ expectedVersion: import_zod90.z.number().int().positive() }).strict();
+var supportNotificationSchema = import_zod90.z.object({
+  id: import_zod90.z.string().uuid(),
+  seq: import_zod90.z.number(),
+  ticketId: import_zod90.z.string().uuid(),
+  kind: import_zod90.z.string(),
+  createdAt: import_zod90.z.number(),
+  readAt: import_zod90.z.number().nullable()
 });
-var supportNotificationPageSchema = import_zod88.z.object({
+var supportNotificationPageSchema = import_zod90.z.object({
   items: supportNotificationSchema.array(),
-  nextCursor: import_zod88.z.string().nullable()
+  nextCursor: import_zod90.z.string().nullable()
 });
-var supportLabelsSchema = import_zod88.z.object({
-  priority: import_zod88.z.enum(["low", "normal", "high", "urgent"]),
-  tags: import_zod88.z.array(import_zod88.z.string().trim().min(1).max(40)).max(10).refine((tags) => new Set(tags).size === tags.length, "Tags must be unique")
+var supportLabelsSchema = import_zod90.z.object({
+  priority: import_zod90.z.enum(["low", "normal", "high", "urgent"]),
+  tags: import_zod90.z.array(import_zod90.z.string().trim().min(1).max(40)).max(10).refine((tags) => new Set(tags).size === tags.length, "Tags must be unique")
 }).strict();
 var supportLabelsInputSchema = supportLabelsSchema.extend({
-  clientMutationId: import_zod88.z.string().uuid(),
-  expectedVersion: import_zod88.z.number().int().positive()
+  clientMutationId: import_zod90.z.string().uuid(),
+  expectedVersion: import_zod90.z.number().int().positive()
 });
-var supportUserProfileSchema = import_zod88.z.object({
-  userId: import_zod88.z.string().uuid(),
-  email: import_zod88.z.string().nullable(),
-  displayName: import_zod88.z.string().nullable(),
-  createdAt: import_zod88.z.number()
+var supportUserProfileSchema = import_zod90.z.object({
+  userId: import_zod90.z.string().uuid(),
+  email: import_zod90.z.string().nullable(),
+  displayName: import_zod90.z.string().nullable(),
+  createdAt: import_zod90.z.number()
 });
-var supportStaffContextSchema = import_zod88.z.object({
-  notes: import_zod88.z.object({ items: supportNoteViewSchema.array(), nextCursor: import_zod88.z.string().nullable() }),
-  activity: import_zod88.z.object({ items: supportActivitySchema.array(), nextCursor: import_zod88.z.string().nullable() }),
+var supportStaffContextSchema = import_zod90.z.object({
+  notes: import_zod90.z.object({ items: supportNoteViewSchema.array(), nextCursor: import_zod90.z.string().nullable() }),
+  activity: import_zod90.z.object({ items: supportActivitySchema.array(), nextCursor: import_zod90.z.string().nullable() }),
   labels: supportLabelsSchema
 });
 
@@ -20012,144 +20144,144 @@ var SUPPORT_ARCHIVE_TABLES = [
 var SUPPORT_ARCHIVE_PAGE_SIZE = 25;
 
 // packages/schema/src/support/recovery/schema.ts
-var import_zod89 = require("zod");
-var supportMaintenanceInputSchema = import_zod89.z.object({
-  clientMutationId: import_zod89.z.string().uuid(),
-  expectedEpoch: import_zod89.z.number().int().positive(),
-  kind: import_zod89.z.enum(["backup", "restore", "erase"]),
-  backupId: import_zod89.z.string().uuid().optional(),
-  userId: import_zod89.z.string().uuid().optional(),
-  ticketId: import_zod89.z.string().uuid().optional(),
-  reason: import_zod89.z.string().trim().min(1).max(2e3)
+var import_zod91 = require("zod");
+var supportMaintenanceInputSchema = import_zod91.z.object({
+  clientMutationId: import_zod91.z.string().uuid(),
+  expectedEpoch: import_zod91.z.number().int().positive(),
+  kind: import_zod91.z.enum(["backup", "restore", "erase"]),
+  backupId: import_zod91.z.string().uuid().optional(),
+  userId: import_zod91.z.string().uuid().optional(),
+  ticketId: import_zod91.z.string().uuid().optional(),
+  reason: import_zod91.z.string().trim().min(1).max(2e3)
 }).strict().superRefine((input, ctx) => {
   if (input.kind === "restore" && !input.backupId)
-    ctx.addIssue({ code: import_zod89.z.ZodIssueCode.custom, message: "backupId required" });
+    ctx.addIssue({ code: import_zod91.z.ZodIssueCode.custom, message: "backupId required" });
   if (input.kind === "erase" && Number(!!input.userId) + Number(!!input.ticketId) !== 1)
-    ctx.addIssue({ code: import_zod89.z.ZodIssueCode.custom, message: "exactly one erasure target required" });
+    ctx.addIssue({ code: import_zod91.z.ZodIssueCode.custom, message: "exactly one erasure target required" });
   if (input.kind !== "erase" && (input.userId || input.ticketId) || input.kind !== "restore" && input.backupId)
-    ctx.addIssue({ code: import_zod89.z.ZodIssueCode.custom, message: "unexpected target" });
+    ctx.addIssue({ code: import_zod91.z.ZodIssueCode.custom, message: "unexpected target" });
 });
-var supportArchivePageSchema = import_zod89.z.object({
-  table: import_zod89.z.enum(SUPPORT_ARCHIVE_TABLES),
-  rows: import_zod89.z.record(import_zod89.z.union([import_zod89.z.string(), import_zod89.z.number().finite(), import_zod89.z.null()])).array().max(SUPPORT_ARCHIVE_PAGE_SIZE)
+var supportArchivePageSchema = import_zod91.z.object({
+  table: import_zod91.z.enum(SUPPORT_ARCHIVE_TABLES),
+  rows: import_zod91.z.record(import_zod91.z.union([import_zod91.z.string(), import_zod91.z.number().finite(), import_zod91.z.null()])).array().max(SUPPORT_ARCHIVE_PAGE_SIZE)
 }).strict();
-var supportArchiveManifestSchema = import_zod89.z.object({
-  version: import_zod89.z.literal(SUPPORT_ARCHIVE_VERSION),
-  desk: import_zod89.z.literal("octonode"),
-  id: import_zod89.z.string().uuid(),
-  generation: import_zod89.z.number().int().positive(),
-  pages: import_zod89.z.number().int().nonnegative(),
-  chain: import_zod89.z.string().regex(/^[0-9a-f]{64}$/),
-  counts: import_zod89.z.record(import_zod89.z.number().int().nonnegative()),
-  createdAt: import_zod89.z.number().int()
+var supportArchiveManifestSchema = import_zod91.z.object({
+  version: import_zod91.z.literal(SUPPORT_ARCHIVE_VERSION),
+  desk: import_zod91.z.literal("octonode"),
+  id: import_zod91.z.string().uuid(),
+  generation: import_zod91.z.number().int().positive(),
+  pages: import_zod91.z.number().int().nonnegative(),
+  chain: import_zod91.z.string().regex(/^[0-9a-f]{64}$/),
+  counts: import_zod91.z.record(import_zod91.z.number().int().nonnegative()),
+  createdAt: import_zod91.z.number().int()
 }).strict();
-var supportMaintenanceViewSchema = import_zod89.z.object({
-  id: import_zod89.z.string().uuid(),
-  kind: import_zod89.z.enum(["backup", "restore", "erase"]),
-  status: import_zod89.z.enum(["running", "failed", "complete", "cancelled"]),
-  phase: import_zod89.z.string(),
-  createdAt: import_zod89.z.number(),
-  updatedAt: import_zod89.z.number(),
-  error: import_zod89.z.string().nullable()
+var supportMaintenanceViewSchema = import_zod91.z.object({
+  id: import_zod91.z.string().uuid(),
+  kind: import_zod91.z.enum(["backup", "restore", "erase"]),
+  status: import_zod91.z.enum(["running", "failed", "complete", "cancelled"]),
+  phase: import_zod91.z.string(),
+  createdAt: import_zod91.z.number(),
+  updatedAt: import_zod91.z.number(),
+  error: import_zod91.z.string().nullable()
 });
 
 // packages/schema/src/support/snapshot.ts
-var import_zod90 = require("zod");
-var supportWorkflowSnapshotSchema = import_zod90.z.object({
-  kind: import_zod90.z.literal("octonode.support.workflow"),
-  version: import_zod90.z.union([import_zod90.z.literal(1), import_zod90.z.literal(2)]),
-  source: import_zod90.z.object({
-    path: import_zod90.z.string().min(1).max(500).refine(
+var import_zod92 = require("zod");
+var supportWorkflowSnapshotSchema = import_zod92.z.object({
+  kind: import_zod92.z.literal("octonode.support.workflow"),
+  version: import_zod92.z.union([import_zod92.z.literal(1), import_zod92.z.literal(2)]),
+  source: import_zod92.z.object({
+    path: import_zod92.z.string().min(1).max(500).refine(
       (path3) => !path3.startsWith("/") && !path3.includes("\\") && !path3.split("/").includes(".."),
       "Expected a relative source path"
     ),
-    revision: import_zod90.z.string().min(1).max(128),
-    content: import_zod90.z.string().min(1).max(9e4)
+    revision: import_zod92.z.string().min(1).max(128),
+    content: import_zod92.z.string().min(1).max(9e4)
   }).strict().optional(),
-  title: import_zod90.z.string().min(1).max(200),
-  revision: import_zod90.z.string().min(1).max(128),
-  capturedAt: import_zod90.z.number().int().nonnegative(),
-  nodes: import_zod90.z.array(
-    import_zod90.z.object({
-      id: import_zod90.z.string().min(1).max(200),
-      label: import_zod90.z.string().max(200),
-      language: import_zod90.z.string().max(40).optional(),
-      plugin: import_zod90.z.string().max(200).optional(),
-      pluginVersion: import_zod90.z.string().max(80).optional(),
-      position: import_zod90.z.object({ x: import_zod90.z.number().finite(), y: import_zod90.z.number().finite() }).optional()
+  title: import_zod92.z.string().min(1).max(200),
+  revision: import_zod92.z.string().min(1).max(128),
+  capturedAt: import_zod92.z.number().int().nonnegative(),
+  nodes: import_zod92.z.array(
+    import_zod92.z.object({
+      id: import_zod92.z.string().min(1).max(200),
+      label: import_zod92.z.string().max(200),
+      language: import_zod92.z.string().max(40).optional(),
+      plugin: import_zod92.z.string().max(200).optional(),
+      pluginVersion: import_zod92.z.string().max(80).optional(),
+      position: import_zod92.z.object({ x: import_zod92.z.number().finite(), y: import_zod92.z.number().finite() }).optional()
     }).strict()
   ).max(500),
-  edges: import_zod90.z.array(
-    import_zod90.z.object({
-      from: import_zod90.z.object({ node: import_zod90.z.string().min(1).max(200), output: import_zod90.z.string().max(200).optional() }).strict(),
-      to: import_zod90.z.object({ node: import_zod90.z.string().min(1).max(200), input: import_zod90.z.string().max(200).optional() }).strict(),
-      kind: import_zod90.z.enum(["data", "dependency", "control"]).optional()
+  edges: import_zod92.z.array(
+    import_zod92.z.object({
+      from: import_zod92.z.object({ node: import_zod92.z.string().min(1).max(200), output: import_zod92.z.string().max(200).optional() }).strict(),
+      to: import_zod92.z.object({ node: import_zod92.z.string().min(1).max(200), input: import_zod92.z.string().max(200).optional() }).strict(),
+      kind: import_zod92.z.enum(["data", "dependency", "control"]).optional()
     }).strict()
   ).max(2e3)
 }).strict().superRefine(scanSensitive).superRefine((snapshot, context) => {
   if (snapshot.version === 1 && snapshot.source)
-    context.addIssue({ code: import_zod90.z.ZodIssueCode.custom, message: "Source requires snapshot version 2" });
+    context.addIssue({ code: import_zod92.z.ZodIssueCode.custom, message: "Source requires snapshot version 2" });
   if (new TextEncoder().encode(JSON.stringify(snapshot)).length > 120 * 1024)
-    context.addIssue({ code: import_zod90.z.ZodIssueCode.custom, message: "Workflow snapshot exceeds preview size limit" });
+    context.addIssue({ code: import_zod92.z.ZodIssueCode.custom, message: "Workflow snapshot exceeds preview size limit" });
   const ids = new Set(snapshot.nodes.map((node) => node.id));
   if (ids.size !== snapshot.nodes.length || snapshot.edges.some((edge) => !ids.has(edge.from.node) || !ids.has(edge.to.node)))
-    context.addIssue({ code: import_zod90.z.ZodIssueCode.custom, message: "Invalid workflow connections" });
+    context.addIssue({ code: import_zod92.z.ZodIssueCode.custom, message: "Invalid workflow connections" });
 });
 
 // packages/schema/src/task-management/common.ts
-var import_zod91 = require("zod");
-var taskNameSchema = import_zod91.z.string().trim().min(1).max(120);
-var taskDescriptionSchema = import_zod91.z.string().max(32768).nullable();
-var taskTimestampSchema = import_zod91.z.number().int().nonnegative();
+var import_zod93 = require("zod");
+var taskNameSchema = import_zod93.z.string().trim().min(1).max(120);
+var taskDescriptionSchema = import_zod93.z.string().max(32768).nullable();
+var taskTimestampSchema = import_zod93.z.number().int().nonnegative();
 var nullableTaskTimestampSchema = taskTimestampSchema.nullable();
-var taskColorSchema = import_zod91.z.string().regex(/^#[0-9a-f]{6}$/i);
-var taskUserIdSchema = import_zod91.z.string().min(1).max(128);
-var taskSpaceTemplateSchema = import_zod91.z.enum(TASK_SPACE_TEMPLATES);
-var taskStatusCategorySchema = import_zod91.z.enum(TASK_STATUS_CATEGORIES);
-var workItemLevelSchema = import_zod91.z.enum(WORK_ITEM_LEVELS);
-var builtinWorkItemTypeSchema = import_zod91.z.enum(BUILTIN_WORK_ITEM_TYPES);
-var workItemPrioritySchema = import_zod91.z.enum(WORK_ITEM_PRIORITIES);
-var taskFieldTypeSchema = import_zod91.z.enum(TASK_FIELD_TYPES);
-var taskSpaceKeySchema = import_zod91.z.string().trim().min(2).max(10).regex(/^[A-Z][A-Z0-9]*$/);
-var workItemKeySchema = import_zod91.z.string().trim().regex(/^[A-Z][A-Z0-9]{1,9}-[1-9][0-9]*$/);
-var taskSpaceSchema = import_zod91.z.object({
+var taskColorSchema = import_zod93.z.string().regex(/^#[0-9a-f]{6}$/i);
+var taskUserIdSchema = import_zod93.z.string().min(1).max(128);
+var taskSpaceTemplateSchema = import_zod93.z.enum(TASK_SPACE_TEMPLATES);
+var taskStatusCategorySchema = import_zod93.z.enum(TASK_STATUS_CATEGORIES);
+var workItemLevelSchema = import_zod93.z.enum(WORK_ITEM_LEVELS);
+var builtinWorkItemTypeSchema = import_zod93.z.enum(BUILTIN_WORK_ITEM_TYPES);
+var workItemPrioritySchema = import_zod93.z.enum(WORK_ITEM_PRIORITIES);
+var taskFieldTypeSchema = import_zod93.z.enum(TASK_FIELD_TYPES);
+var taskSpaceKeySchema = import_zod93.z.string().trim().min(2).max(10).regex(/^[A-Z][A-Z0-9]*$/);
+var workItemKeySchema = import_zod93.z.string().trim().regex(/^[A-Z][A-Z0-9]{1,9}-[1-9][0-9]*$/);
+var taskSpaceSchema = import_zod93.z.object({
   id: entityIdSchema,
   key: taskSpaceKeySchema,
   name: taskNameSchema,
   description: taskDescriptionSchema,
-  sprintsEnabled: import_zod91.z.boolean(),
+  sprintsEnabled: import_zod93.z.boolean(),
   /** Finishing an item needs every open child finished first. */
-  blockDoneWithOpenChildren: import_zod91.z.boolean(),
+  blockDoneWithOpenChildren: import_zod93.z.boolean(),
   /** Finishing the last open child finishes its parent. */
-  autoCloseParent: import_zod91.z.boolean(),
+  autoCloseParent: import_zod93.z.boolean(),
   version: revisionSchema,
   createdAt: taskTimestampSchema,
   updatedAt: taskTimestampSchema,
   archivedAt: nullableTaskTimestampSchema
 }).strict();
-var taskSpaceCreateSchema = import_zod91.z.object({
+var taskSpaceCreateSchema = import_zod93.z.object({
   key: taskSpaceKeySchema,
   name: taskNameSchema,
   description: taskDescriptionSchema.optional(),
   template: taskSpaceTemplateSchema,
   clientMutationId: idempotencyKeySchema
 }).strict();
-var taskSpaceUpdateSchema = import_zod91.z.object({
+var taskSpaceUpdateSchema = import_zod93.z.object({
   name: taskNameSchema.optional(),
   description: taskDescriptionSchema.optional(),
-  sprintsEnabled: import_zod91.z.boolean().optional(),
-  blockDoneWithOpenChildren: import_zod91.z.boolean().optional(),
-  autoCloseParent: import_zod91.z.boolean().optional(),
+  sprintsEnabled: import_zod93.z.boolean().optional(),
+  blockDoneWithOpenChildren: import_zod93.z.boolean().optional(),
+  autoCloseParent: import_zod93.z.boolean().optional(),
   expectedVersion: revisionSchema
 }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one task space change is required");
-var taskStatusSchema = import_zod91.z.object({
+var taskStatusSchema = import_zod93.z.object({
   id: entityIdSchema,
   spaceId: entityIdSchema,
   name: taskNameSchema,
   category: taskStatusCategorySchema,
   color: taskColorSchema,
-  position: import_zod91.z.number().int().nonnegative(),
-  wipLimit: import_zod91.z.number().int().positive().max(1e4).nullable(),
+  position: import_zod93.z.number().int().nonnegative(),
+  wipLimit: import_zod93.z.number().int().positive().max(1e4).nullable(),
   version: revisionSchema,
   archivedAt: nullableTaskTimestampSchema
 }).strict();
@@ -20159,24 +20291,24 @@ var taskStatusCreateSchema = taskStatusSchema.omit({
   version: true,
   archivedAt: true
 }).extend({ clientMutationId: idempotencyKeySchema }).strict();
-var taskStatusUpdateSchema = import_zod91.z.object({
+var taskStatusUpdateSchema = import_zod93.z.object({
   name: taskNameSchema.optional(),
   category: taskStatusCategorySchema.optional(),
   color: taskColorSchema.optional(),
-  position: import_zod91.z.number().int().nonnegative().optional(),
-  wipLimit: import_zod91.z.number().int().positive().max(1e4).nullable().optional(),
-  archived: import_zod91.z.boolean().optional(),
+  position: import_zod93.z.number().int().nonnegative().optional(),
+  wipLimit: import_zod93.z.number().int().positive().max(1e4).nullable().optional(),
+  archived: import_zod93.z.boolean().optional(),
   expectedVersion: revisionSchema
 }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one status change is required");
-var workItemTypeSchema = import_zod91.z.object({
+var workItemTypeSchema = import_zod93.z.object({
   id: entityIdSchema,
   spaceId: entityIdSchema,
   name: taskNameSchema,
   level: workItemLevelSchema,
   builtin: builtinWorkItemTypeSchema.nullable(),
   color: taskColorSchema,
-  icon: import_zod91.z.string().trim().min(1).max(64).nullable(),
-  position: import_zod91.z.number().int().nonnegative(),
+  icon: import_zod93.z.string().trim().min(1).max(64).nullable(),
+  position: import_zod93.z.number().int().nonnegative(),
   version: revisionSchema,
   archivedAt: nullableTaskTimestampSchema
 }).strict();
@@ -20187,90 +20319,90 @@ var workItemTypeCreateSchema = workItemTypeSchema.omit({
   version: true,
   archivedAt: true
 }).extend({ clientMutationId: idempotencyKeySchema }).strict();
-var workItemTypeUpdateSchema = import_zod91.z.object({
+var workItemTypeUpdateSchema = import_zod93.z.object({
   name: taskNameSchema.optional(),
   color: taskColorSchema.optional(),
-  icon: import_zod91.z.string().trim().min(1).max(64).nullable().optional(),
-  position: import_zod91.z.number().int().nonnegative().optional(),
-  archived: import_zod91.z.boolean().optional(),
+  icon: import_zod93.z.string().trim().min(1).max(64).nullable().optional(),
+  position: import_zod93.z.number().int().nonnegative().optional(),
+  archived: import_zod93.z.boolean().optional(),
   expectedVersion: revisionSchema
 }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one work item type change is required");
-var taskFieldOptionSchema = import_zod91.z.object({
+var taskFieldOptionSchema = import_zod93.z.object({
   id: entityIdSchema,
   name: taskNameSchema,
   color: taskColorSchema,
-  position: import_zod91.z.number().int().nonnegative(),
+  position: import_zod93.z.number().int().nonnegative(),
   version: revisionSchema,
   archivedAt: nullableTaskTimestampSchema
 }).strict();
-var taskFieldOptionCreateSchema = import_zod91.z.object({
+var taskFieldOptionCreateSchema = import_zod93.z.object({
   name: taskNameSchema,
   color: taskColorSchema,
-  position: import_zod91.z.number().int().nonnegative(),
+  position: import_zod93.z.number().int().nonnegative(),
   clientMutationId: idempotencyKeySchema
 }).strict();
-var taskFieldOptionUpdateSchema = import_zod91.z.object({
+var taskFieldOptionUpdateSchema = import_zod93.z.object({
   name: taskNameSchema.optional(),
   color: taskColorSchema.optional(),
-  position: import_zod91.z.number().int().nonnegative().optional(),
-  archived: import_zod91.z.boolean().optional(),
+  position: import_zod93.z.number().int().nonnegative().optional(),
+  archived: import_zod93.z.boolean().optional(),
   expectedVersion: revisionSchema
 }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one field option change is required");
 var taskFieldDefinitionShape = {
   name: taskNameSchema,
-  description: import_zod91.z.string().max(500).nullable(),
+  description: import_zod93.z.string().max(500).nullable(),
   type: taskFieldTypeSchema,
-  required: import_zod91.z.boolean(),
-  position: import_zod91.z.number().int().nonnegative()
+  required: import_zod93.z.boolean(),
+  position: import_zod93.z.number().int().nonnegative()
 };
 function validateTaskFieldOptions(value, context) {
   const select = value.type === "single_select" || value.type === "multi_select";
   if (select && value.options.length === 0) {
-    context.addIssue({ code: import_zod91.z.ZodIssueCode.custom, path: ["options"], message: "select fields require options" });
+    context.addIssue({ code: import_zod93.z.ZodIssueCode.custom, path: ["options"], message: "select fields require options" });
   }
   if (!select && value.options.length > 0) {
-    context.addIssue({ code: import_zod91.z.ZodIssueCode.custom, path: ["options"], message: "only select fields accept options" });
+    context.addIssue({ code: import_zod93.z.ZodIssueCode.custom, path: ["options"], message: "only select fields accept options" });
   }
 }
-var taskFieldDefinitionSchema = import_zod91.z.object({
+var taskFieldDefinitionSchema = import_zod93.z.object({
   id: entityIdSchema,
   spaceId: entityIdSchema,
   ...taskFieldDefinitionShape,
-  options: import_zod91.z.array(taskFieldOptionSchema).max(100),
+  options: import_zod93.z.array(taskFieldOptionSchema).max(100),
   version: revisionSchema,
   archivedAt: nullableTaskTimestampSchema
 }).strict().superRefine(validateTaskFieldOptions);
-var taskFieldCreateSchema = import_zod91.z.object({
+var taskFieldCreateSchema = import_zod93.z.object({
   ...taskFieldDefinitionShape,
-  options: import_zod91.z.array(taskFieldOptionCreateSchema.omit({ clientMutationId: true })).max(100),
+  options: import_zod93.z.array(taskFieldOptionCreateSchema.omit({ clientMutationId: true })).max(100),
   clientMutationId: idempotencyKeySchema
 }).strict().superRefine(validateTaskFieldOptions);
-var taskFieldUpdateSchema = import_zod91.z.object({
+var taskFieldUpdateSchema = import_zod93.z.object({
   name: taskNameSchema.optional(),
-  description: import_zod91.z.string().max(500).nullable().optional(),
-  required: import_zod91.z.boolean().optional(),
-  position: import_zod91.z.number().int().nonnegative().optional(),
-  archived: import_zod91.z.boolean().optional(),
+  description: import_zod93.z.string().max(500).nullable().optional(),
+  required: import_zod93.z.boolean().optional(),
+  position: import_zod93.z.number().int().nonnegative().optional(),
+  archived: import_zod93.z.boolean().optional(),
   expectedVersion: revisionSchema
 }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one field change is required");
-var taskFieldValueSchema = import_zod91.z.discriminatedUnion("type", [
-  import_zod91.z.object({ type: import_zod91.z.literal("text"), value: import_zod91.z.string().max(1e4) }).strict(),
-  import_zod91.z.object({ type: import_zod91.z.literal("number"), value: import_zod91.z.number().finite() }).strict(),
-  import_zod91.z.object({ type: import_zod91.z.literal("single_select"), value: entityIdSchema }).strict(),
-  import_zod91.z.object({
-    type: import_zod91.z.literal("multi_select"),
-    value: import_zod91.z.array(entityIdSchema).max(100).refine((ids) => new Set(ids).size === ids.length, "multi-select values must be unique")
+var taskFieldValueSchema = import_zod93.z.discriminatedUnion("type", [
+  import_zod93.z.object({ type: import_zod93.z.literal("text"), value: import_zod93.z.string().max(1e4) }).strict(),
+  import_zod93.z.object({ type: import_zod93.z.literal("number"), value: import_zod93.z.number().finite() }).strict(),
+  import_zod93.z.object({ type: import_zod93.z.literal("single_select"), value: entityIdSchema }).strict(),
+  import_zod93.z.object({
+    type: import_zod93.z.literal("multi_select"),
+    value: import_zod93.z.array(entityIdSchema).max(100).refine((ids) => new Set(ids).size === ids.length, "multi-select values must be unique")
   }).strict(),
-  import_zod91.z.object({ type: import_zod91.z.literal("date"), value: taskTimestampSchema }).strict(),
-  import_zod91.z.object({ type: import_zod91.z.literal("checkbox"), value: import_zod91.z.boolean() }).strict(),
-  import_zod91.z.object({ type: import_zod91.z.literal("user"), value: taskUserIdSchema }).strict(),
-  import_zod91.z.object({ type: import_zod91.z.literal("url"), value: import_zod91.z.string().url().max(2048) }).strict()
+  import_zod93.z.object({ type: import_zod93.z.literal("date"), value: taskTimestampSchema }).strict(),
+  import_zod93.z.object({ type: import_zod93.z.literal("checkbox"), value: import_zod93.z.boolean() }).strict(),
+  import_zod93.z.object({ type: import_zod93.z.literal("user"), value: taskUserIdSchema }).strict(),
+  import_zod93.z.object({ type: import_zod93.z.literal("url"), value: import_zod93.z.string().url().max(2048) }).strict()
 ]);
-var workItemFieldValueSchema = import_zod91.z.object({
+var workItemFieldValueSchema = import_zod93.z.object({
   fieldId: entityIdSchema,
   value: taskFieldValueSchema
 }).strict();
-var taskTagSchema = import_zod91.z.object({
+var taskTagSchema = import_zod93.z.object({
   id: entityIdSchema,
   spaceId: entityIdSchema,
   name: taskNameSchema,
@@ -20278,28 +20410,28 @@ var taskTagSchema = import_zod91.z.object({
   version: revisionSchema,
   archivedAt: nullableTaskTimestampSchema
 }).strict();
-var taskTagCreateSchema = import_zod91.z.object({
+var taskTagCreateSchema = import_zod93.z.object({
   name: taskNameSchema,
   color: taskColorSchema,
   clientMutationId: idempotencyKeySchema
 }).strict();
-var taskTagUpdateSchema = import_zod91.z.object({
+var taskTagUpdateSchema = import_zod93.z.object({
   name: taskNameSchema.optional(),
   color: taskColorSchema.optional(),
-  archived: import_zod91.z.boolean().optional(),
+  archived: import_zod93.z.boolean().optional(),
   expectedVersion: revisionSchema
 }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one tag change is required");
-var taskSearchQuerySchema = import_zod91.z.object({
-  q: import_zod91.z.string().trim().min(1).max(240),
-  offset: import_zod91.z.coerce.number().int().min(0).max(1e5).default(0),
-  limit: import_zod91.z.coerce.number().int().min(1).max(100).default(20)
+var taskSearchQuerySchema = import_zod93.z.object({
+  q: import_zod93.z.string().trim().min(1).max(240),
+  offset: import_zod93.z.coerce.number().int().min(0).max(1e5).default(0),
+  limit: import_zod93.z.coerce.number().int().min(1).max(100).default(20)
 }).strict();
 
 // packages/schema/src/task-management/planning.ts
-var import_zod92 = require("zod");
-var taskReleaseStateSchema = import_zod92.z.enum(TASK_RELEASE_STATES);
-var taskSprintStateSchema = import_zod92.z.enum(TASK_SPRINT_STATES);
-var taskReleaseSchema = import_zod92.z.object({
+var import_zod94 = require("zod");
+var taskReleaseStateSchema = import_zod94.z.enum(TASK_RELEASE_STATES);
+var taskSprintStateSchema = import_zod94.z.enum(TASK_SPRINT_STATES);
+var taskReleaseSchema = import_zod94.z.object({
   id: entityIdSchema,
   spaceId: entityIdSchema,
   name: taskNameSchema,
@@ -20314,38 +20446,38 @@ var taskReleaseSchema = import_zod92.z.object({
 }).strict().superRefine((release2, context) => {
   if (release2.state === "released" && release2.releasedAt === null) {
     context.addIssue({
-      code: import_zod92.z.ZodIssueCode.custom,
+      code: import_zod94.z.ZodIssueCode.custom,
       path: ["releasedAt"],
       message: "released releases require releasedAt"
     });
   }
 });
-var taskReleaseCreateSchema = import_zod92.z.object({
+var taskReleaseCreateSchema = import_zod94.z.object({
   name: taskNameSchema,
   description: taskDescriptionSchema.optional(),
   startAt: nullableTaskTimestampSchema.optional(),
   targetAt: nullableTaskTimestampSchema.optional(),
   clientMutationId: idempotencyKeySchema
 }).strict();
-var taskReleaseUpdateSchema = import_zod92.z.object({
+var taskReleaseUpdateSchema = import_zod94.z.object({
   name: taskNameSchema.optional(),
   description: taskDescriptionSchema.optional(),
   startAt: nullableTaskTimestampSchema.optional(),
   targetAt: nullableTaskTimestampSchema.optional(),
-  archived: import_zod92.z.boolean().optional(),
+  archived: import_zod94.z.boolean().optional(),
   expectedVersion: revisionSchema
 }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one release change is required");
-var taskReleaseProgressSchema = import_zod92.z.object({
-  totalItems: import_zod92.z.number().int().nonnegative(),
-  doneItems: import_zod92.z.number().int().nonnegative(),
-  totalStoryPoints: import_zod92.z.number().nonnegative(),
-  doneStoryPoints: import_zod92.z.number().nonnegative()
+var taskReleaseProgressSchema = import_zod94.z.object({
+  totalItems: import_zod94.z.number().int().nonnegative(),
+  doneItems: import_zod94.z.number().int().nonnegative(),
+  totalStoryPoints: import_zod94.z.number().nonnegative(),
+  doneStoryPoints: import_zod94.z.number().nonnegative()
 }).strict();
-var taskSprintSchema = import_zod92.z.object({
+var taskSprintSchema = import_zod94.z.object({
   id: entityIdSchema,
   spaceId: entityIdSchema,
   name: taskNameSchema,
-  goal: import_zod92.z.string().max(500).nullable(),
+  goal: import_zod94.z.string().max(500).nullable(),
   state: taskSprintStateSchema,
   startAt: nullableTaskTimestampSchema,
   endAt: nullableTaskTimestampSchema,
@@ -20355,18 +20487,18 @@ var taskSprintSchema = import_zod92.z.object({
 }).strict().superRefine((sprint, context) => {
   if (sprint.startAt !== null && sprint.endAt !== null && sprint.endAt < sprint.startAt) {
     context.addIssue({
-      code: import_zod92.z.ZodIssueCode.custom,
+      code: import_zod94.z.ZodIssueCode.custom,
       path: ["endAt"],
       message: "endAt must not precede startAt"
     });
   }
   if (sprint.state === "active" && (sprint.startAt === null || sprint.endAt === null)) {
-    context.addIssue({ code: import_zod92.z.ZodIssueCode.custom, message: "active sprints require startAt and endAt" });
+    context.addIssue({ code: import_zod94.z.ZodIssueCode.custom, message: "active sprints require startAt and endAt" });
   }
 });
-var taskSprintCreateSchema = import_zod92.z.object({
+var taskSprintCreateSchema = import_zod94.z.object({
   name: taskNameSchema,
-  goal: import_zod92.z.string().max(500).nullable().optional(),
+  goal: import_zod94.z.string().max(500).nullable().optional(),
   startAt: nullableTaskTimestampSchema.optional(),
   endAt: nullableTaskTimestampSchema.optional(),
   clientMutationId: idempotencyKeySchema
@@ -20374,9 +20506,9 @@ var taskSprintCreateSchema = import_zod92.z.object({
   (sprint) => sprint.startAt == null || sprint.endAt == null || sprint.endAt >= sprint.startAt,
   "endAt must not precede startAt"
 );
-var taskSprintUpdateSchema = import_zod92.z.object({
+var taskSprintUpdateSchema = import_zod94.z.object({
   name: taskNameSchema.optional(),
-  goal: import_zod92.z.string().max(500).nullable().optional(),
+  goal: import_zod94.z.string().max(500).nullable().optional(),
   startAt: nullableTaskTimestampSchema.optional(),
   endAt: nullableTaskTimestampSchema.optional(),
   expectedVersion: revisionSchema
@@ -20384,27 +20516,27 @@ var taskSprintUpdateSchema = import_zod92.z.object({
   (sprint) => sprint.startAt == null || sprint.endAt == null || sprint.endAt >= sprint.startAt,
   "endAt must not precede startAt"
 );
-var sprintStartSchema = import_zod92.z.object({
+var sprintStartSchema = import_zod94.z.object({
   startAt: taskTimestampSchema,
   endAt: taskTimestampSchema,
   expectedVersion: revisionSchema,
   clientMutationId: idempotencyKeySchema
 }).strict().refine((sprint) => sprint.endAt >= sprint.startAt, "endAt must not precede startAt");
-var sprintCompletionDestinationSchema = import_zod92.z.discriminatedUnion("kind", [
-  import_zod92.z.object({ kind: import_zod92.z.literal("backlog") }).strict(),
-  import_zod92.z.object({ kind: import_zod92.z.literal("sprint"), sprintId: entityIdSchema }).strict()
+var sprintCompletionDestinationSchema = import_zod94.z.discriminatedUnion("kind", [
+  import_zod94.z.object({ kind: import_zod94.z.literal("backlog") }).strict(),
+  import_zod94.z.object({ kind: import_zod94.z.literal("sprint"), sprintId: entityIdSchema }).strict()
 ]);
-var sprintCompleteSchema = import_zod92.z.object({
+var sprintCompleteSchema = import_zod94.z.object({
   incompleteDestination: sprintCompletionDestinationSchema,
   expectedVersion: revisionSchema,
   clientMutationId: idempotencyKeySchema
 }).strict();
-var releaseResolutionSchema = import_zod92.z.discriminatedUnion("kind", [
-  import_zod92.z.object({ kind: import_zod92.z.literal("keep") }).strict(),
-  import_zod92.z.object({ kind: import_zod92.z.literal("remove") }).strict(),
-  import_zod92.z.object({ kind: import_zod92.z.literal("move"), releaseId: entityIdSchema }).strict()
+var releaseResolutionSchema = import_zod94.z.discriminatedUnion("kind", [
+  import_zod94.z.object({ kind: import_zod94.z.literal("keep") }).strict(),
+  import_zod94.z.object({ kind: import_zod94.z.literal("remove") }).strict(),
+  import_zod94.z.object({ kind: import_zod94.z.literal("move"), releaseId: entityIdSchema }).strict()
 ]);
-var taskReleaseOperationSchema = import_zod92.z.object({
+var taskReleaseOperationSchema = import_zod94.z.object({
   releasedAt: taskTimestampSchema,
   unresolvedItems: releaseResolutionSchema,
   expectedVersion: revisionSchema,
@@ -20412,61 +20544,61 @@ var taskReleaseOperationSchema = import_zod92.z.object({
 }).strict();
 
 // packages/schema/src/task-management/work/items.ts
-var import_zod93 = require("zod");
-var taskLinkTypeSchema = import_zod93.z.enum(TASK_LINK_TYPES);
-var workItemLinkSchema = import_zod93.z.object({
+var import_zod95 = require("zod");
+var taskLinkTypeSchema = import_zod95.z.enum(TASK_LINK_TYPES);
+var workItemLinkSchema = import_zod95.z.object({
   sourceItemId: entityIdSchema,
   targetItemId: entityIdSchema,
   type: taskLinkTypeSchema,
   createdBy: taskUserIdSchema,
   createdAt: taskTimestampSchema
 }).strict();
-var workItemWorkflowLinkSchema = import_zod93.z.object({
+var workItemWorkflowLinkSchema = import_zod95.z.object({
   itemId: entityIdSchema,
-  projectId: import_zod93.z.string().min(1).max(128),
-  workflowId: import_zod93.z.string().min(1).max(200),
+  projectId: import_zod95.z.string().min(1).max(128),
+  workflowId: import_zod95.z.string().min(1).max(200),
   createdBy: taskUserIdSchema,
   createdAt: taskTimestampSchema
 }).strict();
-var workItemPullRequestLinkSchema = import_zod93.z.object({
+var workItemPullRequestLinkSchema = import_zod95.z.object({
   itemId: entityIdSchema,
-  repositoryId: import_zod93.z.number().int().positive(),
-  pullNumber: import_zod93.z.number().int().positive(),
+  repositoryId: import_zod95.z.number().int().positive(),
+  pullNumber: import_zod95.z.number().int().positive(),
   createdBy: taskUserIdSchema,
   createdAt: taskTimestampSchema
 }).strict();
-var workItemDesignDocLinkSchema = import_zod93.z.object({
+var workItemDesignDocLinkSchema = import_zod95.z.object({
   itemId: entityIdSchema,
   documentId: entityIdSchema,
   createdBy: taskUserIdSchema,
   createdAt: taskTimestampSchema
 }).strict();
-var workItemSchema = import_zod93.z.object({
+var workItemSchema = import_zod95.z.object({
   id: entityIdSchema,
   key: workItemKeySchema,
   spaceId: entityIdSchema,
   type: workItemTypeSchema,
-  title: import_zod93.z.string().trim().min(1).max(240),
+  title: import_zod95.z.string().trim().min(1).max(240),
   description: taskDescriptionSchema,
   statusId: entityIdSchema,
   priority: workItemPrioritySchema,
   reporterId: taskUserIdSchema,
   assigneeId: taskUserIdSchema.nullable(),
-  assigneeName: import_zod93.z.string().nullable().optional(),
+  assigneeName: import_zod95.z.string().nullable().optional(),
   parentId: entityIdSchema.nullable(),
   sprintId: entityIdSchema.nullable(),
-  storyPoints: import_zod93.z.number().min(0).max(1e3).nullable(),
+  storyPoints: import_zod95.z.number().min(0).max(1e3).nullable(),
   startAt: nullableTaskTimestampSchema,
   dueAt: nullableTaskTimestampSchema,
-  rank: import_zod93.z.number().int().nonnegative(),
-  fieldValues: import_zod93.z.array(workItemFieldValueSchema).max(50),
-  tags: import_zod93.z.array(taskTagSchema).max(20),
-  releases: import_zod93.z.array(taskReleaseSchema).max(20),
-  links: import_zod93.z.object({
-    items: import_zod93.z.array(workItemLinkSchema).max(100),
-    workflows: import_zod93.z.array(workItemWorkflowLinkSchema).max(100),
-    pullRequests: import_zod93.z.array(workItemPullRequestLinkSchema).max(100),
-    designDocs: import_zod93.z.array(workItemDesignDocLinkSchema).max(100)
+  rank: import_zod95.z.number().int().nonnegative(),
+  fieldValues: import_zod95.z.array(workItemFieldValueSchema).max(50),
+  tags: import_zod95.z.array(taskTagSchema).max(20),
+  releases: import_zod95.z.array(taskReleaseSchema).max(20),
+  links: import_zod95.z.object({
+    items: import_zod95.z.array(workItemLinkSchema).max(100),
+    workflows: import_zod95.z.array(workItemWorkflowLinkSchema).max(100),
+    pullRequests: import_zod95.z.array(workItemPullRequestLinkSchema).max(100),
+    designDocs: import_zod95.z.array(workItemDesignDocLinkSchema).max(100)
   }).strict(),
   version: revisionSchema,
   createdAt: taskTimestampSchema,
@@ -20475,21 +20607,21 @@ var workItemSchema = import_zod93.z.object({
 }).strict();
 var workItemMutationShape = {
   typeId: entityIdSchema,
-  title: import_zod93.z.string().trim().min(1).max(240),
+  title: import_zod95.z.string().trim().min(1).max(240),
   description: taskDescriptionSchema,
   statusId: entityIdSchema,
   priority: workItemPrioritySchema,
   assigneeId: taskUserIdSchema.nullable(),
   parentId: entityIdSchema.nullable(),
   sprintId: entityIdSchema.nullable(),
-  storyPoints: import_zod93.z.number().min(0).max(1e3).nullable(),
+  storyPoints: import_zod95.z.number().min(0).max(1e3).nullable(),
   startAt: nullableTaskTimestampSchema,
   dueAt: nullableTaskTimestampSchema,
-  fieldValues: import_zod93.z.array(workItemFieldValueSchema).max(50),
-  tagIds: import_zod93.z.array(entityIdSchema).max(20),
-  releaseIds: import_zod93.z.array(entityIdSchema).max(20)
+  fieldValues: import_zod95.z.array(workItemFieldValueSchema).max(50),
+  tagIds: import_zod95.z.array(entityIdSchema).max(20),
+  releaseIds: import_zod95.z.array(entityIdSchema).max(20)
 };
-var workItemCreateSchema = import_zod93.z.object({
+var workItemCreateSchema = import_zod95.z.object({
   typeId: workItemMutationShape.typeId,
   title: workItemMutationShape.title,
   description: workItemMutationShape.description.optional(),
@@ -20522,94 +20654,94 @@ var workItemChangesShape = {
   tagIds: workItemMutationShape.tagIds.optional(),
   releaseIds: workItemMutationShape.releaseIds.optional()
 };
-var workItemUpdateSchema = import_zod93.z.object({ ...workItemChangesShape, expectedVersion: revisionSchema }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one work item change is required");
-var workItemVersionedRefSchema = import_zod93.z.object({ itemId: entityIdSchema, expectedVersion: revisionSchema }).strict();
-var workItemBulkSchema = import_zod93.z.object({
-  create: import_zod93.z.array(workItemCreateSchema.omit({ clientMutationId: true })).max(WORK_ITEM_BULK_LIMIT).default([]),
-  update: import_zod93.z.array(
+var workItemUpdateSchema = import_zod95.z.object({ ...workItemChangesShape, expectedVersion: revisionSchema }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one work item change is required");
+var workItemVersionedRefSchema = import_zod95.z.object({ itemId: entityIdSchema, expectedVersion: revisionSchema }).strict();
+var workItemBulkSchema = import_zod95.z.object({
+  create: import_zod95.z.array(workItemCreateSchema.omit({ clientMutationId: true })).max(WORK_ITEM_BULK_LIMIT).default([]),
+  update: import_zod95.z.array(
     workItemVersionedRefSchema.extend({
-      changes: import_zod93.z.object(workItemChangesShape).strict().refine((changes) => Object.keys(changes).length > 0, "at least one work item change is required")
+      changes: import_zod95.z.object(workItemChangesShape).strict().refine((changes) => Object.keys(changes).length > 0, "at least one work item change is required")
     }).strict()
   ).max(WORK_ITEM_BULK_LIMIT).default([]),
-  archive: import_zod93.z.array(workItemVersionedRefSchema).max(WORK_ITEM_BULK_LIMIT).default([]),
-  restore: import_zod93.z.array(workItemVersionedRefSchema).max(WORK_ITEM_BULK_LIMIT).default([]),
+  archive: import_zod95.z.array(workItemVersionedRefSchema).max(WORK_ITEM_BULK_LIMIT).default([]),
+  restore: import_zod95.z.array(workItemVersionedRefSchema).max(WORK_ITEM_BULK_LIMIT).default([]),
   clientMutationId: idempotencyKeySchema
 }).strict().superRefine((bulk, context) => {
   const total = bulk.create.length + bulk.update.length + bulk.archive.length + bulk.restore.length;
   if (total === 0 || total > WORK_ITEM_BULK_LIMIT)
     context.addIssue({
-      code: import_zod93.z.ZodIssueCode.custom,
+      code: import_zod95.z.ZodIssueCode.custom,
       message: `a bulk request needs 1-${WORK_ITEM_BULK_LIMIT} operations`
     });
   const ids = [...bulk.update, ...bulk.archive, ...bulk.restore].map(({ itemId }) => itemId);
   if (new Set(ids).size !== ids.length)
-    context.addIssue({ code: import_zod93.z.ZodIssueCode.custom, message: "each work item may appear once per bulk request" });
+    context.addIssue({ code: import_zod95.z.ZodIssueCode.custom, message: "each work item may appear once per bulk request" });
 });
-var workItemMoveSchema = import_zod93.z.object({
+var workItemMoveSchema = import_zod95.z.object({
   statusId: entityIdSchema,
   beforeItemId: entityIdSchema.nullable().optional(),
   afterItemId: entityIdSchema.nullable().optional(),
   expectedVersion: revisionSchema,
   clientMutationId: idempotencyKeySchema
 }).strict().refine((move) => !(move.beforeItemId && move.afterItemId), "beforeItemId and afterItemId are mutually exclusive");
-var workItemLinkMutationSchema = import_zod93.z.discriminatedUnion("kind", [
-  import_zod93.z.object({ kind: import_zod93.z.literal("item"), targetItemId: entityIdSchema, type: taskLinkTypeSchema }).strict(),
-  import_zod93.z.object({
-    kind: import_zod93.z.literal("workflow"),
-    projectId: import_zod93.z.string().min(1).max(128),
-    workflowId: import_zod93.z.string().min(1).max(200)
+var workItemLinkMutationSchema = import_zod95.z.discriminatedUnion("kind", [
+  import_zod95.z.object({ kind: import_zod95.z.literal("item"), targetItemId: entityIdSchema, type: taskLinkTypeSchema }).strict(),
+  import_zod95.z.object({
+    kind: import_zod95.z.literal("workflow"),
+    projectId: import_zod95.z.string().min(1).max(128),
+    workflowId: import_zod95.z.string().min(1).max(200)
   }).strict(),
-  import_zod93.z.object({
-    kind: import_zod93.z.literal("pull_request"),
-    repositoryId: import_zod93.z.number().int().positive(),
-    pullNumber: import_zod93.z.number().int().positive()
+  import_zod95.z.object({
+    kind: import_zod95.z.literal("pull_request"),
+    repositoryId: import_zod95.z.number().int().positive(),
+    pullNumber: import_zod95.z.number().int().positive()
   }).strict(),
-  import_zod93.z.object({
-    kind: import_zod93.z.literal("design_doc"),
+  import_zod95.z.object({
+    kind: import_zod95.z.literal("design_doc"),
     documentId: entityIdSchema
   }).strict()
 ]);
-var workItemMineQuerySchema = import_zod93.z.object({
-  role: import_zod93.z.enum(["assigned", "reported"]).default("assigned"),
-  includeDone: import_zod93.z.boolean().default(false),
-  limit: import_zod93.z.number().int().min(1).max(100).default(50)
+var workItemMineQuerySchema = import_zod95.z.object({
+  role: import_zod95.z.enum(["assigned", "reported"]).default("assigned"),
+  includeDone: import_zod95.z.boolean().default(false),
+  limit: import_zod95.z.number().int().min(1).max(100).default(50)
 }).strict();
 
 // packages/schema/src/task-management/views.ts
-var import_zod94 = require("zod");
-var taskViewLayoutSchema = import_zod94.z.enum(TASK_VIEW_LAYOUTS);
-var taskViewGroupSchema = import_zod94.z.enum(TASK_VIEW_GROUPS);
-var taskViewSortSchema = import_zod94.z.enum(TASK_VIEW_SORTS);
-var taskFieldFilterSchema = import_zod94.z.object({
+var import_zod96 = require("zod");
+var taskViewLayoutSchema = import_zod96.z.enum(TASK_VIEW_LAYOUTS);
+var taskViewGroupSchema = import_zod96.z.enum(TASK_VIEW_GROUPS);
+var taskViewSortSchema = import_zod96.z.enum(TASK_VIEW_SORTS);
+var taskFieldFilterSchema = import_zod96.z.object({
   fieldId: entityIdSchema,
-  operator: import_zod94.z.enum(["is", "is_not", "contains", "before", "after"]),
-  value: import_zod94.z.union([import_zod94.z.string().max(1e4), import_zod94.z.number().finite(), import_zod94.z.boolean(), import_zod94.z.array(import_zod94.z.string().max(128)).max(100)])
+  operator: import_zod96.z.enum(["is", "is_not", "contains", "before", "after"]),
+  value: import_zod96.z.union([import_zod96.z.string().max(1e4), import_zod96.z.number().finite(), import_zod96.z.boolean(), import_zod96.z.array(import_zod96.z.string().max(128)).max(100)])
 }).strict();
-var taskViewFilterSchema = import_zod94.z.object({
-  query: import_zod94.z.string().trim().max(200).optional(),
-  focus: import_zod94.z.enum(["all", "open", "unassigned", "overdue"]).optional(),
-  layout: import_zod94.z.enum(["board", "list", "calendar", "timeline", "backlog", "sprint", "releases"]).optional(),
+var taskViewFilterSchema = import_zod96.z.object({
+  query: import_zod96.z.string().trim().max(200).optional(),
+  focus: import_zod96.z.enum(["all", "open", "unassigned", "overdue"]).optional(),
+  layout: import_zod96.z.enum(["board", "list", "calendar", "timeline", "backlog", "sprint", "releases"]).optional(),
   sort: taskViewSortSchema.optional(),
-  excludeIds: import_zod94.z.array(entityIdSchema).max(100).optional(),
-  typeIds: import_zod94.z.array(entityIdSchema).max(50).optional(),
-  statusIds: import_zod94.z.array(entityIdSchema).max(20).optional(),
-  priorities: import_zod94.z.array(workItemPrioritySchema).max(WORK_ITEM_PRIORITIES.length).optional(),
-  assigneeIds: import_zod94.z.array(taskUserIdSchema).max(100).optional(),
-  tagIds: import_zod94.z.array(entityIdSchema).max(500).optional(),
-  archived: import_zod94.z.boolean().optional(),
-  sprintIds: import_zod94.z.array(entityIdSchema).max(100).optional(),
-  releaseIds: import_zod94.z.array(entityIdSchema).max(100).optional(),
+  excludeIds: import_zod96.z.array(entityIdSchema).max(100).optional(),
+  typeIds: import_zod96.z.array(entityIdSchema).max(50).optional(),
+  statusIds: import_zod96.z.array(entityIdSchema).max(20).optional(),
+  priorities: import_zod96.z.array(workItemPrioritySchema).max(WORK_ITEM_PRIORITIES.length).optional(),
+  assigneeIds: import_zod96.z.array(taskUserIdSchema).max(100).optional(),
+  tagIds: import_zod96.z.array(entityIdSchema).max(500).optional(),
+  archived: import_zod96.z.boolean().optional(),
+  sprintIds: import_zod96.z.array(entityIdSchema).max(100).optional(),
+  releaseIds: import_zod96.z.array(entityIdSchema).max(100).optional(),
   parentId: entityIdSchema.optional(),
-  projectIds: import_zod94.z.array(import_zod94.z.string().min(1).max(128)).max(100).optional(),
-  customFields: import_zod94.z.array(taskFieldFilterSchema).max(50).optional(),
+  projectIds: import_zod96.z.array(import_zod96.z.string().min(1).max(128)).max(100).optional(),
+  customFields: import_zod96.z.array(taskFieldFilterSchema).max(50).optional(),
   startFrom: taskTimestampSchema.optional(),
   dueThrough: taskTimestampSchema.optional(),
-  hideDone: import_zod94.z.boolean().optional()
+  hideDone: import_zod96.z.boolean().optional()
 }).strict();
-var taskViewColumnSchema = import_zod94.z.discriminatedUnion("kind", [
-  import_zod94.z.object({
-    kind: import_zod94.z.literal("builtin"),
-    field: import_zod94.z.enum([
+var taskViewColumnSchema = import_zod96.z.discriminatedUnion("kind", [
+  import_zod96.z.object({
+    kind: import_zod96.z.literal("builtin"),
+    field: import_zod96.z.enum([
       "key",
       "type",
       "title",
@@ -20625,25 +20757,25 @@ var taskViewColumnSchema = import_zod94.z.discriminatedUnion("kind", [
       "releases",
       "updated"
     ]),
-    width: import_zod94.z.number().int().min(60).max(1e3).optional()
+    width: import_zod96.z.number().int().min(60).max(1e3).optional()
   }).strict(),
-  import_zod94.z.object({
-    kind: import_zod94.z.literal("custom"),
+  import_zod96.z.object({
+    kind: import_zod96.z.literal("custom"),
     fieldId: entityIdSchema,
-    width: import_zod94.z.number().int().min(60).max(1e3).optional()
+    width: import_zod96.z.number().int().min(60).max(1e3).optional()
   }).strict()
 ]);
 function validateTaskViewGrouping(view, context) {
   if (view.groupBy === "custom_single_select" && view.groupFieldId === null) {
     context.addIssue({
-      code: import_zod94.z.ZodIssueCode.custom,
+      code: import_zod96.z.ZodIssueCode.custom,
       path: ["groupFieldId"],
       message: "custom grouping requires a field"
     });
   }
   if (view.groupBy !== "custom_single_select" && view.groupFieldId !== null) {
     context.addIssue({
-      code: import_zod94.z.ZodIssueCode.custom,
+      code: import_zod96.z.ZodIssueCode.custom,
       path: ["groupFieldId"],
       message: "groupFieldId is only valid for custom grouping"
     });
@@ -20656,10 +20788,10 @@ var taskViewMutationShape = {
   groupBy: taskViewGroupSchema,
   groupFieldId: entityIdSchema.nullable(),
   sort: taskViewSortSchema,
-  columns: import_zod94.z.array(taskViewColumnSchema).max(50),
-  shared: import_zod94.z.boolean()
+  columns: import_zod96.z.array(taskViewColumnSchema).max(50),
+  shared: import_zod96.z.boolean()
 };
-var taskViewSchema = import_zod94.z.object({
+var taskViewSchema = import_zod96.z.object({
   id: entityIdSchema,
   spaceId: entityIdSchema,
   ...taskViewMutationShape,
@@ -20667,20 +20799,20 @@ var taskViewSchema = import_zod94.z.object({
   createdAt: taskTimestampSchema,
   updatedAt: taskTimestampSchema
 }).strict().superRefine(validateTaskViewGrouping);
-var taskCatalogSchema = import_zod94.z.object({
-  statuses: import_zod94.z.array(taskStatusSchema),
-  types: import_zod94.z.array(workItemTypeSchema),
-  tags: import_zod94.z.array(taskTagSchema),
-  sprints: import_zod94.z.array(taskSprintSchema),
-  releases: import_zod94.z.array(taskReleaseSchema),
-  views: import_zod94.z.array(taskViewSchema),
-  fields: import_zod94.z.array(taskFieldDefinitionSchema)
+var taskCatalogSchema = import_zod96.z.object({
+  statuses: import_zod96.z.array(taskStatusSchema),
+  types: import_zod96.z.array(workItemTypeSchema),
+  tags: import_zod96.z.array(taskTagSchema),
+  sprints: import_zod96.z.array(taskSprintSchema),
+  releases: import_zod96.z.array(taskReleaseSchema),
+  views: import_zod96.z.array(taskViewSchema),
+  fields: import_zod96.z.array(taskFieldDefinitionSchema)
 }).strict();
-var taskViewCreateSchema = import_zod94.z.object({
+var taskViewCreateSchema = import_zod96.z.object({
   ...taskViewMutationShape,
   clientMutationId: idempotencyKeySchema
 }).strict().superRefine(validateTaskViewGrouping);
-var taskViewUpdateSchema = import_zod94.z.object({
+var taskViewUpdateSchema = import_zod96.z.object({
   name: taskViewMutationShape.name.optional(),
   layout: taskViewMutationShape.layout.optional(),
   filter: taskViewMutationShape.filter.optional(),
@@ -20693,31 +20825,31 @@ var taskViewUpdateSchema = import_zod94.z.object({
 }).strict().refine((changes) => Object.keys(changes).length > 1, "at least one view change is required");
 
 // packages/schema/src/task-management/activity.ts
-var import_zod95 = require("zod");
-var workItemCommentSchema = import_zod95.z.object({
+var import_zod97 = require("zod");
+var workItemCommentSchema = import_zod97.z.object({
   id: entityIdSchema,
   itemId: entityIdSchema,
-  authorKind: import_zod95.z.enum(["user", "agent"]),
+  authorKind: import_zod97.z.enum(["user", "agent"]),
   authorId: taskUserIdSchema,
-  body: import_zod95.z.string().max(32768),
+  body: import_zod97.z.string().max(32768),
   version: revisionSchema,
   createdAt: taskTimestampSchema,
   editedAt: nullableTaskTimestampSchema,
   deletedAt: nullableTaskTimestampSchema
 }).strict();
-var workItemCommentCreateSchema = import_zod95.z.object({
-  body: import_zod95.z.string().trim().min(1).max(32768),
+var workItemCommentCreateSchema = import_zod97.z.object({
+  body: import_zod97.z.string().trim().min(1).max(32768),
   replyToId: entityIdSchema.nullable().optional(),
   clientMutationId: idempotencyKeySchema
 }).strict();
-var activityValueSchema = import_zod95.z.union([import_zod95.z.string().max(500), import_zod95.z.number(), import_zod95.z.boolean(), import_zod95.z.null()]);
-var workItemActivitySchema = import_zod95.z.object({
-  seq: import_zod95.z.number().int().positive(),
+var activityValueSchema = import_zod97.z.union([import_zod97.z.string().max(500), import_zod97.z.number(), import_zod97.z.boolean(), import_zod97.z.null()]);
+var workItemActivitySchema = import_zod97.z.object({
+  seq: import_zod97.z.number().int().positive(),
   id: entityIdSchema,
   itemId: entityIdSchema,
-  actorKind: import_zod95.z.enum(["user", "agent", "system"]),
+  actorKind: import_zod97.z.enum(["user", "agent", "system"]),
   actorId: taskUserIdSchema,
-  kind: import_zod95.z.enum([
+  kind: import_zod97.z.enum([
     "created",
     "updated",
     "moved",
@@ -20734,14 +20866,14 @@ var workItemActivitySchema = import_zod95.z.object({
     "sprint_completed",
     "release_updated"
   ]),
-  fields: import_zod95.z.array(import_zod95.z.string().min(1).max(64)).max(50),
-  before: import_zod95.z.record(activityValueSchema),
-  after: import_zod95.z.record(activityValueSchema),
+  fields: import_zod97.z.array(import_zod97.z.string().min(1).max(64)).max(50),
+  before: import_zod97.z.record(activityValueSchema),
+  after: import_zod97.z.record(activityValueSchema),
   createdAt: taskTimestampSchema
 }).strict();
-var taskErrorSchema = import_zod95.z.object({
-  error: import_zod95.z.string().min(1).max(1e3),
-  code: import_zod95.z.enum([
+var taskErrorSchema = import_zod97.z.object({
+  error: import_zod97.z.string().min(1).max(1e3),
+  code: import_zod97.z.enum([
     "forbidden",
     "not_found",
     "conflict",
@@ -20753,95 +20885,95 @@ var taskErrorSchema = import_zod95.z.object({
   currentVersion: revisionSchema.optional()
 }).strict();
 var taskSpacePageSchema = pageSchema(taskSpaceSchema);
-var taskItemTotalsSchema = import_zod95.z.object({
-  total: import_zod95.z.number().int().nonnegative(),
-  done: import_zod95.z.number().int().nonnegative(),
-  storyPoints: import_zod95.z.number().nonnegative()
+var taskItemTotalsSchema = import_zod97.z.object({
+  total: import_zod97.z.number().int().nonnegative(),
+  done: import_zod97.z.number().int().nonnegative(),
+  storyPoints: import_zod97.z.number().nonnegative()
 });
 var taskItemSummarySchema = taskItemTotalsSchema.extend({
   startAt: nullableTaskTimestampSchema,
   endAt: nullableTaskTimestampSchema,
-  statuses: import_zod95.z.record(taskItemTotalsSchema),
-  sprints: import_zod95.z.record(taskItemTotalsSchema),
-  releases: import_zod95.z.record(taskItemTotalsSchema)
+  statuses: import_zod97.z.record(taskItemTotalsSchema),
+  sprints: import_zod97.z.record(taskItemTotalsSchema),
+  releases: import_zod97.z.record(taskItemTotalsSchema)
 });
 var workItemPageSchema = pageSchema(workItemSchema).extend({ summary: taskItemSummarySchema });
-var taskSpaceBrowseSchema = import_zod95.z.object({ catalog: taskCatalogSchema, page: workItemPageSchema }).strict();
+var taskSpaceBrowseSchema = import_zod97.z.object({ catalog: taskCatalogSchema, page: workItemPageSchema }).strict();
 var taskSprintPageSchema = pageSchema(taskSprintSchema);
 var taskReleasePageSchema = pageSchema(taskReleaseSchema);
 var workItemCommentPageSchema = pageSchema(workItemCommentSchema);
 var workItemActivityPageSchema = pageSchema(workItemActivitySchema);
-var workItemDetailSchema = import_zod95.z.object({
+var workItemDetailSchema = import_zod97.z.object({
   item: workItemSchema,
   comments: workItemCommentPageSchema,
   activity: workItemActivityPageSchema
 }).strict();
 
 // packages/schema/src/task-management/attachments.ts
-var import_zod96 = require("zod");
-var taskAttachmentMimeSchema = import_zod96.z.enum(TASK_ATTACHMENT_MIME_TYPES);
-var taskAttachmentNameSchema = import_zod96.z.string().trim().min(1).max(200).regex(/^[^/\\\p{Cc}]+$/u);
-var taskAttachmentSchema = import_zod96.z.object({
+var import_zod98 = require("zod");
+var taskAttachmentMimeSchema = import_zod98.z.enum(TASK_ATTACHMENT_MIME_TYPES);
+var taskAttachmentNameSchema = import_zod98.z.string().trim().min(1).max(200).regex(/^[^/\\\p{Cc}]+$/u);
+var taskAttachmentSchema = import_zod98.z.object({
   id: entityIdSchema,
   itemId: entityIdSchema,
   name: taskAttachmentNameSchema,
   mime: taskAttachmentMimeSchema,
-  size: import_zod96.z.number().int().positive().max(TASK_ATTACHMENT_MAX_BYTES),
-  checksum: import_zod96.z.string().max(128),
+  size: import_zod98.z.number().int().positive().max(TASK_ATTACHMENT_MAX_BYTES),
+  checksum: import_zod98.z.string().max(128),
   createdBy: taskUserIdSchema,
   createdAt: taskTimestampSchema
 }).strict();
-var taskAttachmentListSchema = import_zod96.z.object({ items: import_zod96.z.array(taskAttachmentSchema).max(100) }).strict();
-var taskAttachmentUploadQuerySchema = import_zod96.z.object({ name: taskAttachmentNameSchema }).strict();
-var taskAttachmentRecordSchema = import_zod96.z.object({
+var taskAttachmentListSchema = import_zod98.z.object({ items: import_zod98.z.array(taskAttachmentSchema).max(100) }).strict();
+var taskAttachmentUploadQuerySchema = import_zod98.z.object({ name: taskAttachmentNameSchema }).strict();
+var taskAttachmentRecordSchema = import_zod98.z.object({
   id: entityIdSchema,
   name: taskAttachmentNameSchema,
   mime: taskAttachmentMimeSchema,
-  size: import_zod96.z.number().int().positive().max(TASK_ATTACHMENT_MAX_BYTES),
-  checksum: import_zod96.z.string().max(128),
-  objectKey: import_zod96.z.string().min(1).max(512),
+  size: import_zod98.z.number().int().positive().max(TASK_ATTACHMENT_MAX_BYTES),
+  checksum: import_zod98.z.string().max(128),
+  objectKey: import_zod98.z.string().min(1).max(512),
   clientMutationId: idempotencyKeySchema
 }).strict();
 
 // packages/schema/src/task-management/hierarchy.ts
-var import_zod97 = require("zod");
-var taskHierarchyRollupSchema = import_zod97.z.object({
-  total: import_zod97.z.number().int().nonnegative(),
-  todo: import_zod97.z.number().int().nonnegative(),
-  inProgress: import_zod97.z.number().int().nonnegative(),
-  done: import_zod97.z.number().int().nonnegative(),
-  points: import_zod97.z.number(),
-  donePoints: import_zod97.z.number(),
+var import_zod99 = require("zod");
+var taskHierarchyRollupSchema = import_zod99.z.object({
+  total: import_zod99.z.number().int().nonnegative(),
+  todo: import_zod99.z.number().int().nonnegative(),
+  inProgress: import_zod99.z.number().int().nonnegative(),
+  done: import_zod99.z.number().int().nonnegative(),
+  points: import_zod99.z.number(),
+  donePoints: import_zod99.z.number(),
   startAt: nullableTaskTimestampSchema,
   dueAt: nullableTaskTimestampSchema
 }).strict();
-var workItemTreeNodeSchema = import_zod97.z.object({
+var workItemTreeNodeSchema = import_zod99.z.object({
   id: entityIdSchema,
   key: workItemKeySchema,
   spaceId: entityIdSchema,
   parentId: entityIdSchema.nullable(),
-  depth: import_zod97.z.number().int().nonnegative(),
-  childCount: import_zod97.z.number().int().nonnegative().optional(),
+  depth: import_zod99.z.number().int().nonnegative(),
+  childCount: import_zod99.z.number().int().nonnegative().optional(),
   rollup: taskHierarchyRollupSchema.optional(),
-  title: import_zod97.z.string(),
+  title: import_zod99.z.string(),
   level: workItemLevelSchema,
-  typeName: import_zod97.z.string(),
+  typeName: import_zod99.z.string(),
   typeColor: taskColorSchema,
-  statusName: import_zod97.z.string(),
+  statusName: import_zod99.z.string(),
   statusColor: taskColorSchema,
   statusCategory: taskStatusCategorySchema,
   assigneeId: taskUserIdSchema.nullable(),
-  storyPoints: import_zod97.z.number().nullable(),
+  storyPoints: import_zod99.z.number().nullable(),
   startAt: nullableTaskTimestampSchema,
   dueAt: nullableTaskTimestampSchema
 }).strict();
-var workItemTreeSchema = import_zod97.z.object({
-  nodes: import_zod97.z.array(workItemTreeNodeSchema).max(WORK_ITEM_TREE_LIMIT),
-  truncated: import_zod97.z.boolean(),
-  nextCursor: import_zod97.z.string().nullable().optional()
+var workItemTreeSchema = import_zod99.z.object({
+  nodes: import_zod99.z.array(workItemTreeNodeSchema).max(WORK_ITEM_TREE_LIMIT),
+  truncated: import_zod99.z.boolean(),
+  nextCursor: import_zod99.z.string().nullable().optional()
 }).strict();
 var taskSpaceTreeSchema = workItemTreeSchema.omit({ truncated: true }).extend({
-  nextCursor: import_zod97.z.string().nullable()
+  nextCursor: import_zod99.z.string().nullable()
 });
 var workItemSummarySchema = workItemTreeNodeSchema.omit({
   parentId: true,
@@ -20849,51 +20981,51 @@ var workItemSummarySchema = workItemTreeNodeSchema.omit({
   level: true,
   typeName: true
 });
-var workItemSummaryListSchema = import_zod97.z.object({ items: import_zod97.z.array(workItemSummarySchema).max(100) }).strict();
-var taskTreeBranchQuerySchema = import_zod97.z.object({ branch: import_zod97.z.boolean().default(false), parentId: entityIdSchema.optional() }).strict();
+var workItemSummaryListSchema = import_zod99.z.object({ items: import_zod99.z.array(workItemSummarySchema).max(100) }).strict();
+var taskTreeBranchQuerySchema = import_zod99.z.object({ branch: import_zod99.z.boolean().default(false), parentId: entityIdSchema.optional() }).strict();
 
 // packages/schema/src/test/data.ts
-var import_zod98 = require("zod");
+var import_zod100 = require("zod");
 
 // packages/schema/src/github.ts
-var import_zod99 = require("zod");
-var GitHubAutoSyncTarget = import_zod99.z.object({
-  architectureId: import_zod99.z.string().min(1).max(128),
-  fullName: import_zod99.z.string().regex(/^[\w.-]+\/[\w.-]+$/),
-  branch: import_zod99.z.string().min(1).max(1024),
-  sha: import_zod99.z.string().regex(/^[a-f0-9]{40}$/),
-  projectIds: import_zod99.z.array(import_zod99.z.string().min(1).max(128)).min(1).max(1e3)
+var import_zod101 = require("zod");
+var GitHubAutoSyncTarget = import_zod101.z.object({
+  architectureId: import_zod101.z.string().min(1).max(128),
+  fullName: import_zod101.z.string().regex(/^[\w.-]+\/[\w.-]+$/),
+  branch: import_zod101.z.string().min(1).max(1024),
+  sha: import_zod101.z.string().regex(/^[a-f0-9]{40}$/),
+  projectIds: import_zod101.z.array(import_zod101.z.string().min(1).max(128)).min(1).max(1e3)
 });
 var GitHubAutoSyncDispatch = GitHubAutoSyncTarget.extend({
-  workspace: import_zod99.z.object({ kind: import_zod99.z.enum(["user", "org", "team"]), id: import_zod99.z.string().min(1).max(128) }),
-  userId: import_zod99.z.string().min(1).max(128)
+  workspace: import_zod101.z.object({ kind: import_zod101.z.enum(["user", "org", "team"]), id: import_zod101.z.string().min(1).max(128) }),
+  userId: import_zod101.z.string().min(1).max(128)
 });
-var GitHubAutoSyncSettings = import_zod99.z.object({
-  connected: import_zod99.z.boolean(),
-  enabled: import_zod99.z.boolean(),
-  ready: import_zod99.z.boolean()
+var GitHubAutoSyncSettings = import_zod101.z.object({
+  connected: import_zod101.z.boolean(),
+  enabled: import_zod101.z.boolean(),
+  ready: import_zod101.z.boolean()
 });
-var GitHubAutoSyncUpdate = import_zod99.z.object({ enabled: import_zod99.z.boolean() }).strict();
-var GitHubUserRepositoriesQuery = import_zod99.z.object({
-  page: import_zod99.z.coerce.number().int().min(1).max(1e4).default(1),
-  q: import_zod99.z.string().trim().max(200).optional()
+var GitHubAutoSyncUpdate = import_zod101.z.object({ enabled: import_zod101.z.boolean() }).strict();
+var GitHubUserRepositoriesQuery = import_zod101.z.object({
+  page: import_zod101.z.coerce.number().int().min(1).max(1e4).default(1),
+  q: import_zod101.z.string().trim().max(200).optional()
 });
-var GitHubUserRepositories = import_zod99.z.object({
-  items: import_zod99.z.array(
-    import_zod99.z.object({
-      id: import_zod99.z.number().int(),
-      full_name: import_zod99.z.string(),
-      clone_url: import_zod99.z.string().url(),
-      private: import_zod99.z.boolean(),
-      updated_at: import_zod99.z.string().nullable()
+var GitHubUserRepositories = import_zod101.z.object({
+  items: import_zod101.z.array(
+    import_zod101.z.object({
+      id: import_zod101.z.number().int(),
+      full_name: import_zod101.z.string(),
+      clone_url: import_zod101.z.string().url(),
+      private: import_zod101.z.boolean(),
+      updated_at: import_zod101.z.string().nullable()
     })
   ),
-  hasMore: import_zod99.z.boolean(),
-  nextPage: import_zod99.z.number().int().positive().nullable().optional()
+  hasMore: import_zod101.z.boolean(),
+  nextPage: import_zod101.z.number().int().positive().nullable().optional()
 });
 
 // packages/schema/src/gitlab.ts
-var import_zod100 = require("zod");
+var import_zod102 = require("zod");
 function gitlabRepositoryUrl(value) {
   const input = value.trim();
   if (!input || /[\s\\?#%]/.test(input) || /(?:^|\/)\.{1,2}(?:\/|$)/.test(input)) return null;
@@ -20910,12 +21042,12 @@ function gitlabRepositoryUrl(value) {
     return null;
   return `https://gitlab.com/${parts.join("/")}.git`;
 }
-var GitLabConnection = import_zod100.z.object({
-  id: import_zod100.z.string().uuid(),
-  accountId: import_zod100.z.string(),
-  accountName: import_zod100.z.string().nullable(),
-  installedBy: import_zod100.z.string(),
-  status: import_zod100.z.enum([
+var GitLabConnection = import_zod102.z.object({
+  id: import_zod102.z.string().uuid(),
+  accountId: import_zod102.z.string(),
+  accountName: import_zod102.z.string().nullable(),
+  installedBy: import_zod102.z.string(),
+  status: import_zod102.z.enum([
     "active",
     "scope_drift",
     "refresh_failed",
@@ -20924,26 +21056,26 @@ var GitLabConnection = import_zod100.z.object({
     "revoked",
     "uninstalled"
   ]),
-  tokenExpiresAt: import_zod100.z.number().nullable(),
-  updatedAt: import_zod100.z.number()
+  tokenExpiresAt: import_zod102.z.number().nullable(),
+  updatedAt: import_zod102.z.number()
 });
-var GitLabRepository = import_zod100.z.object({
-  id: import_zod100.z.number().int().positive(),
-  fullName: import_zod100.z.string().min(1).max(512),
-  cloneUrl: import_zod100.z.string().refine((value) => gitlabRepositoryUrl(value) !== null),
-  defaultBranch: import_zod100.z.string().nullable(),
-  private: import_zod100.z.boolean(),
-  archived: import_zod100.z.boolean(),
-  selected: import_zod100.z.boolean()
+var GitLabRepository = import_zod102.z.object({
+  id: import_zod102.z.number().int().positive(),
+  fullName: import_zod102.z.string().min(1).max(512),
+  cloneUrl: import_zod102.z.string().refine((value) => gitlabRepositoryUrl(value) !== null),
+  defaultBranch: import_zod102.z.string().nullable(),
+  private: import_zod102.z.boolean(),
+  archived: import_zod102.z.boolean(),
+  selected: import_zod102.z.boolean()
 });
-var GitLabRepositories = import_zod100.z.object({
-  items: import_zod100.z.array(GitLabRepository).max(100),
-  nextPage: import_zod100.z.number().int().positive().nullable()
+var GitLabRepositories = import_zod102.z.object({
+  items: import_zod102.z.array(GitLabRepository).max(100),
+  nextPage: import_zod102.z.number().int().positive().nullable()
 });
-var GitLabRepositorySelection = import_zod100.z.object({ repositoryId: import_zod100.z.number().int().positive(), selected: import_zod100.z.boolean() }).strict();
+var GitLabRepositorySelection = import_zod102.z.object({ repositoryId: import_zod102.z.number().int().positive(), selected: import_zod102.z.boolean() }).strict();
 
 // packages/schema/src/frontend/preview.ts
-var import_zod101 = require("zod");
+var import_zod103 = require("zod");
 
 // packages/schema/src/frontend/constants.ts
 var FRONTEND_STATIC_LIMITS = {
@@ -20967,128 +21099,128 @@ var FRONTEND_SOURCE_LIMITS = {
 };
 
 // packages/schema/src/frontend/preview.ts
-var frontendPreviewMountSchema = import_zod101.z.object({
-  source: import_zod101.z.string().min(1).max(1024),
-  revision: import_zod101.z.string().regex(/^[a-f0-9]{64}$/),
-  exportName: import_zod101.z.string().regex(/^(?:default|[A-Z][a-zA-Z0-9]{0,79})$/),
-  props: import_zod101.z.string().max(16e3)
+var frontendPreviewMountSchema = import_zod103.z.object({
+  source: import_zod103.z.string().min(1).max(1024),
+  revision: import_zod103.z.string().regex(/^[a-f0-9]{64}$/),
+  exportName: import_zod103.z.string().regex(/^(?:default|[A-Z][a-zA-Z0-9]{0,79})$/),
+  props: import_zod103.z.string().max(16e3)
 }).strict();
-var frontendPreviewStartSchema = import_zod101.z.object({
-  packagePath: import_zod101.z.string().min(1).max(1024),
+var frontendPreviewStartSchema = import_zod103.z.object({
+  packagePath: import_zod103.z.string().min(1).max(1024),
   mount: frontendPreviewMountSchema.optional(),
-  script: import_zod101.z.string().regex(/^[\w][\w:.-]{0,79}$/),
+  script: import_zod103.z.string().regex(/^[\w][\w:.-]{0,79}$/),
   // Retained for local developer previews and existing clients; hosted static builds expose no port.
-  port: import_zod101.z.number().int().min(1024).max(65535)
+  port: import_zod103.z.number().int().min(1024).max(65535)
 }).strict();
-var frontendPreviewArtifactSchema = import_zod101.z.object({ format: import_zod101.z.literal(1), routing: import_zod101.z.enum(["spa", "pages"]) }).strict();
+var frontendPreviewArtifactSchema = import_zod103.z.object({ format: import_zod103.z.literal(1), routing: import_zod103.z.enum(["spa", "pages"]) }).strict();
 
 // packages/schema/src/frontend/source.ts
-var import_zod102 = require("zod");
-var frontendPathSchema = import_zod102.z.object({ architectureId: import_zod102.z.string().min(1).max(128) });
-var frontendSourceQuerySchema = import_zod102.z.object({ path: import_zod102.z.string().min(1).max(1024) });
+var import_zod104 = require("zod");
+var frontendPathSchema = import_zod104.z.object({ architectureId: import_zod104.z.string().min(1).max(128) });
+var frontendSourceQuerySchema = import_zod104.z.object({ path: import_zod104.z.string().min(1).max(1024) });
 var frontendMetadataQuerySchema = frontendSourceQuerySchema.extend({
-  includeImports: import_zod102.z.enum(["true", "false"]).default("true")
+  includeImports: import_zod104.z.enum(["true", "false"]).default("true")
 });
-var frontendSourceWriteSchema = import_zod102.z.object({
-  path: import_zod102.z.string().min(1).max(1024),
-  content: import_zod102.z.string().max(FRONTEND_SOURCE_LIMITS.bytes),
-  revision: import_zod102.z.string().regex(/^[a-f0-9]{64}$/)
+var frontendSourceWriteSchema = import_zod104.z.object({
+  path: import_zod104.z.string().min(1).max(1024),
+  content: import_zod104.z.string().max(FRONTEND_SOURCE_LIMITS.bytes),
+  revision: import_zod104.z.string().regex(/^[a-f0-9]{64}$/)
 }).strict();
-var frontendDiscoveryQuerySchema = import_zod102.z.object({ includeFiles: import_zod102.z.enum(["true", "false"]).default("true") });
-var frontendFilesQuerySchema = import_zod102.z.object({
-  packagePath: import_zod102.z.string().min(1).max(1024),
-  q: import_zod102.z.string().trim().max(200).default(""),
-  kind: import_zod102.z.enum(["all", "source", "story"]).default("all"),
-  offset: import_zod102.z.coerce.number().int().min(0).max(2e4).default(0),
-  limit: import_zod102.z.coerce.number().int().min(1).max(100).default(50)
+var frontendDiscoveryQuerySchema = import_zod104.z.object({ includeFiles: import_zod104.z.enum(["true", "false"]).default("true") });
+var frontendFilesQuerySchema = import_zod104.z.object({
+  packagePath: import_zod104.z.string().min(1).max(1024),
+  q: import_zod104.z.string().trim().max(200).default(""),
+  kind: import_zod104.z.enum(["all", "source", "story"]).default("all"),
+  offset: import_zod104.z.coerce.number().int().min(0).max(2e4).default(0),
+  limit: import_zod104.z.coerce.number().int().min(1).max(100).default(50)
 });
-var frontendScriptSchema = import_zod102.z.object({
-  name: import_zod102.z.string(),
-  command: import_zod102.z.string(),
-  kind: import_zod102.z.enum(["app", "storybook"])
+var frontendScriptSchema = import_zod104.z.object({
+  name: import_zod104.z.string(),
+  command: import_zod104.z.string(),
+  kind: import_zod104.z.enum(["app", "storybook"])
 });
-var frontendPackageSchema = import_zod102.z.object({
-  path: import_zod102.z.string(),
-  name: import_zod102.z.string(),
-  framework: import_zod102.z.string().nullable(),
-  scripts: import_zod102.z.array(frontendScriptSchema),
-  files: import_zod102.z.array(import_zod102.z.string()),
-  fileCount: import_zod102.z.number().int(),
-  defaultFile: import_zod102.z.string().nullable()
+var frontendPackageSchema = import_zod104.z.object({
+  path: import_zod104.z.string(),
+  name: import_zod104.z.string(),
+  framework: import_zod104.z.string().nullable(),
+  scripts: import_zod104.z.array(frontendScriptSchema),
+  files: import_zod104.z.array(import_zod104.z.string()),
+  fileCount: import_zod104.z.number().int(),
+  defaultFile: import_zod104.z.string().nullable()
 });
-var frontendDiscoverySchema = import_zod102.z.object({
-  packages: import_zod102.z.array(frontendPackageSchema),
-  diagnostics: import_zod102.z.array(import_zod102.z.string())
+var frontendDiscoverySchema = import_zod104.z.object({
+  packages: import_zod104.z.array(frontendPackageSchema),
+  diagnostics: import_zod104.z.array(import_zod104.z.string())
 });
-var frontendSourceSchema = import_zod102.z.object({
-  path: import_zod102.z.string(),
-  packagePath: import_zod102.z.string(),
-  content: import_zod102.z.string(),
-  revision: import_zod102.z.string(),
-  exports: import_zod102.z.array(import_zod102.z.string()).optional(),
-  frontend: import_zod102.z.boolean(),
-  route: import_zod102.z.string().nullable(),
-  imports: import_zod102.z.array(import_zod102.z.object({ module: import_zod102.z.string(), path: import_zod102.z.string().nullable(), packagePath: import_zod102.z.string().nullable() })),
-  stories: import_zod102.z.array(import_zod102.z.string())
+var frontendSourceSchema = import_zod104.z.object({
+  path: import_zod104.z.string(),
+  packagePath: import_zod104.z.string(),
+  content: import_zod104.z.string(),
+  revision: import_zod104.z.string(),
+  exports: import_zod104.z.array(import_zod104.z.string()).optional(),
+  frontend: import_zod104.z.boolean(),
+  route: import_zod104.z.string().nullable(),
+  imports: import_zod104.z.array(import_zod104.z.object({ module: import_zod104.z.string(), path: import_zod104.z.string().nullable(), packagePath: import_zod104.z.string().nullable() })),
+  stories: import_zod104.z.array(import_zod104.z.string())
 });
-var frontendFilesSchema = import_zod102.z.object({
-  items: import_zod102.z.array(import_zod102.z.object({ path: import_zod102.z.string(), packagePath: import_zod102.z.string(), kind: import_zod102.z.enum(["source", "story"]) })),
-  total: import_zod102.z.number().int(),
-  offset: import_zod102.z.number().int(),
-  limit: import_zod102.z.number().int(),
-  nextOffset: import_zod102.z.number().int().nullable(),
-  diagnostics: import_zod102.z.array(import_zod102.z.string())
+var frontendFilesSchema = import_zod104.z.object({
+  items: import_zod104.z.array(import_zod104.z.object({ path: import_zod104.z.string(), packagePath: import_zod104.z.string(), kind: import_zod104.z.enum(["source", "story"]) })),
+  total: import_zod104.z.number().int(),
+  offset: import_zod104.z.number().int(),
+  limit: import_zod104.z.number().int(),
+  nextOffset: import_zod104.z.number().int().nullable(),
+  diagnostics: import_zod104.z.array(import_zod104.z.string())
 });
-var frontendGenerationSchema = import_zod102.z.object({
-  source: import_zod102.z.string().min(1).max(1024),
-  revision: import_zod102.z.string().regex(/^[a-f0-9]{64}$/),
-  kind: import_zod102.z.enum(["component", "story", "page"]),
-  path: import_zod102.z.string().min(1).max(1024),
-  name: import_zod102.z.string().regex(/^[A-Z][a-zA-Z0-9]{0,79}$/),
-  exportName: import_zod102.z.string().regex(/^(?:default|[A-Z][a-zA-Z0-9]{0,79})$/),
-  props: import_zod102.z.string().max(16e3).default("{}"),
-  blocks: import_zod102.z.array(
-    import_zod102.z.object({
-      source: import_zod102.z.string().min(1).max(1024),
-      revision: import_zod102.z.string().regex(/^[a-f0-9]{64}$/),
-      exportName: import_zod102.z.string().regex(/^(?:default|[A-Z][a-zA-Z0-9]{0,79})$/),
-      props: import_zod102.z.string().max(16e3)
+var frontendGenerationSchema = import_zod104.z.object({
+  source: import_zod104.z.string().min(1).max(1024),
+  revision: import_zod104.z.string().regex(/^[a-f0-9]{64}$/),
+  kind: import_zod104.z.enum(["component", "story", "page"]),
+  path: import_zod104.z.string().min(1).max(1024),
+  name: import_zod104.z.string().regex(/^[A-Z][a-zA-Z0-9]{0,79}$/),
+  exportName: import_zod104.z.string().regex(/^(?:default|[A-Z][a-zA-Z0-9]{0,79})$/),
+  props: import_zod104.z.string().max(16e3).default("{}"),
+  blocks: import_zod104.z.array(
+    import_zod104.z.object({
+      source: import_zod104.z.string().min(1).max(1024),
+      revision: import_zod104.z.string().regex(/^[a-f0-9]{64}$/),
+      exportName: import_zod104.z.string().regex(/^(?:default|[A-Z][a-zA-Z0-9]{0,79})$/),
+      props: import_zod104.z.string().max(16e3)
     }).strict()
   ).max(16).default([])
 }).strict();
-var frontendGenerationReviewSchema = import_zod102.z.object({
-  token: import_zod102.z.string(),
-  files: import_zod102.z.array(import_zod102.z.object({ path: import_zod102.z.string(), content: import_zod102.z.string() }))
+var frontendGenerationReviewSchema = import_zod104.z.object({
+  token: import_zod104.z.string(),
+  files: import_zod104.z.array(import_zod104.z.object({ path: import_zod104.z.string(), content: import_zod104.z.string() }))
 });
-var frontendGenerationApplySchema = import_zod102.z.object({ input: frontendGenerationSchema, token: import_zod102.z.string().regex(/^[a-f0-9]{64}$/) }).strict();
+var frontendGenerationApplySchema = import_zod104.z.object({ input: frontendGenerationSchema, token: import_zod104.z.string().regex(/^[a-f0-9]{64}$/) }).strict();
 var frontendMetadataSchema = frontendSourceSchema.omit({ content: true }).extend({ imports: frontendSourceSchema.shape.imports.optional() });
 
 // packages/schema/src/frontend/build.ts
-var import_zod103 = require("zod");
-var frontendBuildFileSchema = import_zod103.z.object({
+var import_zod105 = require("zod");
+var frontendBuildFileSchema = import_zod105.z.object({
   path: catalogPathSchema,
-  revision: import_zod103.z.string().regex(/^[a-f0-9]{64}$/),
-  size: import_zod103.z.number().int().nonnegative().max(FRONTEND_SOURCE_LIMITS.snapshotBytes),
-  mode: import_zod103.z.union([import_zod103.z.literal(420), import_zod103.z.literal(493)]),
-  ticket: import_zod103.z.string().max(8e3).optional(),
-  inline: import_zod103.z.string().max(1e5).optional()
+  revision: import_zod105.z.string().regex(/^[a-f0-9]{64}$/),
+  size: import_zod105.z.number().int().nonnegative().max(FRONTEND_SOURCE_LIMITS.snapshotBytes),
+  mode: import_zod105.z.union([import_zod105.z.literal(420), import_zod105.z.literal(493)]),
+  ticket: import_zod105.z.string().max(8e3).optional(),
+  inline: import_zod105.z.string().max(1e5).optional()
 }).strict().refine(
   (file) => file.inline !== void 0 !== (file.ticket !== void 0),
   "A source entry requires exactly one body source"
 );
-var frontendBuildInputSchema = import_zod103.z.object({
-  format: import_zod103.z.literal(2),
+var frontendBuildInputSchema = import_zod105.z.object({
+  format: import_zod105.z.literal(2),
   request: frontendPreviewStartSchema,
-  files: import_zod103.z.array(frontendBuildFileSchema).max(FRONTEND_SOURCE_LIMITS.files)
+  files: import_zod105.z.array(frontendBuildFileSchema).max(FRONTEND_SOURCE_LIMITS.files)
 }).strict().superRefine((input, context) => {
   if (new Set(input.files.map((file) => file.path.toLowerCase())).size !== input.files.length || input.files.reduce((bytes, file) => bytes + file.size, 0) > FRONTEND_SOURCE_LIMITS.snapshotBytes)
     context.addIssue({ code: "custom", message: "Invalid or oversized source manifest" });
 });
-var frontendStoredSourceSchema = import_zod103.z.object({
-  key: import_zod103.z.string().min(1).max(2048),
-  location: import_zod103.z.string().min(1).max(240),
-  size: import_zod103.z.number().int().nonnegative().max(FRONTEND_SOURCE_LIMITS.snapshotBytes),
-  revision: import_zod103.z.string().regex(/^[a-f0-9]{64}$/)
+var frontendStoredSourceSchema = import_zod105.z.object({
+  key: import_zod105.z.string().min(1).max(2048),
+  location: import_zod105.z.string().min(1).max(240),
+  size: import_zod105.z.number().int().nonnegative().max(FRONTEND_SOURCE_LIMITS.snapshotBytes),
+  revision: import_zod105.z.string().regex(/^[a-f0-9]{64}$/)
 }).strict();
 
 // packages/schema/src/plugin/authoring/constants.ts
@@ -21113,271 +21245,271 @@ var AUTHORING_SESSION_POLICY = {
 };
 
 // packages/schema/src/plugin/authoring/session.ts
-var import_zod104 = require("zod");
-var digest = import_zod104.z.string().regex(/^[a-f0-9]{64}$/);
-var reviewedDigest = import_zod104.z.string().regex(/^sha256:[a-f0-9]{64}$/);
-var authoringSessionScopeSchema = import_zod104.z.object({
+var import_zod106 = require("zod");
+var digest = import_zod106.z.string().regex(/^[a-f0-9]{64}$/);
+var reviewedDigest = import_zod106.z.string().regex(/^sha256:[a-f0-9]{64}$/);
+var authoringSessionScopeSchema = import_zod106.z.object({
   workspace: workspaceRefSchema,
-  project: import_zod104.z.string().min(1).max(240).nullable(),
-  worktree: import_zod104.z.string().uuid().nullable(),
-  actor: import_zod104.z.string().min(1).max(240)
+  project: import_zod106.z.string().min(1).max(240).nullable(),
+  worktree: import_zod106.z.string().uuid().nullable(),
+  actor: import_zod106.z.string().min(1).max(240)
 });
-var authoringJobClaimSchema = import_zod104.z.object({
-  id: import_zod104.z.string().uuid(),
+var authoringJobClaimSchema = import_zod106.z.object({
+  id: import_zod106.z.string().uuid(),
   scope: authoringSessionScopeSchema,
-  operation: import_zod104.z.enum(["inspect", "preview", "create", "publish"]),
-  token: import_zod104.z.string().uuid(),
-  generation: import_zod104.z.number().int().nonnegative(),
+  operation: import_zod106.z.enum(["inspect", "preview", "create", "publish"]),
+  token: import_zod106.z.string().uuid(),
+  generation: import_zod106.z.number().int().nonnegative(),
   requestDigest: digest,
-  purpose: import_zod104.z.enum(["project", "publish"]).nullable(),
+  purpose: import_zod106.z.enum(["project", "publish"]).nullable(),
   reviewedDigest: reviewedDigest.nullable(),
-  expiresAt: import_zod104.z.number().int().positive()
+  expiresAt: import_zod106.z.number().int().positive()
 });
-var authoringCapsuleSchema = import_zod104.z.object({
-  path: import_zod104.z.string().max(1024).regex(
+var authoringCapsuleSchema = import_zod106.z.object({
+  path: import_zod106.z.string().max(1024).regex(
     /^(?:[A-Za-z0-9_.-]+\/)*(?:\.octonode|\.octonode-state)\/authoring\/[a-f0-9-]{36}\/capsules\/[a-f0-9]{64}\.json$/
   ).refine((path3) => path3.split("/").every((part) => part !== "." && part !== "..")),
   digest,
-  bytes: import_zod104.z.number().int().positive().max(AUTHORING_SESSION_POLICY.maxBytes)
+  bytes: import_zod106.z.number().int().positive().max(AUTHORING_SESSION_POLICY.maxBytes)
 });
-var authoringCheckpointSchema = import_zod104.z.object({
-  token: import_zod104.z.string().uuid(),
-  generation: import_zod104.z.number().int().nonnegative(),
+var authoringCheckpointSchema = import_zod106.z.object({
+  token: import_zod106.z.string().uuid(),
+  generation: import_zod106.z.number().int().nonnegative(),
   capsule: authoringCapsuleSchema,
-  purpose: import_zod104.z.enum(["project", "publish"]).nullable(),
+  purpose: import_zod106.z.enum(["project", "publish"]).nullable(),
   reviewedDigest: reviewedDigest.nullable()
 });
-var authoringSessionReceiptSchema = import_zod104.z.object({
-  operation: import_zod104.z.enum(["create", "publish"]),
+var authoringSessionReceiptSchema = import_zod106.z.object({
+  operation: import_zod106.z.enum(["create", "publish"]),
   requestDigest: digest,
-  result: import_zod104.z.record(import_zod104.z.string(), import_zod104.z.unknown()).refine(
+  result: import_zod106.z.record(import_zod106.z.string(), import_zod106.z.unknown()).refine(
     (value) => new TextEncoder().encode(JSON.stringify(value)).byteLength <= AUTHORING_SESSION_POLICY.maxReceiptBytes,
     "Authoring receipt exceeds its limit"
   )
 });
-var authoringPublicationSchema = import_zod104.z.object({
-  pluginId: import_zod104.z.string().min(1).max(240),
-  version: import_zod104.z.string().min(1).max(240),
+var authoringPublicationSchema = import_zod106.z.object({
+  pluginId: import_zod106.z.string().min(1).max(240),
+  version: import_zod106.z.string().min(1).max(240),
   manifestDigest: digest,
   archiveDigest: digest,
-  orgId: import_zod104.z.string().min(1).max(240).nullable(),
-  teamId: import_zod104.z.string().min(1).max(240).nullable()
+  orgId: import_zod106.z.string().min(1).max(240).nullable(),
+  teamId: import_zod106.z.string().min(1).max(240).nullable()
 });
-var authoringPublicationVoucherSchema = import_zod104.z.object({
-  id: import_zod104.z.string().uuid(),
+var authoringPublicationVoucherSchema = import_zod106.z.object({
+  id: import_zod106.z.string().uuid(),
   publication: authoringPublicationSchema,
-  fresh: import_zod104.z.boolean(),
-  consumed: import_zod104.z.boolean()
+  fresh: import_zod106.z.boolean(),
+  consumed: import_zod106.z.boolean()
 });
 var authoringSessionRecordSchema = authoringCheckpointSchema.extend({
   scope: authoringSessionScopeSchema,
-  generation: import_zod104.z.number().int().positive(),
-  expiresAt: import_zod104.z.number().int().positive(),
-  archiveId: import_zod104.z.string().uuid(),
+  generation: import_zod106.z.number().int().positive(),
+  expiresAt: import_zod106.z.number().int().positive(),
+  archiveId: import_zod106.z.string().uuid(),
   receipt: authoringSessionReceiptSchema.optional(),
-  publicationAttempt: import_zod104.z.object({ requestDigest: digest, publication: authoringPublicationSchema }).optional()
+  publicationAttempt: import_zod106.z.object({ requestDigest: digest, publication: authoringPublicationSchema }).optional()
 });
-var authoringSessionPendingSchema = import_zod104.z.object({
+var authoringSessionPendingSchema = import_zod106.z.object({
   claim: authoringJobClaimSchema,
   checkpoint: authoringCheckpointSchema.optional(),
   receipt: authoringSessionReceiptSchema.optional(),
   publicationVoucher: authoringPublicationVoucherSchema.optional()
 });
-var authoringSessionBrokerSchema = import_zod104.z.object({
+var authoringSessionBrokerSchema = import_zod106.z.object({
   claim: authoringJobClaimSchema,
   record: authoringSessionRecordSchema.nullable(),
-  activeTokens: import_zod104.z.array(import_zod104.z.string().uuid()).max(AUTHORING_SESSION_POLICY.maxSessions)
+  activeTokens: import_zod106.z.array(import_zod106.z.string().uuid()).max(AUTHORING_SESSION_POLICY.maxSessions)
 });
-var authoringArchiveProofSchema = import_zod104.z.object({
-  claimId: import_zod104.z.string().uuid(),
+var authoringArchiveProofSchema = import_zod106.z.object({
+  claimId: import_zod106.z.string().uuid(),
   capsuleDigest: digest,
   reviewedDigest: reviewedDigest.nullable()
 });
 
 // packages/schema/src/assistant/resources.ts
-var import_zod105 = require("zod");
+var import_zod107 = require("zod");
 var assistantResourceContentSchema = assistantSettingsSchema.pick({ connectors: true, skills: true }).extend({
-  files: import_zod105.z.array(assistantFileSchema).max(64).optional()
+  files: import_zod107.z.array(assistantFileSchema).max(64).optional()
 });
-var assistantResourceInputSchema = import_zod105.z.object({
-  id: import_zod105.z.string().uuid(),
-  name: import_zod105.z.string().trim().min(1).max(80),
-  kind: import_zod105.z.enum(["skill", "plugin", "mcp"]),
-  projectId: import_zod105.z.string().min(1).max(128).nullable(),
-  autoLoad: import_zod105.z.boolean(),
-  enabled: import_zod105.z.boolean().optional(),
-  source: import_zod105.z.object({
-    catalog: import_zod105.z.literal("claude-plugins-official"),
-    name: import_zod105.z.string().max(80),
-    repository: import_zod105.z.string().max(256),
-    revision: import_zod105.z.string().regex(/^[a-f0-9]{40}$/),
-    author: import_zod105.z.string().max(256)
+var assistantResourceInputSchema = import_zod107.z.object({
+  id: import_zod107.z.string().uuid(),
+  name: import_zod107.z.string().trim().min(1).max(80),
+  kind: import_zod107.z.enum(["skill", "plugin", "mcp"]),
+  projectId: import_zod107.z.string().min(1).max(128).nullable(),
+  autoLoad: import_zod107.z.boolean(),
+  enabled: import_zod107.z.boolean().optional(),
+  source: import_zod107.z.object({
+    catalog: import_zod107.z.literal("claude-plugins-official"),
+    name: import_zod107.z.string().max(80),
+    repository: import_zod107.z.string().max(256),
+    revision: import_zod107.z.string().regex(/^[a-f0-9]{40}$/),
+    author: import_zod107.z.string().max(256)
   }).strict().optional(),
   content: assistantResourceContentSchema
 }).strict().superRefine((record, ctx) => {
   try {
     assistantResourceArtifact(record);
   } catch {
-    ctx.addIssue({ code: import_zod105.z.ZodIssueCode.custom, message: "Resource files conflict or exceed artifact limits" });
+    ctx.addIssue({ code: import_zod107.z.ZodIssueCode.custom, message: "Resource files conflict or exceed artifact limits" });
   }
   if (!record.content.skills.length && !record.content.connectors.length && !record.content.files?.length)
     ctx.addIssue({
-      code: import_zod105.z.ZodIssueCode.custom,
+      code: import_zod107.z.ZodIssueCode.custom,
       message: "A resource must include instructions or an MCP connector"
     });
   if (record.kind === "skill" && (record.content.skills.length !== 1 || record.content.connectors.length))
-    ctx.addIssue({ code: import_zod105.z.ZodIssueCode.custom, message: "A skill contains one instruction document" });
+    ctx.addIssue({ code: import_zod107.z.ZodIssueCode.custom, message: "A skill contains one instruction document" });
   if (record.kind === "mcp" && (record.content.connectors.length !== 1 || record.content.skills.length))
-    ctx.addIssue({ code: import_zod105.z.ZodIssueCode.custom, message: "An MCP record contains one connector" });
+    ctx.addIssue({ code: import_zod107.z.ZodIssueCode.custom, message: "An MCP record contains one connector" });
   if (record.content.files?.some((file) => file.path === ".mcp.json" || file.path === ".claude-plugin/plugin.json"))
     ctx.addIssue({
-      code: import_zod105.z.ZodIssueCode.custom,
+      code: import_zod107.z.ZodIssueCode.custom,
       message: "Configure MCP and plugin identity through the registration fields"
     });
   if (new TextEncoder().encode(JSON.stringify(record)).byteLength > 128e3)
-    ctx.addIssue({ code: import_zod105.z.ZodIssueCode.custom, message: "Resource exceeds 128 KB" });
+    ctx.addIssue({ code: import_zod107.z.ZodIssueCode.custom, message: "Resource exceeds 128 KB" });
 });
-var assistantResourceSchema = import_zod105.z.object({
+var assistantResourceSchema = import_zod107.z.object({
   registration: assistantResourceInputSchema,
-  version: import_zod105.z.number().int().positive(),
-  createdAt: import_zod105.z.number().int().nonnegative(),
-  ownerUserId: import_zod105.z.string().min(1).nullable().optional(),
-  canEdit: import_zod105.z.boolean().optional()
+  version: import_zod107.z.number().int().positive(),
+  createdAt: import_zod107.z.number().int().nonnegative(),
+  ownerUserId: import_zod107.z.string().min(1).nullable().optional(),
+  canEdit: import_zod107.z.boolean().optional()
 });
-var assistantResourceListSchema = import_zod105.z.object({ items: import_zod105.z.array(assistantResourceSchema).max(128) });
-var assistantTerminalConnectionSchema = import_zod105.z.object({
-  api: import_zod105.z.string().url().max(2048),
-  token: import_zod105.z.string().min(1).max(16384),
-  projectId: import_zod105.z.string().min(1).max(128)
+var assistantResourceListSchema = import_zod107.z.object({ items: import_zod107.z.array(assistantResourceSchema).max(128) });
+var assistantTerminalConnectionSchema = import_zod107.z.object({
+  api: import_zod107.z.string().url().max(2048),
+  token: import_zod107.z.string().min(1).max(16384),
+  projectId: import_zod107.z.string().min(1).max(128)
 }).strict();
 
 // packages/schema/src/data/table/validation.ts
-var import_zod106 = require("zod");
-
-// packages/schema/src/billing/billing.ts
-var import_zod109 = require("zod");
-
-// packages/schema/src/billing/ai.ts
 var import_zod108 = require("zod");
 
+// packages/schema/src/billing/billing.ts
+var import_zod111 = require("zod");
+
+// packages/schema/src/billing/ai.ts
+var import_zod110 = require("zod");
+
 // packages/schema/src/access/organization/seat.ts
-var import_zod107 = require("zod");
-var organizationInventorySchema = import_zod107.z.array(userTierRefSchema.extend({ quantity: import_zod107.z.number().int().min(0).max(1e4) })).max(100).refine(
+var import_zod109 = require("zod");
+var organizationInventorySchema = import_zod109.z.array(userTierRefSchema.extend({ quantity: import_zod109.z.number().int().min(0).max(1e4) })).max(100).refine(
   (items) => new Set(items.map((item) => `${item.tier}:${item.version}`)).size === items.length,
   "Duplicate seat tier"
 );
-var organizationSettingsWriteSchema = import_zod107.z.object({
-  revision: import_zod107.z.number().int().nonnegative(),
-  enabled: import_zod107.z.boolean(),
+var organizationSettingsWriteSchema = import_zod109.z.object({
+  revision: import_zod109.z.number().int().nonnegative(),
+  enabled: import_zod109.z.boolean(),
   defaultSeat: userTierRefSchema.nullable(),
-  extraTeams: import_zod107.z.number().int().min(0).max(1e4),
-  extraMembersPerTeam: import_zod107.z.number().int().min(0).max(1e4),
+  extraTeams: import_zod109.z.number().int().min(0).max(1e4),
+  extraMembersPerTeam: import_zod109.z.number().int().min(0).max(1e4),
   inventory: organizationInventorySchema,
-  reason: import_zod107.z.string().trim().min(3).max(1e3)
+  reason: import_zod109.z.string().trim().min(3).max(1e3)
 }).strict();
 var organizationSettingsSchema = organizationSettingsWriteSchema.extend({
-  orgId: import_zod107.z.string(),
-  reason: import_zod107.z.string(),
-  plan: userTierRefSchema.extend({ name: import_zod107.z.string() }),
-  effectiveDefault: userTierRefSchema.extend({ name: import_zod107.z.string() }),
-  capacity: import_zod107.z.object({
-    teams: import_zod107.z.number().int().nonnegative().nullable(),
-    membersPerTeam: import_zod107.z.number().int().nonnegative().nullable(),
-    usedTeams: import_zod107.z.number().int().nonnegative(),
-    usedSeats: import_zod107.z.number().int().nonnegative()
+  orgId: import_zod109.z.string(),
+  reason: import_zod109.z.string(),
+  plan: userTierRefSchema.extend({ name: import_zod109.z.string() }),
+  effectiveDefault: userTierRefSchema.extend({ name: import_zod109.z.string() }),
+  capacity: import_zod109.z.object({
+    teams: import_zod109.z.number().int().nonnegative().nullable(),
+    membersPerTeam: import_zod109.z.number().int().nonnegative().nullable(),
+    usedTeams: import_zod109.z.number().int().nonnegative(),
+    usedSeats: import_zod109.z.number().int().nonnegative()
   }),
-  seats: import_zod107.z.array(
+  seats: import_zod109.z.array(
     userTierRefSchema.extend({
-      name: import_zod107.z.string(),
-      purchased: import_zod107.z.number().int().nonnegative(),
-      granted: import_zod107.z.number().int().nonnegative(),
-      assigned: import_zod107.z.number().int().nonnegative()
+      name: import_zod109.z.string(),
+      purchased: import_zod109.z.number().int().nonnegative(),
+      granted: import_zod109.z.number().int().nonnegative(),
+      assigned: import_zod109.z.number().int().nonnegative()
     })
   ),
-  updatedBy: import_zod107.z.string(),
-  updatedAt: import_zod107.z.number().int().nonnegative(),
-  canManage: import_zod107.z.boolean(),
-  canGrant: import_zod107.z.boolean()
+  updatedBy: import_zod109.z.string(),
+  updatedAt: import_zod109.z.number().int().nonnegative(),
+  canManage: import_zod109.z.boolean(),
+  canGrant: import_zod109.z.boolean()
 });
-var organizationSeatWriteSchema = import_zod107.z.object({
-  revision: import_zod107.z.number().int().nonnegative(),
+var organizationSeatWriteSchema = import_zod109.z.object({
+  revision: import_zod109.z.number().int().nonnegative(),
   assignment: userTierRefSchema,
-  blocked: import_zod107.z.boolean(),
-  reason: import_zod107.z.string().trim().min(3).max(1e3)
+  blocked: import_zod109.z.boolean(),
+  reason: import_zod109.z.string().trim().min(3).max(1e3)
 }).strict();
 var organizationSeatSchema = organizationSeatWriteSchema.extend({
-  orgId: import_zod107.z.string(),
-  userId: import_zod107.z.string(),
-  name: import_zod107.z.string(),
-  role: import_zod107.z.string(),
-  tierName: import_zod107.z.string(),
-  teamCount: import_zod107.z.number().int().nonnegative(),
-  teams: import_zod107.z.array(import_zod107.z.object({ id: import_zod107.z.string(), name: import_zod107.z.string() })).max(20),
-  updatedBy: import_zod107.z.string(),
-  updatedAt: import_zod107.z.number().int().nonnegative(),
-  canManage: import_zod107.z.boolean()
+  orgId: import_zod109.z.string(),
+  userId: import_zod109.z.string(),
+  name: import_zod109.z.string(),
+  role: import_zod109.z.string(),
+  tierName: import_zod109.z.string(),
+  teamCount: import_zod109.z.number().int().nonnegative(),
+  teams: import_zod109.z.array(import_zod109.z.object({ id: import_zod109.z.string(), name: import_zod109.z.string() })).max(20),
+  updatedBy: import_zod109.z.string(),
+  updatedAt: import_zod109.z.number().int().nonnegative(),
+  canManage: import_zod109.z.boolean()
 });
-var organizationSeatsQuerySchema = import_zod107.z.object({
-  search: import_zod107.z.string().max(100).default(""),
-  offset: import_zod107.z.coerce.number().int().min(0).max(1e6).default(0),
-  limit: import_zod107.z.coerce.number().int().min(1).max(100).default(25),
-  teamIds: import_zod107.z.string().max(3e4).optional(),
-  userId: import_zod107.z.string().min(1).max(128).optional()
+var organizationSeatsQuerySchema = import_zod109.z.object({
+  search: import_zod109.z.string().max(100).default(""),
+  offset: import_zod109.z.coerce.number().int().min(0).max(1e6).default(0),
+  limit: import_zod109.z.coerce.number().int().min(1).max(100).default(25),
+  teamIds: import_zod109.z.string().max(3e4).optional(),
+  userId: import_zod109.z.string().min(1).max(128).optional()
 });
-var organizationSeatsSchema = import_zod107.z.object({
-  total: import_zod107.z.number().int().nonnegative(),
-  items: import_zod107.z.array(organizationSeatSchema)
+var organizationSeatsSchema = import_zod109.z.object({
+  total: import_zod109.z.number().int().nonnegative(),
+  items: import_zod109.z.array(organizationSeatSchema)
 });
 var organizationSeatBulkWriteSchema = organizationSeatWriteSchema.omit({ revision: true }).extend({
-  targets: import_zod107.z.array(import_zod107.z.object({ id: import_zod107.z.string().min(1).max(128), revision: import_zod107.z.number().int().positive() })).min(1).max(ACCESS_TIER_BATCH_LIMIT).refine((items) => new Set(items.map((item) => item.id)).size === items.length, "Duplicate people")
+  targets: import_zod109.z.array(import_zod109.z.object({ id: import_zod109.z.string().min(1).max(128), revision: import_zod109.z.number().int().positive() })).min(1).max(ACCESS_TIER_BATCH_LIMIT).refine((items) => new Set(items.map((item) => item.id)).size === items.length, "Duplicate people")
 });
 
 // packages/schema/src/billing/ai.ts
-var identifier4 = import_zod108.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/);
-var usdMicros = import_zod108.z.number().int().min(0).max(1e12);
-var aiBudgetWindowSchema = import_zod108.z.object({
-  id: identifier4,
-  durationSeconds: import_zod108.z.number().int().min(60).max(31536e3),
+var identifier5 = import_zod110.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/);
+var usdMicros = import_zod110.z.number().int().min(0).max(1e12);
+var aiBudgetWindowSchema = import_zod110.z.object({
+  id: identifier5,
+  durationSeconds: import_zod110.z.number().int().min(60).max(31536e3),
   budgetUsdMicros: usdMicros
 }).strict();
-var aiPlanBudgetSchema = import_zod108.z.object({
+var aiPlanBudgetSchema = import_zod110.z.object({
   plan: accessTierIdSchema,
   monthlyBudgetUsdMicros: usdMicros,
-  allowPayAsYouGo: import_zod108.z.boolean().optional(),
-  windows: import_zod108.z.array(aiBudgetWindowSchema).max(12),
-  modelIds: import_zod108.z.array(identifier4).max(100)
+  allowPayAsYouGo: import_zod110.z.boolean().optional(),
+  windows: import_zod110.z.array(aiBudgetWindowSchema).max(12),
+  modelIds: import_zod110.z.array(identifier5).max(100)
 }).strict().superRefine((plan, ctx) => {
   if (new Set(plan.windows.map((window) => window.id)).size !== plan.windows.length)
     ctx.addIssue({ code: "custom", path: ["windows"], message: "Window IDs must be unique within a plan" });
   if (new Set(plan.modelIds).size !== plan.modelIds.length)
     ctx.addIssue({ code: "custom", path: ["modelIds"], message: "Model IDs must be unique" });
 });
-var aiPricedModelSchema = import_zod108.z.object({
-  id: identifier4,
-  name: import_zod108.z.string().trim().min(1).max(80),
-  provider: import_zod108.z.enum(["workers-ai", "anthropic", "openai", "google"]),
-  model: import_zod108.z.string().trim().min(1).max(128).regex(/^[A-Za-z0-9@][A-Za-z0-9._:/@-]*$/),
-  priceSource: import_zod108.z.enum(["cloudflare", "custom"]).optional(),
+var aiPricedModelSchema = import_zod110.z.object({
+  id: identifier5,
+  name: import_zod110.z.string().trim().min(1).max(80),
+  provider: import_zod110.z.enum(["workers-ai", "anthropic", "openai", "google"]),
+  model: import_zod110.z.string().trim().min(1).max(128).regex(/^[A-Za-z0-9@][A-Za-z0-9._:/@-]*$/),
+  priceSource: import_zod110.z.enum(["cloudflare", "custom"]).optional(),
   inputUsdMicrosPerMillion: usdMicros,
   outputUsdMicrosPerMillion: usdMicros,
-  enabled: import_zod108.z.boolean()
+  enabled: import_zod110.z.boolean()
 }).strict();
-var aiGatewayRouterSchema = import_zod108.z.object({
-  gatewayId: import_zod108.z.string().regex(/^[a-z0-9][a-z0-9_-]{0,63}$/),
-  route: import_zod108.z.string().regex(/^[a-z0-9][a-z0-9_-]{0,63}$/)
+var aiGatewayRouterSchema = import_zod110.z.object({
+  gatewayId: import_zod110.z.string().regex(/^[a-z0-9][a-z0-9_-]{0,63}$/),
+  route: import_zod110.z.string().regex(/^[a-z0-9][a-z0-9_-]{0,63}$/)
 }).strict();
-var aiModelPriceSchema = import_zod108.z.object({
-  model: import_zod108.z.string().min(1).max(128),
+var aiModelPriceSchema = import_zod110.z.object({
+  model: import_zod110.z.string().min(1).max(128),
   inputUsdMicrosPerMillion: usdMicros,
   outputUsdMicrosPerMillion: usdMicros,
-  syncedAt: import_zod108.z.number().int().nonnegative(),
-  stale: import_zod108.z.boolean()
+  syncedAt: import_zod110.z.number().int().nonnegative(),
+  stale: import_zod110.z.boolean()
 }).strict();
-var aiBillingPolicySchema = import_zod108.z.object({
+var aiBillingPolicySchema = import_zod110.z.object({
   router: aiGatewayRouterSchema.optional(),
-  creditsPerUsd: import_zod108.z.number().min(1e-6).max(1e6).multipleOf(1e-6),
-  models: import_zod108.z.array(aiPricedModelSchema).max(100),
-  plans: import_zod108.z.array(aiPlanBudgetSchema).max(100)
+  creditsPerUsd: import_zod110.z.number().min(1e-6).max(1e6).multipleOf(1e-6),
+  models: import_zod110.z.array(aiPricedModelSchema).max(100),
+  plans: import_zod110.z.array(aiPlanBudgetSchema).max(100)
 }).strict().superRefine((policy, ctx) => {
   for (const field of ["models", "plans"]) {
     const ids = policy[field].map((item) => "id" in item ? item.id : item.plan);
@@ -21391,51 +21523,51 @@ var aiBillingPolicySchema = import_zod108.z.object({
     if (plan.modelIds.some((id2) => !policy.models.some((model) => model.id === id2)))
       ctx.addIssue({ code: "custom", path: ["plans", index, "modelIds"], message: "Unknown model ID" });
 });
-var aiModelPricesQuerySchema = import_zod108.z.object({
-  models: import_zod108.z.string().min(1).max(12899).refine(
+var aiModelPricesQuerySchema = import_zod110.z.object({
+  models: import_zod110.z.string().min(1).max(12899).refine(
     (value) => value.split(",").length <= 100 && value.split(",").every((model) => /^@cf\/[A-Za-z0-9._/-]{1,124}$/.test(model))
   )
 });
-var aiModelPricesSchema = import_zod108.z.object({
+var aiModelPricesSchema = import_zod110.z.object({
   items: aiModelPriceSchema.array(),
-  errors: import_zod108.z.array(import_zod108.z.object({ model: import_zod108.z.string(), message: import_zod108.z.string() }))
+  errors: import_zod110.z.array(import_zod110.z.object({ model: import_zod110.z.string(), message: import_zod110.z.string() }))
 });
 
 // packages/schema/src/billing/billing.ts
-var capacityAddonSchema = import_zod109.z.object({
-  addonId: import_zod109.z.string().max(100),
-  units: import_zod109.z.number().int().positive().max(1e8),
-  priceCents: import_zod109.z.number().int().nonnegative().max(1e8)
+var capacityAddonSchema = import_zod111.z.object({
+  addonId: import_zod111.z.string().max(100),
+  units: import_zod111.z.number().int().positive().max(1e8),
+  priceCents: import_zod111.z.number().int().nonnegative().max(1e8)
 }).strict();
-var billingOfferSchema = import_zod109.z.object({
-  id: import_zod109.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
-  plan: import_zod109.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
-  name: import_zod109.z.string().trim().min(1).max(80),
-  rank: import_zod109.z.number().int().nonnegative().max(1e3),
-  workspaceKind: import_zod109.z.enum(["user", "org", "team"]),
-  interval: import_zod109.z.enum(["month", "year"]),
-  productId: import_zod109.z.string().regex(/^(?:pdt_[A-Za-z0-9_]+)?$/),
-  currency: import_zod109.z.string().regex(/^[A-Z]{3}$/),
-  monthlyPriceCents: import_zod109.z.number().int().positive().max(1e8),
-  basePriceCents: import_zod109.z.number().int().nonnegative().max(1e8).optional(),
-  organizationId: import_zod109.z.string().regex(/^[A-Za-z0-9_-]{1,128}$/).optional(),
-  hostingMode: import_zod109.z.enum(["shared", "dedicated", "dedicated_customer_storage"]).optional(),
-  annualDiscountPercent: import_zod109.z.number().min(0).max(99),
-  includedExecutions: import_zod109.z.number().int().positive().max(1e8),
-  includedAiCredits: import_zod109.z.number().int().positive().max(1e8),
+var billingOfferSchema = import_zod111.z.object({
+  id: import_zod111.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
+  plan: import_zod111.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
+  name: import_zod111.z.string().trim().min(1).max(80),
+  rank: import_zod111.z.number().int().nonnegative().max(1e3),
+  workspaceKind: import_zod111.z.enum(["user", "org", "team"]),
+  interval: import_zod111.z.enum(["month", "year"]),
+  productId: import_zod111.z.string().regex(/^(?:pdt_[A-Za-z0-9_]+)?$/),
+  currency: import_zod111.z.string().regex(/^[A-Z]{3}$/),
+  monthlyPriceCents: import_zod111.z.number().int().positive().max(1e8),
+  basePriceCents: import_zod111.z.number().int().nonnegative().max(1e8).optional(),
+  organizationId: import_zod111.z.string().regex(/^[A-Za-z0-9_-]{1,128}$/).optional(),
+  hostingMode: import_zod111.z.enum(["shared", "dedicated", "dedicated_customer_storage"]).optional(),
+  annualDiscountPercent: import_zod111.z.number().min(0).max(99),
+  includedExecutions: import_zod111.z.number().int().positive().max(1e8),
+  includedAiCredits: import_zod111.z.number().int().positive().max(1e8),
   access: accessProfileSchema.optional(),
-  seatAddonId: import_zod109.z.string().max(100).nullable(),
+  seatAddonId: import_zod111.z.string().max(100).nullable(),
   executionAddon: capacityAddonSchema.nullable(),
   aiAddon: capacityAddonSchema.nullable(),
-  organizationSeats: import_zod109.z.array(
+  organizationSeats: import_zod111.z.array(
     userTierRefSchema.extend({
-      addonId: import_zod109.z.string().max(100),
-      priceCents: import_zod109.z.number().int().positive().max(1e8)
+      addonId: import_zod111.z.string().max(100),
+      priceCents: import_zod111.z.number().int().positive().max(1e8)
     })
   ).max(20).optional(),
   teamAddon: capacityAddonSchema.nullable().optional(),
   membersPerTeamAddon: capacityAddonSchema.nullable().optional(),
-  enabled: import_zod109.z.boolean()
+  enabled: import_zod111.z.boolean()
 }).strict().superRefine((offer, ctx) => {
   if (offer.workspaceKind !== "org" && (offer.organizationSeats?.length || offer.teamAddon || offer.membersPerTeamAddon))
     ctx.addIssue({ code: "custom", message: "Organization seat and team add-ons require an organization offer" });
@@ -21464,24 +21596,24 @@ var billingOfferSchema = import_zod109.z.object({
   ].filter(Boolean);
   if (new Set(ids).size !== ids.length) ctx.addIssue({ code: "custom", message: "Add-on IDs must be distinct" });
 });
-var billingCreditPackSchema = import_zod109.z.object({
-  id: import_zod109.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
-  name: import_zod109.z.string().trim().min(1).max(80),
-  productId: import_zod109.z.string().regex(/^(?:pdt_[A-Za-z0-9_]+)?$/),
-  meter: import_zod109.z.enum(["executions", "ai_credits"]),
-  units: import_zod109.z.number().int().positive().max(1e8),
-  priceCents: import_zod109.z.number().int().positive().max(1e8),
-  currency: import_zod109.z.string().regex(/^[A-Z]{3}$/),
-  enabled: import_zod109.z.boolean()
+var billingCreditPackSchema = import_zod111.z.object({
+  id: import_zod111.z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
+  name: import_zod111.z.string().trim().min(1).max(80),
+  productId: import_zod111.z.string().regex(/^(?:pdt_[A-Za-z0-9_]+)?$/),
+  meter: import_zod111.z.enum(["executions", "ai_credits"]),
+  units: import_zod111.z.number().int().positive().max(1e8),
+  priceCents: import_zod111.z.number().int().positive().max(1e8),
+  currency: import_zod111.z.string().regex(/^[A-Z]{3}$/),
+  enabled: import_zod111.z.boolean()
 }).strict();
-var billingCatalogSchema = import_zod109.z.object({
-  revision: import_zod109.z.number().int().nonnegative(),
-  freeExecutions: import_zod109.z.number().int().positive().max(1e8),
-  freeAiCredits: import_zod109.z.number().int().positive().max(1e8),
+var billingCatalogSchema = import_zod111.z.object({
+  revision: import_zod111.z.number().int().nonnegative(),
+  freeExecutions: import_zod111.z.number().int().positive().max(1e8),
+  freeAiCredits: import_zod111.z.number().int().positive().max(1e8),
   freeAccess: accessProfileSchema.optional(),
   aiPolicy: aiBillingPolicySchema.optional(),
-  offers: import_zod109.z.array(billingOfferSchema).max(100),
-  creditPacks: import_zod109.z.array(billingCreditPackSchema).max(100).default([])
+  offers: import_zod111.z.array(billingOfferSchema).max(100),
+  creditPacks: import_zod111.z.array(billingCreditPackSchema).max(100).default([])
 }).strict().superRefine((catalog, ctx) => {
   if (catalog.freeAccess && catalog.freeAccess.tier !== "free")
     ctx.addIssue({
@@ -21500,182 +21632,182 @@ var billingCatalogSchema = import_zod109.z.object({
     if (new Set(catalog.offers.map((offer) => offer[field])).size !== catalog.offers.length)
       ctx.addIssue({ code: "custom", path: ["offers"], message: `Duplicate ${field}` });
 });
-var billingSelectionSchema = import_zod109.z.object({
-  offerId: import_zod109.z.string().min(1).max(64),
-  seats: import_zod109.z.number().int().min(0).max(1e4).default(1),
-  seatTiers: import_zod109.z.array(userTierRefSchema.extend({ quantity: import_zod109.z.number().int().min(0).max(1e4) })).max(20).optional(),
-  teamPacks: import_zod109.z.number().int().min(0).max(1e4).optional(),
-  membersPerTeamPacks: import_zod109.z.number().int().min(0).max(1e4).optional(),
-  executionPacks: import_zod109.z.number().int().min(0).max(1e4).default(0),
-  aiPacks: import_zod109.z.number().int().min(0).max(1e4).default(0),
-  discountCodes: import_zod109.z.array(import_zod109.z.string().trim().min(3).max(16)).max(20).optional()
+var billingSelectionSchema = import_zod111.z.object({
+  offerId: import_zod111.z.string().min(1).max(64),
+  seats: import_zod111.z.number().int().min(0).max(1e4).default(1),
+  seatTiers: import_zod111.z.array(userTierRefSchema.extend({ quantity: import_zod111.z.number().int().min(0).max(1e4) })).max(20).optional(),
+  teamPacks: import_zod111.z.number().int().min(0).max(1e4).optional(),
+  membersPerTeamPacks: import_zod111.z.number().int().min(0).max(1e4).optional(),
+  executionPacks: import_zod111.z.number().int().min(0).max(1e4).default(0),
+  aiPacks: import_zod111.z.number().int().min(0).max(1e4).default(0),
+  discountCodes: import_zod111.z.array(import_zod111.z.string().trim().min(3).max(16)).max(20).optional()
 }).strict();
 var billingChangeSchema = billingSelectionSchema.extend({
-  quoteId: import_zod109.z.string().uuid()
+  quoteId: import_zod111.z.string().uuid()
 });
-var billingHierarchyInputSchema = import_zod109.z.object({
-  mode: import_zod109.z.enum(["separate", "consolidated"]),
-  revision: import_zod109.z.number().int().nonnegative()
+var billingHierarchyInputSchema = import_zod111.z.object({
+  mode: import_zod111.z.enum(["separate", "consolidated"]),
+  revision: import_zod111.z.number().int().nonnegative()
 }).strict();
-var billingHierarchySchema = import_zod109.z.object({
-  mode: import_zod109.z.enum(["separate", "consolidated"]),
-  revision: import_zod109.z.number().int().nonnegative(),
-  organizationId: import_zod109.z.string().nullable(),
-  inherited: import_zod109.z.boolean(),
-  canManage: import_zod109.z.boolean()
+var billingHierarchySchema = import_zod111.z.object({
+  mode: import_zod111.z.enum(["separate", "consolidated"]),
+  revision: import_zod111.z.number().int().nonnegative(),
+  organizationId: import_zod111.z.string().nullable(),
+  inherited: import_zod111.z.boolean(),
+  canManage: import_zod111.z.boolean()
 });
 
 // packages/schema/src/billing/usage.ts
-var import_zod110 = require("zod");
-var billingAiUserUsageSchema = import_zod110.z.object({
-  periodStart: import_zod110.z.number().int().nonnegative(),
-  periodEnd: import_zod110.z.number().int().nonnegative(),
-  creditsPerUsd: import_zod110.z.number().positive().nullable(),
-  totalCredits: import_zod110.z.number(),
-  unattributedCredits: import_zod110.z.number(),
-  users: import_zod110.z.array(
-    import_zod110.z.object({
-      userId: import_zod110.z.string(),
-      name: import_zod110.z.string(),
-      credits: import_zod110.z.number()
+var import_zod112 = require("zod");
+var billingAiUserUsageSchema = import_zod112.z.object({
+  periodStart: import_zod112.z.number().int().nonnegative(),
+  periodEnd: import_zod112.z.number().int().nonnegative(),
+  creditsPerUsd: import_zod112.z.number().positive().nullable(),
+  totalCredits: import_zod112.z.number(),
+  unattributedCredits: import_zod112.z.number(),
+  users: import_zod112.z.array(
+    import_zod112.z.object({
+      userId: import_zod112.z.string(),
+      name: import_zod112.z.string(),
+      credits: import_zod112.z.number()
     })
   ).max(100),
-  truncated: import_zod110.z.boolean()
+  truncated: import_zod112.z.boolean()
 });
 
 // packages/schema/src/billing/grants.ts
-var import_zod111 = require("zod");
+var import_zod113 = require("zod");
 
 // packages/schema/src/billing/constants.ts
 var CREDIT_GRANT_METERS = ["ai_credits", "executions"];
 
 // packages/schema/src/billing/grants.ts
-var adminCreditGrantSchema = import_zod111.z.object({
+var adminCreditGrantSchema = import_zod113.z.object({
   workspace: workspaceRefSchema,
-  accountId: import_zod111.z.string().min(1).max(256),
-  requestId: import_zod111.z.string().uuid(),
-  meter: import_zod111.z.enum(CREDIT_GRANT_METERS),
-  quantity: import_zod111.z.number().int().positive().max(1e8),
-  reason: import_zod111.z.string().trim().min(3).max(1e3)
+  accountId: import_zod113.z.string().min(1).max(256),
+  requestId: import_zod113.z.string().uuid(),
+  meter: import_zod113.z.enum(CREDIT_GRANT_METERS),
+  quantity: import_zod113.z.number().int().positive().max(1e8),
+  reason: import_zod113.z.string().trim().min(3).max(1e3)
 }).strict();
-var adminCreditBalanceSchema = import_zod111.z.object({
-  accountId: import_zod111.z.string(),
+var adminCreditBalanceSchema = import_zod113.z.object({
+  accountId: import_zod113.z.string(),
   funding: workspaceRefSchema,
-  fundingName: import_zod111.z.string(),
-  balances: import_zod111.z.array(import_zod111.z.object({ meter: import_zod111.z.string(), balance: import_zod111.z.number() })),
-  grants: import_zod111.z.array(
-    import_zod111.z.object({
-      requestId: import_zod111.z.string(),
-      actorId: import_zod111.z.string(),
-      meter: import_zod111.z.string(),
-      quantity: import_zod111.z.number(),
-      reason: import_zod111.z.string(),
-      createdAt: import_zod111.z.number()
+  fundingName: import_zod113.z.string(),
+  balances: import_zod113.z.array(import_zod113.z.object({ meter: import_zod113.z.string(), balance: import_zod113.z.number() })),
+  grants: import_zod113.z.array(
+    import_zod113.z.object({
+      requestId: import_zod113.z.string(),
+      actorId: import_zod113.z.string(),
+      meter: import_zod113.z.string(),
+      quantity: import_zod113.z.number(),
+      reason: import_zod113.z.string(),
+      createdAt: import_zod113.z.number()
     })
   )
 });
 
 // packages/schema/src/remote/claude.ts
-var import_zod112 = require("zod");
-var remoteClaudeRunSchema = import_zod112.z.object({
-  input: import_zod112.z.object({
+var import_zod114 = require("zod");
+var remoteClaudeRunSchema = import_zod114.z.object({
+  input: import_zod114.z.object({
     request: agentServiceRunRequestSchema,
-    artifacts: import_zod112.z.array(assistantArtifactSchema).max(32),
+    artifacts: import_zod114.z.array(assistantArtifactSchema).max(32),
     attachmentMessages: attachmentModelMessagesSchema.optional(),
-    mcpUrl: import_zod112.z.string().url(),
-    attachmentUrl: import_zod112.z.string().url().optional()
+    mcpUrl: import_zod114.z.string().url(),
+    attachmentUrl: import_zod114.z.string().url().optional()
   }).strict(),
-  credentials: import_zod112.z.object({
-    callerToken: import_zod112.z.string().min(1).max(16384),
-    apiKey: import_zod112.z.string().min(1).max(16384),
-    connectors: import_zod112.z.record(import_zod112.z.string().max(16384))
+  credentials: import_zod114.z.object({
+    callerToken: import_zod114.z.string().min(1).max(16384),
+    apiKey: import_zod114.z.string().min(1).max(16384),
+    connectors: import_zod114.z.record(import_zod114.z.string().max(16384))
   }).strict()
 }).strict();
 
 // packages/schema/src/assistant/instructions.ts
-var import_zod113 = require("zod");
+var import_zod115 = require("zod");
 
 // packages/schema/src/assistant/instructions/constants.ts
 var PROJECT_INSTRUCTION_MAX_BYTES = 16e3;
 var PROJECT_INSTRUCTION_MAX_FILES = 32;
 
 // packages/schema/src/assistant/instructions.ts
-var assistantProjectInstructionsSchema = import_zod113.z.object({
-  files: import_zod113.z.array(
-    import_zod113.z.object({
-      path: import_zod113.z.string().max(1024),
-      content: import_zod113.z.string().max(PROJECT_INSTRUCTION_MAX_BYTES),
-      revision: import_zod113.z.string().max(128)
+var assistantProjectInstructionsSchema = import_zod115.z.object({
+  files: import_zod115.z.array(
+    import_zod115.z.object({
+      path: import_zod115.z.string().max(1024),
+      content: import_zod115.z.string().max(PROJECT_INSTRUCTION_MAX_BYTES),
+      revision: import_zod115.z.string().max(128)
     })
   ).max(PROJECT_INSTRUCTION_MAX_FILES),
-  skipped: import_zod113.z.array(import_zod113.z.string().max(1024)).max(256)
+  skipped: import_zod115.z.array(import_zod115.z.string().max(1024)).max(256)
 });
 
 // packages/schema/src/hosting.ts
-var import_zod114 = require("zod");
-var storageLocationSchema = import_zod114.z.object({
-  id: import_zod114.z.string().uuid(),
-  generation: import_zod114.z.number().int().positive(),
-  provider: import_zod114.z.enum(["r2", "aws_s3", "s3_compatible"]),
-  endpoint: import_zod114.z.string().url(),
-  region: import_zod114.z.string().min(1).max(80),
-  bucket: import_zod114.z.string().regex(/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/),
-  prefix: import_zod114.z.string().regex(/^(?:[a-zA-Z0-9_-]+\/)+$/).max(400),
-  forcePathStyle: import_zod114.z.boolean().default(false)
+var import_zod116 = require("zod");
+var storageLocationSchema = import_zod116.z.object({
+  id: import_zod116.z.string().uuid(),
+  generation: import_zod116.z.number().int().positive(),
+  provider: import_zod116.z.enum(["r2", "aws_s3", "s3_compatible"]),
+  endpoint: import_zod116.z.string().url(),
+  region: import_zod116.z.string().min(1).max(80),
+  bucket: import_zod116.z.string().regex(/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/),
+  prefix: import_zod116.z.string().regex(/^(?:[a-zA-Z0-9_-]+\/)+$/).max(400),
+  forcePathStyle: import_zod116.z.boolean().default(false)
 }).strict();
-var storageCredentialSchema = import_zod114.z.object({
-  accessKeyId: import_zod114.z.string().min(1).max(256),
-  secretAccessKey: import_zod114.z.string().min(1).max(256),
-  sessionToken: import_zod114.z.string().min(1).max(8192).optional(),
-  expiresAt: import_zod114.z.number().int().positive().optional()
+var storageCredentialSchema = import_zod116.z.object({
+  accessKeyId: import_zod116.z.string().min(1).max(256),
+  secretAccessKey: import_zod116.z.string().min(1).max(256),
+  sessionToken: import_zod116.z.string().min(1).max(8192).optional(),
+  expiresAt: import_zod116.z.number().int().positive().optional()
 }).strict().refine((value) => !value.sessionToken || Boolean(value.expiresAt), "Session credentials require expiresAt");
-var storageConnectionInputSchema = import_zod114.z.object({
+var storageConnectionInputSchema = import_zod116.z.object({
   location: storageLocationSchema,
   credentials: storageCredentialSchema
 }).strict();
-var objectArchiveSchema = import_zod114.z.object({
-  format: import_zod114.z.literal("octonode-squashfs-v1"),
-  id: import_zod114.z.string().uuid(),
-  connectionId: import_zod114.z.string().uuid(),
-  generation: import_zod114.z.number().int().positive(),
-  workspace: import_zod114.z.string().regex(/^(org|team):[A-Za-z0-9_-]+$/),
-  key: import_zod114.z.string().min(1).max(1024),
-  dir: import_zod114.z.string().startsWith("/workspace"),
-  bytes: import_zod114.z.number().int().positive().max(SNAPSHOT_CONFIG2.archive.maxBytes),
-  sha256: import_zod114.z.string().regex(/^[a-f0-9]{64}$/),
-  createdAt: import_zod114.z.number().int().positive(),
-  expiresAt: import_zod114.z.number().int().positive()
+var objectArchiveSchema = import_zod116.z.object({
+  format: import_zod116.z.literal("octonode-squashfs-v1"),
+  id: import_zod116.z.string().uuid(),
+  connectionId: import_zod116.z.string().uuid(),
+  generation: import_zod116.z.number().int().positive(),
+  workspace: import_zod116.z.string().regex(/^(org|team):[A-Za-z0-9_-]+$/),
+  key: import_zod116.z.string().min(1).max(1024),
+  dir: import_zod116.z.string().startsWith("/workspace"),
+  bytes: import_zod116.z.number().int().positive().max(SNAPSHOT_CONFIG2.archive.maxBytes),
+  sha256: import_zod116.z.string().regex(/^[a-f0-9]{64}$/),
+  createdAt: import_zod116.z.number().int().positive(),
+  expiresAt: import_zod116.z.number().int().positive()
 }).strict();
-var archiveCaptureResultSchema = import_zod114.z.object({
-  bytes: import_zod114.z.number().int().positive().max(SNAPSHOT_CONFIG2.archive.maxBytes),
-  sha256: import_zod114.z.string().regex(/^[a-f0-9]{64}$/)
+var archiveCaptureResultSchema = import_zod116.z.object({
+  bytes: import_zod116.z.number().int().positive().max(SNAPSHOT_CONFIG2.archive.maxBytes),
+  sha256: import_zod116.z.string().regex(/^[a-f0-9]{64}$/)
 }).strict();
-var archiveUploadResultSchema = import_zod114.z.object({ etag: import_zod114.z.string().min(1).nullable() }).strict();
+var archiveUploadResultSchema = import_zod116.z.object({ etag: import_zod116.z.string().min(1).nullable() }).strict();
 
 // packages/schema/src/assistant/catalog.ts
-var import_zod115 = require("zod");
-var assistantCatalogEntrySchema = import_zod115.z.object({
-  name: import_zod115.z.string().min(1).max(80),
-  description: import_zod115.z.string().max(1e4),
-  author: import_zod115.z.string().max(256),
-  available: import_zod115.z.boolean(),
-  repository: import_zod115.z.string().max(256).optional(),
-  path: import_zod115.z.string().max(512).optional(),
-  revision: import_zod115.z.string().max(128).optional()
+var import_zod117 = require("zod");
+var assistantCatalogEntrySchema = import_zod117.z.object({
+  name: import_zod117.z.string().min(1).max(80),
+  description: import_zod117.z.string().max(1e4),
+  author: import_zod117.z.string().max(256),
+  available: import_zod117.z.boolean(),
+  repository: import_zod117.z.string().max(256).optional(),
+  path: import_zod117.z.string().max(512).optional(),
+  revision: import_zod117.z.string().max(128).optional()
 });
-var assistantCatalogSchema = import_zod115.z.object({
-  revision: import_zod115.z.string().regex(/^[a-f0-9]{40}$/),
-  items: import_zod115.z.array(assistantCatalogEntrySchema).max(1500)
+var assistantCatalogSchema = import_zod117.z.object({
+  revision: import_zod117.z.string().regex(/^[a-f0-9]{40}$/),
+  items: import_zod117.z.array(assistantCatalogEntrySchema).max(1500)
 });
-var assistantCatalogBundleSchema = import_zod115.z.object({
+var assistantCatalogBundleSchema = import_zod117.z.object({
   entry: assistantCatalogEntrySchema,
-  revision: import_zod115.z.string().regex(/^[a-f0-9]{40}$/),
-  files: import_zod115.z.array(assistantFileSchema).max(128)
+  revision: import_zod117.z.string().regex(/^[a-f0-9]{40}$/),
+  files: import_zod117.z.array(assistantFileSchema).max(128)
 });
 
 // packages/schema/src/slack/schema.ts
-var import_zod116 = require("zod");
-var slackNotificationCategorySchema = import_zod116.z.enum([
+var import_zod118 = require("zod");
+var slackNotificationCategorySchema = import_zod118.z.enum([
   "executions",
   "messages",
   "tasks",
@@ -21683,55 +21815,55 @@ var slackNotificationCategorySchema = import_zod116.z.enum([
   "reviews",
   "system"
 ]);
-var slackWorkflowRefSchema = import_zod116.z.object({
+var slackWorkflowRefSchema = import_zod118.z.object({
   workspace: workspaceRefSchema,
-  projectId: import_zod116.z.string().min(1).max(240),
-  workflowId: import_zod116.z.string().min(1).max(240)
+  projectId: import_zod118.z.string().min(1).max(240),
+  workflowId: import_zod118.z.string().min(1).max(240)
 }).strict();
-var slackPreferencesSchema = import_zod116.z.object({
-  enabled: import_zod116.z.boolean(),
-  categories: import_zod116.z.array(slackNotificationCategorySchema).max(6),
-  executionStatus: import_zod116.z.enum(["all", "failures"])
+var slackPreferencesSchema = import_zod118.z.object({
+  enabled: import_zod118.z.boolean(),
+  categories: import_zod118.z.array(slackNotificationCategorySchema).max(6),
+  executionStatus: import_zod118.z.enum(["all", "failures"])
 }).strict();
-var slackAccountSchema = import_zod116.z.object({
-  connectionId: import_zod116.z.string().uuid(),
-  slackUserId: import_zod116.z.string(),
-  accountName: import_zod116.z.string().nullable(),
+var slackAccountSchema = import_zod118.z.object({
+  connectionId: import_zod118.z.string().uuid(),
+  slackUserId: import_zod118.z.string(),
+  accountName: import_zod118.z.string().nullable(),
   preferences: slackPreferencesSchema,
-  delivery: import_zod116.z.object({ failed: import_zod116.z.number().int().nonnegative(), uncertain: import_zod116.z.number().int().nonnegative() })
+  delivery: import_zod118.z.object({ failed: import_zod118.z.number().int().nonnegative(), uncertain: import_zod118.z.number().int().nonnegative() })
 });
-var slackAccountResponseSchema = import_zod116.z.object({ account: slackAccountSchema.nullable() });
-var slackLinkCompleteSchema = import_zod116.z.object({ state: import_zod116.z.string().regex(/^[A-Za-z0-9_-]{32,128}$/) }).strict();
-var slackLinkResponseSchema = import_zod116.z.object({ status: import_zod116.z.literal("awaiting_confirmation") });
-var slackWorkflowDispatchSchema = import_zod116.z.discriminatedUnion("operation", [
-  slackWorkflowRefSchema.extend({ operation: import_zod116.z.literal("preview"), userId: import_zod116.z.string().min(1).max(128) }),
+var slackAccountResponseSchema = import_zod118.z.object({ account: slackAccountSchema.nullable() });
+var slackLinkCompleteSchema = import_zod118.z.object({ state: import_zod118.z.string().regex(/^[A-Za-z0-9_-]{32,128}$/) }).strict();
+var slackLinkResponseSchema = import_zod118.z.object({ status: import_zod118.z.literal("awaiting_confirmation") });
+var slackWorkflowDispatchSchema = import_zod118.z.discriminatedUnion("operation", [
+  slackWorkflowRefSchema.extend({ operation: import_zod118.z.literal("preview"), userId: import_zod118.z.string().min(1).max(128) }),
   slackWorkflowRefSchema.extend({
-    operation: import_zod116.z.literal("run"),
-    userId: import_zod116.z.string().min(1).max(128),
-    idempotencyKey: import_zod116.z.string().uuid(),
-    baseRevision: import_zod116.z.string().regex(/^[a-f0-9]{64}$/),
-    input: import_zod116.z.record(import_zod116.z.string(), import_zod116.z.unknown())
+    operation: import_zod118.z.literal("run"),
+    userId: import_zod118.z.string().min(1).max(128),
+    idempotencyKey: import_zod118.z.string().uuid(),
+    baseRevision: import_zod118.z.string().regex(/^[a-f0-9]{64}$/),
+    input: import_zod118.z.record(import_zod118.z.string(), import_zod118.z.unknown())
   })
 ]);
-var slackWorkflowPreviewSchema = import_zod116.z.object({
-  id: import_zod116.z.string(),
-  revision: import_zod116.z.string(),
-  spaceName: import_zod116.z.string().optional(),
-  branch: import_zod116.z.string().optional(),
-  nodes: import_zod116.z.array(import_zod116.z.object({ id: import_zod116.z.string(), label: import_zod116.z.string().optional() })),
-  edges: import_zod116.z.array(import_zod116.z.object({ from: import_zod116.z.string(), to: import_zod116.z.string() })),
-  inputs: import_zod116.z.record(import_zod116.z.string(), import_zod116.z.unknown()).optional()
+var slackWorkflowPreviewSchema = import_zod118.z.object({
+  id: import_zod118.z.string(),
+  revision: import_zod118.z.string(),
+  spaceName: import_zod118.z.string().optional(),
+  branch: import_zod118.z.string().optional(),
+  nodes: import_zod118.z.array(import_zod118.z.object({ id: import_zod118.z.string(), label: import_zod118.z.string().optional() })),
+  edges: import_zod118.z.array(import_zod118.z.object({ from: import_zod118.z.string(), to: import_zod118.z.string() })),
+  inputs: import_zod118.z.record(import_zod118.z.string(), import_zod118.z.unknown()).optional()
 });
 var slackExecutionNoticeSchema = slackWorkflowRefSchema.extend({
-  runId: import_zod116.z.string().regex(/^[a-f0-9]{64}$/),
-  userId: import_zod116.z.string().min(1).max(128),
-  status: import_zod116.z.enum(["succeeded", "failed", "cancelled", "interrupted"]),
-  timestamp: import_zod116.z.number().int().nonnegative()
+  runId: import_zod118.z.string().regex(/^[a-f0-9]{64}$/),
+  userId: import_zod118.z.string().min(1).max(128),
+  status: import_zod118.z.enum(["succeeded", "failed", "cancelled", "interrupted"]),
+  timestamp: import_zod118.z.number().int().nonnegative()
 }).strict();
 
 // packages/schema/src/realtime/schema.ts
-var import_zod117 = require("zod");
-var workspaceRealtimeResourceSchema = import_zod117.z.enum([
+var import_zod119 = require("zod");
+var workspaceRealtimeResourceSchema = import_zod119.z.enum([
   "publishing-builds",
   "app-development",
   "remote-hosts",
@@ -21743,31 +21875,31 @@ var workspaceRealtimeResourceSchema = import_zod117.z.enum([
   "attachments",
   "frontend-runtime"
 ]);
-var workspaceRealtimeEventSchema = import_zod117.z.object({
-  type: import_zod117.z.literal("resource.updated"),
+var workspaceRealtimeEventSchema = import_zod119.z.object({
+  type: import_zod119.z.literal("resource.updated"),
   resource: workspaceRealtimeResourceSchema,
-  userId: import_zod117.z.string().min(1).max(128).optional()
+  userId: import_zod119.z.string().min(1).max(128).optional()
 });
-var workspaceRealtimeTicketSchema = import_zod117.z.object({
-  ticket: import_zod117.z.string(),
-  protocol: import_zod117.z.literal("octonode.realtime.v1"),
-  expiresAt: import_zod117.z.number().int().nonnegative(),
-  url: import_zod117.z.string(),
-  resources: import_zod117.z.array(workspaceRealtimeResourceSchema).optional(),
-  gatewayResources: import_zod117.z.array(workspaceRealtimeResourceSchema).optional()
+var workspaceRealtimeTicketSchema = import_zod119.z.object({
+  ticket: import_zod119.z.string(),
+  protocol: import_zod119.z.literal("octonode.realtime.v1"),
+  expiresAt: import_zod119.z.number().int().nonnegative(),
+  url: import_zod119.z.string(),
+  resources: import_zod119.z.array(workspaceRealtimeResourceSchema).optional(),
+  gatewayResources: import_zod119.z.array(workspaceRealtimeResourceSchema).optional()
 });
-var workspaceBootstrapSocialTicketSchema = workspaceRealtimeTicketSchema.extend({ workspace: import_zod117.z.string() });
+var workspaceBootstrapSocialTicketSchema = workspaceRealtimeTicketSchema.extend({ workspace: import_zod119.z.string() });
 
 // packages/schema/src/realtime/projection/schema.ts
-var import_zod118 = require("zod");
+var import_zod120 = require("zod");
 
 // packages/schema/src/realtime/projection/constants.ts
 var PROJECTION_REALTIME_PROTOCOL = "octonode.projection.v1";
 var PROJECTION_SESSION_MS = 15 * 6e4;
 
 // packages/schema/src/realtime/projection/schema.ts
-var projectionRealtimeTopicSchema = import_zod118.z.object({
-  resource: import_zod118.z.enum([
+var projectionRealtimeTopicSchema = import_zod120.z.object({
+  resource: import_zod120.z.enum([
     "workspace-access",
     "access-policy",
     "billing",
@@ -21776,44 +21908,44 @@ var projectionRealtimeTopicSchema = import_zod118.z.object({
     "support-maintenance",
     "github"
   ]),
-  scope: import_zod118.z.string().min(1).max(256),
-  workspace: import_zod118.z.string().regex(/^(user|team|org):[a-f0-9-]{36}$/).optional()
+  scope: import_zod120.z.string().min(1).max(256),
+  workspace: import_zod120.z.string().regex(/^(user|team|org):[a-f0-9-]{36}$/).optional()
 });
-var projectionRealtimeTicketSchema = import_zod118.z.object({
+var projectionRealtimeTicketSchema = import_zod120.z.object({
   ...projectionRealtimeTopicSchema.shape,
-  url: import_zod118.z.string(),
-  protocol: import_zod118.z.literal(PROJECTION_REALTIME_PROTOCOL),
-  ticket: import_zod118.z.string(),
-  expiresAt: import_zod118.z.number().int().nonnegative(),
-  refreshAt: import_zod118.z.number().int().positive().optional(),
-  navigation: import_zod118.z.literal(true).describe("Account stream covers membership and platform/workspace policy changes.").optional()
+  url: import_zod120.z.string(),
+  protocol: import_zod120.z.literal(PROJECTION_REALTIME_PROTOCOL),
+  ticket: import_zod120.z.string(),
+  expiresAt: import_zod120.z.number().int().nonnegative(),
+  refreshAt: import_zod120.z.number().int().positive().optional(),
+  navigation: import_zod120.z.literal(true).describe("Account stream covers membership and platform/workspace policy changes.").optional()
 });
-var projectionRealtimeEventSchema = import_zod118.z.object({
-  type: import_zod118.z.literal("projection.changed"),
-  refreshAt: import_zod118.z.number().int().positive().optional(),
+var projectionRealtimeEventSchema = import_zod120.z.object({
+  type: import_zod120.z.literal("projection.changed"),
+  refreshAt: import_zod120.z.number().int().positive().optional(),
   resource: projectionRealtimeTopicSchema.shape.resource,
   scope: projectionRealtimeTopicSchema.shape.scope
 });
-var projectionFanoutSchema = import_zod118.z.object({
-  kind: import_zod118.z.enum(["org", "team", "github", "platform"]),
-  id: import_zod118.z.string().min(1).max(256),
-  after: import_zod118.z.string().max(256).optional()
+var projectionFanoutSchema = import_zod120.z.object({
+  kind: import_zod120.z.enum(["org", "team", "github", "platform"]),
+  id: import_zod120.z.string().min(1).max(256),
+  after: import_zod120.z.string().max(256).optional()
 }).refine((target) => target.kind !== "platform" || target.id === "platform", "Invalid platform fanout target");
 
 // packages/schema/src/desktop/schema.ts
-var import_zod119 = require("zod");
-var desktopRequestSchema = import_zod119.z.object({
-  projectId: import_zod119.z.string().min(1).max(200).optional(),
-  workspace: import_zod119.z.string().min(1).max(300).optional(),
-  computerId: import_zod119.z.string().uuid().optional(),
-  checkoutId: import_zod119.z.string().uuid().optional(),
-  idempotencyKey: import_zod119.z.string().uuid().optional(),
-  provider: import_zod119.z.enum(["github", "gitlab"]).optional()
+var import_zod121 = require("zod");
+var desktopRequestSchema = import_zod121.z.object({
+  projectId: import_zod121.z.string().min(1).max(200).optional(),
+  workspace: import_zod121.z.string().min(1).max(300).optional(),
+  computerId: import_zod121.z.string().uuid().optional(),
+  checkoutId: import_zod121.z.string().uuid().optional(),
+  idempotencyKey: import_zod121.z.string().uuid().optional(),
+  provider: import_zod121.z.enum(["github", "gitlab"]).optional()
 }).strict();
-var desktopNativeRequestSchema = import_zod119.z.object({
-  type: import_zod119.z.literal("action"),
-  id: import_zod119.z.string().regex(/^[0-9]+$/),
-  action: import_zod119.z.enum([
+var desktopNativeRequestSchema = import_zod121.z.object({
+  type: import_zod121.z.literal("action"),
+  id: import_zod121.z.string().regex(/^[0-9]+$/),
+  action: import_zod121.z.enum([
     "status",
     "export",
     "sync",
@@ -21831,46 +21963,46 @@ var desktopNativeRequestSchema = import_zod119.z.object({
     "import"
   ]),
   input: desktopRequestSchema,
-  authorization: import_zod119.z.string().max(16384),
-  githubToken: import_zod119.z.string().max(16384).optional()
+  authorization: import_zod121.z.string().max(16384),
+  githubToken: import_zod121.z.string().max(16384).optional()
 }).strict();
-var desktopResultSchema = import_zod119.z.object({
-  tools: import_zod119.z.object({ nodeAvailable: import_zod119.z.boolean(), gitAvailable: import_zod119.z.boolean(), nodeVersion: import_zod119.z.string().optional() }).optional(),
-  projects: import_zod119.z.array(import_zod119.z.object({ id: import_zod119.z.string(), name: import_zod119.z.string() })).optional(),
+var desktopResultSchema = import_zod121.z.object({
+  tools: import_zod121.z.object({ nodeAvailable: import_zod121.z.boolean(), gitAvailable: import_zod121.z.boolean(), nodeVersion: import_zod121.z.string().optional() }).optional(),
+  projects: import_zod121.z.array(import_zod121.z.object({ id: import_zod121.z.string(), name: import_zod121.z.string() })).optional(),
   job: jobs_exports.ProjectJobStatus.optional(),
-  path: import_zod119.z.string().optional(),
-  projectId: import_zod119.z.string().optional(),
-  cancelled: import_zod119.z.boolean().optional(),
-  local: import_zod119.z.boolean().optional(),
-  syncable: import_zod119.z.boolean().optional(),
-  mode: import_zod119.z.enum(["git", "cloud"]).optional(),
-  computerId: import_zod119.z.string().uuid().optional(),
-  checkoutId: import_zod119.z.string().uuid().optional(),
-  environments: import_zod119.z.array(
-    import_zod119.z.object({
-      computerId: import_zod119.z.string().uuid(),
-      checkoutId: import_zod119.z.string().uuid(),
-      path: import_zod119.z.string(),
-      available: import_zod119.z.boolean(),
-      running: import_zod119.z.boolean(),
-      connected: import_zod119.z.boolean(),
-      error: import_zod119.z.string().optional()
+  path: import_zod121.z.string().optional(),
+  projectId: import_zod121.z.string().optional(),
+  cancelled: import_zod121.z.boolean().optional(),
+  local: import_zod121.z.boolean().optional(),
+  syncable: import_zod121.z.boolean().optional(),
+  mode: import_zod121.z.enum(["git", "cloud"]).optional(),
+  computerId: import_zod121.z.string().uuid().optional(),
+  checkoutId: import_zod121.z.string().uuid().optional(),
+  environments: import_zod121.z.array(
+    import_zod121.z.object({
+      computerId: import_zod121.z.string().uuid(),
+      checkoutId: import_zod121.z.string().uuid(),
+      path: import_zod121.z.string(),
+      available: import_zod121.z.boolean(),
+      running: import_zod121.z.boolean(),
+      connected: import_zod121.z.boolean(),
+      error: import_zod121.z.string().optional()
     })
   ).optional(),
-  url: import_zod119.z.string().optional(),
-  accessToken: import_zod119.z.string().optional(),
-  refreshToken: import_zod119.z.string().optional(),
-  githubToken: import_zod119.z.string().optional()
+  url: import_zod121.z.string().optional(),
+  accessToken: import_zod121.z.string().optional(),
+  refreshToken: import_zod121.z.string().optional(),
+  githubToken: import_zod121.z.string().optional()
 });
-var desktopComputerRecordSchema = import_zod119.z.object({
-  version: import_zod119.z.literal(1),
-  id: import_zod119.z.string().uuid(),
-  checkoutId: import_zod119.z.string().uuid(),
-  userId: import_zod119.z.string().min(1),
-  workspace: import_zod119.z.string().min(1),
-  root: import_zod119.z.string().min(1),
-  rootIdentity: import_zod119.z.string().regex(/^[a-f0-9]{64}$/),
-  runtime: import_zod119.z.string().min(1)
+var desktopComputerRecordSchema = import_zod121.z.object({
+  version: import_zod121.z.literal(1),
+  id: import_zod121.z.string().uuid(),
+  checkoutId: import_zod121.z.string().uuid(),
+  userId: import_zod121.z.string().min(1),
+  workspace: import_zod121.z.string().min(1),
+  root: import_zod121.z.string().min(1),
+  rootIdentity: import_zod121.z.string().regex(/^[a-f0-9]{64}$/),
+  runtime: import_zod121.z.string().min(1)
 }).strict();
 
 // packages/schema/src/variables/constants.ts
@@ -21881,93 +22013,94 @@ var VARIABLE_BATCH_BYTES = 1024 * 1024;
 var VARIABLE_BATCH_REQUEST_BYTES = 6 * VARIABLE_BATCH_BYTES + 64 * 1024;
 
 // packages/schema/src/variables/schema.ts
-var import_zod120 = require("zod");
-var variableKeySchema = import_zod120.z.string().min(1).max(VARIABLE_KEY_LIMIT).regex(/^[A-Za-z_][A-Za-z0-9_]*$/);
-var variableValueSchema = import_zod120.z.string().refine(
+var import_zod122 = require("zod");
+var variableKeySchema = import_zod122.z.string().min(1).max(VARIABLE_KEY_LIMIT).regex(/^[A-Za-z_][A-Za-z0-9_]*$/);
+var variableValueSchema = import_zod122.z.string().refine(
   (value) => !/[\r\n\0]/.test(value) && new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(new TextEncoder().encode(value)) === value && new TextEncoder().encode(value).byteLength <= VARIABLE_VALUE_BYTES,
   "Variable values must be single-line text of at most 64 KiB"
 );
-var variableRevisionSchema = import_zod120.z.string().uuid();
-var variableWriteSchema = import_zod120.z.object({
+var variableRevisionSchema = import_zod122.z.string().uuid();
+var variableWriteSchema = import_zod122.z.object({
   key: variableKeySchema,
   value: variableValueSchema,
   expectedRevision: variableRevisionSchema.nullable()
 }).strict();
-var variableWriteBatchSchema = import_zod120.z.array(variableWriteSchema).min(1).max(VARIABLE_BATCH_LIMIT).refine(
+var variableWriteBatchSchema = import_zod122.z.array(variableWriteSchema).min(1).max(VARIABLE_BATCH_LIMIT).refine(
   (entries) => new Set(entries.map(({ key }) => key)).size === entries.length && entries.reduce((total, { value }) => total + new TextEncoder().encode(value).byteLength, 0) <= VARIABLE_BATCH_BYTES,
   "Variable batches require unique names and at most 1 MiB of values"
 );
-var variableBulkWriteSchema = import_zod120.z.object({ entries: variableWriteBatchSchema }).strict();
-var variableMutationSchema = import_zod120.z.union([variableWriteSchema, variableBulkWriteSchema]);
-var variableRevealSchema = import_zod120.z.object({ expectedRevision: variableRevisionSchema }).strict();
-var variableRevealResultSchema = import_zod120.z.object({ value: import_zod120.z.string(), revision: variableRevisionSchema }).strict();
-var variableMetadataSchema = import_zod120.z.object({
+var variableBulkWriteSchema = import_zod122.z.object({ entries: variableWriteBatchSchema }).strict();
+var variableMutationSchema = import_zod122.z.union([variableWriteSchema, variableBulkWriteSchema]);
+var variableRevealSchema = import_zod122.z.object({ expectedRevision: variableRevisionSchema }).strict();
+var variableRevealResultSchema = import_zod122.z.object({ value: import_zod122.z.string(), revision: variableRevisionSchema }).strict();
+var variableMetadataSchema = import_zod122.z.object({
   key: variableKeySchema,
-  value: import_zod120.z.literal("[redacted]"),
-  updatedAt: import_zod120.z.number(),
+  value: import_zod122.z.literal("[redacted]"),
+  updatedAt: import_zod122.z.number(),
   revision: variableRevisionSchema.nullable(),
-  canReveal: import_zod120.z.boolean().optional()
+  canReveal: import_zod122.z.boolean().optional()
 }).strict();
-var variableCiphertextSchema = import_zod120.z.object({
-  v: import_zod120.z.literal(1),
-  iv: import_zod120.z.string().regex(/^[A-Za-z0-9_-]{16}$/),
-  ciphertext: import_zod120.z.string().min(22).max(9e4).regex(/^[A-Za-z0-9_-]+$/)
+var variableCiphertextSchema = import_zod122.z.object({
+  v: import_zod122.z.literal(1),
+  iv: import_zod122.z.string().regex(/^[A-Za-z0-9_-]{16}$/),
+  ciphertext: import_zod122.z.string().min(22).max(9e4).regex(/^[A-Za-z0-9_-]+$/)
 }).strict();
-var variableEnvelopeSchema = variableCiphertextSchema.extend({ keyId: import_zod120.z.string().uuid() }).strict();
-var variableResolveSchema = import_zod120.z.object({
-  keys: import_zod120.z.array(variableKeySchema).min(1).max(VARIABLE_BATCH_LIMIT).optional()
+var variableEnvelopeSchema = variableCiphertextSchema.extend({ keyId: import_zod122.z.string().uuid() }).strict();
+var variableResolveSchema = import_zod122.z.object({
+  keys: import_zod122.z.array(variableKeySchema).min(1).max(VARIABLE_BATCH_LIMIT).optional()
 }).strict();
 var variableRuntimeRequestSchema = variableResolveSchema.extend({
-  project: import_zod120.z.string().min(1).max(1024),
-  worktree: import_zod120.z.string().uuid().nullable()
+  project: import_zod122.z.string().min(1).max(1024),
+  worktree: import_zod122.z.string().uuid().nullable()
 }).strict();
-var resolvedVariablesSchema = import_zod120.z.array(variableRevealResultSchema.extend({ key: variableKeySchema }).strict()).max(VARIABLE_BATCH_LIMIT);
-var variableContextSchema = import_zod120.z.object({
+var resolvedVariablesSchema = import_zod122.z.array(variableRevealResultSchema.extend({ key: variableKeySchema }).strict()).max(VARIABLE_BATCH_LIMIT);
+var variableContextSchema = import_zod122.z.object({
   workspace: workspaceRefSchema,
-  deployment: import_zod120.z.string().min(1).max(128)
+  deployment: import_zod122.z.string().min(1).max(128)
 }).strict();
 var variableStateSchema = variableContextSchema.extend({
-  phase: import_zod120.z.enum(["encrypted", "legacy", "migrate", "rotate", "backup", "restore", "erased"]),
-  generation: import_zod120.z.string().uuid(),
-  keyId: import_zod120.z.string().uuid().nullable(),
-  operationId: import_zod120.z.string().uuid().nullable()
+  phase: import_zod122.z.enum(["encrypted", "rotate", "backup", "restore", "erased"]),
+  generation: import_zod122.z.string().uuid(),
+  keyId: import_zod122.z.string().uuid().nullable(),
+  operationId: import_zod122.z.string().uuid().nullable()
 }).strict();
-var variableMaintenanceSchema = import_zod120.z.discriminatedUnion("operation", [
-  import_zod120.z.object({ operation: import_zod120.z.literal("migrate"), operationId: import_zod120.z.string().uuid() }).strict(),
-  import_zod120.z.object({ operation: import_zod120.z.literal("rewrap") }).strict(),
-  import_zod120.z.object({ operation: import_zod120.z.literal("rotate"), operationId: import_zod120.z.string().uuid() }).strict(),
-  import_zod120.z.object({ operation: import_zod120.z.literal("status") }).strict(),
-  import_zod120.z.object({ operation: import_zod120.z.literal("erase") }).strict()
+var variableMaintenanceSchema = import_zod122.z.discriminatedUnion("operation", [
+  import_zod122.z.object({ operation: import_zod122.z.literal("rewrap") }).strict(),
+  import_zod122.z.object({ operation: import_zod122.z.literal("rotate"), operationId: import_zod122.z.string().uuid() }).strict(),
+  import_zod122.z.object({ operation: import_zod122.z.literal("status") }).strict(),
+  import_zod122.z.object({ operation: import_zod122.z.literal("erase") }).strict()
 ]);
 var variableMaintenanceStatusSchema = variableStateSchema.pick({ phase: true, generation: true, operationId: true }).extend({
-  total: import_zod120.z.number().int().nonnegative(),
-  legacy: import_zod120.z.number().int().nonnegative(),
-  complete: import_zod120.z.boolean(),
-  masterVersion: import_zod120.z.string().min(1)
+  total: import_zod122.z.number().int().nonnegative(),
+  complete: import_zod122.z.boolean(),
+  masterVersion: import_zod122.z.string().min(1)
 }).strict();
-var variableImportSchema = import_zod120.z.object({
-  project: import_zod120.z.string().min(1).max(1024),
-  entries: import_zod120.z.array(variableWriteSchema.omit({ expectedRevision: true })).min(1).max(VARIABLE_BATCH_LIMIT)
-}).strict().refine(
-  (input) => new Set(input.entries.map(({ key }) => key)).size === input.entries.length && input.entries.reduce((total, { value }) => total + new TextEncoder().encode(value).byteLength, 0) <= VARIABLE_BATCH_BYTES,
-  "Import must contain unique names and at most 1 MiB of values"
-);
 
 // packages/schema/src/native.ts
-var import_zod121 = require("zod");
-var nativeMaterializeInputSchema = import_zod121.z.object({
-  workflowId: import_zod121.z.string().optional(),
-  draft: import_zod121.z.boolean().optional(),
-  instanceId: import_zod121.z.string().optional(),
-  language: import_zod121.z.literal("typescript").optional(),
-  position: import_zod121.z.object({ x: import_zod121.z.number(), y: import_zod121.z.number() }).optional(),
-  params: import_zod121.z.record(import_zod121.z.string(), import_zod121.z.unknown()).optional()
+var import_zod123 = require("zod");
+var nativeMaterializeInputSchema = import_zod123.z.object({
+  workflowId: import_zod123.z.string().optional(),
+  draft: import_zod123.z.boolean().optional(),
+  instanceId: import_zod123.z.string().optional(),
+  language: import_zod123.z.literal("typescript").optional(),
+  position: import_zod123.z.object({ x: import_zod123.z.number(), y: import_zod123.z.number() }).optional(),
+  params: import_zod123.z.record(import_zod123.z.string(), import_zod123.z.unknown()).optional()
 });
-var pluginNodeAddInputSchema = import_zod121.z.object({
-  instanceId: import_zod121.z.string().min(1).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/).optional(),
-  workflowId: import_zod121.z.string().optional(),
-  draft: import_zod121.z.boolean().optional(),
-  position: import_zod121.z.object({ x: import_zod121.z.number(), y: import_zod121.z.number() }).optional()
+var pluginNodeAddInputSchema = import_zod123.z.object({
+  instanceId: import_zod123.z.string().min(1).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/).optional(),
+  workflowId: import_zod123.z.string().optional(),
+  draft: import_zod123.z.boolean().optional(),
+  position: import_zod123.z.object({ x: import_zod123.z.number(), y: import_zod123.z.number() }).optional()
+});
+var nativeCatalogQuerySchema = import_zod123.z.object({
+  q: import_zod123.z.string().max(200).optional(),
+  ids: import_zod123.z.string().max(1e5).optional(),
+  offset: import_zod123.z.coerce.number().int().nonnegative().optional(),
+  limit: import_zod123.z.coerce.number().int().positive().max(NATIVE_CATALOG_QUERY_LIMIT).optional(),
+  /** Apply the caller's view customization (visibility, labels, icons) before paging; otherwise canonical. */
+  customized: import_zod123.z.enum(["true"]).optional(),
+  /** With `customized`, use the account's global customization instead of the project's. */
+  global: import_zod123.z.enum(["true"]).optional()
 });
 
 // packages/plugin-runtime/src/constants.ts
@@ -22067,15 +22200,10 @@ function pluginBundleFiles(dir) {
 function pluginStoreRoot() {
   return (0, import_node_path3.join)((0, import_node_os.homedir)(), ".octonode", "store");
 }
-function shortSha(sha256) {
-  return sha256.replace(/^sha256:/, "").slice(0, 8);
-}
 function storeEntryDir(id2, version, sha256, root = pluginStoreRoot()) {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(id2) || !/^[a-zA-Z0-9.+_-]+$/.test(version) || !/^sha256:[a-f0-9]{64}$/.test(sha256))
     throw new Error("Invalid plugin store identity");
-  const full = (0, import_node_path3.join)(root, `${id2}@${version}-${sha256.slice(7)}`);
-  const legacy = (0, import_node_path3.join)(root, `${id2}@${version}-${shortSha(sha256)}`);
-  return !(0, import_node_fs3.existsSync)(full) && (0, import_node_fs3.existsSync)(legacy) ? legacy : full;
+  return (0, import_node_path3.join)(root, `${id2}@${version}-${sha256.slice(7)}`);
 }
 function addToStore(srcDir, opts = {}) {
   const manifest2 = loadPluginDefinition(srcDir);
@@ -22250,12 +22378,12 @@ function discover(opts, metadataOnly) {
 
 // packages/plugin/src/dependencies.ts
 var import_node_child_process = require("node:child_process");
-var import_node_fs7 = require("node:fs");
+var import_node_fs8 = require("node:fs");
 var import_node_os4 = require("node:os");
-var import_node_path7 = require("node:path");
+var import_node_path8 = require("node:path");
 var import_node_util = require("node:util");
-var import_semver = __toESM(require_semver2());
-var import_yaml2 = require("yaml");
+var import_semver3 = __toESM(require_semver2());
+var import_yaml3 = require("yaml");
 
 // packages/plugin/src/dependencies.constants.ts
 var DEFAULT_PACKAGE_MANAGER = "pnpm@12.3.4";
@@ -22274,7 +22402,7 @@ var import_node_crypto2 = require("node:crypto");
 var import_node_fs6 = require("node:fs");
 var import_node_path6 = require("node:path");
 var import_node_os3 = require("node:os");
-var import_zod122 = require("zod");
+var import_zod124 = require("zod");
 function inside(root, path3) {
   const local = (0, import_node_path6.relative)(root, path3);
   return local === "" || !(0, import_node_path6.isAbsolute)(local) && local !== ".." && !local.startsWith(`..${import_node_path6.sep}`);
@@ -22489,11 +22617,11 @@ function restoreDependencySnapshot(snapshot, mode = "copy") {
   let previous = [];
   try {
     if ((0, import_node_fs6.lstatSync)(snapshot.directory, { throwIfNoEntry: false })?.isSymbolicLink()) return false;
-    const record = import_zod122.z.object({
-      format: import_zod122.z.literal(SNAPSHOT_CONFIG2.dependency.format),
-      key: import_zod122.z.literal(snapshot.key),
-      sha256: import_zod122.z.string().regex(/^[a-f0-9]{64}$/),
-      outputs: import_zod122.z.array(import_zod122.z.string()).refine(
+    const record = import_zod124.z.object({
+      format: import_zod124.z.literal(SNAPSHOT_CONFIG2.dependency.format),
+      key: import_zod124.z.literal(snapshot.key),
+      sha256: import_zod124.z.string().regex(/^[a-f0-9]{64}$/),
+      outputs: import_zod124.z.array(import_zod124.z.string()).refine(
         (paths2) => new Set(paths2).size === paths2.length && paths2.every((path3) => snapshot.outputs.includes(path3))
       )
     }).parse(JSON.parse((0, import_node_fs6.readFileSync)((0, import_node_path6.join)(snapshot.directory, "snapshot.json"), "utf8")));
@@ -22566,45 +22694,101 @@ function saveDependencySnapshot(snapshot, mode = "copy") {
   }
 }
 
+// packages/plugin/src/dependency/verify.ts
+var import_semver = __toESM(require_semver2());
+var import_yaml2 = require("yaml");
+var import_zod125 = require("zod");
+
+// packages/plugin/src/dependency/manager.ts
+var import_node_fs7 = require("node:fs");
+var import_node_path7 = require("node:path");
+var import_semver2 = __toESM(require_semver2());
+var import_zod126 = require("zod");
+
+// packages/plugin/src/dependency/constants.ts
+var DEPENDENCY_MANAGER_METADATA_MAX_BYTES = 64 * 1024;
+
+// packages/plugin/src/dependency/manager.ts
+function metadata(file) {
+  const stat = (0, import_node_fs7.lstatSync)(file);
+  if (!stat.isFile() || stat.size > DEPENDENCY_MANAGER_METADATA_MAX_BYTES)
+    throw new Error("Invalid package manager metadata");
+  return JSON.parse((0, import_node_fs7.readFileSync)(file, "utf8"));
+}
+function installedPinnedManager(project, environment) {
+  if (project.manager !== "pnpm" || !project.declared?.startsWith("pnpm@") || !environment.COREPACK_HOME || environment.COREPACK_ENABLE_PROJECT_SPEC === "0")
+    return;
+  const reference = project.declared.slice("pnpm@".length);
+  const [version, integrity] = reference.split("+sha");
+  if (!(0, import_semver2.valid)(version) || (0, import_semver2.valid)(version) !== version) return;
+  try {
+    const executable = environment.PATH?.split(import_node_path7.delimiter).map((directory2) => (0, import_node_path7.join)(directory2, "corepack")).find((file) => {
+      try {
+        (0, import_node_fs7.accessSync)(file, import_node_fs7.constants.X_OK);
+        return true;
+      } catch {
+        return false;
+      }
+    });
+    if (!executable) return;
+    const entry = (0, import_node_fs7.realpathSync)(executable), corepack = (0, import_node_path7.resolve)((0, import_node_path7.dirname)(entry), "..");
+    const manifest2 = import_zod126.z.object({ name: import_zod126.z.literal("corepack"), version: import_zod126.z.string().min(1), bin: import_zod126.z.object({ corepack: import_zod126.z.string() }) }).parse(metadata((0, import_node_path7.join)(corepack, "package.json")));
+    if ((0, import_node_fs7.realpathSync)((0, import_node_path7.resolve)(corepack, manifest2.bin.corepack)) !== entry) return;
+    const installed = (0, import_node_path7.join)(environment.COREPACK_HOME, "v1", "pnpm", version);
+    const marker = import_zod126.z.object({
+      locator: import_zod126.z.object({ name: import_zod126.z.literal("pnpm"), reference: import_zod126.z.string() }),
+      hash: import_zod126.z.string().regex(/^sha[0-9]+\.[a-f0-9]+$/),
+      bin: import_zod126.z.object({ pnpm: import_zod126.z.string() })
+    }).parse(metadata((0, import_node_path7.join)(installed, ".corepack")));
+    const pkg = import_zod126.z.object({ name: import_zod126.z.literal("pnpm"), version: import_zod126.z.literal(version), bin: import_zod126.z.object({ pnpm: import_zod126.z.string() }) }).parse(metadata((0, import_node_path7.join)(installed, "package.json")));
+    if (![version, reference].includes(marker.locator.reference) || integrity && marker.hash !== `sha${integrity}` || (0, import_node_path7.resolve)(installed, marker.bin.pnpm) !== (0, import_node_path7.resolve)(installed, pkg.bin.pnpm))
+      return;
+    (0, import_node_fs7.accessSync)((0, import_node_path7.resolve)(installed, pkg.bin.pnpm), import_node_fs7.constants.R_OK);
+    return `${version}/corepack@${manifest2.version}`;
+  } catch {
+    return;
+  }
+}
+
 // packages/plugin/src/dependencies.ts
 var execute = (0, import_node_util.promisify)(import_node_child_process.execFile);
 var installations = /* @__PURE__ */ new Map();
 function checkTransactionPath(root, file) {
-  const local = (0, import_node_path7.relative)(root, file);
-  if (!local || local.startsWith("../") || (0, import_node_path7.resolve)(root, local) !== file)
+  const local = (0, import_node_path8.relative)(root, file);
+  if (!local || local.startsWith("../") || (0, import_node_path8.resolve)(root, local) !== file)
     throw new Error("Transaction path must stay inside its project");
-  for (let cursor = file; cursor !== root; cursor = (0, import_node_path7.dirname)(cursor)) {
-    const stat = (0, import_node_fs7.lstatSync)(cursor, { throwIfNoEntry: false });
+  for (let cursor = file; cursor !== root; cursor = (0, import_node_path8.dirname)(cursor)) {
+    const stat = (0, import_node_fs8.lstatSync)(cursor, { throwIfNoEntry: false });
     if (stat?.isSymbolicLink()) throw new Error("Transaction path contains a symbolic link");
   }
 }
 function manifest(root) {
-  const file = (0, import_node_path7.join)(root, "package.json");
-  return (0, import_node_fs7.existsSync)(file) ? JSON.parse((0, import_node_fs7.readFileSync)(file, "utf8")) : {};
+  const file = (0, import_node_path8.join)(root, "package.json");
+  return (0, import_node_fs8.existsSync)(file) ? JSON.parse((0, import_node_fs8.readFileSync)(file, "utf8")) : {};
 }
 function dependencyCacheRoot(root) {
-  return (0, import_node_path7.resolve)(root ?? OCTONODE_PACKAGE_CACHE() ?? (0, import_node_path7.join)((0, import_node_os4.homedir)(), ".octonode", "package-cache"));
+  return (0, import_node_path8.resolve)(root ?? OCTONODE_PACKAGE_CACHE() ?? (0, import_node_path8.join)((0, import_node_os4.homedir)(), ".octonode", "package-cache"));
 }
 function dependencyPaths(cwd) {
-  const start2 = (0, import_node_fs7.realpathSync)(cwd);
-  if (!(0, import_node_fs7.existsSync)((0, import_node_path7.join)(start2, "package.json")) && ((0, import_node_fs7.existsSync)((0, import_node_path7.join)(start2, "pyproject.toml")) || (0, import_node_fs7.existsSync)((0, import_node_path7.join)(start2, "octonode.lock"))))
+  const start2 = (0, import_node_fs8.realpathSync)(cwd);
+  if (!(0, import_node_fs8.existsSync)((0, import_node_path8.join)(start2, "package.json")) && ((0, import_node_fs8.existsSync)((0, import_node_path8.join)(start2, "pyproject.toml")) || (0, import_node_fs8.existsSync)((0, import_node_path8.join)(start2, "octonode.lock"))))
     return { root: start2, target: start2 };
   const ancestors = [];
-  for (let path3 = start2; ; path3 = (0, import_node_path7.dirname)(path3)) {
+  for (let path3 = start2; ; path3 = (0, import_node_path8.dirname)(path3)) {
     ancestors.push(path3);
-    if ((0, import_node_fs7.existsSync)((0, import_node_path7.join)(path3, ".git")) || (0, import_node_path7.dirname)(path3) === path3) break;
+    if ((0, import_node_fs8.existsSync)((0, import_node_path8.join)(path3, ".git")) || (0, import_node_path8.dirname)(path3) === path3) break;
   }
-  const repository = ancestors.find((path3) => (0, import_node_fs7.existsSync)((0, import_node_path7.join)(path3, ".git")));
-  const target = (0, import_node_fs7.existsSync)((0, import_node_path7.join)(start2, "package.json")) ? start2 : repository ? ancestors.find((path3) => (0, import_node_fs7.existsSync)((0, import_node_path7.join)(path3, "package.json"))) ?? start2 : start2;
+  const repository = ancestors.find((path3) => (0, import_node_fs8.existsSync)((0, import_node_path8.join)(path3, ".git")));
+  const target = (0, import_node_fs8.existsSync)((0, import_node_path8.join)(start2, "package.json")) ? start2 : repository ? ancestors.find((path3) => (0, import_node_fs8.existsSync)((0, import_node_path8.join)(path3, "package.json"))) ?? start2 : start2;
   const root = ancestors.find((path3) => {
-    if (path3 === target || !(0, import_node_path7.relative)(path3, target) || (0, import_node_path7.relative)(path3, target).startsWith("..")) return false;
+    if (path3 === target || !(0, import_node_path8.relative)(path3, target) || (0, import_node_path8.relative)(path3, target).startsWith("..")) return false;
     const workspaces = manifest(path3).workspaces;
-    const pnpmWorkspace = (0, import_node_path7.join)(path3, "pnpm-workspace.yaml");
-    const patterns = (0, import_node_fs7.existsSync)(pnpmWorkspace) ? (0, import_yaml2.parse)((0, import_node_fs7.readFileSync)(pnpmWorkspace, "utf8"))?.packages : Array.isArray(workspaces) ? workspaces : workspaces?.packages;
+    const pnpmWorkspace = (0, import_node_path8.join)(path3, "pnpm-workspace.yaml");
+    const patterns = (0, import_node_fs8.existsSync)(pnpmWorkspace) ? (0, import_yaml3.parse)((0, import_node_fs8.readFileSync)(pnpmWorkspace, "utf8"))?.packages : Array.isArray(workspaces) ? workspaces : workspaces?.packages;
     if (!Array.isArray(patterns)) return false;
-    const local = (0, import_node_path7.relative)(path3, target).split("\\").join("/");
+    const local = (0, import_node_path8.relative)(path3, target).split("\\").join("/");
     const globs = patterns.filter((value) => typeof value === "string");
-    return globs.some((pattern) => !pattern.startsWith("!") && (0, import_node_path7.matchesGlob)(local, pattern.replace(/\/$/, ""))) && !globs.some((pattern) => pattern.startsWith("!") && (0, import_node_path7.matchesGlob)(local, pattern.slice(1).replace(/\/$/, "")));
+    return globs.some((pattern) => !pattern.startsWith("!") && (0, import_node_path8.matchesGlob)(local, pattern.replace(/\/$/, ""))) && !globs.some((pattern) => pattern.startsWith("!") && (0, import_node_path8.matchesGlob)(local, pattern.slice(1).replace(/\/$/, "")));
   }) ?? target;
   return { root, target };
 }
@@ -22612,7 +22796,7 @@ function resolveDependencyProject(cwd) {
   const { root, target } = dependencyPaths(cwd);
   const declared = manifest(root).packageManager;
   const locked = Object.keys(PACKAGE_MANAGER_LOCKS).filter(
-    (manager2) => PACKAGE_MANAGER_LOCKS[manager2].some((file) => (0, import_node_fs7.existsSync)((0, import_node_path7.join)(root, file)))
+    (manager2) => PACKAGE_MANAGER_LOCKS[manager2].some((file) => (0, import_node_fs8.existsSync)((0, import_node_path8.join)(root, file)))
   );
   const manager = declared?.split("@")[0];
   if (manager && !(manager in PACKAGE_MANAGER_LOCKS)) throw new Error(`unsupported package manager: ${declared}`);
@@ -22622,7 +22806,7 @@ function resolveDependencyProject(cwd) {
   return {
     target,
     root,
-    manager: manager ?? locked[0] ?? ((0, import_node_fs7.existsSync)((0, import_node_path7.join)(root, "pnpm-workspace.yaml")) ? "pnpm" : (0, import_node_fs7.existsSync)((0, import_node_path7.join)(target, "package.json")) ? "npm" : "pnpm"),
+    manager: manager ?? locked[0] ?? ((0, import_node_fs8.existsSync)((0, import_node_path8.join)(root, "pnpm-workspace.yaml")) ? "pnpm" : (0, import_node_fs8.existsSync)((0, import_node_path8.join)(target, "package.json")) ? "npm" : "pnpm"),
     declared
   };
 }
@@ -22661,7 +22845,7 @@ function dependencyInstallEnvironment(cacheRoot) {
   });
 }
 function isClassicYarn(project) {
-  return project.manager === "yarn" && (project.declared?.startsWith("yarn@1.") || !project.declared && (0, import_node_fs7.existsSync)((0, import_node_path7.join)(project.root, "yarn.lock")) && (0, import_node_fs7.readFileSync)((0, import_node_path7.join)(project.root, "yarn.lock"), "utf8").includes("# yarn lockfile v1"));
+  return project.manager === "yarn" && (project.declared?.startsWith("yarn@1.") || !project.declared && (0, import_node_fs8.existsSync)((0, import_node_path8.join)(project.root, "yarn.lock")) && (0, import_node_fs8.readFileSync)((0, import_node_path8.join)(project.root, "yarn.lock"), "utf8").includes("# yarn lockfile v1"));
 }
 async function run(project, command, cwd, cacheRoot) {
   const [file, args] = command;
@@ -22669,7 +22853,7 @@ async function run(project, command, cwd, cacheRoot) {
   const flags = yarnClassic ? [
     ...args.filter((arg) => arg !== "--mode=skip-build").map((arg) => arg === "--immutable" ? "--frozen-lockfile" : arg),
     "--ignore-scripts"
-  ] : project.manager === "pnpm" && args[0] === "add" && project.root === cwd && (0, import_node_fs7.existsSync)((0, import_node_path7.join)(cwd, "pnpm-workspace.yaml")) ? [...args, "--workspace-root"] : args;
+  ] : project.manager === "pnpm" && args[0] === "add" && project.root === cwd && (0, import_node_fs8.existsSync)((0, import_node_path8.join)(cwd, "pnpm-workspace.yaml")) ? [...args, "--workspace-root"] : args;
   const pinned = project.declared && file !== "bun" || yarnClassic;
   const executable = yarnClassic && !project.declared ? CLASSIC_YARN : file;
   await execute(pinned ? "corepack" : file, pinned ? [executable, ...flags] : flags, {
@@ -22681,20 +22865,20 @@ async function run(project, command, cwd, cacheRoot) {
 }
 async function verifyProjectDependencies(project, names, versions = {}) {
   if (!names.length) return;
-  const pnp = (0, import_node_path7.join)(project.root, ".pnp.cjs");
-  const loader = (0, import_node_path7.join)(project.root, ".pnp.loader.mjs");
+  const pnp = (0, import_node_path8.join)(project.root, ".pnp.cjs");
+  const loader = (0, import_node_path8.join)(project.root, ".pnp.loader.mjs");
   await execute(
     process.execPath,
     [
-      ...(0, import_node_fs7.existsSync)(pnp) ? ["--require", pnp] : [],
-      ...(0, import_node_fs7.existsSync)(loader) ? ["--loader", loader] : [],
+      ...(0, import_node_fs8.existsSync)(pnp) ? ["--require", pnp] : [],
+      ...(0, import_node_fs8.existsSync)(loader) ? ["--loader", loader] : [],
       "--input-type=module",
       "-e",
       `import { createRequire } from 'node:module';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-const require = createRequire(${JSON.stringify((0, import_node_path7.join)(project.target, "package.json"))});
+const require = createRequire(${JSON.stringify((0, import_node_path8.join)(project.target, "package.json"))});
 const versions = ${JSON.stringify(versions)};
 for (const name of ${JSON.stringify(names)}) {
   let resolved;
@@ -22732,26 +22916,31 @@ for (const name of ${JSON.stringify(names)}) {
     }
   );
 }
-async function withDependencyInstall(cwd, action) {
+async function withDependencyInstall(cwd, action, recovery) {
   if (process.platform === "win32")
     throw new Error("Plugin dependency lifecycle currently supports macOS and Linux; use WSL on Windows");
   const root = dependencyPaths(cwd).root;
   const previous = installations.get(root) ?? Promise.resolve();
   const next = previous.catch(() => {
   }).then(async () => {
-    const mutex = (0, import_node_path7.join)(root, DEPENDENCY_MUTEX);
+    if (recovery) await recoverDependencyProject(cwd, recovery, true);
+    const mutex = (0, import_node_path8.join)(root, DEPENDENCY_MUTEX);
     try {
-      (0, import_node_fs7.mkdirSync)(mutex);
+      (0, import_node_fs8.mkdirSync)(mutex);
     } catch {
       throw new Error(
         "Another dependency installation is running or needs recovery; use octonodes plugin recover after it exits"
       );
     }
-    (0, import_node_fs7.writeFileSync)((0, import_node_path7.join)(mutex, "owner.json"), JSON.stringify({ pid: process.pid }));
+    (0, import_node_fs8.writeFileSync)((0, import_node_path8.join)(mutex, "owner.json"), JSON.stringify({ pid: process.pid, active: true }));
     try {
       return await action();
     } finally {
-      if (!(0, import_node_fs7.existsSync)((0, import_node_path7.join)(mutex, "journal.json"))) (0, import_node_fs7.rmSync)(mutex, { recursive: true, force: true });
+      if (!(0, import_node_fs8.existsSync)((0, import_node_path8.join)(mutex, "journal.json"))) (0, import_node_fs8.rmSync)(mutex, { recursive: true, force: true });
+      else {
+        checkTransactionPath(root, (0, import_node_path8.join)(mutex, "owner.json"));
+        (0, import_node_fs8.writeFileSync)((0, import_node_path8.join)(mutex, "owner.json"), JSON.stringify({ pid: process.pid, active: false }));
+      }
     }
   });
   installations.set(root, next);
@@ -22792,7 +22981,7 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
   const declared = manifest(project.target);
   const existing = { ...declared.devDependencies, ...declared.optionalDependencies, ...declared.dependencies };
   const reusedRanges = dependencies.filter(
-    ({ name, spec }) => options.preserveExisting && existing[name] && existing[name] !== spec && (0, import_semver.valid)(spec) && (0, import_semver.satisfies)(spec, existing[name])
+    ({ name, spec }) => options.preserveExisting && existing[name] && existing[name] !== spec && (0, import_semver3.valid)(spec) && (0, import_semver3.satisfies)(spec, existing[name])
   );
   if (reusedRanges.length)
     await verifyProjectDependencies(
@@ -22802,7 +22991,7 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
     );
   if (options.preserveExisting) {
     for (const { name, spec } of dependencies)
-      if (Object.hasOwn(existing, name) && existing[name] !== spec && options.replaceExisting?.[name] !== existing[name] && !reusedRanges.some((dependency) => dependency.name === name) && !(existing[name].startsWith("file:") && spec.startsWith("file:") && (0, import_node_path7.resolve)(project.target, existing[name].slice(5)) === (0, import_node_path7.resolve)(project.target, spec.slice(5))))
+      if (Object.hasOwn(existing, name) && existing[name] !== spec && options.replaceExisting?.[name] !== existing[name] && !reusedRanges.some((dependency) => dependency.name === name) && !(existing[name].startsWith("file:") && spec.startsWith("file:") && (0, import_node_path8.resolve)(project.target, existing[name].slice(5)) === (0, import_node_path8.resolve)(project.target, spec.slice(5))))
         throw new Error(
           `Dependency conflict: ${name} is ${existing[name]}, plugin requires ${spec}; reconcile it explicitly first`
         );
@@ -22819,39 +23008,39 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
     () => false
   );
   const metadataOnly = options.metadataOnly || reuse;
-  const packageJson = (0, import_node_path7.join)(project.target, "package.json");
-  if (!dependencies.length && !(0, import_node_fs7.existsSync)(packageJson) && !options.commit) return;
-  const hasLock = PACKAGE_MANAGER_LOCKS[project.manager].some((file) => (0, import_node_fs7.existsSync)((0, import_node_path7.join)(project.root, file)));
+  const packageJson = (0, import_node_path8.join)(project.target, "package.json");
+  if (!dependencies.length && !(0, import_node_fs8.existsSync)(packageJson) && !options.commit) return;
+  const hasLock = PACKAGE_MANAGER_LOCKS[project.manager].some((file) => (0, import_node_fs8.existsSync)((0, import_node_path8.join)(project.root, file)));
   if (options.frozen && !hasLock)
     throw new Error("commit the native package-manager lockfile before preparing this worktree");
   const files = [
     .../* @__PURE__ */ new Set([
       packageJson,
-      (0, import_node_path7.join)(project.root, "package.json"),
-      ...Object.values(PACKAGE_MANAGER_LOCKS).flat().map((file) => (0, import_node_path7.join)(project.root, file)),
-      (0, import_node_path7.join)(project.root, "pnpm-workspace.yaml"),
+      (0, import_node_path8.join)(project.root, "package.json"),
+      ...Object.values(PACKAGE_MANAGER_LOCKS).flat().map((file) => (0, import_node_path8.join)(project.root, file)),
+      (0, import_node_path8.join)(project.root, "pnpm-workspace.yaml"),
       ...options.transactionFiles ?? []
     ])
   ];
   for (const path3 of files) checkTransactionPath(project.root, path3);
-  const before = new Map(files.map((path3) => [path3, (0, import_node_fs7.existsSync)(path3) ? (0, import_node_fs7.readFileSync)(path3) : void 0]));
-  const journal = (0, import_node_path7.join)(project.root, DEPENDENCY_MUTEX, "journal.json");
-  const hadModules = (0, import_node_fs7.existsSync)((0, import_node_path7.join)(project.root, "node_modules"));
+  const before = new Map(files.map((path3) => [path3, (0, import_node_fs8.existsSync)(path3) ? (0, import_node_fs8.readFileSync)(path3) : void 0]));
+  const journal = (0, import_node_path8.join)(project.root, DEPENDENCY_MUTEX, "journal.json");
+  const hadModules = (0, import_node_fs8.existsSync)((0, import_node_path8.join)(project.root, "node_modules"));
   const pnpFiles = [".pnp.cjs", ".pnp.loader.mjs", ".pnp.data.json"];
   const pnpBefore = new Map(
     pnpFiles.map((file) => {
-      const path3 = (0, import_node_path7.join)(project.root, file);
-      return [path3, (0, import_node_fs7.existsSync)(path3) ? (0, import_node_fs7.readFileSync)(path3) : void 0];
+      const path3 = (0, import_node_path8.join)(project.root, file);
+      return [path3, (0, import_node_fs8.existsSync)(path3) ? (0, import_node_fs8.readFileSync)(path3) : void 0];
     })
   );
-  const hadInstall = hadModules || (0, import_node_fs7.existsSync)((0, import_node_path7.join)(project.root, ".pnp.cjs"));
+  const hadInstall = hadModules || (0, import_node_fs8.existsSync)((0, import_node_path8.join)(project.root, ".pnp.cjs"));
   let metadataTouched = false;
-  const metadata = new Set(options.transactionFiles ?? []);
+  const metadata2 = new Set(options.transactionFiles ?? []);
   const restoreBefore = () => {
     for (const [path3, content] of before) {
-      if (metadata.has(path3) && !metadataTouched) continue;
-      if (content === void 0) (0, import_node_fs7.rmSync)(path3, { force: true });
-      else (0, import_node_fs7.writeFileSync)(path3, content);
+      if (metadata2.has(path3) && !metadataTouched) continue;
+      if (content === void 0) (0, import_node_fs8.rmSync)(path3, { force: true });
+      else (0, import_node_fs8.writeFileSync)(path3, content);
     }
   };
   if (hadInstall && !hasLock && !metadataOnly)
@@ -22859,13 +23048,13 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
       "create a native lockfile before updating existing dependencies so failed installations can be recovered"
     );
   try {
-    if (metadataOnly && (0, import_node_fs7.existsSync)((0, import_node_path7.dirname)(journal))) (0, import_node_fs7.writeFileSync)((0, import_node_path7.join)((0, import_node_path7.dirname)(journal), "metadata-only"), "1");
-    if ((0, import_node_fs7.existsSync)((0, import_node_path7.dirname)(journal)))
-      (0, import_node_fs7.writeFileSync)(
+    if (metadataOnly && (0, import_node_fs8.existsSync)((0, import_node_path8.dirname)(journal))) (0, import_node_fs8.writeFileSync)((0, import_node_path8.join)((0, import_node_path8.dirname)(journal), "metadata-only"), "1");
+    if ((0, import_node_fs8.existsSync)((0, import_node_path8.dirname)(journal)))
+      (0, import_node_fs8.writeFileSync)(
         journal,
         JSON.stringify(
           [...before].map(([path3, content]) => ({
-            path: (0, import_node_path7.relative)(project.root, path3).replaceAll("\\", "/"),
+            path: (0, import_node_path8.relative)(project.root, path3).replaceAll("\\", "/"),
             content: content?.toString("base64") ?? null
           }))
         )
@@ -22873,13 +23062,13 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
     if (metadataOnly) {
       metadataTouched = true;
       await options.commit?.();
-      (0, import_node_fs7.rmSync)(journal, { force: true });
-      (0, import_node_fs7.rmSync)((0, import_node_path7.join)((0, import_node_path7.dirname)(journal), "metadata-only"), { force: true });
+      (0, import_node_fs8.rmSync)(journal, { force: true });
+      (0, import_node_fs8.rmSync)((0, import_node_path8.join)((0, import_node_path8.dirname)(journal), "metadata-only"), { force: true });
       return;
     }
-    if (!(0, import_node_fs7.existsSync)(packageJson)) {
-      (0, import_node_fs7.mkdirSync)(project.target, { recursive: true });
-      (0, import_node_fs7.writeFileSync)(
+    if (!(0, import_node_fs8.existsSync)(packageJson)) {
+      (0, import_node_fs8.mkdirSync)(project.target, { recursive: true });
+      (0, import_node_fs8.writeFileSync)(
         packageJson,
         JSON.stringify({ private: true, packageManager: DEFAULT_PACKAGE_MANAGER }, null, 2) + "\n"
       );
@@ -22892,11 +23081,11 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
     const snapshotEnvironment = dependencyInstallEnvironment(options.cacheRoot);
     const pinnedManager = current.declared && current.manager !== "bun" || isClassicYarn(current);
     const versionCommand = isClassicYarn(current) && !current.declared ? CLASSIC_YARN : current.manager;
-    const managerVersion = options.frozen && (options.cacheRoot || OCTONODE_PACKAGE_CACHE()) ? await execute(
+    const managerVersion = options.frozen && (options.cacheRoot || OCTONODE_PACKAGE_CACHE()) ? installedPinnedManager(current, snapshotEnvironment) ?? await execute(
       pinnedManager ? "corepack" : current.manager,
       pinnedManager ? [versionCommand, "--version"] : ["--version"],
       { cwd: current.root, env: snapshotEnvironment, timeout: DEPENDENCIES_MANAGER_VERSION_TIMEOUT_MS }
-    ).then(({ stdout }) => stdout.trim()).catch(() => void 0) : void 0;
+    ).then(({ stdout }) => installedPinnedManager(current, snapshotEnvironment) ?? stdout.trim()).catch(() => void 0) : void 0;
     const snapshot = managerVersion ? dependencySnapshot(current, dependencyCacheRoot(options.cacheRoot), managerVersion, snapshotEnvironment) : void 0;
     if (options.remove?.length) {
       for (const name of options.remove)
@@ -22912,11 +23101,11 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
       for (const development of [false, true]) {
         const group = dependencies.filter((item) => !!item.development === development);
         if (!group.length) continue;
-        const manifest2 = JSON.parse((0, import_node_fs7.readFileSync)(packageJson, "utf8"));
+        const manifest2 = JSON.parse((0, import_node_fs8.readFileSync)(packageJson, "utf8"));
         const previousSection = development ? "dependencies" : "devDependencies";
         if (group.some(({ name }) => manifest2[previousSection]?.[name])) {
           for (const { name } of group) delete manifest2[previousSection]?.[name];
-          (0, import_node_fs7.writeFileSync)(packageJson, JSON.stringify(manifest2, null, 2) + "\n");
+          (0, import_node_fs8.writeFileSync)(packageJson, JSON.stringify(manifest2, null, 2) + "\n");
         }
         const [command, args] = packageManagerAdd(
           current.manager,
@@ -22933,26 +23122,26 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
     );
     if (options.frozen) {
       for (const [path3, content] of before) {
-        const after = (0, import_node_fs7.existsSync)(path3) ? (0, import_node_fs7.readFileSync)(path3) : void 0;
+        const after = (0, import_node_fs8.existsSync)(path3) ? (0, import_node_fs8.readFileSync)(path3) : void 0;
         if (content?.equals(after ?? Buffer.alloc(0)) || !content && !after) continue;
         if (path3.endsWith("package.json") && content && after && (0, import_node_util.isDeepStrictEqual)(JSON.parse(content.toString()), JSON.parse(after.toString()))) {
-          (0, import_node_fs7.writeFileSync)(path3, content);
+          (0, import_node_fs8.writeFileSync)(path3, content);
         } else {
-          throw new Error(`frozen installation changed ${(0, import_node_path7.relative)(project.root, path3)}`);
+          throw new Error(`frozen installation changed ${(0, import_node_path8.relative)(project.root, path3)}`);
         }
       }
     }
-    for (const path3 of metadata) {
+    for (const path3 of metadata2) {
       const content = before.get(path3);
-      const current2 = (0, import_node_fs7.existsSync)(path3) ? (0, import_node_fs7.readFileSync)(path3) : void 0;
+      const current2 = (0, import_node_fs8.existsSync)(path3) ? (0, import_node_fs8.readFileSync)(path3) : void 0;
       if (!(content?.equals(current2 ?? Buffer.alloc(0)) || !content && !current2))
         throw new Error(
-          `Owner metadata changed during installation: ${(0, import_node_path7.relative)(project.root, path3)}; refresh and retry`
+          `Owner metadata changed during installation: ${(0, import_node_path8.relative)(project.root, path3)}; refresh and retry`
         );
     }
     metadataTouched = true;
     await options.commit?.();
-    (0, import_node_fs7.rmSync)(journal, { force: true });
+    (0, import_node_fs8.rmSync)(journal, { force: true });
     if (snapshot && !restored) {
       const after = dependencySnapshot(
         current,
@@ -22963,14 +23152,14 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
       if (after?.key === snapshot.key) saveDependencySnapshot(after);
     }
   } catch (error) {
-    const changed = [...before].filter(([path3, content]) => (0, import_node_fs7.existsSync)(path3) && !content?.equals((0, import_node_fs7.readFileSync)(path3)));
+    const changed = [...before].filter(([path3, content]) => (0, import_node_fs8.existsSync)(path3) && !content?.equals((0, import_node_fs8.readFileSync)(path3)));
     if (changed.length) {
-      const backup = (0, import_node_path7.join)(project.root, `.octonode-recovery-${Date.now()}`);
+      const backup = (0, import_node_path8.join)(project.root, `.octonode-recovery-${Date.now()}`);
       for (const [path3] of changed) {
         checkTransactionPath(project.root, path3);
-        const target = (0, import_node_path7.join)(backup, (0, import_node_path7.relative)(project.root, path3));
-        (0, import_node_fs7.mkdirSync)((0, import_node_path7.dirname)(target), { recursive: true });
-        (0, import_node_fs7.writeFileSync)(target, (0, import_node_fs7.readFileSync)(path3));
+        const target = (0, import_node_path8.join)(backup, (0, import_node_path8.relative)(project.root, path3));
+        (0, import_node_fs8.mkdirSync)((0, import_node_path8.dirname)(target), { recursive: true });
+        (0, import_node_fs8.writeFileSync)(target, (0, import_node_fs8.readFileSync)(path3));
       }
       process.stderr.write(`Pre-rollback files preserved in ${backup}
 `);
@@ -22985,77 +23174,94 @@ async function reconcileDependencies(cwd, dependencies, options = {}) {
       }
       restoreBefore();
     } else if (!metadataOnly && !hadInstall) {
-      (0, import_node_fs7.rmSync)((0, import_node_path7.join)(project.root, "node_modules"), { recursive: true, force: true });
+      (0, import_node_fs8.rmSync)((0, import_node_path8.join)(project.root, "node_modules"), { recursive: true, force: true });
     }
     for (const [path3, content] of pnpBefore) {
-      if (content === void 0) (0, import_node_fs7.rmSync)(path3, { force: true });
-      else (0, import_node_fs7.writeFileSync)(path3, content);
+      if (content === void 0) (0, import_node_fs8.rmSync)(path3, { force: true });
+      else (0, import_node_fs8.writeFileSync)(path3, content);
     }
     const failure = error;
-    if (!recovery) (0, import_node_fs7.rmSync)(journal, { force: true });
+    if (!recovery) (0, import_node_fs8.rmSync)(journal, { force: true });
     throw new Error(`package installation failed: ${failure.stderr?.trim() || failure.message}${recovery}`);
   }
 }
-async function recoverDependencyInstall(cwd) {
+function recoverDependencyInstall(cwd, options = {}) {
+  return recoverDependencyProject(cwd, options);
+}
+async function recoverDependencyProject(cwd, options, ownProcessIdle = false) {
   const project = resolveDependencyProject(cwd);
-  const mutex = (0, import_node_path7.join)(project.root, DEPENDENCY_MUTEX);
-  if (!(0, import_node_fs7.existsSync)(mutex)) return;
-  checkTransactionPath(project.root, (0, import_node_path7.join)(mutex, "owner.json"));
-  const owner = JSON.parse((0, import_node_fs7.readFileSync)((0, import_node_path7.join)(mutex, "owner.json"), "utf8"));
+  const mutex = (0, import_node_path8.join)(project.root, DEPENDENCY_MUTEX);
+  if (!(0, import_node_fs8.existsSync)(mutex)) return;
+  checkTransactionPath(project.root, (0, import_node_path8.join)(mutex, "owner.json"));
+  const owner = JSON.parse((0, import_node_fs8.readFileSync)((0, import_node_path8.join)(mutex, "owner.json"), "utf8"));
   if (!Number.isInteger(owner.pid) || owner.pid < 1)
     throw new Error("Invalid installation owner; inspect the transaction manually");
-  try {
-    process.kill(owner.pid, 0);
-    throw new Error("Installation owner is still running");
-  } catch (error) {
-    if (error.code !== "ESRCH") throw error;
+  if (owner.active !== false && !(ownProcessIdle && owner.pid === process.pid && owner.active === void 0)) {
+    let running = true;
+    try {
+      process.kill(owner.pid, 0);
+      if (process.platform === "linux") {
+        try {
+          running = !/^State:\s*Z/m.test((0, import_node_fs8.readFileSync)(`/proc/${owner.pid}/status`, "utf8"));
+        } catch (error) {
+          if (error.code === "ENOENT") running = false;
+          else throw error;
+        }
+      }
+    } catch (error) {
+      if (error.code !== "ESRCH") throw error;
+      running = false;
+    }
+    if (running) throw new Error("Installation owner is still running");
   }
-  const journal = (0, import_node_path7.join)(mutex, "journal.json");
+  const journal = (0, import_node_path8.join)(mutex, "journal.json");
   checkTransactionPath(project.root, journal);
-  if ((0, import_node_fs7.existsSync)(journal)) {
-    const records = JSON.parse((0, import_node_fs7.readFileSync)(journal, "utf8"));
+  if ((0, import_node_fs8.existsSync)(journal)) {
+    const records = JSON.parse((0, import_node_fs8.readFileSync)(journal, "utf8"));
     if (!Array.isArray(records)) throw new Error("Invalid recovery journal");
     for (const record of records) {
       if (!record || typeof record.path !== "string" || !record.path || record.path.includes("\\") || record.path.startsWith("/") || record.path.split("/").some((part) => part === ".." || part === "." || part.includes(":")) || record.content !== null && typeof record.content !== "string")
         throw new Error("Invalid recovery journal path");
-      checkTransactionPath(project.root, (0, import_node_path7.join)(project.root, record.path));
-      checkTransactionPath(project.root, (0, import_node_path7.join)(mutex, "recovery-backup", record.path));
+      checkTransactionPath(project.root, (0, import_node_path8.join)(project.root, record.path));
+      checkTransactionPath(project.root, (0, import_node_path8.join)(mutex, "recovery-backup", record.path));
     }
     for (const record of records) {
-      const path3 = (0, import_node_path7.join)(project.root, record.path);
-      if ((0, import_node_fs7.existsSync)(path3)) {
-        const backup = (0, import_node_path7.join)(mutex, "recovery-backup", record.path);
-        (0, import_node_fs7.mkdirSync)((0, import_node_path7.dirname)(backup), { recursive: true });
-        if (!(0, import_node_fs7.existsSync)(backup)) (0, import_node_fs7.writeFileSync)(backup, (0, import_node_fs7.readFileSync)(path3));
+      const path3 = (0, import_node_path8.join)(project.root, record.path);
+      if ((0, import_node_fs8.existsSync)(path3)) {
+        const backup = (0, import_node_path8.join)(mutex, "recovery-backup", record.path);
+        (0, import_node_fs8.mkdirSync)((0, import_node_path8.dirname)(backup), { recursive: true });
+        if (!(0, import_node_fs8.existsSync)(backup)) (0, import_node_fs8.writeFileSync)(backup, (0, import_node_fs8.readFileSync)(path3));
       }
-      if (record.content === null) (0, import_node_fs7.rmSync)(path3, { force: true });
-      else (0, import_node_fs7.writeFileSync)(path3, Buffer.from(record.content, "base64"));
+      const nativeManifest = record.path === "package.json" || record.path.endsWith("/package.json") || Object.values(PACKAGE_MANAGER_LOCKS).some((locks) => locks.some((lock) => record.path === lock));
+      if (options.useCurrentManifests && nativeManifest) continue;
+      if (record.content === null) (0, import_node_fs8.rmSync)(path3, { force: true });
+      else (0, import_node_fs8.writeFileSync)(path3, Buffer.from(record.content, "base64"));
     }
-    if (!(0, import_node_fs7.existsSync)((0, import_node_path7.join)(mutex, "metadata-only")) && PACKAGE_MANAGER_LOCKS[project.manager].some((file) => (0, import_node_fs7.existsSync)((0, import_node_path7.join)(project.root, file))))
+    if (!(0, import_node_fs8.existsSync)((0, import_node_path8.join)(mutex, "metadata-only")) && PACKAGE_MANAGER_LOCKS[project.manager].some((file) => (0, import_node_fs8.existsSync)((0, import_node_path8.join)(project.root, file))))
       await run(project, installCommand(project, true), project.root);
   }
-  if ((0, import_node_fs7.existsSync)((0, import_node_path7.join)(mutex, "recovery-backup"))) {
-    const backup = (0, import_node_path7.join)(project.root, `.octonode-recovery-${Date.now()}`);
-    (0, import_node_fs7.renameSync)((0, import_node_path7.join)(mutex, "recovery-backup"), backup);
+  if ((0, import_node_fs8.existsSync)((0, import_node_path8.join)(mutex, "recovery-backup"))) {
+    const backup = (0, import_node_path8.join)(project.root, `.octonode-recovery-${Date.now()}`);
+    (0, import_node_fs8.renameSync)((0, import_node_path8.join)(mutex, "recovery-backup"), backup);
     process.stderr.write(`Pre-recovery files preserved in ${backup}
 `);
   }
-  (0, import_node_fs7.rmSync)(mutex, { recursive: true, force: true });
+  (0, import_node_fs8.rmSync)(mutex, { recursive: true, force: true });
 }
 
 // packages/plugin/src/generated/package.ts
 var import_tar = require("tar");
 var import_node_zlib = require("node:zlib");
 var import_node_crypto4 = require("node:crypto");
-var import_node_fs9 = require("node:fs");
+var import_node_fs10 = require("node:fs");
 var import_node_os5 = require("node:os");
-var import_node_path9 = require("node:path");
+var import_node_path10 = require("node:path");
 
 // packages/plugin/src/authoring/artifact.ts
 var import_node_crypto3 = require("node:crypto");
-var import_node_fs8 = require("node:fs");
-var import_node_path8 = require("node:path");
-var import_yaml3 = require("yaml");
+var import_node_fs9 = require("node:fs");
+var import_node_path9 = require("node:path");
+var import_yaml4 = require("yaml");
 
 // packages/plugin/src/authoring/constants/constants.ts
 var BUILD_RECORD = "octonode-build.json";
@@ -23073,18 +23279,18 @@ var RESERVED_ASSETS = /* @__PURE__ */ new Set([
 ]);
 
 // packages/plugin/src/authoring/artifact.ts
-var fileHash = (path3) => (0, import_node_crypto3.createHash)("sha256").update((0, import_node_fs8.readFileSync)(path3)).digest("hex");
+var fileHash = (path3) => (0, import_node_crypto3.createHash)("sha256").update((0, import_node_fs9.readFileSync)(path3)).digest("hex");
 function safePath(path3) {
-  if (!path3 || (0, import_node_path8.isAbsolute)(path3) || path3.includes("\\") || path3.split("/").some((part) => !part || part === "." || part === ".." || part.includes(":") || FORBIDDEN_PART.test(part))) {
+  if (!path3 || (0, import_node_path9.isAbsolute)(path3) || path3.includes("\\") || path3.split("/").some((part) => !part || part === "." || part === ".." || part.includes(":") || FORBIDDEN_PART.test(part))) {
     throw new Error(`Unsafe plugin file: ${path3}`);
   }
 }
 function pluginFiles(root, prefix = "") {
-  if (!(0, import_node_fs8.lstatSync)((0, import_node_path8.join)(root, prefix)).isDirectory()) throw new Error(`Not a plugin directory: ${root}`);
-  return (0, import_node_fs8.readdirSync)((0, import_node_path8.join)(root, prefix)).sort().flatMap((name) => {
+  if (!(0, import_node_fs9.lstatSync)((0, import_node_path9.join)(root, prefix)).isDirectory()) throw new Error(`Not a plugin directory: ${root}`);
+  return (0, import_node_fs9.readdirSync)((0, import_node_path9.join)(root, prefix)).sort().flatMap((name) => {
     const path3 = prefix ? `${prefix}/${name}` : name;
     safePath(path3);
-    const stat = (0, import_node_fs8.lstatSync)((0, import_node_path8.join)(root, path3));
+    const stat = (0, import_node_fs9.lstatSync)((0, import_node_path9.join)(root, path3));
     if (stat.isSymbolicLink()) throw new Error(`Plugin files cannot be symbolic links: ${path3}`);
     if (stat.isDirectory()) return pluginFiles(root, path3);
     if (!stat.isFile()) throw new Error(`Plugin asset must be a regular file: ${path3}`);
@@ -23092,15 +23298,15 @@ function pluginFiles(root, prefix = "") {
   });
 }
 function loadManifest(directory2) {
-  if ((0, import_node_fs8.lstatSync)(directory2).isSymbolicLink()) throw new Error("Plugin directory cannot be a symbolic link");
-  const definitions = DEFINITION_FILES.filter((name) => (0, import_node_fs8.existsSync)((0, import_node_path8.join)(directory2, name)));
+  if ((0, import_node_fs9.lstatSync)(directory2).isSymbolicLink()) throw new Error("Plugin directory cannot be a symbolic link");
+  const definitions = DEFINITION_FILES.filter((name) => (0, import_node_fs9.existsSync)((0, import_node_path9.join)(directory2, name)));
   if (definitions.length !== 1) throw new Error("Keep exactly one plugin definition in the package");
-  const path3 = (0, import_node_path8.join)(directory2, definitions[0]);
-  const stat = (0, import_node_fs8.lstatSync)(path3);
+  const path3 = (0, import_node_path9.join)(directory2, definitions[0]);
+  const stat = (0, import_node_fs9.lstatSync)(path3);
   if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 1048576)
     throw new Error("Invalid plugin definition file");
-  const document = (0, import_yaml3.parseDocument)((0, import_node_fs8.readFileSync)(path3, "utf8"), { uniqueKeys: true, version: "1.2" });
-  (0, import_yaml3.visit)(document, {
+  const document = (0, import_yaml4.parseDocument)((0, import_node_fs9.readFileSync)(path3, "utf8"), { uniqueKeys: true, version: "1.2" });
+  (0, import_yaml4.visit)(document, {
     Alias() {
       throw new Error("Plugin definitions cannot contain YAML aliases");
     }
@@ -23115,7 +23321,7 @@ function verifyBuild(directory2) {
   const manifest2 = loadManifest(directory2);
   const files = pluginFiles(directory2);
   if (!files.includes(BUILD_RECORD)) throw new Error("Missing build record; run octonodes plugin build first");
-  const record = JSON.parse((0, import_node_fs8.readFileSync)((0, import_node_path8.join)(directory2, BUILD_RECORD), "utf8"));
+  const record = JSON.parse((0, import_node_fs9.readFileSync)((0, import_node_path9.join)(directory2, BUILD_RECORD), "utf8"));
   if (manifest2.app && (record.runtime || record.ui?.length))
     throw new Error("Self-hosted apps cannot include a prepared runtime or packaged UI");
   if (record.runtime) {
@@ -23135,7 +23341,7 @@ function verifyBuild(directory2) {
     throw new Error("Plugin files changed since build; rebuild before publishing");
   }
   for (const file of expected) {
-    if (record.files[file] !== fileHash((0, import_node_path8.join)(directory2, file)))
+    if (record.files[file] !== fileHash((0, import_node_path9.join)(directory2, file)))
       throw new Error(`Plugin file changed since build: ${file}`);
   }
   if (manifest2.app) {
@@ -23144,13 +23350,13 @@ function verifyBuild(directory2) {
     if (JSON.stringify(expected) !== JSON.stringify(allowed))
       throw new Error("App artifacts contain registration metadata only and declared static bundles");
     for (const extension of assets) {
-      if ((0, import_node_fs8.lstatSync)((0, import_node_path8.join)(directory2, extension.path)).size > 2 * 1024 * 1024 || `sha256:${fileHash((0, import_node_path8.join)(directory2, extension.path))}` !== extension.sha256)
+      if ((0, import_node_fs9.lstatSync)((0, import_node_path9.join)(directory2, extension.path)).size > 2 * 1024 * 1024 || `sha256:${fileHash((0, import_node_path9.join)(directory2, extension.path))}` !== extension.sha256)
         throw new Error(`Invalid app bundle: ${extension.path}`);
     }
     return { manifest: manifest2, files };
   }
   if (manifest2.schemaVersion === "2") {
-    if (record.runtime) throw new Error("v2 plugins cannot use the legacy prepared Node.js runtime");
+    if (record.runtime) throw new Error("v2 plugins cannot use the v1 prepared Node.js runtime");
     const assets = new Set(expected);
     for (const node of manifest2.nodes) {
       if (!node.execution || !assets.has(node.execution.entrypoint.path))
@@ -23175,14 +23381,14 @@ function verifyBuild(directory2) {
     )
   );
   for (const entry of new Set(ui.map(({ path: path3 }) => path3))) {
-    if (!expected.includes(entry) || (0, import_node_fs8.lstatSync)((0, import_node_path8.join)(directory2, entry)).size > PLUGIN_UI_BUNDLE_MAX_BYTES)
+    if (!expected.includes(entry) || (0, import_node_fs9.lstatSync)((0, import_node_path9.join)(directory2, entry)).size > PLUGIN_UI_BUNDLE_MAX_BYTES)
       throw new Error(`Invalid plugin UI bundle: ${entry}`);
   }
   if (JSON.stringify(record.ui ?? []) !== JSON.stringify(
     ui.map((declaration) => ({
       ...declaration,
-      size: (0, import_node_fs8.lstatSync)((0, import_node_path8.join)(directory2, declaration.path)).size,
-      sha256: fileHash((0, import_node_path8.join)(directory2, declaration.path))
+      size: (0, import_node_fs9.lstatSync)((0, import_node_path9.join)(directory2, declaration.path)).size,
+      sha256: fileHash((0, import_node_path9.join)(directory2, declaration.path))
     }))
   ))
     throw new Error("Invalid plugin UI build record");
@@ -23214,34 +23420,34 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
       selections: selected.map(({ alias, sha256 }) => ({ alias, sha256 }))
     })
   ).digest("hex");
-  const stage = (0, import_node_fs9.mkdtempSync)((0, import_node_path9.join)((0, import_node_os5.tmpdir)(), "octonode-package-"));
+  const stage = (0, import_node_fs10.mkdtempSync)((0, import_node_path10.join)((0, import_node_os5.tmpdir)(), "octonode-package-"));
   try {
-    const packageRoot = (0, import_node_path9.join)(stage, "package");
-    (0, import_node_fs9.mkdirSync)(packageRoot);
+    const packageRoot = (0, import_node_path10.join)(stage, "package");
+    (0, import_node_fs10.mkdirSync)(packageRoot);
     for (const { alias, directory: directory2, sha256 } of selected) {
-      if ((0, import_node_fs9.lstatSync)(directory2).isSymbolicLink())
+      if ((0, import_node_fs10.lstatSync)(directory2).isSymbolicLink())
         throw new Error(`Plugin directory cannot be a symbolic link: ${alias}`);
-      const snapshot = (0, import_node_path9.join)(stage, "snapshots", alias);
-      (0, import_node_fs9.mkdirSync)(snapshot, { recursive: true });
+      const snapshot = (0, import_node_path10.join)(stage, "snapshots", alias);
+      (0, import_node_fs10.mkdirSync)(snapshot, { recursive: true });
       for (const file of pluginBundleFiles(directory2)) {
         safePath(file);
-        (0, import_node_fs9.mkdirSync)((0, import_node_path9.dirname)((0, import_node_path9.join)(snapshot, file)), { recursive: true });
-        (0, import_node_fs9.writeFileSync)((0, import_node_path9.join)(snapshot, file), (0, import_node_fs9.readFileSync)((0, import_node_path9.join)(directory2, file)));
+        (0, import_node_fs10.mkdirSync)((0, import_node_path10.dirname)((0, import_node_path10.join)(snapshot, file)), { recursive: true });
+        (0, import_node_fs10.writeFileSync)((0, import_node_path10.join)(snapshot, file), (0, import_node_fs10.readFileSync)((0, import_node_path10.join)(directory2, file)));
       }
       if (hashPluginDir(snapshot) !== sha256) throw new Error(`Plugin integrity mismatch: ${alias}`);
-      const library = (0, import_node_path9.join)(snapshot, "library");
-      if (!(0, import_node_fs9.existsSync)((0, import_node_path9.join)(library, "index.js")) || !(0, import_node_fs9.existsSync)((0, import_node_path9.join)(library, "index.d.ts")))
+      const library = (0, import_node_path10.join)(snapshot, "library");
+      if (!(0, import_node_fs10.existsSync)((0, import_node_path10.join)(library, "index.js")) || !(0, import_node_fs10.existsSync)((0, import_node_path10.join)(library, "index.d.ts")))
         throw new Error(`Plugin ${alias} has no importable library; rebuild with a compatible CLI`);
       for (const file of pluginFiles(library)) {
-        const target = (0, import_node_path9.join)(packageRoot, alias, file);
-        (0, import_node_fs9.mkdirSync)((0, import_node_path9.dirname)(target), { recursive: true });
-        (0, import_node_fs9.writeFileSync)(target, (0, import_node_fs9.readFileSync)((0, import_node_path9.join)(library, file)));
-        (0, import_node_fs9.chmodSync)(target, 420);
+        const target = (0, import_node_path10.join)(packageRoot, alias, file);
+        (0, import_node_fs10.mkdirSync)((0, import_node_path10.dirname)(target), { recursive: true });
+        (0, import_node_fs10.writeFileSync)(target, (0, import_node_fs10.readFileSync)((0, import_node_path10.join)(library, file)));
+        (0, import_node_fs10.chmodSync)(target, 420);
       }
     }
     const subpaths = selected.map(({ alias }) => `./${alias}`);
-    (0, import_node_fs9.writeFileSync)(
-      (0, import_node_path9.join)(packageRoot, "package.json"),
+    (0, import_node_fs10.writeFileSync)(
+      (0, import_node_path10.join)(packageRoot, "package.json"),
       JSON.stringify(
         {
           name: GENERATED_PLUGIN_PACKAGE,
@@ -23256,8 +23462,8 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
         2
       ) + "\n"
     );
-    (0, import_node_fs9.chmodSync)((0, import_node_path9.join)(packageRoot, "package.json"), 420);
-    const archive = (0, import_node_path9.join)(stage, "package.tar");
+    (0, import_node_fs10.chmodSync)((0, import_node_path10.join)(packageRoot, "package.json"), 420);
+    const archive = (0, import_node_path10.join)(stage, "package.tar");
     (0, import_tar.create)(
       {
         file: archive,
@@ -23270,24 +23476,24 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
       },
       pluginFiles(packageRoot)
     );
-    const bytes = (0, import_node_zlib.gzipSync)((0, import_node_fs9.readFileSync)(archive), { level: 0 });
+    const bytes = (0, import_node_zlib.gzipSync)((0, import_node_fs10.readFileSync)(archive), { level: 0 });
     bytes[9] = 255;
-    const output = (0, import_node_path9.join)(cwd, GENERATED_PLUGIN_DIRECTORY);
-    (0, import_node_fs9.mkdirSync)(output, { recursive: true });
-    if ((0, import_node_fs9.lstatSync)(output).isSymbolicLink()) throw new Error("Generated plugin directory cannot be a symbolic link");
-    const ignore = (0, import_node_path9.join)(output, ".gitignore");
-    if (!(0, import_node_fs9.existsSync)(ignore)) (0, import_node_fs9.writeFileSync)(ignore, "*\n", { flag: "wx" });
-    const destination = (0, import_node_path9.join)(output, `plugin-${digest3}.tgz`);
-    if ((0, import_node_fs9.existsSync)(destination)) {
-      if ((0, import_node_fs9.lstatSync)(destination).isSymbolicLink() || !(0, import_node_fs9.readFileSync)(destination).equals(bytes))
+    const output = (0, import_node_path10.join)(cwd, GENERATED_PLUGIN_DIRECTORY);
+    (0, import_node_fs10.mkdirSync)(output, { recursive: true });
+    if ((0, import_node_fs10.lstatSync)(output).isSymbolicLink()) throw new Error("Generated plugin directory cannot be a symbolic link");
+    const ignore = (0, import_node_path10.join)(output, ".gitignore");
+    if (!(0, import_node_fs10.existsSync)(ignore)) (0, import_node_fs10.writeFileSync)(ignore, "*\n", { flag: "wx" });
+    const destination = (0, import_node_path10.join)(output, `plugin-${digest3}.tgz`);
+    if ((0, import_node_fs10.existsSync)(destination)) {
+      if ((0, import_node_fs10.lstatSync)(destination).isSymbolicLink() || !(0, import_node_fs10.readFileSync)(destination).equals(bytes))
         throw new Error("Generated plugin package changed; remove the corrupt generated file and restore again");
     } else {
-      const temporary = (0, import_node_fs9.mkdtempSync)((0, import_node_path9.join)(output, ".pack-"));
+      const temporary = (0, import_node_fs10.mkdtempSync)((0, import_node_path10.join)(output, ".pack-"));
       try {
-        (0, import_node_fs9.writeFileSync)((0, import_node_path9.join)(temporary, "package.tgz"), bytes);
-        (0, import_node_fs9.renameSync)((0, import_node_path9.join)(temporary, "package.tgz"), destination);
+        (0, import_node_fs10.writeFileSync)((0, import_node_path10.join)(temporary, "package.tgz"), bytes);
+        (0, import_node_fs10.renameSync)((0, import_node_path10.join)(temporary, "package.tgz"), destination);
       } finally {
-        (0, import_node_fs9.rmSync)(temporary, { recursive: true, force: true });
+        (0, import_node_fs10.rmSync)(temporary, { recursive: true, force: true });
       }
     }
     return {
@@ -23298,7 +23504,7 @@ async function generatePluginPackage(cwd, selections, expectedPacker) {
       sha256: `sha256:${(0, import_node_crypto4.createHash)("sha256").update(bytes).digest("hex")}`
     };
   } finally {
-    (0, import_node_fs9.rmSync)(stage, { recursive: true, force: true });
+    (0, import_node_fs10.rmSync)(stage, { recursive: true, force: true });
   }
 }
 
@@ -23328,8 +23534,8 @@ function assertUniqueNpmPlugins(plugins) {
 
 // packages/plugin/src/prepared/runtime.ts
 var import_node_child_process2 = require("node:child_process");
-var import_node_fs10 = require("node:fs");
-var import_node_path10 = require("node:path");
+var import_node_fs11 = require("node:fs");
+var import_node_path11 = require("node:path");
 var import_node_util2 = require("node:util");
 var import_tar2 = require("tar");
 
@@ -23338,9 +23544,9 @@ var RUNTIME_PREPARE_PLUGIN_RUNTIME_TIMEOUT_MS = 10 * 6e4;
 
 // packages/plugin/src/prepared/runtime.ts
 function preparedRuntime(directory2) {
-  const path3 = (0, import_node_path10.join)(directory2, BUILD_RECORD);
-  if (!(0, import_node_fs10.existsSync)(path3)) return;
-  const record = JSON.parse((0, import_node_fs10.readFileSync)(path3, "utf8"));
+  const path3 = (0, import_node_path11.join)(directory2, BUILD_RECORD);
+  if (!(0, import_node_fs11.existsSync)(path3)) return;
+  const record = JSON.parse((0, import_node_fs11.readFileSync)(path3, "utf8"));
   if (record.runtime === void 0) return;
   return PreparedPluginRuntime.parse(record.runtime);
 }
@@ -23367,10 +23573,12 @@ async function preparePluginRuntime(directory2, output, cacheRoot) {
     throw new Error("Artifact is already prepared; rebuild its source before preparing a new release");
   if (manifest2.permissions.some((permission) => permission.resource === "project_data"))
     throw new Error("Plugins requiring project data must execute in their workspace");
-  if ((0, import_node_fs10.existsSync)(output)) throw new Error("Prepared artifact output already exists; choose a new output directory");
-  const packageJson = JSON.parse((0, import_node_fs10.readFileSync)((0, import_node_path10.join)(directory2, "package.json"), "utf8"));
+  if ((0, import_node_fs11.existsSync)(output)) throw new Error("Prepared artifact output already exists; choose a new output directory");
+  const packageJson = JSON.parse((0, import_node_fs11.readFileSync)((0, import_node_path11.join)(directory2, "package.json"), "utf8"));
   if (packageJson.dependencies || packageJson.optionalDependencies)
-    throw new Error("Workflow/legacy runtime dependencies need workspace execution or a dedicated runner image");
+    throw new Error(
+      "Workflow and package.json runtime dependencies need workspace execution or a dedicated runner image"
+    );
   const dependencies = pluginNpmDependencies(manifest2);
   for (const dependency of dependencies) {
     if (!/^(@[a-z0-9~._-]+\/)?[a-z0-9~._-]+$/.test(dependency.package) || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(dependency.version) || ![dependency.version, `${dependency.package}@${dependency.version}`].includes(dependency.spec))
@@ -23381,17 +23589,17 @@ async function preparePluginRuntime(directory2, output, cacheRoot) {
   if (Number(process.versions.node.split(".")[0]) !== 24) throw new Error("Prepare plugins using Node 24");
   if (dependencies.length && !["linux", "darwin"].includes(process.platform))
     throw new Error("Unsupported preparation platform");
-  (0, import_node_fs10.mkdirSync)((0, import_node_path10.dirname)((0, import_node_path10.resolve)(output)), { recursive: true });
-  const stage = (0, import_node_fs10.mkdtempSync)((0, import_node_path10.join)((0, import_node_path10.dirname)((0, import_node_path10.resolve)(output)), ".prepare-"));
+  (0, import_node_fs11.mkdirSync)((0, import_node_path11.dirname)((0, import_node_path11.resolve)(output)), { recursive: true });
+  const stage = (0, import_node_fs11.mkdtempSync)((0, import_node_path11.join)((0, import_node_path11.dirname)((0, import_node_path11.resolve)(output)), ".prepare-"));
   try {
-    const artifact = (0, import_node_path10.join)(stage, "artifact");
-    (0, import_node_fs10.cpSync)(directory2, artifact, { recursive: true });
+    const artifact = (0, import_node_path11.join)(stage, "artifact");
+    (0, import_node_fs11.cpSync)(directory2, artifact, { recursive: true });
     const runtime = { format: 1, nodeMajor: 24, platform: "portable" };
     if (dependencies.length) {
-      const install = (0, import_node_path10.join)(stage, "install");
-      (0, import_node_fs10.mkdirSync)(install);
-      (0, import_node_fs10.writeFileSync)(
-        (0, import_node_path10.join)(install, "package.json"),
+      const install = (0, import_node_path11.join)(stage, "install");
+      (0, import_node_fs11.mkdirSync)(install);
+      (0, import_node_fs11.writeFileSync)(
+        (0, import_node_path11.join)(install, "package.json"),
         JSON.stringify({
           private: true,
           dependencies: Object.fromEntries(dependencies.map((item) => [item.package, item.version]))
@@ -23407,18 +23615,18 @@ async function preparePluginRuntime(directory2, output, cacheRoot) {
           maxBuffer: 1024 * 1024
         }
       );
-      const lock = JSON.parse((0, import_node_fs10.readFileSync)((0, import_node_path10.join)(install, "package-lock.json"), "utf8"));
+      const lock = JSON.parse((0, import_node_fs11.readFileSync)((0, import_node_path11.join)(install, "package-lock.json"), "utf8"));
       if (Object.values(lock.packages ?? {}).some(
         (pkg) => pkg.hasInstallScript || pkg.link
       ))
         throw new Error("Dependencies with install scripts or workspace links require a dedicated runner image");
       let bytes = 0;
       let count = 0;
-      const walk = (path3) => (0, import_node_fs10.readdirSync)((0, import_node_path10.join)(install, path3)).sort().flatMap((name) => {
+      const walk = (path3) => (0, import_node_fs11.readdirSync)((0, import_node_path11.join)(install, path3)).sort().flatMap((name) => {
         if (name === ".bin") return [];
         const file = path3 ? `${path3}/${name}` : name;
         runtimePath(file);
-        const stat = (0, import_node_fs10.lstatSync)((0, import_node_path10.join)(install, file));
+        const stat = (0, import_node_fs11.lstatSync)((0, import_node_path11.join)(install, file));
         if (++count > PREPARED_RUNTIME_MAX_FILES || stat.isSymbolicLink())
           throw new Error("Prepared dependencies exceed limits or contain links");
         if (stat.isDirectory()) return walk(file);
@@ -23429,7 +23637,7 @@ async function preparePluginRuntime(directory2, output, cacheRoot) {
       });
       (0, import_tar2.create)(
         {
-          file: (0, import_node_path10.join)(artifact, PREPARED_RUNTIME_ARCHIVE),
+          file: (0, import_node_path11.join)(artifact, PREPARED_RUNTIME_ARCHIVE),
           cwd: install,
           gzip: true,
           sync: true,
@@ -23447,15 +23655,15 @@ async function preparePluginRuntime(directory2, output, cacheRoot) {
         } : {}
       });
     }
-    const record = JSON.parse((0, import_node_fs10.readFileSync)((0, import_node_path10.join)(artifact, BUILD_RECORD), "utf8"));
-    (0, import_node_fs10.writeFileSync)(
-      (0, import_node_path10.join)(artifact, BUILD_RECORD),
+    const record = JSON.parse((0, import_node_fs11.readFileSync)((0, import_node_path11.join)(artifact, BUILD_RECORD), "utf8"));
+    (0, import_node_fs11.writeFileSync)(
+      (0, import_node_path11.join)(artifact, BUILD_RECORD),
       JSON.stringify(
         {
           ...record,
           runtime,
           files: Object.fromEntries(
-            pluginFiles(artifact).filter((file) => file !== BUILD_RECORD).map((file) => [file, fileHash((0, import_node_path10.join)(artifact, file))])
+            pluginFiles(artifact).filter((file) => file !== BUILD_RECORD).map((file) => [file, fileHash((0, import_node_path11.join)(artifact, file))])
           )
         },
         null,
@@ -23463,10 +23671,10 @@ async function preparePluginRuntime(directory2, output, cacheRoot) {
       ) + "\n"
     );
     verifyBuild(artifact);
-    (0, import_node_fs10.renameSync)(artifact, (0, import_node_path10.resolve)(output));
-    return (0, import_node_path10.resolve)(output);
+    (0, import_node_fs11.renameSync)(artifact, (0, import_node_path11.resolve)(output));
+    return (0, import_node_path11.resolve)(output);
   } finally {
-    (0, import_node_fs10.rmSync)(stage, { recursive: true, force: true });
+    (0, import_node_fs11.rmSync)(stage, { recursive: true, force: true });
   }
 }
 
@@ -23485,8 +23693,8 @@ function preparedPluginPin(directory2, pin) {
 
 // packages/plugin/src/runtimes/environment.ts
 var import_node_crypto5 = require("node:crypto");
-var import_node_fs11 = require("node:fs");
-var import_node_path11 = require("node:path");
+var import_node_fs12 = require("node:fs");
+var import_node_path12 = require("node:path");
 
 // packages/core/src/ipc/spawn.ts
 var import_node_child_process3 = require("node:child_process");
@@ -23553,7 +23761,7 @@ function runExchange(requestJson, options) {
       stderrTruncated: false,
       durationMs: 0
     });
-  return new Promise((resolve12) => {
+  return new Promise((resolve13) => {
     const detached = process.platform !== "win32";
     const [executable, ...args] = options.args ? [options.command, ...options.args] : commandArgs(options.command);
     const child = (0, import_node_child_process3.spawn)(executable, args, {
@@ -23608,7 +23816,7 @@ function runExchange(requestJson, options) {
       if (killTimer) clearTimeout(killTimer);
       if (escalationTimer) clearTimeout(escalationTimer);
       options.signal?.removeEventListener("abort", abort);
-      resolve12({ ...outcome, streamError, durationMs: Date.now() - startedAt });
+      resolve13({ ...outcome, streamError, durationMs: Date.now() - startedAt });
     };
     child.stdout.on("data", (chunk) => {
       const remaining = Math.max(0, maxStdoutBytes - stdoutBytes);
@@ -23690,8 +23898,8 @@ var import_environment = __toESM(require_environment());
 var import_typescript = __toESM(require("typescript"));
 
 // packages/plugin/src/runtimes/environment.ts
-var import_semver2 = __toESM(require_semver2());
-var import_zod123 = require("zod");
+var import_semver4 = __toESM(require_semver2());
+var import_zod127 = require("zod");
 
 // packages/plugin/src/runtimes/constants.ts
 var PYTHON_DEFAULT_VERSION = "3.13";
@@ -23717,45 +23925,45 @@ for p in required:
 print('verified')`;
 
 // packages/plugin/src/runtimes/environment.ts
-var receiptSchema = import_zod123.z.object({
-  format: import_zod123.z.literal(1),
-  fingerprint: import_zod123.z.string(),
-  executable: import_zod123.z.string(),
-  version: import_zod123.z.string(),
-  revision: import_zod123.z.string(),
-  packages: import_zod123.z.array(import_zod123.z.object({ name: import_zod123.z.string(), version: import_zod123.z.string() }))
+var receiptSchema = import_zod127.z.object({
+  format: import_zod127.z.literal(1),
+  fingerprint: import_zod127.z.string(),
+  executable: import_zod127.z.string(),
+  version: import_zod127.z.string(),
+  revision: import_zod127.z.string(),
+  packages: import_zod127.z.array(import_zod127.z.object({ name: import_zod127.z.string(), version: import_zod127.z.string() }))
 });
-var inspectedPython = import_zod123.z.object({
-  version: import_zod123.z.string(),
-  implementation: import_zod123.z.string(),
-  dependencies: import_zod123.z.array(import_zod123.z.string()),
-  workspace: import_zod123.z.boolean(),
-  sources: import_zod123.z.record(import_zod123.z.unknown())
+var inspectedPython = import_zod127.z.object({
+  version: import_zod127.z.string(),
+  implementation: import_zod127.z.string(),
+  dependencies: import_zod127.z.array(import_zod127.z.string()),
+  workspace: import_zod127.z.boolean(),
+  sources: import_zod127.z.record(import_zod127.z.unknown())
 });
 var digest2 = (value) => (0, import_node_crypto5.createHash)("sha256").update(value).digest("hex");
 function checkedFile(root, file) {
-  const path3 = (0, import_node_path11.join)(root, file);
-  for (let parent = path3; parent !== root; parent = (0, import_node_path11.dirname)(parent)) {
-    if (!parent.startsWith(root.endsWith(import_node_path11.sep) ? root : root + import_node_path11.sep)) throw new Error("Runtime file escapes the project");
-    if ((0, import_node_fs11.lstatSync)(parent, { throwIfNoEntry: false })?.isSymbolicLink())
+  const path3 = (0, import_node_path12.join)(root, file);
+  for (let parent = path3; parent !== root; parent = (0, import_node_path12.dirname)(parent)) {
+    if (!parent.startsWith(root.endsWith(import_node_path12.sep) ? root : root + import_node_path12.sep)) throw new Error("Runtime file escapes the project");
+    if ((0, import_node_fs12.lstatSync)(parent, { throwIfNoEntry: false })?.isSymbolicLink())
       throw new Error(`Runtime files cannot be symlinks: ${file}`);
   }
-  if (!(0, import_node_fs11.existsSync)(path3)) return;
-  if (!(0, import_node_fs11.statSync)(path3).isFile() || (0, import_node_fs11.statSync)(path3).size > 16777216) throw new Error(`Invalid runtime file: ${file}`);
-  return (0, import_node_fs11.readFileSync)(path3, "utf8");
+  if (!(0, import_node_fs12.existsSync)(path3)) return;
+  if (!(0, import_node_fs12.statSync)(path3).isFile() || (0, import_node_fs12.statSync)(path3).size > 16777216) throw new Error(`Invalid runtime file: ${file}`);
+  return (0, import_node_fs12.readFileSync)(path3, "utf8");
 }
 function nativeFingerprint(root) {
   return digest2(JSON.stringify(PYTHON_PROJECT_FILES.map((file) => [file, checkedFile(root, file) ?? null])));
 }
 function ancestorPythonProjects(root) {
-  const parent = (0, import_node_path11.dirname)(root);
+  const parent = (0, import_node_path12.dirname)(root);
   if (parent === root) return [];
   const content = checkedFile(parent, "pyproject.toml");
   return [...content ? [content] : [], ...ancestorPythonProjects(parent)];
 }
 function executableRevision(path3) {
-  const real = (0, import_node_fs11.realpathSync)(path3);
-  const stat = (0, import_node_fs11.statSync)(real);
+  const real = (0, import_node_fs12.realpathSync)(path3);
+  const stat = (0, import_node_fs12.statSync)(real);
   return digest2(JSON.stringify([real, stat.size, stat.mtimeMs]));
 }
 function pluginRuntimePackages(manifests) {
@@ -23766,7 +23974,7 @@ function pluginRuntimePackages(manifests) {
   );
 }
 function pythonRuntimeReceipt(cwd) {
-  const root = (0, import_node_fs11.realpathSync)(cwd);
+  const root = (0, import_node_fs12.realpathSync)(cwd);
   const content = checkedFile(root, RUNTIME_RECEIPT);
   if (!content) return;
   let value;
@@ -23778,8 +23986,8 @@ function pythonRuntimeReceipt(cwd) {
   const parsed = receiptSchema.safeParse(value);
   if (!parsed.success) return;
   const receipt = parsed.data;
-  if (!receipt.executable.startsWith((0, import_node_path11.join)(root, RUNTIME_DIRECTORY) + import_node_path11.sep)) return;
-  if (receipt.fingerprint !== nativeFingerprint(root) || !(0, import_node_fs11.existsSync)(receipt.executable)) return;
+  if (!receipt.executable.startsWith((0, import_node_path12.join)(root, RUNTIME_DIRECTORY) + import_node_path12.sep)) return;
+  if (receipt.fingerprint !== nativeFingerprint(root) || !(0, import_node_fs12.existsSync)(receipt.executable)) return;
   if (receipt.revision !== executableRevision(receipt.executable)) return;
   return receipt;
 }
@@ -23801,7 +24009,7 @@ async function runtimeCommand(cwd, command, args, options = {}, env) {
   return result.stdout;
 }
 async function inspectRuntimePlan(cwd, manifests, options) {
-  const root = (0, import_node_fs11.realpathSync)(cwd);
+  const root = (0, import_node_fs12.realpathSync)(cwd);
   const requirements = manifests.flatMap((manifest2) => Object.values(manifest2.runtimeRequirements ?? {}));
   const packages = pluginRuntimePackages(manifests);
   const python = requirements.filter((requirement) => requirement.runtime === "cpython");
@@ -23815,7 +24023,7 @@ async function inspectRuntimePlan(cwd, manifests, options) {
   );
   const runtimes = [];
   for (const requirement of requirements.filter((item) => item.runtime !== "cpython")) {
-    const ready = requirement.runtime === "node" && (0, import_semver2.validRange)(requirement.versionConstraint) && (0, import_semver2.satisfies)(process.versions.node, requirement.versionConstraint);
+    const ready = requirement.runtime === "node" && (0, import_semver4.validRange)(requirement.versionConstraint) && (0, import_semver4.satisfies)(process.versions.node, requirement.versionConstraint);
     runtimes.push({
       runtime: requirement.runtime,
       required: requirement.versionConstraint,
@@ -23833,7 +24041,7 @@ async function inspectRuntimePlan(cwd, manifests, options) {
         throw new Error("Python plugins are available for local macOS/Linux testing; this target is not qualified yet");
       const requested = checkedFile(root, ".python-version")?.trim() || PYTHON_LOCAL_VERSIONS.find(
         (candidate) => python.every(
-          (requirement) => (0, import_semver2.validRange)(requirement.versionConstraint) && (0, import_semver2.intersects)(requirement.versionConstraint, `>=${candidate} <3.${Number(candidate.split(".")[1]) + 1}`)
+          (requirement) => (0, import_semver4.validRange)(requirement.versionConstraint) && (0, import_semver4.intersects)(requirement.versionConstraint, `>=${candidate} <3.${Number(candidate.split(".")[1]) + 1}`)
         )
       ) || PYTHON_DEFAULT_VERSION;
       if (!/^3\.\d+(?:\.\d+)?$/.test(requested)) throw new Error("Set .python-version to one numeric CPython version");
@@ -23850,7 +24058,7 @@ async function inspectRuntimePlan(cwd, manifests, options) {
         )
       );
       version = inspection.version;
-      if (inspection.implementation !== "CPython" || python.some((r) => !(0, import_semver2.validRange)(r.versionConstraint) || !(0, import_semver2.satisfies)(inspection.version, r.versionConstraint)))
+      if (inspection.implementation !== "CPython" || python.some((r) => !(0, import_semver4.validRange)(r.versionConstraint) || !(0, import_semver4.satisfies)(inspection.version, r.versionConstraint)))
         throw new Error(
           `Installed CPython ${version} does not satisfy all plugin requirements. Select a compatible .python-version`
         );
@@ -23902,7 +24110,7 @@ async function inspectRuntimePlan(cwd, manifests, options) {
           ancestors,
           executable,
           version,
-          executable && (0, import_node_fs11.existsSync)(executable) ? executableRevision(executable) : null
+          executable && (0, import_node_fs12.existsSync)(executable) ? executableRevision(executable) : null
         ])
       ),
       ready: runtimes.every((r) => r.status === "ready"),
@@ -23917,10 +24125,10 @@ async function planPluginRuntimes(cwd, manifests, options = {}) {
   return (await inspectRuntimePlan(cwd, manifests, options)).plan;
 }
 function runtimeTransactionFiles(cwd) {
-  return ["pyproject.toml", "uv.lock", ".python-version", RUNTIME_RECEIPT].map((file) => (0, import_node_path11.resolve)(cwd, file));
+  return ["pyproject.toml", "uv.lock", ".python-version", RUNTIME_RECEIPT].map((file) => (0, import_node_path12.resolve)(cwd, file));
 }
 async function preparePluginRuntimes(cwd, manifests, options) {
-  const root = (0, import_node_fs11.realpathSync)(cwd);
+  const root = (0, import_node_fs12.realpathSync)(cwd);
   const { plan, executable, version } = await inspectRuntimePlan(root, manifests, options);
   if (plan.fingerprint !== options.expectedFingerprint)
     throw new Error("Runtime requirements or project files changed. Review setup again");
@@ -23931,13 +24139,13 @@ async function preparePluginRuntimes(cwd, manifests, options) {
   if (plan.ready) return;
   if (!executable || !version) throw new Error("No compatible interpreter selected");
   const uv = options.uv ?? PROCESS_ENV.OCTONODE_UV ?? "uv";
-  const directory2 = (0, import_node_path11.join)(root, RUNTIME_DIRECTORY, (0, import_node_crypto5.randomUUID)());
+  const directory2 = (0, import_node_path12.join)(root, RUNTIME_DIRECTORY, (0, import_node_crypto5.randomUUID)());
   checkedFile(root, RUNTIME_RECEIPT);
-  (0, import_node_fs11.mkdirSync)((0, import_node_path11.dirname)(directory2), { recursive: true });
+  (0, import_node_fs12.mkdirSync)((0, import_node_path12.dirname)(directory2), { recursive: true });
   try {
-    if (!(0, import_node_fs11.existsSync)((0, import_node_path11.join)(root, "pyproject.toml")))
-      (0, import_node_fs11.writeFileSync)(
-        (0, import_node_path11.join)(root, "pyproject.toml"),
+    if (!(0, import_node_fs12.existsSync)((0, import_node_path12.join)(root, "pyproject.toml")))
+      (0, import_node_fs12.writeFileSync)(
+        (0, import_node_path12.join)(root, "pyproject.toml"),
         `[project]
 name = "octonode-local-plugins"
 version = "0.1.0"
@@ -23945,7 +24153,7 @@ requires-python = ">=${version.split(".").slice(0, 2).join(".")},<${Number(versi
 dependencies = []
 `
       );
-    if (!(0, import_node_fs11.existsSync)((0, import_node_path11.join)(root, ".python-version"))) (0, import_node_fs11.writeFileSync)((0, import_node_path11.join)(root, ".python-version"), version + "\n");
+    if (!(0, import_node_fs12.existsSync)((0, import_node_path12.join)(root, ".python-version"))) (0, import_node_fs12.writeFileSync)((0, import_node_path12.join)(root, ".python-version"), version + "\n");
     const packages = [
       ...new Map(
         plan.packages.filter((p2) => p2.ecosystem === "pypi").map((p2) => [p2.name, { name: p2.name, version: p2.version }])
@@ -23999,7 +24207,7 @@ dependencies = []
       options,
       { UV_PROJECT_ENVIRONMENT: directory2 }
     );
-    const python = (0, import_node_path11.join)(directory2, "bin", "python");
+    const python = (0, import_node_path12.join)(directory2, "bin", "python");
     await runtimeCommand(root, python, ["-I", "-c", PYTHON_VERIFY, JSON.stringify(packages)], options);
     if (nativeFingerprint(root) !== lockedFingerprint)
       throw new Error("Python project changed during setup. Review again");
@@ -24011,22 +24219,22 @@ dependencies = []
       revision: executableRevision(python),
       packages
     };
-    const staging = (0, import_node_path11.join)(directory2, "receipt.json");
-    (0, import_node_fs11.writeFileSync)(staging, JSON.stringify(receipt, null, 2) + "\n", { flag: "wx" });
-    (0, import_node_fs11.renameSync)(staging, (0, import_node_path11.join)(root, RUNTIME_RECEIPT));
+    const staging = (0, import_node_path12.join)(directory2, "receipt.json");
+    (0, import_node_fs12.writeFileSync)(staging, JSON.stringify(receipt, null, 2) + "\n", { flag: "wx" });
+    (0, import_node_fs12.renameSync)(staging, (0, import_node_path12.join)(root, RUNTIME_RECEIPT));
   } catch (error) {
-    (0, import_node_fs11.rmSync)(directory2, { recursive: true, force: true });
+    (0, import_node_fs12.rmSync)(directory2, { recursive: true, force: true });
     throw error;
   }
 }
 
 // packages/plugin/src/runtimes/resolve.ts
-var import_semver3 = __toESM(require_semver2());
+var import_semver5 = __toESM(require_semver2());
 
 // packages/plugin/src/lifecycle.ts
 function runtimeProject(cwd, manifest2) {
   const project = resolveDependencyProject(cwd);
-  if (manifest2.schemaVersion === "2" && (0, import_node_fs12.realpathSync)(cwd) !== project.target)
+  if (manifest2.schemaVersion === "2" && (0, import_node_fs13.realpathSync)(cwd) !== project.target)
     throw new Error(
       "Initialize pyproject.toml or package.json in the selected project before installing runtime plugins; ancestor project files will not be changed"
     );
@@ -24040,7 +24248,8 @@ function runtimeManifests(cwd, locked, options) {
     ).map((plugin) => plugin.manifest)
   ];
 }
-async function reconcilePluginLock(cwd, next, options = {}) {
+async function reconcilePluginLock(cwd, requested, options = {}) {
+  const next = PluginLockfile.parse(requested);
   const project = resolveDependencyProject(cwd);
   const before = readLockfile(cwd);
   for (const toolkit of Object.values(next.toolkits ?? {})) {
@@ -24058,7 +24267,7 @@ async function reconcilePluginLock(cwd, next, options = {}) {
     if (manifest2.id !== (pin.pluginId ?? alias) || manifest2.version !== pin.version || hashPluginDir(directory2) !== pin.sha256)
       throw new Error(`Plugin identity or integrity mismatch: ${alias}`);
     const users = Object.values(next.toolkits ?? {}).filter((toolkit) => toolkit.plugins.includes(alias));
-    const development = pin.direct === false && users.length > 0 && users.every((toolkit) => toolkit.developmentPlugins?.includes(alias));
+    const development = !pin.direct && users.length > 0 && users.every((toolkit) => toolkit.developmentPlugins?.includes(alias));
     return { alias, development, directory: directory2, sha256: pin.sha256, manifest: manifest2, remote: preparedPluginPin(directory2, pin) };
   });
   assertUniqueNpmPlugins([
@@ -24079,8 +24288,8 @@ async function reconcilePluginLock(cwd, next, options = {}) {
     throw new Error("Plugin runtimes need setup. Review the runtime plan before installation");
   const libraries = loaded.filter((item) => item.manifest.library);
   const generated = libraries.length ? await generatePluginPackage(project.target, libraries) : void 0;
-  const packageFile = (0, import_node_path12.join)(project.target, "package.json");
-  const packageJson = (0, import_node_fs12.existsSync)(packageFile) ? JSON.parse((0, import_node_fs12.readFileSync)(packageFile, "utf8")) : {};
+  const packageFile = (0, import_node_path13.join)(project.target, "package.json");
+  const packageJson = (0, import_node_fs13.existsSync)(packageFile) ? JSON.parse((0, import_node_fs13.readFileSync)(packageFile, "utf8")) : {};
   const declared = { ...packageJson.devDependencies, ...packageJson.optionalDependencies, ...packageJson.dependencies };
   if (generated && declared[generated.name] && declared[generated.name].replace(/^file:\.\//, "file:") !== before.generated?.spec.replace(/^file:\.\//, "file:") && !options.migrate)
     throw new Error(
@@ -24092,8 +24301,8 @@ async function reconcilePluginLock(cwd, next, options = {}) {
   ].flatMap(
     ({ manifest: manifest2, development }) => pluginNpmDependencies(manifest2).map((npm) => {
       const spec = npm.spec.startsWith(`${npm.package}@`) ? npm.spec.slice(npm.package.length + 1) : npm.spec;
-      const sameLocal = typeof declared[npm.package] === "string" && declared[npm.package].startsWith("file:") && spec.startsWith("file:") && (0, import_node_path12.resolve)(project.target, declared[npm.package].slice(5)) === (0, import_node_path12.resolve)(project.target, spec.slice(5));
-      if (declared[npm.package] && declared[npm.package] !== spec && before.managedDependencies?.[npm.package] !== declared[npm.package] && !sameLocal && !((0, import_semver4.valid)(spec) && (0, import_semver4.satisfies)(spec, declared[npm.package])))
+      const sameLocal = typeof declared[npm.package] === "string" && declared[npm.package].startsWith("file:") && spec.startsWith("file:") && (0, import_node_path13.resolve)(project.target, declared[npm.package].slice(5)) === (0, import_node_path13.resolve)(project.target, spec.slice(5));
+      if (declared[npm.package] && declared[npm.package] !== spec && before.managedDependencies?.[npm.package] !== declared[npm.package] && !sameLocal && !((0, import_semver6.valid)(spec) && (0, import_semver6.satisfies)(spec, declared[npm.package])))
         throw new Error(
           `Dependency conflict: ${npm.package} is ${declared[npm.package]}, plugin requires ${spec}; reconcile it explicitly first`
         );
@@ -24156,7 +24365,7 @@ async function reconcilePluginLock(cwd, next, options = {}) {
             expectedFingerprint: options.runtimeFingerprint
           });
         await options.commit?.();
-        const installedManifest = (0, import_node_fs12.existsSync)(packageFile) ? JSON.parse((0, import_node_fs12.readFileSync)(packageFile, "utf8")) : {};
+        const installedManifest = (0, import_node_fs13.existsSync)(packageFile) ? JSON.parse((0, import_node_fs13.readFileSync)(packageFile, "utf8")) : {};
         const installedDependencies = {
           ...installedManifest.devDependencies,
           ...installedManifest.optionalDependencies,
@@ -24216,20 +24425,20 @@ async function removePluginPin(alias, options = {}) {
 
 // packages/plugin/src/restore.ts
 var import_node_util6 = require("node:util");
-var import_node_fs23 = require("node:fs");
-var import_node_path23 = require("node:path");
+var import_node_fs24 = require("node:fs");
+var import_node_path24 = require("node:path");
 
 // packages/plugin/src/remote/registry.ts
-var import_zod124 = require("zod");
+var import_zod128 = require("zod");
 
 // packages/plugin/src/remote/constants.ts
 var REGISTRY_RES_TIMEOUT_MS = 6e4;
 
 // packages/plugin/src/remote/registry.ts
 var import_node_crypto7 = require("node:crypto");
-var import_node_fs22 = require("node:fs");
+var import_node_fs23 = require("node:fs");
 var import_node_os7 = require("node:os");
-var import_node_path22 = require("node:path");
+var import_node_path23 = require("node:path");
 var import_node_util5 = require("node:util");
 var import_tar4 = require("tar");
 
@@ -24239,14 +24448,14 @@ var PLUGIN_ARCHIVE_MAX_FILES = 1e4;
 
 // packages/plugin/src/archive.ts
 var import_node_zlib2 = require("node:zlib");
-var import_node_fs13 = require("node:fs");
-var import_node_path13 = require("node:path");
+var import_node_fs14 = require("node:fs");
+var import_node_path14 = require("node:path");
 var import_tar3 = require("tar");
 function extractPluginArchive(bytes, stage) {
   if (bytes.length > PLUGIN_ARCHIVE_MAX_BYTES) throw new Error("Plugin archive exceeds download limit");
   const decoded = (0, import_node_zlib2.gunzipSync)(bytes, { maxOutputLength: PLUGIN_ARCHIVE_MAX_BYTES });
-  const archive = (0, import_node_path13.join)(stage, "bundle.tar");
-  (0, import_node_fs13.writeFileSync)(archive, decoded);
+  const archive = (0, import_node_path14.join)(stage, "bundle.tar");
+  (0, import_node_fs14.writeFileSync)(archive, decoded);
   const seen = /* @__PURE__ */ new Set();
   let total = 0;
   (0, import_tar3.list)({
@@ -24266,8 +24475,8 @@ function extractPluginArchive(bytes, stage) {
         throw new Error("Plugin archive exceeds extraction limits");
     }
   });
-  const output = (0, import_node_path13.join)(stage, "plugin");
-  (0, import_node_fs13.mkdirSync)(output);
+  const output = (0, import_node_path14.join)(stage, "plugin");
+  (0, import_node_fs14.mkdirSync)(output);
   (0, import_tar3.extract)({
     file: archive,
     cwd: output,
@@ -24283,8 +24492,8 @@ function extractPluginArchive(bytes, stage) {
 
 // packages/plugin/src/install.ts
 var import_node_child_process4 = require("node:child_process");
-var import_node_fs14 = require("node:fs");
-var import_node_path14 = require("node:path");
+var import_node_fs15 = require("node:fs");
+var import_node_path15 = require("node:path");
 var import_node_util3 = require("node:util");
 function commandError(err) {
   const error = err;
@@ -24305,8 +24514,8 @@ async function installNodeDepsUnlocked(dir, opts, locked) {
     try {
       const project = resolveDependencyProject(opts.cwd ?? process.cwd());
       const cwd = project.target;
-      const packageFile = (0, import_node_path14.join)(project.target, "package.json");
-      const before = (0, import_node_fs14.existsSync)(packageFile) ? JSON.parse((0, import_node_fs14.readFileSync)(packageFile, "utf8")) : {};
+      const packageFile = (0, import_node_path15.join)(project.target, "package.json");
+      const before = (0, import_node_fs15.existsSync)(packageFile) ? JSON.parse((0, import_node_fs15.readFileSync)(packageFile, "utf8")) : {};
       const declared = { ...before.devDependencies, ...before.optionalDependencies, ...before.dependencies };
       const previous = readLockfile(cwd);
       await reconcileDependencies(
@@ -24318,7 +24527,7 @@ async function installNodeDepsUnlocked(dir, opts, locked) {
           replaceExisting: previous.managedDependencies,
           transactionFiles: [lockfilePath(cwd)],
           commit: () => {
-            const manifest2 = JSON.parse((0, import_node_fs14.readFileSync)(packageFile, "utf8"));
+            const manifest2 = JSON.parse((0, import_node_fs15.readFileSync)(packageFile, "utf8"));
             const installed = {
               ...manifest2.devDependencies,
               ...manifest2.optionalDependencies,
@@ -24343,9 +24552,9 @@ async function installNodeDepsUnlocked(dir, opts, locked) {
       return { depsInstalled: false, depsError: commandError(err) };
     }
   }
-  const pjPath = (0, import_node_path14.join)(dir, "package.json");
-  if (!(0, import_node_fs14.existsSync)(pjPath)) return {};
-  const pj = JSON.parse((0, import_node_fs14.readFileSync)(pjPath, "utf8"));
+  const pjPath = (0, import_node_path15.join)(dir, "package.json");
+  if (!(0, import_node_fs15.existsSync)(pjPath)) return {};
+  const pj = JSON.parse((0, import_node_fs15.readFileSync)(pjPath, "utf8"));
   if (!pj.dependencies && !pj.optionalDependencies) return {};
   try {
     await (0, import_node_util3.promisify)(import_node_child_process4.execFile)(
@@ -24375,7 +24584,7 @@ async function installPlugin(src, opts = {}) {
   return installPluginUnlocked(src, opts);
 }
 async function installPluginUnlocked(src, opts) {
-  if (!(0, import_node_fs14.existsSync)(src) || !(0, import_node_fs14.statSync)(src).isDirectory()) {
+  if (!(0, import_node_fs15.existsSync)(src) || !(0, import_node_fs15.statSync)(src).isDirectory()) {
     throw new Error(`source "${src}" is not a directory`);
   }
   if (!isPluginDir(src)) {
@@ -24394,17 +24603,17 @@ async function installPluginUnlocked(src, opts) {
     ...installed.map((item) => ({ alias: item.manifest.id, manifest: item.manifest })),
     { alias: manifest2.id, manifest: manifest2 }
   ]);
-  const dest = (0, import_node_path14.join)(root, manifest2.id);
-  if ((0, import_node_fs14.existsSync)(dest)) {
+  const dest = (0, import_node_path15.join)(root, manifest2.id);
+  if ((0, import_node_fs15.existsSync)(dest)) {
     if (!opts.force) {
       throw new Error(`plugin "${manifest2.id}" is already installed at ${dest} (use --force to overwrite)`);
     }
   }
   const deps = pluginNpmDependencies(manifest2).length ? await installNodeDepsUnlocked(src, { ...opts, cacheOnly: opts.cacheOnly ?? !opts.project }, !!opts.project) : {};
   if (deps.depsError) return { manifest: manifest2, dir: dest, source: source2, ...deps };
-  if ((0, import_node_fs14.existsSync)(dest)) (0, import_node_fs14.rmSync)(dest, { recursive: true, force: true });
-  (0, import_node_fs14.mkdirSync)(root, { recursive: true });
-  (0, import_node_fs14.cpSync)(src, dest, { recursive: true });
+  if ((0, import_node_fs15.existsSync)(dest)) (0, import_node_fs15.rmSync)(dest, { recursive: true, force: true });
+  (0, import_node_fs15.mkdirSync)(root, { recursive: true });
+  (0, import_node_fs15.cpSync)(src, dest, { recursive: true });
   return {
     manifest: manifest2,
     dir: dest,
@@ -24415,79 +24624,79 @@ async function installPluginUnlocked(src, opts) {
 }
 
 // packages/plugin/src/prepared/library.ts
-var import_node_fs21 = require("node:fs");
+var import_node_fs22 = require("node:fs");
 var import_node_os6 = require("node:os");
-var import_node_path21 = require("node:path");
+var import_node_path22 = require("node:path");
 var import_node_util4 = require("node:util");
 
 // packages/plugin/src/authoring/app.ts
-var import_node_fs15 = require("node:fs");
-var import_node_path15 = require("node:path");
+var import_node_fs16 = require("node:fs");
+var import_node_path16 = require("node:path");
 function buildApp(manifest2, output, root) {
-  const stage = (0, import_node_fs15.mkdtempSync)((0, import_node_path15.join)(output, ".app-"));
-  const artifact = (0, import_node_path15.join)(stage, "artifact");
-  const destination = (0, import_node_path15.join)(output, manifest2.id);
-  const backup = (0, import_node_path15.join)(stage, "previous");
+  const stage = (0, import_node_fs16.mkdtempSync)((0, import_node_path16.join)(output, ".app-"));
+  const artifact = (0, import_node_path16.join)(stage, "artifact");
+  const destination = (0, import_node_path16.join)(output, manifest2.id);
+  const backup = (0, import_node_path16.join)(stage, "previous");
   try {
-    (0, import_node_fs15.mkdirSync)(artifact);
+    (0, import_node_fs16.mkdirSync)(artifact);
     if (manifest2.app?.hosting === "extension-only") {
-      (0, import_node_fs15.mkdirSync)((0, import_node_path15.join)(artifact, "extensions"));
+      (0, import_node_fs16.mkdirSync)((0, import_node_path16.join)(artifact, "extensions"));
       for (const extension of manifest2.app.extensions) {
         safePath(extension.path);
         let source2 = root;
         for (const part of extension.path.split("/")) {
-          source2 = (0, import_node_path15.join)(source2, part);
-          if ((0, import_node_fs15.lstatSync)(source2).isSymbolicLink()) throw new Error("App assets cannot be symbolic links");
+          source2 = (0, import_node_path16.join)(source2, part);
+          if ((0, import_node_fs16.lstatSync)(source2).isSymbolicLink()) throw new Error("App assets cannot be symbolic links");
         }
-        if (!(0, import_node_fs15.lstatSync)(source2).isFile() || (0, import_node_fs15.lstatSync)(source2).size > 2 * 1024 * 1024 || `sha256:${fileHash(source2)}` !== extension.sha256)
+        if (!(0, import_node_fs16.lstatSync)(source2).isFile() || (0, import_node_fs16.lstatSync)(source2).size > 2 * 1024 * 1024 || `sha256:${fileHash(source2)}` !== extension.sha256)
           throw new Error(`Invalid app bundle: ${extension.path}`);
-        (0, import_node_fs15.cpSync)(source2, (0, import_node_path15.join)(artifact, extension.path));
+        (0, import_node_fs16.cpSync)(source2, (0, import_node_path16.join)(artifact, extension.path));
       }
     }
-    (0, import_node_fs15.writeFileSync)(
-      (0, import_node_path15.join)(artifact, "octonode.json"),
+    (0, import_node_fs16.writeFileSync)(
+      (0, import_node_path16.join)(artifact, "octonode.json"),
       JSON.stringify({ apiVersion: SETTINGS_API_VERSION, plugin: manifest2 }, null, 2) + "\n"
     );
-    (0, import_node_fs15.writeFileSync)(
-      (0, import_node_path15.join)(artifact, BUILD_RECORD),
+    (0, import_node_fs16.writeFileSync)(
+      (0, import_node_path16.join)(artifact, BUILD_RECORD),
       JSON.stringify(
         {
           format: 1,
-          files: Object.fromEntries(pluginFiles(artifact).map((file) => [file, fileHash((0, import_node_path15.join)(artifact, file))]))
+          files: Object.fromEntries(pluginFiles(artifact).map((file) => [file, fileHash((0, import_node_path16.join)(artifact, file))]))
         },
         null,
         2
       ) + "\n"
     );
     verifyBuild(artifact);
-    if ((0, import_node_fs15.existsSync)(destination)) {
+    if ((0, import_node_fs16.existsSync)(destination)) {
       verifyBuild(destination);
-      (0, import_node_fs15.renameSync)(destination, backup);
+      (0, import_node_fs16.renameSync)(destination, backup);
     }
     try {
-      (0, import_node_fs15.renameSync)(artifact, destination);
+      (0, import_node_fs16.renameSync)(artifact, destination);
     } catch (error) {
-      if ((0, import_node_fs15.existsSync)(backup)) (0, import_node_fs15.renameSync)(backup, destination);
+      if ((0, import_node_fs16.existsSync)(backup)) (0, import_node_fs16.renameSync)(backup, destination);
       throw error;
     }
     return { manifest: manifest2, directory: destination };
   } finally {
-    (0, import_node_fs15.rmSync)(stage, { recursive: true, force: true });
+    (0, import_node_fs16.rmSync)(stage, { recursive: true, force: true });
   }
 }
 
 // packages/plugin/src/authoring/build.ts
-var import_node_fs20 = require("node:fs");
-var import_node_path20 = require("node:path");
+var import_node_fs21 = require("node:fs");
+var import_node_path21 = require("node:path");
 var import_node_module2 = require("node:module");
 var import_esbuild3 = require("esbuild");
 var import_typescript4 = __toESM(require("typescript"));
-var import_yaml5 = require("yaml");
+var import_yaml6 = require("yaml");
 
 // packages/plugin-runtime/src/definitions/compiler/index.ts
 var ts5 = __toESM(require("typescript"));
-var import_node_fs17 = require("node:fs");
-var import_node_path17 = require("node:path");
+var import_node_fs18 = require("node:fs");
+var import_node_path18 = require("node:path");
 
 // packages/plugin-runtime/src/definitions/compiler/constants.ts
 var DEFINITION_FILENAME = "octonode.config.ts";
@@ -24579,16 +24788,16 @@ function schemaFor(checker, type, seen = /* @__PURE__ */ new Set(), optional = f
 
 // packages/plugin-runtime/src/definitions/compiler/catalog.ts
 var ts4 = __toESM(require("typescript"));
-var import_node_fs16 = require("node:fs");
-var import_node_path16 = require("node:path");
+var import_node_fs17 = require("node:fs");
+var import_node_path17 = require("node:path");
 var import_node_crypto6 = require("node:crypto");
 function generateNodeCatalog(root, files, check = false) {
-  root = (0, import_node_fs16.realpathSync)(root);
-  const inventory = (0, import_node_path16.resolve)(root, NODES_FILENAME);
+  root = (0, import_node_fs17.realpathSync)(root);
+  const inventory = (0, import_node_path17.resolve)(root, NODES_FILENAME);
   let npmInventory;
-  if ((0, import_node_fs16.existsSync)(inventory)) {
-    if ((0, import_node_fs16.realpathSync)(inventory) !== inventory) throw new Error(`${NODES_FILENAME} must not be a symlink`);
-    const current = (0, import_node_fs16.readFileSync)(inventory, "utf8");
+  if ((0, import_node_fs17.existsSync)(inventory)) {
+    if ((0, import_node_fs17.realpathSync)(inventory) !== inventory) throw new Error(`${NODES_FILENAME} must not be a symlink`);
+    const current = (0, import_node_fs17.readFileSync)(inventory, "utf8");
     const prefix = ["// Generated npm inventory: ", "// Generated workflow inventory: "].find(
       (prefix2) => current.startsWith(prefix2)
     );
@@ -24601,14 +24810,14 @@ function generateNodeCatalog(root, files, check = false) {
       npmInventory = body;
     }
   }
-  const configPath = (0, import_node_fs16.existsSync)((0, import_node_path16.resolve)(root, "tsconfig.json")) ? (0, import_node_path16.resolve)(root, "tsconfig.json") : void 0;
+  const configPath = (0, import_node_fs17.existsSync)((0, import_node_path17.resolve)(root, "tsconfig.json")) ? (0, import_node_path17.resolve)(root, "tsconfig.json") : void 0;
   const config = configPath ? ts4.readConfigFile(configPath, ts4.sys.readFile) : { config: {} };
   if (config.error) throw new Error(ts4.flattenDiagnosticMessageText(config.error.messageText, "\n"));
   const parsed = ts4.parseJsonConfigFileContent(config.config, ts4.sys, root);
   const error = parsed.errors.find((error2) => error2.code !== 18003);
   if (error) throw new Error(ts4.flattenDiagnosticMessageText(error.messageText, "\n"));
-  const paths2 = (files ?? parsed.fileNames).map((file) => (0, import_node_path16.resolve)(root, file)).filter((file) => {
-    const path3 = (0, import_node_path16.relative)(root, file).replaceAll("\\", "/");
+  const paths2 = (files ?? parsed.fileNames).map((file) => (0, import_node_path17.resolve)(root, file)).filter((file) => {
+    const path3 = (0, import_node_path17.relative)(root, file).replaceAll("\\", "/");
     return !path3.startsWith("../") && !path3.split("/").some((part) => ["node_modules", "octonode_plugins", "dist"].includes(part) || part.startsWith(".")) && !DEFINITION_FILES2.includes(path3) && !/\.d\.[cm]?ts$/.test(path3) && /\.[cm]?ts$/.test(path3);
   }).sort();
   const program = ts4.createProgram(paths2, {
@@ -24628,9 +24837,9 @@ function generateNodeCatalog(root, files, check = false) {
     for (const exported of checker.getExportsOfModule(module2).sort((a, b2) => a.name.localeCompare(b2.name))) {
       const symbol = exported.flags & ts4.SymbolFlags.Alias ? checker.getAliasedSymbol(exported) : exported;
       const declaration = symbol.valueDeclaration;
-      if (!declaration || (0, import_node_path16.resolve)(declaration.getSourceFile().fileName) !== path3) continue;
+      if (!declaration || (0, import_node_path17.resolve)(declaration.getSourceFile().fileName) !== path3) continue;
       if (!checker.getTypeOfSymbolAtLocation(symbol, declaration).getCallSignatures().length) continue;
-      entries.push({ path: (0, import_node_path16.relative)(root, path3).replaceAll("\\", "/"), name: exported.name });
+      entries.push({ path: (0, import_node_path17.relative)(root, path3).replaceAll("\\", "/"), name: exported.name });
     }
   }
   const counts = /* @__PURE__ */ new Map();
@@ -24676,24 +24885,24 @@ function generateNodeCatalog(root, files, check = false) {
     text = `// Generated npm inventory: ${(0, import_node_crypto6.createHash)("sha256").update(text).digest("hex")}
 ${text}`;
   }
-  const output = (0, import_node_path16.resolve)(root, NODES_FILENAME);
-  if ((0, import_node_fs16.existsSync)(output) && (0, import_node_fs16.realpathSync)(output) !== output) throw new Error(`${NODES_FILENAME} must not be a symlink`);
+  const output = (0, import_node_path17.resolve)(root, NODES_FILENAME);
+  if ((0, import_node_fs17.existsSync)(output) && (0, import_node_fs17.realpathSync)(output) !== output) throw new Error(`${NODES_FILENAME} must not be a symlink`);
   if (check) {
-    if (!(0, import_node_fs16.existsSync)(output) || (0, import_node_fs16.readFileSync)(output, "utf8") !== text)
+    if (!(0, import_node_fs17.existsSync)(output) || (0, import_node_fs17.readFileSync)(output, "utf8") !== text)
       throw new Error(`${NODES_FILENAME} is stale; regenerate the node inventory`);
-  } else if (!(0, import_node_fs16.existsSync)(output) || (0, import_node_fs16.readFileSync)(output, "utf8") !== text) (0, import_node_fs16.writeFileSync)(output, text);
+  } else if (!(0, import_node_fs17.existsSync)(output) || (0, import_node_fs17.readFileSync)(output, "utf8") !== text) (0, import_node_fs17.writeFileSync)(output, text);
   return text;
 }
 
 // packages/plugin-runtime/src/definitions/compiler/index.ts
 function compileDefinition(root, extraFiles = [], kind = "project") {
-  root = (0, import_node_fs17.realpathSync)(root);
+  root = (0, import_node_fs18.realpathSync)(root);
   const filename = kind === "project" ? DEFINITION_FILENAME : PLUGIN_FILENAME;
-  const entry = (0, import_node_path17.resolve)(root, filename);
-  const configPath = (0, import_node_fs17.existsSync)((0, import_node_path17.resolve)(root, "tsconfig.json")) ? (0, import_node_path17.resolve)(root, "tsconfig.json") : void 0;
+  const entry = (0, import_node_path18.resolve)(root, filename);
+  const configPath = (0, import_node_fs18.existsSync)((0, import_node_path18.resolve)(root, "tsconfig.json")) ? (0, import_node_path18.resolve)(root, "tsconfig.json") : void 0;
   const config = configPath ? ts5.readConfigFile(configPath, ts5.sys.readFile) : { config: {} };
   if (config.error) throw new Error(ts5.flattenDiagnosticMessageText(config.error.messageText, "\n"));
-  const parsed = ts5.parseJsonConfigFileContent(config.config, ts5.sys, configPath ? (0, import_node_path17.dirname)(configPath) : root);
+  const parsed = ts5.parseJsonConfigFileContent(config.config, ts5.sys, configPath ? (0, import_node_path18.dirname)(configPath) : root);
   const configError = parsed.errors.find((diagnostic) => diagnostic.code !== 18003);
   if (configError) throw new Error(ts5.flattenDiagnosticMessageText(configError.messageText, "\n"));
   const options = {
@@ -24711,28 +24920,28 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
   const roots = [
     .../* @__PURE__ */ new Set([
       ...parsed.fileNames,
-      ...extraFiles.map((file) => (0, import_node_path17.resolve)(root, file)),
-      ...(0, import_node_fs17.existsSync)(entry) ? [entry] : []
+      ...extraFiles.map((file) => (0, import_node_path18.resolve)(root, file)),
+      ...(0, import_node_fs18.existsSync)(entry) ? [entry] : []
     ])
-  ].filter((file) => !(0, import_node_path17.relative)(root, file).split(/[\\/]/).includes("octonode_plugins"));
-  if (!(0, import_node_fs17.existsSync)(entry)) {
+  ].filter((file) => !(0, import_node_path18.relative)(root, file).split(/[\\/]/).includes("octonode_plugins"));
+  if (!(0, import_node_fs18.existsSync)(entry)) {
     for (const file of roots) {
       const text = ts5.sys.readFile(file);
-      if (!DEFINITION_FILES2.includes((0, import_node_path17.relative)(root, file)) && text && ts5.preProcessFile(text, true, true).importedFiles.some((item) => DEFINITION_MODULES.includes(item.fileName)))
-        throw new Error(`${(0, import_node_path17.relative)(root, file)}: SDK definitions are only allowed in reserved Octonode files`);
+      if (!DEFINITION_FILES2.includes((0, import_node_path18.relative)(root, file)) && text && ts5.preProcessFile(text, true, true).importedFiles.some((item) => DEFINITION_MODULES.includes(item.fileName)))
+        throw new Error(`${(0, import_node_path18.relative)(root, file)}: SDK definitions are only allowed in reserved Octonode files`);
     }
     return void 0;
   }
   const program = ts5.createProgram(roots, options);
-  const catalog = program.getSourceFile((0, import_node_path17.resolve)(root, NODES_FILENAME));
+  const catalog = program.getSourceFile((0, import_node_path18.resolve)(root, NODES_FILENAME));
   if (catalog) generateNodeCatalog(root, roots, true);
   for (const file of program.getSourceFiles()) {
-    if (file.isDeclarationFile || file.fileName.includes("/node_modules/") || (0, import_node_path17.relative)(root, file.fileName).split(/[\\/]/).includes("octonode_plugins"))
+    if (file.isDeclarationFile || file.fileName.includes("/node_modules/") || (0, import_node_path18.relative)(root, file.fileName).split(/[\\/]/).includes("octonode_plugins"))
       continue;
-    if (!DEFINITION_FILES2.includes((0, import_node_path17.relative)(root, file.fileName)) && ts5.preProcessFile(file.text, true, true).importedFiles.some((item) => DEFINITION_MODULES.includes(item.fileName)))
-      throw new Error(`${(0, import_node_path17.relative)(root, file.fileName)}: SDK definitions are only allowed in reserved Octonode files`);
+    if (!DEFINITION_FILES2.includes((0, import_node_path18.relative)(root, file.fileName)) && ts5.preProcessFile(file.text, true, true).importedFiles.some((item) => DEFINITION_MODULES.includes(item.fileName)))
+      throw new Error(`${(0, import_node_path18.relative)(root, file.fileName)}: SDK definitions are only allowed in reserved Octonode files`);
   }
-  if ((0, import_node_fs17.realpathSync)(entry) !== entry) throw new Error(`${DEFINITION_FILENAME} must not be a symlink`);
+  if ((0, import_node_fs18.realpathSync)(entry) !== entry) throw new Error(`${DEFINITION_FILENAME} must not be a symlink`);
   const source2 = program.getSourceFile(entry);
   const checker = program.getTypeChecker();
   const sdk = /* @__PURE__ */ new Map();
@@ -24760,17 +24969,17 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
     else
       throw new Error(`${DEFINITION_FILENAME} accepts imports and one default defineProject/definePlugin export only`);
   }
-  const call = definition?.expression;
-  if (!call || !ts5.isCallExpression(call) || !ts5.isIdentifier(call.expression) || call.arguments.length !== 1)
+  const call2 = definition?.expression;
+  if (!call2 || !ts5.isCallExpression(call2) || !ts5.isIdentifier(call2.expression) || call2.arguments.length !== 1)
     throw new Error(`Default-export ${kind === "project" ? "defineProject" : "definePlugin"}({...}) from ${filename}`);
-  const wrapper = sdk.get(call.expression.text);
+  const wrapper = sdk.get(call2.expression.text);
   if (wrapper !== "defineProject" && wrapper !== "definePlugin")
     throw new Error("The default export must use the SDK defineProject or definePlugin helper");
   if (wrapper !== (kind === "project" ? "defineProject" : "definePlugin"))
     throw new Error(
       `${filename} must default-export ${kind === "project" ? "defineProject" : "definePlugin"}; plugins belong in ${PLUGIN_FILENAME}`
     );
-  const fields = new Map(properties(call.arguments[0]));
+  const fields = new Map(properties(call2.arguments[0]));
   const nodesExpression = fields.get("nodes");
   if (nodesExpression && !ts5.isArrayLiteralExpression(nodesExpression))
     throw new Error("nodes must be an inline array of defineNode calls");
@@ -24787,19 +24996,19 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
       throw new Error("Node handles require a literal name");
     const catalogImport = imports.get(handle.expression.text);
     const catalogPath = catalogImport && ts5.resolveModuleName(catalogImport.module, entry, options, ts5.sys).resolvedModule?.resolvedFileName;
-    if (!catalogPath || (0, import_node_path17.resolve)(catalogPath) !== (0, import_node_path17.resolve)(root, NODES_FILENAME) || catalogImport?.name !== "nodes")
+    if (!catalogPath || (0, import_node_path18.resolve)(catalogPath) !== (0, import_node_path18.resolve)(root, NODES_FILENAME) || catalogImport?.name !== "nodes")
       throw new Error(`Import nodes directly from ./${NODES_FILENAME}`);
-    if ((0, import_node_fs17.realpathSync)(catalogPath) !== (0, import_node_path17.resolve)(catalogPath)) throw new Error(`${NODES_FILENAME} must not be a symlink`);
+    if ((0, import_node_fs18.realpathSync)(catalogPath) !== (0, import_node_path18.resolve)(catalogPath)) throw new Error(`${NODES_FILENAME} must not be a symlink`);
     const property = checker.getTypeAtLocation(handle.expression).getProperty(handleName.text)?.valueDeclaration;
     if (!property || !ts5.isPropertyAssignment(property))
       throw new Error(`Unknown generated node: ${handleName.text}; regenerate ${NODES_FILENAME}`);
     if (ts5.isCallExpression(property.initializer)) {
       if (kind !== "plugin") throw new Error("Generated adapter handles are only supported in octonode.plugin.ts");
-      const call2 = property.initializer;
-      if (ts5.isIdentifier(call2.expression) && call2.expression.text === "workflowNode" && call2.arguments.length === 1) {
+      const call3 = property.initializer;
+      if (ts5.isIdentifier(call3.expression) && call3.expression.text === "workflowNode" && call3.arguments.length === 1) {
         const workflow = {
           kind: "workflow",
-          ...literal(call2.arguments[0])
+          ...literal(call3.arguments[0])
         };
         const original = PluginNode.parse(workflow.definition);
         if (typeof workflow.key !== "string" || !/^[a-f0-9]{24}$/.test(workflow.key) || !workflow.files || !workflow.dependencies)
@@ -24827,9 +25036,9 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
         });
         continue;
       }
-      if (!ts5.isIdentifier(call2.expression) || call2.expression.text !== "npmNode" || call2.arguments.length !== 1)
+      if (!ts5.isIdentifier(call3.expression) || call3.expression.text !== "npmNode" || call3.arguments.length !== 1)
         throw new Error("Invalid generated npm node");
-      const npm2 = { kind: "npm", ...literal(call2.arguments[0]) };
+      const npm2 = { kind: "npm", ...literal(call3.arguments[0]) };
       if (!npm2.packageName || !npm2.packageVersion || !npm2.descriptor || !Array.isArray(npm2.descriptor.params))
         throw new Error("Invalid npm inventory; regenerate from the package");
       const moduleSpecifier = npm2.descriptor.moduleSpecifier ?? npm2.packageName;
@@ -24873,6 +25082,7 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
         parameters: [],
         customization: {
           description: npm2.descriptor.description,
+          label: npm2.descriptor.generic ? "Call package export" : npm2.descriptor.methodPath?.at(-1) ?? npm2.descriptor.exportName,
           ...npm2.descriptor.client ? { client: npm2.descriptor.exportName } : {},
           ...customization2
         },
@@ -24890,19 +25100,19 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
     const importDeclaration = binding.parent.parent.parent;
     if (!ts5.isImportDeclaration(importDeclaration) || !ts5.isStringLiteral(importDeclaration.moduleSpecifier))
       throw new Error("Invalid generated node import");
-    const imported = {
+    const imported2 = {
       module: importDeclaration.moduleSpecifier.text,
       name: (binding.propertyName ?? binding.name).text
     };
-    if (!imported || !imported.module.startsWith("."))
+    if (!imported2 || !imported2.module.startsWith("."))
       throw new Error(`Import ${reference.text} from a local implementation file`);
     const local = checker.getSymbolAtLocation(reference);
     const symbol = local && (local.flags & ts5.SymbolFlags.Alias ? checker.getAliasedSymbol(local) : local);
     const declaration = symbol?.valueDeclaration;
     if (!symbol || !declaration) throw new Error(`Cannot resolve function ${reference.text}`);
-    const file = (0, import_node_fs17.realpathSync)(declaration.getSourceFile().fileName);
-    const path3 = (0, import_node_path17.relative)(root, file).replaceAll("\\", "/");
-    if (path3.startsWith("../") || (0, import_node_path17.isAbsolute)(path3) || path3.split("/").includes("node_modules") || declaration.getSourceFile().isDeclarationFile || path3 === DEFINITION_FILENAME || !/\.[cm]?ts$/.test(path3))
+    const file = (0, import_node_fs18.realpathSync)(declaration.getSourceFile().fileName);
+    const path3 = (0, import_node_path18.relative)(root, file).replaceAll("\\", "/");
+    if (path3.startsWith("../") || (0, import_node_path18.isAbsolute)(path3) || path3.split("/").includes("node_modules") || declaration.getSourceFile().isDeclarationFile || path3 === DEFINITION_FILENAME || !/\.[cm]?ts$/.test(path3))
       throw new Error(`Node implementation must be a TypeScript file inside the project: ${path3}`);
     const sourceName = (ts5.isFunctionDeclaration(declaration) || ts5.isVariableDeclaration(declaration)) && declaration.name && ts5.isIdentifier(declaration.name) ? declaration.name.text : symbol.name;
     const identity3 = `${path3}:${sourceName}`;
@@ -24933,11 +25143,11 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
       throw new Error(
         "Project node customization supports label, symbol, description and icon; identity and execution remain source-owned"
       );
-    const node = { path: path3, exportName: imported.name, symbol: sourceName, parameters, customization };
+    const node = { path: path3, exportName: imported2.name, symbol: sourceName, parameters, customization };
     if (customization.bindings) throw new Error("SDK client bindings require npm handles");
-    const resolvedImport = ts5.resolveModuleName(imported.module, entry, options, ts5.sys).resolvedModule;
-    if (!resolvedImport) throw new Error(`Cannot resolve ${imported.module}`);
-    if ((0, import_node_path17.resolve)(resolvedImport.resolvedFileName) !== file)
+    const resolvedImport = ts5.resolveModuleName(imported2.module, entry, options, ts5.sys).resolvedModule;
+    if (!resolvedImport) throw new Error(`Cannot resolve ${imported2.module}`);
+    if ((0, import_node_path18.resolve)(resolvedImport.resolvedFileName) !== file)
       throw new Error("Import node functions directly from their implementation file, not a re-export barrel");
     if (kind === "plugin") {
       const required = [];
@@ -24964,11 +25174,11 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
       if (!handle) return [key, NpmClientDefinition.parse(literal(expression))];
       if (!ts5.isPropertyAccessExpression(handle) || !ts5.isIdentifier(handle.expression))
         throw new Error("Client handles must use clients.name from octonode.nodes.ts");
-      const imported = imports.get(handle.expression.text);
-      if (imported?.name !== "clients" || (0, import_node_path17.resolve)(
+      const imported2 = imports.get(handle.expression.text);
+      if (imported2?.name !== "clients" || (0, import_node_path18.resolve)(
         root,
-        ts5.resolveModuleName(imported.module, entry, options, ts5.sys).resolvedModule?.resolvedFileName ?? ""
-      ) !== (0, import_node_path17.resolve)(root, NODES_FILENAME))
+        ts5.resolveModuleName(imported2.module, entry, options, ts5.sys).resolvedModule?.resolvedFileName ?? ""
+      ) !== (0, import_node_path18.resolve)(root, NODES_FILENAME))
         throw new Error("Import clients directly from octonode.nodes.ts");
       const declaration = checker.getTypeAtLocation(handle.expression).getProperty(handle.name.text)?.valueDeclaration;
       if (!declaration || !ts5.isPropertyAssignment(declaration)) throw new Error("Unknown generated client handle");
@@ -24994,11 +25204,11 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
           throw new Error("Client definition must match the generated inventory");
       } else declaredClients[name] = original;
     }
-  const metadata = Object.fromEntries(
+  const metadata2 = Object.fromEntries(
     [...fields].filter(([key]) => key !== "nodes" && key !== "clients").map(([key, value]) => [key, literal(value)])
   );
-  if (kind === "project" && Object.keys(metadata).length) throw new Error("defineProject accepts only nodes");
-  const { assets = [], library, ...pluginMetadata } = metadata;
+  if (kind === "project" && Object.keys(metadata2).length) throw new Error("defineProject accepts only nodes");
+  const { assets = [], library, ...pluginMetadata } = metadata2;
   if (Object.keys(declaredClients).length) pluginMetadata.clients = declaredClients;
   const npm = nodes.find((node) => node.npm)?.npm;
   const npmOnly = nodes.length > 0 && nodes.every(
@@ -25053,8 +25263,8 @@ function compileDefinition(root, extraFiles = [], kind = "project") {
     const path3 = library.entry;
     if (!/^[a-zA-Z0-9_./-]+\.[cm]?ts$/.test(path3) || path3.startsWith("/") || path3.split("/").some((part) => !part || part === ".." || part === "node_modules"))
       throw new Error("Library entry must be a TypeScript file inside the plugin");
-    const absolute = (0, import_node_path17.resolve)(root, path3);
-    if ((0, import_node_fs17.realpathSync)(absolute) !== absolute) throw new Error("Library entry cannot be a symbolic link");
+    const absolute = (0, import_node_path18.resolve)(root, path3);
+    if ((0, import_node_fs18.realpathSync)(absolute) !== absolute) throw new Error("Library entry cannot be a symbolic link");
     const libraryProgram = ts5.createProgram([absolute], options);
     const libraryChecker = libraryProgram.getTypeChecker();
     const module2 = libraryProgram.getSourceFile(absolute);
@@ -25345,19 +25555,19 @@ function emitNpmJsFiles(plan) {
 }
 
 // packages/plugin/src/authoring/release.ts
-var import_yaml4 = require("yaml");
-var import_node_fs18 = require("node:fs");
-var import_node_path18 = require("node:path");
+var import_yaml5 = require("yaml");
+var import_node_fs19 = require("node:fs");
+var import_node_path19 = require("node:path");
 function readPluginRelease(root) {
-  const files = PLUGIN_RELEASE_FILES.filter((file) => (0, import_node_fs18.existsSync)((0, import_node_path18.join)(root, file)));
+  const files = PLUGIN_RELEASE_FILES.filter((file) => (0, import_node_fs19.existsSync)((0, import_node_path19.join)(root, file)));
   if (!files.length) return void 0;
   if (files.length !== 1) throw new Error("Keep exactly one octonode.plugin.json release file");
-  const path3 = (0, import_node_path18.join)(root, files[0]);
-  const stat = (0, import_node_fs18.lstatSync)(path3);
+  const path3 = (0, import_node_path19.join)(root, files[0]);
+  const stat = (0, import_node_fs19.lstatSync)(path3);
   if (!stat.isFile() || stat.isSymbolicLink() || stat.size > PLUGIN_CONFIG_MAX_BYTES)
     throw new Error("Invalid plugin release file");
-  const document = (0, import_yaml4.parseDocument)((0, import_node_fs18.readFileSync)(path3, "utf8"), { uniqueKeys: true, version: "1.2" });
-  (0, import_yaml4.visit)(document, {
+  const document = (0, import_yaml5.parseDocument)((0, import_node_fs19.readFileSync)(path3, "utf8"), { uniqueKeys: true, version: "1.2" });
+  (0, import_yaml5.visit)(document, {
     Alias() {
       throw new Error("Plugin release files cannot contain YAML aliases");
     }
@@ -25369,8 +25579,8 @@ function readPluginRelease(root) {
 }
 
 // packages/plugin/src/authoring/library.ts
-var import_node_fs19 = require("node:fs");
-var import_node_path19 = require("node:path");
+var import_node_fs20 = require("node:fs");
+var import_node_path20 = require("node:path");
 var import_node_module = require("node:module");
 var import_esbuild2 = require("esbuild");
 var import_typescript3 = __toESM(require("typescript"));
@@ -25382,8 +25592,8 @@ async function buildPluginLibrary(root, entry, output) {
   const options = {
     ...parsed.options,
     rootDir: root,
-    outDir: (0, import_node_path19.join)(output, "types"),
-    declarationDir: (0, import_node_path19.join)(output, "types"),
+    outDir: (0, import_node_path20.join)(output, "types"),
+    declarationDir: (0, import_node_path20.join)(output, "types"),
     noEmit: false,
     emitDeclarationOnly: true,
     declaration: true,
@@ -25395,7 +25605,7 @@ async function buildPluginLibrary(root, entry, output) {
   };
   delete options.tsBuildInfoFile;
   delete options.outFile;
-  const program = import_typescript3.default.createProgram([(0, import_node_path19.resolve)(root, entry)], options);
+  const program = import_typescript3.default.createProgram([(0, import_node_path20.resolve)(root, entry)], options);
   const diagnostics = import_typescript3.default.getPreEmitDiagnostics(program);
   if (diagnostics.some((diagnostic) => diagnostic.category === import_typescript3.default.DiagnosticCategory.Error))
     throw new Error(
@@ -25406,17 +25616,17 @@ async function buildPluginLibrary(root, entry, output) {
       })
     );
   const emitted = program.emit(void 0, (path3, content) => {
-    const local = (0, import_node_path19.relative)(output, path3).replaceAll("\\", "/");
+    const local = (0, import_node_path20.relative)(output, path3).replaceAll("\\", "/");
     safePath(local);
-    (0, import_node_fs19.mkdirSync)((0, import_node_path19.dirname)(path3), { recursive: true });
-    (0, import_node_fs19.writeFileSync)(path3, content);
+    (0, import_node_fs20.mkdirSync)((0, import_node_path20.dirname)(path3), { recursive: true });
+    (0, import_node_fs20.writeFileSync)(path3, content);
   });
   if (emitted.emitSkipped) throw new Error("Cannot emit plugin library declarations");
   const typeEntry = entry.replace(/^\.\//, "").replace(/\.mts$/, ".mjs").replace(/\.cts$/, ".cjs").replace(/\.ts$/, ".js");
-  (0, import_node_fs19.writeFileSync)((0, import_node_path19.join)(output, "index.d.ts"), `export * from ${JSON.stringify(`./types/${typeEntry}`)};
+  (0, import_node_fs20.writeFileSync)((0, import_node_path20.join)(output, "index.d.ts"), `export * from ${JSON.stringify(`./types/${typeEntry}`)};
 `);
-  (0, import_node_fs19.writeFileSync)((0, import_node_path19.join)(output, "package.json"), '{"type":"module"}\n');
-  const check = import_typescript3.default.createProgram([(0, import_node_path19.join)(output, "index.d.ts")], {
+  (0, import_node_fs20.writeFileSync)((0, import_node_path20.join)(output, "package.json"), '{"type":"module"}\n');
+  const check = import_typescript3.default.createProgram([(0, import_node_path20.join)(output, "index.d.ts")], {
     strict: true,
     noEmit: true,
     types: [],
@@ -25424,18 +25634,18 @@ async function buildPluginLibrary(root, entry, output) {
     module: import_typescript3.default.ModuleKind.NodeNext,
     moduleResolution: import_typescript3.default.ModuleResolutionKind.NodeNext
   });
-  const reachable = new Set(check.getSourceFiles().map((file) => (0, import_node_path19.resolve)(file.fileName)));
+  const reachable = new Set(check.getSourceFiles().map((file) => (0, import_node_path20.resolve)(file.fileName)));
   if (check.getSourceFiles().some(
-    (file) => !check.isSourceFileDefaultLibrary(file) && !(0, import_node_path19.resolve)(file.fileName).startsWith((0, import_node_path19.resolve)(output) + "/")
+    (file) => !check.isSourceFileDefaultLibrary(file) && !(0, import_node_path20.resolve)(file.fileName).startsWith((0, import_node_path20.resolve)(output) + "/")
   ))
     throw new Error("Library declarations reference files outside the packaged library");
   for (const file of pluginFiles(output).filter((file2) => /\.d\.[cm]?ts$/.test(file2))) {
-    const path3 = (0, import_node_path19.join)(output, file);
-    if (!reachable.has((0, import_node_path19.resolve)(path3))) {
-      (0, import_node_fs19.rmSync)(path3);
+    const path3 = (0, import_node_path20.join)(output, file);
+    if (!reachable.has((0, import_node_path20.resolve)(path3))) {
+      (0, import_node_fs20.rmSync)(path3);
       continue;
     }
-    const info = import_typescript3.default.preProcessFile((0, import_node_fs19.readFileSync)(path3, "utf8"), true, true);
+    const info = import_typescript3.default.preProcessFile((0, import_node_fs20.readFileSync)(path3, "utf8"), true, true);
     if (info.typeReferenceDirectives.length || info.importedFiles.some((item) => !item.fileName.startsWith(".")))
       throw new Error(`Library public types must be self-contained: ${file}`);
   }
@@ -25444,7 +25654,7 @@ async function buildPluginLibrary(root, entry, output) {
   const result = await (0, import_esbuild2.build)({
     absWorkingDir: root,
     entryPoints: [entry],
-    outfile: (0, import_node_path19.join)(output, "index.js"),
+    outfile: (0, import_node_path20.join)(output, "index.js"),
     bundle: true,
     platform: "node",
     format: "esm",
@@ -25459,7 +25669,7 @@ async function buildPluginLibrary(root, entry, output) {
   });
   if (result.warnings.length) throw new Error(result.warnings.map((warning) => warning.text).join("\n"));
   for (const input of Object.keys(result.metafile.inputs)) {
-    const local = (0, import_node_path19.relative)(root, (0, import_node_path19.resolve)(root, input)).replaceAll("\\", "/");
+    const local = (0, import_node_path20.relative)(root, (0, import_node_path20.resolve)(root, input)).replaceAll("\\", "/");
     if (local.startsWith("../") && !local.includes("/node_modules/"))
       throw new Error("Library import escapes the plugin package");
   }
@@ -25469,34 +25679,34 @@ async function buildPluginLibrary(root, entry, output) {
   }
   const packages = /* @__PURE__ */ new Set([root]);
   for (const input of Object.keys(result.metafile.inputs)) {
-    let directory2 = (0, import_node_path19.dirname)((0, import_node_path19.resolve)(root, input));
+    let directory2 = (0, import_node_path20.dirname)((0, import_node_path20.resolve)(root, input));
     if (!directory2.includes("node_modules")) continue;
-    while (!(0, import_node_fs19.existsSync)((0, import_node_path19.join)(directory2, "package.json")) && (0, import_node_path19.dirname)(directory2) !== directory2)
-      directory2 = (0, import_node_path19.dirname)(directory2);
-    if ((0, import_node_fs19.existsSync)((0, import_node_path19.join)(directory2, "package.json"))) packages.add(directory2);
+    while (!(0, import_node_fs20.existsSync)((0, import_node_path20.join)(directory2, "package.json")) && (0, import_node_path20.dirname)(directory2) !== directory2)
+      directory2 = (0, import_node_path20.dirname)(directory2);
+    if ((0, import_node_fs20.existsSync)((0, import_node_path20.join)(directory2, "package.json"))) packages.add(directory2);
   }
   for (const directory2 of packages) {
-    const metadata = JSON.parse((0, import_node_fs19.readFileSync)((0, import_node_path19.join)(directory2, "package.json"), "utf8"));
-    const name = String(metadata.name ?? "plugin").replaceAll("/", "__");
+    const metadata2 = JSON.parse((0, import_node_fs20.readFileSync)((0, import_node_path20.join)(directory2, "package.json"), "utf8"));
+    const name = String(metadata2.name ?? "plugin").replaceAll("/", "__");
     safePath(name);
-    const destination = (0, import_node_path19.join)(output, "licenses", name);
-    (0, import_node_fs19.mkdirSync)(destination, { recursive: true });
-    (0, import_node_fs19.writeFileSync)(
-      (0, import_node_path19.join)(destination, "package.json"),
-      JSON.stringify({ name: metadata.name, version: metadata.version, license: metadata.license }, null, 2) + "\n"
+    const destination = (0, import_node_path20.join)(output, "licenses", name);
+    (0, import_node_fs20.mkdirSync)(destination, { recursive: true });
+    (0, import_node_fs20.writeFileSync)(
+      (0, import_node_path20.join)(destination, "package.json"),
+      JSON.stringify({ name: metadata2.name, version: metadata2.version, license: metadata2.license }, null, 2) + "\n"
     );
-    for (const file of (0, import_node_fs19.readdirSync)(directory2).filter(
+    for (const file of (0, import_node_fs20.readdirSync)(directory2).filter(
       (file2) => /^(?:licen[sc]e|notice|copying)(?:\..*)?$/i.test(file2)
     )) {
-      const path3 = (0, import_node_path19.join)(directory2, file);
-      if ((0, import_node_fs19.lstatSync)(path3).isFile()) (0, import_node_fs19.writeFileSync)((0, import_node_path19.join)(destination, file), (0, import_node_fs19.readFileSync)(path3));
+      const path3 = (0, import_node_path20.join)(directory2, file);
+      if ((0, import_node_fs20.lstatSync)(path3).isFile()) (0, import_node_fs20.writeFileSync)((0, import_node_path20.join)(destination, file), (0, import_node_fs20.readFileSync)(path3));
     }
   }
 }
 
 // packages/plugin/src/authoring/build.ts
 function prepareAuthoringConfig(stage, sourceRoot) {
-  const config = sourceRoot && (0, import_node_fs20.existsSync)((0, import_node_path20.join)(sourceRoot, "tsconfig.json")) ? (0, import_node_path20.join)(sourceRoot, "tsconfig.json") : void 0;
+  const config = sourceRoot && (0, import_node_fs21.existsSync)((0, import_node_path21.join)(sourceRoot, "tsconfig.json")) ? (0, import_node_path21.join)(sourceRoot, "tsconfig.json") : void 0;
   const parsed = config ? import_typescript4.default.getParsedCommandLineOfConfigFile(
     config,
     {},
@@ -25507,17 +25717,17 @@ function prepareAuthoringConfig(stage, sourceRoot) {
       }
     }
   ) : void 0;
-  const sdk = (0, import_node_path20.dirname)(require.resolve("@octonodes/sdk/package.json"));
+  const sdk = (0, import_node_path21.dirname)(require.resolve("@octonodes/sdk/package.json"));
   const paths2 = Object.fromEntries(
     Object.entries(parsed?.options.paths ?? {}).map(([key, values]) => [
       key,
       values.map(
-        (value) => (0, import_node_path20.resolve)(stage, (0, import_node_path20.relative)(sourceRoot, (0, import_node_path20.resolve)(parsed?.options.baseUrl ?? sourceRoot, value)))
+        (value) => (0, import_node_path21.resolve)(stage, (0, import_node_path21.relative)(sourceRoot, (0, import_node_path21.resolve)(parsed?.options.baseUrl ?? sourceRoot, value)))
       )
     ])
   );
-  (0, import_node_fs20.writeFileSync)(
-    (0, import_node_path20.join)(stage, "tsconfig.json"),
+  (0, import_node_fs21.writeFileSync)(
+    (0, import_node_path21.join)(stage, "tsconfig.json"),
     JSON.stringify({
       ...config ? { extends: config } : {},
       compilerOptions: {
@@ -25525,9 +25735,9 @@ function prepareAuthoringConfig(stage, sourceRoot) {
         baseUrl: stage,
         paths: {
           ...paths2,
-          "@octonodes/sdk/plugin": [(0, import_node_path20.join)(sdk, "dist/plugin/index.d.ts")],
-          "@octonodes/sdk/project": [(0, import_node_path20.join)(sdk, "dist/project/index.d.ts")],
-          "@octonodes/sdk/nodes": [(0, import_node_path20.join)(sdk, "dist/nodes/index.d.ts")]
+          "@octonodes/sdk/plugin": [(0, import_node_path21.join)(sdk, "dist/plugin/index.d.ts")],
+          "@octonodes/sdk/project": [(0, import_node_path21.join)(sdk, "dist/project/index.d.ts")],
+          "@octonodes/sdk/nodes": [(0, import_node_path21.join)(sdk, "dist/nodes/index.d.ts")]
         }
       },
       include: ["**/*.ts"],
@@ -25538,37 +25748,37 @@ function prepareAuthoringConfig(stage, sourceRoot) {
 function directory(root, path3) {
   let current = root;
   for (const part of path3.split("/")) {
-    current = (0, import_node_path20.join)(current, part);
-    if (!(0, import_node_fs20.existsSync)(current)) (0, import_node_fs20.mkdirSync)(current);
-    const stat = (0, import_node_fs20.lstatSync)(current);
+    current = (0, import_node_path21.join)(current, part);
+    if (!(0, import_node_fs21.existsSync)(current)) (0, import_node_fs21.mkdirSync)(current);
+    const stat = (0, import_node_fs21.lstatSync)(current);
     if (stat.isSymbolicLink() || !stat.isDirectory())
       throw new Error(`Build directory must be a real directory: ${current}`);
   }
   return current;
 }
 function assertBundledInputs(root, inputs) {
-  const packageRoot = (0, import_node_fs20.realpathSync)(root);
-  const sdkRoot = (0, import_node_fs20.realpathSync)((0, import_node_path20.dirname)(require.resolve("@octonodes/sdk/package.json")));
+  const packageRoot = (0, import_node_fs21.realpathSync)(root);
+  const sdkRoot = (0, import_node_fs21.realpathSync)((0, import_node_path21.dirname)(require.resolve("@octonodes/sdk/package.json")));
   for (const input of inputs) {
-    const path3 = (0, import_node_path20.resolve)(root, input);
-    const physical = (0, import_node_fs20.existsSync)(path3) ? (0, import_node_fs20.realpathSync)(path3) : (0, import_node_path20.join)((0, import_node_fs20.realpathSync)((0, import_node_path20.dirname)(path3)), (0, import_node_path20.basename)(path3));
+    const path3 = (0, import_node_path21.resolve)(root, input);
+    const physical = (0, import_node_fs21.existsSync)(path3) ? (0, import_node_fs21.realpathSync)(path3) : (0, import_node_path21.join)((0, import_node_fs21.realpathSync)((0, import_node_path21.dirname)(path3)), (0, import_node_path21.basename)(path3));
     const within = (directory2) => {
-      const local = (0, import_node_path20.relative)(directory2, physical);
-      return !(0, import_node_path20.isAbsolute)(local) && !local.startsWith("..");
+      const local = (0, import_node_path21.relative)(directory2, physical);
+      return !(0, import_node_path21.isAbsolute)(local) && !local.startsWith("..");
     };
     if (within(packageRoot) || within(sdkRoot) || /[\\/]node_modules[\\/]/.test(path3)) continue;
     throw new Error("A bundled import escapes the selected package. Move shared implementations into a dependency.");
   }
 }
 async function buildPlugins(entry, root = process.cwd()) {
-  root = (0, import_node_path20.resolve)(root);
-  if (entry && (0, import_node_path20.resolve)(root, entry) !== (0, import_node_path20.resolve)(root, PLUGIN_FILENAME))
+  root = (0, import_node_path21.resolve)(root);
+  if (entry && (0, import_node_path21.resolve)(root, entry) !== (0, import_node_path21.resolve)(root, PLUGIN_FILENAME))
     throw new Error("Plugin definitions must be in octonode.plugin.ts; arbitrary entry files are not supported");
   generateNodeCatalog(root);
   const definition = compileDefinition(root, [], "plugin");
   if (!definition || definition.kind !== "plugin" || !definition.manifest)
     throw new Error("Default-export definePlugin({...}) from octonode.plugin.ts");
-  const entries = [(0, import_node_path20.resolve)(root, PLUGIN_FILENAME)];
+  const entries = [(0, import_node_path21.resolve)(root, PLUGIN_FILENAME)];
   const release2 = readPluginRelease(root)?.config;
   if (release2 && release2.id !== definition.manifest.id)
     throw new Error("Plugin release id must match octonode.plugin.ts");
@@ -25626,7 +25836,7 @@ async function buildPlugins(entry, root = process.cwd()) {
     })
   );
   const imports = definition.nodes.map(
-    (node, index) => node.npm ? "" : `import { ${node.exportName} as implementation${index} } from ${JSON.stringify((0, import_node_path20.resolve)(root, node.path))};`
+    (node, index) => node.npm ? "" : `import { ${node.exportName} as implementation${index} } from ${JSON.stringify((0, import_node_path21.resolve)(root, node.path))};`
   ).join("\n");
   const handlers = definition.nodes.map(
     (node, index) => node.npm ? `${JSON.stringify(manifestDefinition.nodes[index].id)}: inputs => require(${JSON.stringify(npmAdapters.get(node))}).invokeNode(${JSON.stringify(manifestDefinition.nodes[index].id)}, inputs)` : `${JSON.stringify(manifestDefinition.nodes[index].id)}: async (inputs) => (await implementation${index}(${node.parameters.map((name) => `inputs[${JSON.stringify(name)}]`).join(", ")})) ?? null`
@@ -25645,34 +25855,34 @@ async function buildPlugins(entry, root = process.cwd()) {
     export { startPlugin };
     export const plugin = definePlugin(${JSON.stringify(manifestDefinition)}, {${workflow ? workflowNodes.map((node, index) => `${JSON.stringify(manifestDefinition.nodes[index].id)}: (inputs, context) => invokeWorkflow(${JSON.stringify(node.workflow.key)}, inputs, context)`).join(",") : handlers}});`;
   const output = directory(root, "dist/plugins");
-  const staging = (0, import_node_fs20.mkdtempSync)((0, import_node_path20.join)(output, ".build-"));
+  const staging = (0, import_node_fs21.mkdtempSync)((0, import_node_path21.join)(output, ".build-"));
   const prepared = [];
   try {
-    (0, import_node_fs20.writeFileSync)((0, import_node_path20.join)(staging, "package.json"), '{"type":"commonjs"}\n');
+    (0, import_node_fs21.writeFileSync)((0, import_node_path21.join)(staging, "package.json"), '{"type":"commonjs"}\n');
     for (const [index, source2] of entries.entries()) {
-      const sourcePath = (0, import_node_path20.relative)(root, source2).replaceAll("\\", "/");
+      const sourcePath = (0, import_node_path21.relative)(root, source2).replaceAll("\\", "/");
       safePath(sourcePath);
-      const staged = (0, import_node_path20.join)(staging, String(index));
-      (0, import_node_fs20.mkdirSync)((0, import_node_path20.join)(staged, "dist"), { recursive: true });
-      const runner2 = (0, import_node_path20.join)(staged, "dist/index.js");
+      const staged = (0, import_node_path21.join)(staging, String(index));
+      (0, import_node_fs21.mkdirSync)((0, import_node_path21.join)(staged, "dist"), { recursive: true });
+      const runner2 = (0, import_node_path21.join)(staged, "dist/index.js");
       if (workflow) {
         for (const [path3, hash] of Object.entries(workflow.files)) {
           safePath(path3);
           let source3 = root;
           for (const part of path3.split("/")) {
-            source3 = (0, import_node_path20.join)(source3, part);
-            if ((0, import_node_fs20.lstatSync)(source3).isSymbolicLink()) throw new Error(`Workflow runtime cannot be a symlink: ${path3}`);
+            source3 = (0, import_node_path21.join)(source3, part);
+            if ((0, import_node_fs21.lstatSync)(source3).isSymbolicLink()) throw new Error(`Workflow runtime cannot be a symlink: ${path3}`);
           }
           if (fileHash(source3) !== hash) throw new Error(`Workflow runtime changed: ${path3}; export again`);
-          const destination2 = (0, import_node_path20.join)(staged, "workflow-runtime", path3);
-          (0, import_node_fs20.mkdirSync)((0, import_node_path20.dirname)(destination2), { recursive: true });
-          (0, import_node_fs20.cpSync)(source3, destination2);
+          const destination2 = (0, import_node_path21.join)(staged, "workflow-runtime", path3);
+          (0, import_node_fs21.mkdirSync)((0, import_node_path21.dirname)(destination2), { recursive: true });
+          (0, import_node_fs21.cpSync)(source3, destination2);
         }
       }
       if (npmFiles) {
         for (const [path3, content] of Object.entries(npmFiles)) {
-          (0, import_node_fs20.mkdirSync)((0, import_node_path20.dirname)((0, import_node_path20.join)(staged, path3)), { recursive: true });
-          (0, import_node_fs20.writeFileSync)((0, import_node_path20.join)(staged, path3), content);
+          (0, import_node_fs21.mkdirSync)((0, import_node_path21.dirname)((0, import_node_path21.join)(staged, path3)), { recursive: true });
+          (0, import_node_fs21.writeFileSync)((0, import_node_path21.join)(staged, path3), content);
         }
       }
       const result = await (0, import_esbuild3.build)({
@@ -25710,9 +25920,9 @@ async function buildPlugins(entry, root = process.cwd()) {
             throw new Error(`Unbundled dependency: ${dependency.path}`);
         }
       }
-      const metadata = { manifest: manifestDefinition, assets: definition.assets };
-      const manifest2 = PluginManifest.parse(metadata.manifest);
-      if (definition.library) await buildPluginLibrary(root, definition.library.entry, (0, import_node_path20.join)(staged, "library"));
+      const metadata2 = { manifest: manifestDefinition, assets: definition.assets };
+      const manifest2 = PluginManifest.parse(metadata2.manifest);
+      if (definition.library) await buildPluginLibrary(root, definition.library.entry, (0, import_node_path21.join)(staged, "library"));
       if (!manifest2.nodes.length) throw new Error(`Plugin ${manifest2.id} must expose at least one node`);
       if (prepared.some((plugin) => plugin.manifest.id === manifest2.id))
         throw new Error(`Duplicate plugin id: ${manifest2.id}`);
@@ -25732,29 +25942,29 @@ async function buildPlugins(entry, root = process.cwd()) {
         safePath(entry2);
         if (RESERVED_ASSETS.has(entry2.split("/")[0])) throw new Error(`UI entry overwrites a generated file: ${entry2}`);
       }
-      if (!Array.isArray(metadata.assets) || metadata.assets.some((path3) => typeof path3 !== "string"))
+      if (!Array.isArray(metadata2.assets) || metadata2.assets.some((path3) => typeof path3 !== "string"))
         throw new Error("assets must be an array of file paths");
-      for (const asset of metadata.assets) {
+      for (const asset of metadata2.assets) {
         safePath(asset);
         if (uiEntries.includes(asset)) throw new Error(`Asset duplicates a UI entry: ${asset}`);
         if (RESERVED_ASSETS.has(asset.split("/")[0])) throw new Error(`Asset overwrites a generated file: ${asset}`);
         let current = root;
         for (const part of asset.split("/")) {
-          current = (0, import_node_path20.join)(current, part);
-          if ((0, import_node_fs20.lstatSync)(current).isSymbolicLink()) throw new Error(`Asset cannot be a symbolic link: ${asset}`);
+          current = (0, import_node_path21.join)(current, part);
+          if ((0, import_node_fs21.lstatSync)(current).isSymbolicLink()) throw new Error(`Asset cannot be a symbolic link: ${asset}`);
         }
-        if (!(0, import_node_fs20.lstatSync)(current).isFile()) throw new Error(`Declare individual asset files: ${asset}`);
-        (0, import_node_fs20.mkdirSync)((0, import_node_path20.dirname)((0, import_node_path20.join)(staged, asset)), { recursive: true });
-        (0, import_node_fs20.cpSync)(current, (0, import_node_path20.join)(staged, asset));
+        if (!(0, import_node_fs21.lstatSync)(current).isFile()) throw new Error(`Declare individual asset files: ${asset}`);
+        (0, import_node_fs21.mkdirSync)((0, import_node_path21.dirname)((0, import_node_path21.join)(staged, asset)), { recursive: true });
+        (0, import_node_fs21.cpSync)(current, (0, import_node_path21.join)(staged, asset));
       }
       for (const entry2 of uiEntries) {
         let current = root;
         for (const part of entry2.split("/")) {
-          current = (0, import_node_path20.join)(current, part);
-          if ((0, import_node_fs20.lstatSync)(current).isSymbolicLink()) throw new Error(`UI entry cannot be a symbolic link: ${entry2}`);
+          current = (0, import_node_path21.join)(current, part);
+          if ((0, import_node_fs21.lstatSync)(current).isSymbolicLink()) throw new Error(`UI entry cannot be a symbolic link: ${entry2}`);
         }
-        if (!(0, import_node_fs20.lstatSync)(current).isFile()) throw new Error(`UI entry must be a file: ${entry2}`);
-        directory(staged, (0, import_node_path20.dirname)(entry2));
+        if (!(0, import_node_fs21.lstatSync)(current).isFile()) throw new Error(`UI entry must be a file: ${entry2}`);
+        directory(staged, (0, import_node_path21.dirname)(entry2));
         const ui = await (0, import_esbuild3.build)({
           absWorkingDir: root,
           stdin: {
@@ -25763,7 +25973,7 @@ async function buildPlugins(entry, root = process.cwd()) {
             sourcefile: "octonode-ui-entry.ts",
             loader: "ts"
           },
-          outfile: (0, import_node_path20.join)(staged, entry2),
+          outfile: (0, import_node_path21.join)(staged, entry2),
           bundle: true,
           preserveSymlinks: true,
           platform: "browser",
@@ -25778,22 +25988,22 @@ async function buildPlugins(entry, root = process.cwd()) {
         assertBundledInputs(root, Object.keys(ui.metafile.inputs));
         if (Object.values(ui.metafile.outputs).some((output2) => output2.imports.some((dependency) => dependency.external)))
           throw new Error(`UI entry has an unbundled dependency: ${entry2}`);
-        if ((0, import_node_fs20.statSync)((0, import_node_path20.join)(staged, entry2)).size > PLUGIN_UI_BUNDLE_MAX_BYTES)
+        if ((0, import_node_fs21.statSync)((0, import_node_path21.join)(staged, entry2)).size > PLUGIN_UI_BUNDLE_MAX_BYTES)
           throw new Error(`UI entry exceeds 512 KiB: ${entry2}`);
       }
       const serialized = JSON.stringify(manifest2);
-      (0, import_node_fs20.writeFileSync)(
+      (0, import_node_fs21.writeFileSync)(
         runner2,
-        (0, import_node_fs20.readFileSync)(runner2, "utf8") + `
+        (0, import_node_fs21.readFileSync)(runner2, "utf8") + `
 if (require.main === module) {
         if (JSON.stringify(module.exports.plugin.manifest) !== ${JSON.stringify(serialized)}) throw new Error("Plugin definition changed at runtime; keep metadata independent of the environment");
         module.exports.startPlugin(module.exports.plugin);
       }
 `
       );
-      (0, import_node_fs20.writeFileSync)((0, import_node_path20.join)(staged, "octonode.yml"), (0, import_yaml5.stringify)({ apiVersion: SETTINGS_API_VERSION, plugin: manifest2 }));
-      (0, import_node_fs20.writeFileSync)(
-        (0, import_node_path20.join)(staged, "package.json"),
+      (0, import_node_fs21.writeFileSync)((0, import_node_path21.join)(staged, "octonode.yml"), (0, import_yaml6.stringify)({ apiVersion: SETTINGS_API_VERSION, plugin: manifest2 }));
+      (0, import_node_fs21.writeFileSync)(
+        (0, import_node_path21.join)(staged, "package.json"),
         JSON.stringify(
           {
             name: `octonode-plugin-${manifest2.id}`,
@@ -25808,8 +26018,8 @@ if (require.main === module) {
           2
         ) + "\n"
       );
-      (0, import_node_fs20.writeFileSync)(
-        (0, import_node_path20.join)(staged, "README.md"),
+      (0, import_node_fs21.writeFileSync)(
+        (0, import_node_path21.join)(staged, "README.md"),
         `# ${manifest2.name}
 
 ${manifest2.description ?? ""}
@@ -25840,16 +26050,16 @@ ${JSON.stringify(manifest2.connections ?? {}, null, 2)}
 \`\`\`
 `
       );
-      (0, import_node_fs20.writeFileSync)(
-        (0, import_node_path20.join)(staged, BUILD_RECORD),
+      (0, import_node_fs21.writeFileSync)(
+        (0, import_node_path21.join)(staged, BUILD_RECORD),
         JSON.stringify(
           {
             format: 1,
-            files: Object.fromEntries(pluginFiles(staged).map((file) => [file, fileHash((0, import_node_path20.join)(staged, file))])),
+            files: Object.fromEntries(pluginFiles(staged).map((file) => [file, fileHash((0, import_node_path21.join)(staged, file))])),
             ui: uiDeclarations.map((declaration) => ({
               ...declaration,
-              size: (0, import_node_fs20.statSync)((0, import_node_path20.join)(staged, declaration.path)).size,
-              sha256: fileHash((0, import_node_path20.join)(staged, declaration.path))
+              size: (0, import_node_fs21.statSync)((0, import_node_path21.join)(staged, declaration.path)).size,
+              sha256: fileHash((0, import_node_path21.join)(staged, declaration.path))
             }))
           },
           null,
@@ -25857,28 +26067,28 @@ ${JSON.stringify(manifest2.connections ?? {}, null, 2)}
         ) + "\n"
       );
       verifyBuild(staged);
-      const destination = (0, import_node_path20.join)(output, manifest2.id);
-      if ((0, import_node_fs20.existsSync)(destination)) verifyBuild(destination);
+      const destination = (0, import_node_path21.join)(output, manifest2.id);
+      if ((0, import_node_fs21.existsSync)(destination)) verifyBuild(destination);
       prepared.push({ manifest: manifest2, directory: destination, staged });
     }
     for (const [index, plugin] of prepared.entries()) {
-      const backup = (0, import_node_path20.join)(staging, `previous-${index}`);
-      if ((0, import_node_fs20.existsSync)(plugin.directory)) (0, import_node_fs20.renameSync)(plugin.directory, backup);
+      const backup = (0, import_node_path21.join)(staging, `previous-${index}`);
+      if ((0, import_node_fs21.existsSync)(plugin.directory)) (0, import_node_fs21.renameSync)(plugin.directory, backup);
       try {
-        (0, import_node_fs20.renameSync)(plugin.staged, plugin.directory);
+        (0, import_node_fs21.renameSync)(plugin.staged, plugin.directory);
       } catch (error) {
-        if ((0, import_node_fs20.existsSync)(backup)) (0, import_node_fs20.renameSync)(backup, plugin.directory);
+        if ((0, import_node_fs21.existsSync)(backup)) (0, import_node_fs21.renameSync)(backup, plugin.directory);
         throw error;
       }
     }
     return prepared.map(({ manifest: manifest2, directory: directory2 }) => ({ manifest: manifest2, directory: directory2 }));
   } finally {
-    (0, import_node_fs20.rmSync)(staging, { recursive: true, force: true });
+    (0, import_node_fs21.rmSync)(staging, { recursive: true, force: true });
   }
 }
 
 // packages/plugin/src/manifest/edit.ts
-var import_yaml6 = require("yaml");
+var import_yaml7 = require("yaml");
 
 // packages/plugin/src/prepared/library.ts
 async function prepareLibraryPlugin(directory2, output, cacheRoot) {
@@ -25887,17 +26097,17 @@ async function prepareLibraryPlugin(directory2, output, cacheRoot) {
     return directory2;
   }
   const original = loadPluginManifest(directory2);
-  if (original.app || original.permissions.some((permission) => permission.resource === "project_data") || (0, import_node_fs21.existsSync)((0, import_node_path21.join)(directory2, "workflow-runtime")) || (0, import_node_fs21.existsSync)((0, import_node_path21.join)(directory2, "workflow.cjs")))
+  if (original.app || original.permissions.some((permission) => permission.resource === "project_data") || (0, import_node_fs22.existsSync)((0, import_node_path22.join)(directory2, "workflow-runtime")) || (0, import_node_fs22.existsSync)((0, import_node_path22.join)(directory2, "workflow.cjs")))
     return directory2;
-  if ((0, import_node_fs21.existsSync)((0, import_node_path21.join)(directory2, BUILD_RECORD))) return preparePluginRuntime(directory2, output, cacheRoot);
-  if (!(0, import_node_fs21.existsSync)((0, import_node_path21.join)(directory2, "octonode.plugin.ts")))
+  if ((0, import_node_fs22.existsSync)((0, import_node_path22.join)(directory2, BUILD_RECORD))) return preparePluginRuntime(directory2, output, cacheRoot);
+  if (!(0, import_node_fs22.existsSync)((0, import_node_path22.join)(directory2, "octonode.plugin.ts")))
     throw new Error("Build this plugin from its authoring source before adding it to the workspace library");
-  const stage = (0, import_node_fs21.mkdtempSync)((0, import_node_path21.join)((0, import_node_os6.tmpdir)(), "octonode-library-build-"));
+  const stage = (0, import_node_fs22.mkdtempSync)((0, import_node_path22.join)((0, import_node_os6.tmpdir)(), "octonode-library-build-"));
   try {
     for (const file of pluginFiles(directory2)) {
-      const destination = (0, import_node_path21.join)(stage, file);
-      (0, import_node_fs21.mkdirSync)((0, import_node_path21.dirname)(destination), { recursive: true });
-      (0, import_node_fs21.cpSync)((0, import_node_path21.join)(directory2, file), destination, { recursive: true });
+      const destination = (0, import_node_path22.join)(stage, file);
+      (0, import_node_fs22.mkdirSync)((0, import_node_path22.dirname)(destination), { recursive: true });
+      (0, import_node_fs22.cpSync)((0, import_node_path22.join)(directory2, file), destination, { recursive: true });
     }
     prepareAuthoringConfig(stage);
     const [built] = await buildPlugins(void 0, stage);
@@ -25908,7 +26118,7 @@ async function prepareLibraryPlugin(directory2, output, cacheRoot) {
       throw new Error("Plugin definition changed; build and review its authoring source before uploading");
     return await preparePluginRuntime(built.directory, output, cacheRoot);
   } finally {
-    (0, import_node_fs21.rmSync)(stage, { recursive: true, force: true });
+    (0, import_node_fs22.rmSync)(stage, { recursive: true, force: true });
   }
 }
 
@@ -25994,7 +26204,7 @@ var RemoteRegistry = class _RemoteRegistry {
   async installInLibrary(id2, selection = {}) {
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(selection)) if (value !== void 0) params.set(key, value);
-    const result = import_zod124.z.object({ id: import_zod124.z.string() }).parse(
+    const result = import_zod128.z.object({ id: import_zod128.z.string() }).parse(
       await (await this.request(`/marketplace/plugins/${encodeURIComponent(id2)}/library/install?${params}`, {
         method: "POST"
       })).json()
@@ -26011,12 +26221,12 @@ var RemoteRegistry = class _RemoteRegistry {
   async assertProjectWrite() {
     await this.request(`${this.libraryPath()}?intent=project_write`);
   }
-  async saveLibraryArtifact(directory2, id2, expectedRevision, migration = false, signal, expectedWorkspaceRevision) {
-    const workspaceRevision = migration ? void 0 : expectedWorkspaceRevision ?? (await this.library()).revision;
-    const staging = (0, import_node_fs22.mkdtempSync)((0, import_node_path22.join)((0, import_node_os7.tmpdir)(), "octonode-library-prepare-"));
+  async saveLibraryArtifact(directory2, id2, expectedRevision, signal, expectedWorkspaceRevision) {
+    const workspaceRevision = expectedWorkspaceRevision ?? (await this.library()).revision;
+    const staging = (0, import_node_fs23.mkdtempSync)((0, import_node_path23.join)((0, import_node_os7.tmpdir)(), "octonode-library-prepare-"));
     const sourceSha256 = hashPluginDir(directory2);
     try {
-      const artifact = migration ? directory2 : await prepareLibraryPlugin(directory2, (0, import_node_path22.join)(staging, "prepared"));
+      const artifact = await prepareLibraryPlugin(directory2, (0, import_node_path23.join)(staging, "prepared"));
       signal?.throwIfAborted();
       if (hashPluginDir(directory2) !== sourceSha256) throw new Error("Plugin changed during artifact preparation");
       const manifest2 = loadPluginManifest(artifact);
@@ -26024,7 +26234,7 @@ var RemoteRegistry = class _RemoteRegistry {
       const bytes = packPluginDir(artifact);
       if (bytes.byteLength > PLUGIN_LIBRARY_LIMITS.artifactBytes) throw new Error("Workspace artifact exceeds 16 MiB");
       if (hashPluginDir(artifact) !== treeSha256) throw new Error("Plugin changed during artifact preparation");
-      if (!migration) addToStore(artifact);
+      addToStore(artifact);
       const form = new FormData();
       form.set(
         "metadata",
@@ -26033,8 +26243,7 @@ var RemoteRegistry = class _RemoteRegistry {
           manifest: manifest2,
           treeSha256,
           expectedRevision,
-          expectedWorkspaceRevision: workspaceRevision,
-          migration
+          expectedWorkspaceRevision: workspaceRevision
         })
       );
       form.set("artifact", new Blob([new Uint8Array(bytes)]), "plugin.tgz");
@@ -26046,18 +26255,8 @@ var RemoteRegistry = class _RemoteRegistry {
         })).json()
       );
     } finally {
-      (0, import_node_fs22.rmSync)(staging, { recursive: true, force: true });
+      (0, import_node_fs23.rmSync)(staging, { recursive: true, force: true });
     }
-  }
-  async migrateLibrary(entries, signal) {
-    return workspacePluginLibrarySchema.parse(
-      await (await this.request(`${this.libraryPath()}?action=migrate`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ entries }),
-        signal
-      })).json()
-    );
   }
   async authorizeWorkspaceArtifact(archiveSha256) {
     await this.request(`${this.libraryPath()}?action=bundle&archive=${encodeURIComponent(archiveSha256)}`, {
@@ -26086,7 +26285,7 @@ var RemoteRegistry = class _RemoteRegistry {
     const bytes = Buffer.concat(chunks);
     if ((0, import_node_crypto7.createHash)("sha256").update(bytes).digest("hex") !== archiveSha256)
       throw new Error("Workspace artifact checksum mismatch");
-    const temporary = (0, import_node_fs22.mkdtempSync)((0, import_node_path22.join)((0, import_node_os7.tmpdir)(), "octo-library-"));
+    const temporary = (0, import_node_fs23.mkdtempSync)((0, import_node_path23.join)((0, import_node_os7.tmpdir)(), "octo-library-"));
     try {
       const directory2 = extractPluginArchive(bytes, temporary);
       const manifest2 = loadPluginManifest(directory2);
@@ -26094,21 +26293,21 @@ var RemoteRegistry = class _RemoteRegistry {
         throw new Error("Workspace artifact identity mismatch");
       return directory2;
     } catch (error) {
-      (0, import_node_fs22.rmSync)(temporary, { recursive: true, force: true });
+      (0, import_node_fs23.rmSync)(temporary, { recursive: true, force: true });
       throw error;
     }
   }
   async materializeLibraryEntry(id2, storeRoot) {
     const entry = await this.libraryEntry(id2);
     const cached = entry.treeSha256 ? storeEntryDir(entry.manifest.id, entry.manifest.version, entry.treeSha256, storeRoot) : void 0;
-    const warm = cached && (0, import_node_fs22.existsSync)(cached);
+    const warm = cached && (0, import_node_fs23.existsSync)(cached);
     let downloaded;
     if (entry.source.kind === "registry") {
       if (entry.source.registry.replace(/\/$/, "") !== this.baseUrl)
         throw new Error("Migrate this library pin to the configured registry before use");
       const detail = await this.detail(entry.source.remoteId, entry.source.scope, entry.manifest.version);
       const release2 = detail.versions.find((item) => item.version === entry.manifest.version);
-      if ((release2?.archiveSha256 ?? release2?.sha256) !== entry.archiveSha256)
+      if (release2?.archiveSha256 !== entry.archiveSha256)
         throw new Error("Published library release changed or is no longer authorized");
       if (!warm)
         downloaded = await this.downloadBundle(
@@ -26129,7 +26328,7 @@ var RemoteRegistry = class _RemoteRegistry {
       if (!(0, import_node_util5.isDeepStrictEqual)(stored.manifest, entry.manifest) || entry.treeSha256 && stored.sha256 !== entry.treeSha256)
         throw new Error("Workspace plugin identity or integrity mismatch");
     } finally {
-      if (downloaded) (0, import_node_fs22.rmSync)((0, import_node_path22.dirname)(downloaded), { recursive: true, force: true });
+      if (downloaded) (0, import_node_fs23.rmSync)((0, import_node_path23.dirname)(downloaded), { recursive: true, force: true });
     }
     const pin = {
       pluginId: stored.id,
@@ -26192,21 +26391,17 @@ var RemoteRegistry = class _RemoteRegistry {
     );
     return await response.json();
   }
-  /** Reauthorize an immutable pin, including older locks that only recorded the extracted tree hash. */
+  /** Reauthorize an immutable pin against the archive checksum it recorded. */
   async matchesLockedRelease(id2, pin) {
     const remoteId = pin.remoteId ?? id2;
+    if (!pin.archiveSha256)
+      throw new Error(
+        `Locked plugin ${id2} has no archive checksum; reinstall it with \`octonode plugin install ${remoteId}\``
+      );
     const detail = await this.detail(remoteId, pin.scope, pin.version);
     const release2 = detail.versions.find((entry) => entry.version === pin.version);
     if (!release2 || pin.publisher && release2.publishedBy !== pin.publisher) return false;
-    const checksum = release2.archiveSha256 ?? release2.sha256;
-    if (pin.archiveSha256 || checksum?.startsWith("sha256:")) return checksum === (pin.archiveSha256 ?? pin.sha256);
-    if (!/^[a-f0-9]{64}$/.test(checksum)) return false;
-    const directory2 = await this.downloadBundle(remoteId, pin.version, pin.scope, id2, checksum);
-    try {
-      return hashPluginDir(directory2) === pin.sha256;
-    } finally {
-      (0, import_node_fs22.rmSync)((0, import_node_path22.dirname)(directory2), { recursive: true, force: true });
-    }
+    return release2.archiveSha256 === pin.archiveSha256;
   }
   async registerInstall(id2, version, scope2, opts) {
     const response = await this.request(`/marketplace/plugins/${encodeURIComponent(id2)}/install`, {
@@ -26274,17 +26469,17 @@ var RemoteRegistry = class _RemoteRegistry {
     let manifest2 = loadPluginManifest(pluginDir);
     if (manifest2.schemaVersion === "2")
       throw new Error("Plugin runtime v2 is local-only until marketplace rollout is qualified");
-    const packageFile = (0, import_node_path22.join)(pluginDir, "package.json");
-    if ((0, import_node_fs22.existsSync)(packageFile)) {
-      const metadata = JSON.parse((0, import_node_fs22.readFileSync)(packageFile, "utf8"));
-      if (metadata.version && metadata.version !== manifest2.version) {
+    const packageFile = (0, import_node_path23.join)(pluginDir, "package.json");
+    if ((0, import_node_fs23.existsSync)(packageFile)) {
+      const metadata2 = JSON.parse((0, import_node_fs23.readFileSync)(packageFile, "utf8"));
+      if (metadata2.version && metadata2.version !== manifest2.version) {
         throw new Error("package.json version must match the plugin version before publishing");
       }
     }
-    const staging = (0, import_node_fs22.mkdtempSync)((0, import_node_path22.join)((0, import_node_os7.tmpdir)(), "octonode-publish-prepare-"));
+    const staging = (0, import_node_fs23.mkdtempSync)((0, import_node_path23.join)((0, import_node_os7.tmpdir)(), "octonode-publish-prepare-"));
     const original = hashPluginDir(pluginDir);
     try {
-      const artifact = await prepareLibraryPlugin(pluginDir, (0, import_node_path22.join)(staging, "prepared"));
+      const artifact = await prepareLibraryPlugin(pluginDir, (0, import_node_path23.join)(staging, "prepared"));
       if (hashPluginDir(pluginDir) !== original) throw new Error("Plugin changed during publication preparation");
       manifest2 = loadPluginManifest(artifact);
       const bundle = packPluginDir(artifact);
@@ -26309,11 +26504,11 @@ var RemoteRegistry = class _RemoteRegistry {
       });
       const release2 = await res.json();
       if (release2.publication) release2.publication = PublicationApprovalSummary.parse(release2.publication);
-      if (release2.sha256 !== digest3 || release2.archiveSha256 !== void 0 && release2.archiveSha256 !== digest3)
+      if (release2.archiveSha256 !== digest3)
         throw new Error("Marketplace published archive checksum mismatch; check the release before publishing again");
       return release2;
     } finally {
-      (0, import_node_fs22.rmSync)(staging, { recursive: true, force: true });
+      (0, import_node_fs23.rmSync)(staging, { recursive: true, force: true });
     }
   }
   /** Download a version's bundle and extract it to a fresh temp folder. */
@@ -26340,26 +26535,23 @@ var RemoteRegistry = class _RemoteRegistry {
     }
     const bytes = Buffer.concat(chunks);
     const archiveChecksum = res.headers.get("x-octonode-archive-sha256");
+    if (!archiveChecksum && !expectedChecksum) throw new Error("Plugin registry archive checksum is missing");
     if (archiveChecksum !== null && !/^[a-f0-9]{64}$/.test(archiveChecksum))
       throw new Error("Plugin registry archive checksum is invalid");
-    const checksums = [archiveChecksum, res.headers.get("x-octonode-sha256"), expectedChecksum].filter(
-      (checksum) => !!checksum
-    );
+    if (expectedChecksum && !/^[a-f0-9]{64}$/.test(expectedChecksum))
+      throw new Error(`Plugin ${id2}@${version} has no archive checksum; republish this version`);
     const digest3 = (0, import_node_crypto7.createHash)("sha256").update(bytes).digest("hex");
-    for (const expected of checksums)
-      if (/^[a-f0-9]{64}$/.test(expected) && expected !== digest3) throw new Error("Plugin registry checksum mismatch");
-    const dir = (0, import_node_fs22.mkdtempSync)((0, import_node_path22.join)((0, import_node_os7.tmpdir)(), "octo-bundle-"));
+    for (const expected of [archiveChecksum, expectedChecksum])
+      if (expected && expected !== digest3) throw new Error("Plugin registry checksum mismatch");
+    const dir = (0, import_node_fs23.mkdtempSync)((0, import_node_path23.join)((0, import_node_os7.tmpdir)(), "octo-bundle-"));
     try {
       const extracted = extractPluginArchive(bytes, dir);
       const manifest2 = loadPluginManifest(extracted);
       if (manifest2.id !== expectedId || manifest2.version !== version)
         throw new Error(`Downloaded plugin does not match requested ${id2}@${version}`);
-      for (const expected of checksums)
-        if (!/^[a-f0-9]{64}$/.test(expected) && hashPluginDir(extracted) !== expected)
-          throw new Error("Plugin registry checksum mismatch");
       return extracted;
     } catch (error) {
-      (0, import_node_fs22.rmSync)(dir, { recursive: true, force: true });
+      (0, import_node_fs23.rmSync)(dir, { recursive: true, force: true });
       throw error;
     }
   }
@@ -26379,7 +26571,7 @@ var RemoteRegistry = class _RemoteRegistry {
       version,
       opts.scope,
       detail.manifestId ?? id2,
-      release2?.archiveSha256 ?? release2?.sha256
+      release2?.archiveSha256
     );
     const plugin = await installPlugin(dir, opts);
     const res = await this.request(`/marketplace/plugins/${encodeURIComponent(id2)}/install`, {
@@ -26406,7 +26598,7 @@ var RemoteRegistry = class _RemoteRegistry {
     const detail = await this.detail(id2, opts.scope, opts.version);
     const version = opts.version ?? detail.version;
     const versionMeta = detail.versions?.find((v2) => v2.version === version);
-    const releaseChecksum = versionMeta?.archiveSha256 ?? versionMeta?.sha256;
+    const releaseChecksum = versionMeta?.archiveSha256;
     if (!opts.cacheOnly && !opts.noDeps && !releaseChecksum)
       throw new Error("Marketplace release is missing its immutable checksum");
     const availableScopes = versionMeta?.scope ?? detail.scope;
@@ -26416,10 +26608,10 @@ var RemoteRegistry = class _RemoteRegistry {
       try {
         return addToStore(dir, { storeRoot: opts.storeRoot });
       } finally {
-        (0, import_node_fs22.rmSync)((0, import_node_path22.dirname)(dir), { recursive: true, force: true });
+        (0, import_node_fs23.rmSync)((0, import_node_path23.dirname)(dir), { recursive: true, force: true });
       }
     })();
-    const archiveSha256 = releaseChecksum && /^[a-f0-9]{64}$/.test(releaseChecksum) ? releaseChecksum : void 0;
+    const archiveSha256 = releaseChecksum;
     const prepared = this.baseUrl === (OCTONODE_MARKETPLACE_URL() ?? DEFAULT_MARKETPLACE_URL).replace(/\/$/, "") && usesPreparedRunner(entry.dir);
     if (entry.manifest.library && opts.noDeps && !opts.cacheOnly)
       throw new Error(
@@ -26537,11 +26729,11 @@ var RemoteRegistry = class _RemoteRegistry {
     return { plugin: { manifest: entry.manifest, dir: entry.dir, source: "store" }, entry, installId, ...deps };
   }
   /** Report a lifecycle event (invoke/error/uninstall) for an install — the analytics feed. */
-  async postEvent(installId, eventType, metadata, idempotencyKey = crypto.randomUUID()) {
+  async postEvent(installId, eventType, metadata2, idempotencyKey = crypto.randomUUID()) {
     await this.request(`/marketplace/installs/${encodeURIComponent(installId)}/events`, {
       method: "POST",
       headers: { "content-type": "application/json", "idempotency-key": idempotencyKey },
-      body: JSON.stringify({ eventType, metadata })
+      body: JSON.stringify({ eventType, metadata: metadata2 })
     });
   }
   async analytics(ownerId) {
@@ -26559,16 +26751,16 @@ var RemoteRegistry = class _RemoteRegistry {
 };
 function packPluginDir(pluginDir) {
   pluginBundleFiles(pluginDir);
-  const staging = (0, import_node_fs22.mkdtempSync)((0, import_node_path22.join)((0, import_node_os7.tmpdir)(), "octo-pack-"));
-  const out = (0, import_node_path22.join)(staging, "bundle.tar.gz");
+  const staging = (0, import_node_fs23.mkdtempSync)((0, import_node_path23.join)((0, import_node_os7.tmpdir)(), "octo-pack-"));
+  const out = (0, import_node_path23.join)(staging, "bundle.tar.gz");
   try {
     (0, import_tar4.create)(
       { file: out, cwd: pluginDir, sync: true, portable: true, gzip: true, mtime: /* @__PURE__ */ new Date(0) },
       pluginBundleFiles(pluginDir)
     );
-    return (0, import_node_fs22.readFileSync)(out);
+    return (0, import_node_fs23.readFileSync)(out);
   } finally {
-    (0, import_node_fs22.rmSync)(staging, { recursive: true, force: true });
+    (0, import_node_fs23.rmSync)(staging, { recursive: true, force: true });
   }
 }
 
@@ -26576,7 +26768,7 @@ function packPluginDir(pluginDir) {
 async function installFromLock(opts = {}) {
   const cwd = resolveDependencyProject(opts.cwd ?? process.cwd()).target;
   if (opts.frozen && opts.force) throw new Error("Frozen restore cannot accept changed artifact bytes");
-  if (opts.frozen && !(0, import_node_fs23.existsSync)((0, import_node_path23.join)(cwd, "octonode.lock"))) throw new Error("Frozen restore requires octonode.lock");
+  if (opts.frozen && !(0, import_node_fs24.existsSync)((0, import_node_path24.join)(cwd, "octonode.lock"))) throw new Error("Frozen restore requires octonode.lock");
   return withDependencyInstall(cwd, async () => {
     const lock = readLockfile(cwd);
     if (lock.generated && opts.force)
@@ -26604,8 +26796,8 @@ async function installFromLock(opts = {}) {
     const libraries = [];
     const runtimeManifests2 = [];
     const dependencies = [];
-    const packageFile = (0, import_node_path23.join)(cwd, "package.json");
-    const packageJson = (0, import_node_fs23.existsSync)(packageFile) ? JSON.parse((0, import_node_fs23.readFileSync)(packageFile, "utf8")) : {};
+    const packageFile = (0, import_node_path24.join)(cwd, "package.json");
+    const packageJson = (0, import_node_fs24.existsSync)(packageFile) ? JSON.parse((0, import_node_fs24.readFileSync)(packageFile, "utf8")) : {};
     for (const [alias, pin] of Object.entries(lock.plugins)) {
       try {
         const id2 = pin.pluginId ?? alias;
@@ -26647,7 +26839,7 @@ async function installFromLock(opts = {}) {
             if (actual !== pin.sha256)
               upsertLockEntry(cwd, alias, { ...pin, sha256: actual, archiveSha256: void 0 });
           } finally {
-            (0, import_node_fs23.rmSync)((0, import_node_path23.dirname)(downloaded), { recursive: true, force: true });
+            (0, import_node_fs24.rmSync)((0, import_node_path24.dirname)(downloaded), { recursive: true, force: true });
           }
           result.restored.push(alias);
         }
@@ -26658,12 +26850,12 @@ async function installFromLock(opts = {}) {
         if (manifest2.library) libraries.push({ alias, directory: directory2, sha256: pin.sha256 });
         if (!manifest2.library && preparedPluginPin(directory2, pin)) continue;
         if (!manifest2.library && !pluginNpmDependencies(manifest2).length && !opts.artifactsOnly && !opts.noDeps) {
-          const packagePath = (0, import_node_path23.join)(directory2, "package.json");
-          const legacy = (0, import_node_fs23.existsSync)(packagePath) ? JSON.parse((0, import_node_fs23.readFileSync)(packagePath, "utf8")) : {};
-          if (legacy.dependencies || legacy.optionalDependencies) {
+          const packagePath = (0, import_node_path24.join)(directory2, "package.json");
+          const artifactPackage = (0, import_node_fs24.existsSync)(packagePath) ? JSON.parse((0, import_node_fs24.readFileSync)(packagePath, "utf8")) : {};
+          if (artifactPackage.dependencies || artifactPackage.optionalDependencies) {
             if (opts.frozen || opts.offline)
               throw new Error(
-                "Legacy artifact dependencies cannot be restored frozen; publish a bundled artifact or use artifacts-only"
+                "Artifact package.json dependencies cannot be restored frozen; publish a bundled artifact or use artifacts-only"
               );
             const installed = await installNodeDeps(directory2, {
               cwd,
@@ -26699,7 +26891,7 @@ async function installFromLock(opts = {}) {
         const generated = await generatePluginPackage(cwd, libraries, lock.generated.packer);
         if (generated.spec !== lock.generated.spec || generated.sha256 !== lock.generated.sha256 || JSON.stringify(generated.subpaths) !== JSON.stringify(lock.generated.subpaths))
           throw new Error("Generated package does not match octonode.lock");
-        const manifest2 = JSON.parse((0, import_node_fs23.readFileSync)((0, import_node_path23.join)(cwd, "package.json"), "utf8"));
+        const manifest2 = JSON.parse((0, import_node_fs24.readFileSync)((0, import_node_path24.join)(cwd, "package.json"), "utf8"));
         if (manifest2.dependencies?.[generated.name]?.replace(/^file:\.\//, "file:") !== generated.spec.replace(/^file:\.\//, "file:"))
           throw new Error("package.json disagrees with octonode.lock");
       }
@@ -26720,7 +26912,7 @@ async function installFromLock(opts = {}) {
 
 // packages/plugin/src/consumer/lifecycle.ts
 async function runPluginLifecycle(command, target, flags) {
-  const selectedCwd = typeof flags.cwd === "string" ? (0, import_node_path24.resolve)(flags.cwd) : process.cwd();
+  const selectedCwd = typeof flags.cwd === "string" ? (0, import_node_path25.resolve)(flags.cwd) : process.cwd();
   const cwd = resolveDependencyProject(selectedCwd).target;
   const scope2 = typeof flags.scope === "string" ? flags.scope : void 0;
   if (scope2 && !MARKETPLACE_SCOPES.includes(scope2)) throw new Error("Invalid marketplace scope");
@@ -26733,7 +26925,7 @@ async function runPluginLifecycle(command, target, flags) {
     uv: typeof flags.uv === "string" ? flags.uv : void 0
   };
   if (command === "recover") {
-    await recoverDependencyInstall(cwd);
+    await recoverDependencyInstall(cwd, { useCurrentManifests: !!flags["use-current-manifests"] });
     return { recovered: true };
   }
   if (command === "list") return readLockfile(cwd);
@@ -26754,8 +26946,8 @@ async function runPluginLifecycle(command, target, flags) {
     await removePluginPin(target, options);
     return { removed: target, dryRun: options.dryRun };
   }
-  if (command === "install" && (0, import_node_fs24.existsSync)((0, import_node_path24.resolve)(selectedCwd, target))) {
-    const entry = await installLocalArtifact((0, import_node_path24.resolve)(selectedCwd, target), options);
+  if (command === "install" && (0, import_node_fs25.existsSync)((0, import_node_path25.resolve)(selectedCwd, target))) {
+    const entry = await installLocalArtifact((0, import_node_path25.resolve)(selectedCwd, target), options);
     return { id: options.alias ?? entry.id, version: entry.version, sha256: entry.sha256, dryRun: options.dryRun };
   }
   if (command !== "install" && command !== "update") throw new Error(`Unknown plugin lifecycle command: ${command}`);
